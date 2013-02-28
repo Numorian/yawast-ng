@@ -6,8 +6,9 @@ def scan(uri)
   begin
     server_info(uri)
 
-      #apache specific checks
-      apache_check_server_status(uri)
+    #apache specific checks
+    apache_check_server_status(uri)
+    apache_check_server_info(uri)
   rescue
     puts_error 'Fatal Error: Can not continue.'
   end

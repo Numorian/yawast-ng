@@ -14,9 +14,13 @@ This is meant to provide a easy way to perform initial analysis and information 
 
 The following tests are performed:
 
-* *(Generic)* Info Disclosure: Server Banner
+* *(Generic)* Info Disclosure: X-Powered-By header present
+* *(Apache)* Info Disclosure: Module listing enabled
+* *(Apache)* Info Disclosure: Server version
 * *(Apache)* Presence of /server-status
 * *(Apache)* Presence of /server-info
+* *(IIS)* Info Disclosure: Server version
+* *(PHP)* Info Disclosure: PHP version
 
 In addition to these test, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 

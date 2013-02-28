@@ -22,9 +22,19 @@ def server_info(uri)
     end
     puts ''
 
+    server = ''
     head = head(uri)
     puts_info 'HEAD:'
-    head.each { |k, v| puts_info "\t\t#{k}: #{v}" }
+    head.each do |k, v|
+      puts_info "\t\t#{k}: #{v}"
+
+      server = v if k.downcase == 'server'
+    end
+    puts ''
+
+    if server != ''
+      puts_warn "Possible information disclosure (server banner): #{server}"
+    end
   rescue => e
     puts_error "Error getting basic information: #{e.message}"
     raise

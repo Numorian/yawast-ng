@@ -26,6 +26,10 @@ def puts_error(msg)
   puts_msg('[E]'.red, msg)
 end
 
+def puts_vuln(msg)
+  puts_msg('[V]'.pink, msg)
+end
+
 def puts_warn(msg)
   puts_msg('[W]'.yellow, msg)
 end

@@ -1,9 +1,13 @@
 require 'socket'
 require './scanner/http'
+require './scanner/apache'
 
 def scan(uri)
   begin
     server_info(uri)
+
+      #apache specific checks
+      apache_check_server_status(uri)
   rescue
     puts_error 'Fatal Error: Can not continue.'
   end
@@ -23,7 +27,7 @@ def server_info(uri)
     puts ''
 
     server = ''
-    head = head(uri)
+    head = http_head(uri)
     puts_info 'HEAD:'
     head.each do |k, v|
       puts_info "\t\t#{k}: #{v}"

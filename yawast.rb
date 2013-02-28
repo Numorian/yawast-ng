@@ -3,6 +3,7 @@
 require 'uri'
 require 'resolv'
 require './scanner/scan-core'
+require './colorization'
 
 VERSION = '0.0.1'
 
@@ -17,12 +18,20 @@ def usage
   exit(-1)
 end
 
+def puts_msg(type, msg)
+  puts "#{type} #{msg}"
+end
+
 def puts_error(msg)
-  puts "[E] #{msg}"
+  puts_msg('[E]'.red, msg)
+end
+
+def puts_warn(msg)
+  puts_msg('[W]'.yellow, msg)
 end
 
 def puts_info(msg)
-  puts "[I] #{msg}"
+  puts_msg('[I]'.green, msg)
 end
 
 #start the execution flow

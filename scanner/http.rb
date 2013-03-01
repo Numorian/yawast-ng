@@ -1,9 +1,9 @@
 require 'net/http'
 
 def http_head(uri)
-  Net::HTTP.start(uri.host,uri.port) do |http|
-    http.head(uri.path)
-  end
+  req = Net::HTTP.new(uri.host, uri.port)
+  headers = { 'User-Agent' => HTTP_UA }
+  req.head(uri.path, headers)
 end
 
 def http_get(uri)
@@ -11,7 +11,8 @@ def http_get(uri)
 
   begin
     req = Net::HTTP.new(uri.host, uri.port)
-    res = req.request_get(uri.path)
+    headers = { 'User-Agent' => HTTP_UA }
+    res = req.request_get(uri.path, headers)
     body = res.read_body
   rescue
     #do nothing for now

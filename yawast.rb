@@ -6,6 +6,7 @@ require './scanner/scan-core'
 require './colorization'
 
 VERSION = '0.0.1'
+HTTP_UA = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0; YAWAST/#{VERSION})"
 
 def header
   puts "YAWAST v #{VERSION}"

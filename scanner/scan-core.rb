@@ -3,10 +3,15 @@ require './scanner/http'
 require './scanner/apache'
 require './scanner/php'
 require './scanner/iis'
+require './scanner/ssl'
 
 def scan(uri)
   begin
     server_info(uri)
+
+    if uri.scheme == 'https'
+      ssl_info(uri)
+    end
 
     #apache specific checks
     apache_check_server_status(uri)
@@ -57,9 +62,11 @@ def server_info(uri)
 
     if powered_by != ''
       puts_warn "X-Powered-By Header Present: #{powered_by}"
+      puts ''
     end
   rescue => e
     puts_error "Error getting basic information: #{e.message}"
     raise
   end
 end
+

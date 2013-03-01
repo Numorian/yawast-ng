@@ -22,3 +22,9 @@ def http_get(uri)
 
   body
 end
+
+def http_peer_cert(uri)
+  req = Net::HTTP.new(uri.host, uri.port)
+  req.use_ssl = uri.scheme == 'https'
+  req.start { |http| return http.peer_cert }
+end

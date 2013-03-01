@@ -23,9 +23,8 @@ def apache_check_server_status(uri)
 
   if ret.include? 'Apache Server Status'
     puts_vuln "Apache Server Status page found: #{uri}"
+    puts ''
   end
-
-  puts ''
 end
 
 def apache_check_server_info(uri)
@@ -36,7 +35,6 @@ def apache_check_server_info(uri)
 
   if ret.include? 'Apache Server Information'
     puts_vuln "Apache Server Info page found: #{uri}"
+    puts ''
   end
-
-  puts ''
 end

@@ -20,6 +20,7 @@ The following tests are performed:
 * *(Apache)* Presence of /server-status
 * *(Apache)* Presence of /server-info
 * *(IIS)* Info Disclosure: Server version
+* *(IIS)* Info Disclosure: ASP.NET version
 * *(PHP)* Info Disclosure: PHP version
 
 In addition to these test, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.

@@ -16,6 +16,9 @@ def scan(uri)
     #apache specific checks
     apache_check_server_status(uri)
     apache_check_server_info(uri)
+
+    #iis specific checks
+    iis_check_asp_banner(uri)
   rescue
     puts_error 'Fatal Error: Can not continue.'
   end

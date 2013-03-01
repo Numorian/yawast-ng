@@ -2,6 +2,7 @@ require 'net/http'
 
 def http_head(uri)
   req = Net::HTTP.new(uri.host, uri.port)
+  req.use_ssl = uri.scheme == 'https'
   headers = { 'User-Agent' => HTTP_UA }
   req.head(uri.path, headers)
 end
@@ -11,6 +12,7 @@ def http_get(uri)
 
   begin
     req = Net::HTTP.new(uri.host, uri.port)
+    req.use_ssl = uri.scheme == 'https'
     headers = { 'User-Agent' => HTTP_UA }
     res = req.request_get(uri.path, headers)
     body = res.read_body

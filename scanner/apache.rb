@@ -11,6 +11,8 @@ def apache_check_banner(banner)
     puts_warn 'Apache Server: Module listing enabled'
     modules.each { |mod| puts_warn "\t\t#{mod}" }
   end
+
+  puts ''
 end
 
 def apache_check_server_status(uri)
@@ -22,6 +24,8 @@ def apache_check_server_status(uri)
   if ret.include? 'Apache Server Status'
     puts_vuln "Apache Server Status page found: #{uri}"
   end
+
+  puts ''
 end
 
 def apache_check_server_info(uri)
@@ -33,4 +37,6 @@ def apache_check_server_info(uri)
   if ret.include? 'Apache Server Information'
     puts_vuln "Apache Server Info page found: #{uri}"
   end
+
+  puts ''
 end

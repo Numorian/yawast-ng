@@ -3,4 +3,5 @@ def iis_check_banner(banner)
   return if !banner.include? 'Microsoft-IIS/'
 
   puts_warn "IIS Version: #{banner}"
+  puts ''
 end

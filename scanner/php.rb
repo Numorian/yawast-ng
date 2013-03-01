@@ -7,6 +7,7 @@ def php_check_banner(banner)
   modules.each do |mod|
     if mod.include? 'PHP/'
       puts_warn "PHP Version: #{mod}"
+      puts ''
     end
   end
 end

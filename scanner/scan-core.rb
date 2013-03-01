@@ -48,6 +48,8 @@ def server_info(uri)
 
     if server != ''
       puts_info "Server Banner: #{server}"
+      puts ''
+
       apache_check_banner(server)
       php_check_banner(server)
       iis_check_banner(server)

@@ -10,15 +10,14 @@ def apache_check_banner(banner)
   else
     puts_warn 'Apache Server: Module listing enabled'
     modules.each { |mod| puts_warn "\t\t#{mod}" }
-  end
+    puts ''
 
-  puts ''
-
-  #check for special items
-  modules.each do |mod|
-    if mod.include? 'OpenSSL'
-      puts_warn "OpenSSL Version Disclosure: #{mod}"
-      puts ''
+    #check for special items
+    modules.each do |mod|
+      if mod.include? 'OpenSSL'
+        puts_warn "OpenSSL Version Disclosure: #{mod}"
+        puts ''
+      end
     end
   end
 end

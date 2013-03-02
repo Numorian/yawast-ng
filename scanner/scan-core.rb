@@ -4,6 +4,7 @@ require './scanner/apache'
 require './scanner/php'
 require './scanner/iis'
 require './scanner/ssl'
+require './scanner/nginx'
 
 def scan(uri)
   begin
@@ -61,6 +62,7 @@ def server_info(uri)
       apache_check_banner(server)
       php_check_banner(server)
       iis_check_banner(server)
+      nginx_check_banner(server)
     end
 
     if powered_by != ''

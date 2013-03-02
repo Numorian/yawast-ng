@@ -17,6 +17,7 @@ The following tests are performed:
 * *(Generic)* Info Disclosure: X-Powered-By header present
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
+* *(Apache)* Info Disclosure: OpenSSL module version
 * *(Apache)* Presence of /server-status
 * *(Apache)* Presence of /server-info
 * *(IIS)* Info Disclosure: Server version

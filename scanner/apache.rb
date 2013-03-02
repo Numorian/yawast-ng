@@ -13,6 +13,14 @@ def apache_check_banner(banner)
   end
 
   puts ''
+
+  #check for special items
+  modules.each do |mod|
+    if mod.include? 'OpenSSL'
+      puts_warn "OpenSSL Version Disclosure: #{mod}"
+      puts ''
+    end
+  end
 end
 
 def apache_check_server_status(uri)

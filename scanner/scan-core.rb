@@ -72,4 +72,3 @@ def server_info(uri)
     raise
   end
 end
-

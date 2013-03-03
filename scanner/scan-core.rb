@@ -20,8 +20,8 @@ def scan(uri)
 
     #iis specific checks
     iis_check_asp_banner(uri)
-  rescue
-    puts_error 'Fatal Error: Can not continue.'
+  rescue => e
+    puts_error "Fatal Error: Can not continue. (#{e.message})"
   end
 end
 

@@ -18,3 +18,21 @@ def ssl_info(uri)
     puts_error "SSL: Error Reading X509 Details: #{e.message}"
   end
 end
+
+def ssl_check_hsts(uri)
+  headers = http_head(uri)
+  found = ''
+
+  headers.each do |k, v|
+    if k.downcase.include? 'strict-transport-security'
+      found = k
+    end
+  end
+
+  if found == ''
+    puts_warn 'HSTS: Not Enabled'
+  else
+    puts_info "HSTS: Enabled (#{found})"
+  end
+  puts ''
+end

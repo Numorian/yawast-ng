@@ -12,6 +12,7 @@ def scan(uri)
 
     if uri.scheme == 'https'
       ssl_info(uri)
+      ssl_check_hsts(uri)
     end
 
     #apache specific checks

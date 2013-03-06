@@ -1,6 +1,6 @@
 ##YAWAST
 
-Yet Another Web Application Security Tester
+Yet Another Web Application Security Tool
 
 *Don't expect anything here to work yet - way too early.* This should be considered pre-alpha, don't expect things to work correctly or results to be comprehensive. It'll take time before this is a useful tool, it's not there yet.
 
@@ -8,7 +8,7 @@ Yet Another Web Application Security Tester
 
 Because.
 
-This is meant to provide a easy way to perform initial analysis and information discovery. It won't provide a full suite of testing tools, as there are better ways to do that - but it will provide basic information to help target further testing.
+This is meant to provide a easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests.
 
 ####Tests
 

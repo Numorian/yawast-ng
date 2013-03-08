@@ -25,7 +25,7 @@ def ssl_check_hsts(uri)
 
   headers.each do |k, v|
     if k.downcase.include? 'strict-transport-security'
-      found = k
+      found = "#{k}: #{v}"
     end
   end
 

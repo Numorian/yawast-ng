@@ -2,7 +2,7 @@ module Yawast
   module Commands
     class Scan
       def self.process(args, options)
-        #raise ArgumentError.new('You must specify a URL.') if args.empty?
+        raise ArgumentError.new('You must specify a URL.') if args.empty?
 
         url = args[0]
         ssl_test = options.ssl

@@ -21,10 +21,11 @@ require_all '/scanner'
 
 module Yawast
   VERSION = '0.0.1'
+  DESCRIPTION = 'Yawast: Yet Another Web Application Security Tool'
   HTTP_UA = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0; Yawast/#{VERSION})"
 
   def self.header
-    puts "Yawast v #{VERSION}"
+    puts "Yawast v#{VERSION} - #{DESCRIPTION}"
     puts 'Copyright (c) 2013 Adam Caudill <adam@adamcaudill.com>'
     puts ''
   end

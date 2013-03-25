@@ -5,7 +5,7 @@ require './lib/yawast'
 
 program :name, 'yawast'
 program :version, Yawast::VERSION
-program :description, 'Yawast: Yet Another Web Application Security Tool'
+program :description, Yawast::DESCRIPTION
 
 default_command :help
 

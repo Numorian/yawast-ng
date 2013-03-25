@@ -28,6 +28,8 @@ module Yawast
         begin
           server = ''
           powered_by = ''
+          cookies = Array.new
+
           head = Yawast::Scanner::Http.head(uri)
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -35,6 +37,11 @@ module Yawast
 
             server = v if k.downcase == 'server'
             powered_by = v if k.downcase == 'x-powered-by'
+
+            if k.downcase == 'set-cookie'
+              #this chunk of magic manages to properly split cookies, when multiple are sent together
+              v.gsub(/(,([^;,]*=)|,$)/) { "\r\n#{$2}" }.split(/\r\n/).each { |c| cookies.push(c) }
+            end
           end
           puts ''
 
@@ -47,6 +54,16 @@ module Yawast
 
           if powered_by != ''
             Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}"
+            puts ''
+          end
+
+          unless cookies.empty?
+            Yawast::Utilities.puts_info 'Cookies:'
+
+            cookies.each do |val|
+              Yawast::Utilities.puts_info "\t\t#{val.strip}"
+            end
+
             puts ''
           end
         rescue => e

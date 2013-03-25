@@ -48,7 +48,6 @@ module Yawast
           puts ''
         end
       end
-
     end
   end
 end

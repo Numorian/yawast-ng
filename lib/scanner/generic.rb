@@ -18,7 +18,14 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t#{ip} (#{host_name})"
           end
           puts ''
+        rescue => e
+          Yawast::Utilities.puts_error "Error getting basic information: #{e.message}"
+          raise
+        end
+      end
 
+      def self.head_info(uri)
+        begin
           server = ''
           powered_by = ''
           head = Yawast::Scanner::Http.head(uri)
@@ -43,7 +50,7 @@ module Yawast
             puts ''
           end
         rescue => e
-          Yawast::Utilities.puts_error "Error getting basic information: #{e.message}"
+          Yawast::Utilities.puts_error "Error getting head information: #{e.message}"
           raise
         end
       end

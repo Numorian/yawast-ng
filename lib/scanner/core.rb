@@ -8,6 +8,7 @@ module Yawast
 
         begin
           Yawast::Scanner::Generic.server_info(uri)
+          Yawast::Scanner::Generic.head_info(uri)
 
           #perfom SSL checks
           if (uri.scheme == 'https') && ssl_test

@@ -34,7 +34,10 @@ Standard scan:
 
 `./yawast scan <url>`
 
-There is also a `--ssl` option that enables the SSL specific tests.
+Options
+
+`--ssl` - Includes SSL information
+`--head` - Only checks information from HEAD
 
 ####License
 

@@ -5,7 +5,6 @@ module Yawast
         raise ArgumentError.new('You must specify a URL.') if args.empty?
 
         url = args[0]
-        ssl_test = options.ssl
 
         uri = URI.parse(url)
         uri.path = '/' if uri.path == ''
@@ -18,7 +17,7 @@ module Yawast
           raise ArgumentError.new("Invalid URL (#{e.message})")
         end
 
-        Yawast::Scanner::Core.process(uri, ssl_test)
+        Yawast::Scanner::Core.process(uri, options)
       end
     end
   end

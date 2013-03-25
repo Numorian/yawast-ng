@@ -1,4 +1,4 @@
-##YAWAST
+##Yawast
 
 Yet Another Web Application Security Tool
 
@@ -30,9 +30,11 @@ In addition to these test, certain basic information is also displayed, such as 
 
 ####Usage
 
-YAWAST is meant to be extremely easy to use; thus it currently has a single parameter: the URL.
+Standard scan:
 
-`./yawast.rb <url>`
+`./yawast scan <url>`
+
+There is also a `--ssl` option that enables the SSL specific tests.
 
 ####License
 

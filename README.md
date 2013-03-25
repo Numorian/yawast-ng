@@ -36,8 +36,8 @@ Standard scan:
 
 Options
 
-`--ssl` - Includes SSL information
-`--head` - Only checks information from HEAD
+* `--ssl` - Includes SSL information
+* `--head` - Only checks information from HEAD
 
 ####License
 

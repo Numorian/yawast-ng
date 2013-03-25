@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'commander/import'
+require './lib/yawast'
+
+program :name, 'yawast'
+program :version, Yawast::VERSION
+program :description, 'Yawast: Yet Another Web Application Security Tool'
+
+default_command :help
+
+command :scan do |c|
+  c.syntax = 'yawast scan URL'
+  c.description = 'Scans the provided URL'
+
+  c.option '--ssl', 'Includes SSL information'
+
+  c.action do |args, options|
+    Yawast::Commands::Scan.process(args, options)
+  end
+end

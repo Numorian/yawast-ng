@@ -7,13 +7,16 @@ module Yawast
         puts ''
 
         begin
+          #cache the HEAD result, so that we can minimize hits
+          head = Yawast::Scanner::Http.head(uri)
+
           Yawast::Scanner::Generic.server_info(uri)
-          Yawast::Scanner::Generic.head_info(uri)
+          Yawast::Scanner::Generic.head_info(head)
 
           #perfom SSL checks
           if uri.scheme == 'https' && !options.nossl
               Yawast::Scanner::Ssl.info(uri)
-              Yawast::Scanner::Ssl.check_hsts(uri)
+              Yawast::Scanner::Ssl.check_hsts(head)
           end
 
           unless options.head

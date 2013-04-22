@@ -22,11 +22,10 @@ module Yawast
         end
       end
 
-      def self.check_hsts(uri)
-        headers = Yawast::Scanner::Http.head(uri)
+      def self.check_hsts(head)
         found = ''
 
-        headers.each do |k, v|
+        head.each do |k, v|
           if k.downcase.include? 'strict-transport-security'
             found = "#{k}: #{v}"
           end

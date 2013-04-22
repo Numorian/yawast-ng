@@ -24,13 +24,12 @@ module Yawast
         end
       end
 
-      def self.head_info(uri)
+      def self.head_info(head)
         begin
           server = ''
           powered_by = ''
           cookies = Array.new
 
-          head = Yawast::Scanner::Http.head(uri)
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
             Yawast::Utilities.puts_info "\t\t#{k}: #{v}"

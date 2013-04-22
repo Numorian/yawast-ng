@@ -35,10 +35,7 @@ Standard scan:
 
 `./yawast scan <url>`
 
-Options
-
-* `--ssl` - Includes SSL information
-* `--head` - Only checks information from HEAD
+For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
 
 ####License
 

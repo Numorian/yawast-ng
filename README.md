@@ -23,6 +23,7 @@ The following tests are performed:
 * *(Apache)* Presence of /server-info
 * *(IIS)* Info Disclosure: Server version
 * *(IIS)* Info Disclosure: ASP.NET version
+* *(IIS)* Info Disclosure: ASP.NET MVC version
 * *(nginx)* Info Disclosure: Server version
 * *(PHP)* Info Disclosure: PHP version
 

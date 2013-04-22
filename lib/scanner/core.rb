@@ -20,12 +20,9 @@ module Yawast
           end
 
           unless options.head
-            #apache specific checks
-            Yawast::Scanner::Apache.check_server_status(uri)
-            Yawast::Scanner::Apache.check_server_info(uri)
-
-            #iis specific checks
-            Yawast::Scanner::Iis.check_asp_banner(uri)
+            #server specific checks
+            Yawast::Scanner::Apache.check_all(uri, head)
+            Yawast::Scanner::Iis.check_all(uri, head)
           end
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.message})"

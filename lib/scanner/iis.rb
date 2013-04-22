@@ -10,12 +10,15 @@ module Yawast
         puts ''
       end
 
-      def self.check_asp_banner(uri)
+      def self.check_all(uri, head)
+        #run all the defined checks
+        check_asp_banner(head)
+      end
+
+      def self.check_asp_banner(head)
         return if !@iis
 
-        headers = Yawast::Scanner::Http.head(uri)
-
-        headers.each do |k, v|
+        head.each do |k, v|
           if k.downcase == 'x-aspnet-version'
             Yawast::Utilities.puts_warn "ASP.NET Version: #{v}"
             puts ''

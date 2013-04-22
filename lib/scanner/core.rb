@@ -11,9 +11,9 @@ module Yawast
           Yawast::Scanner::Generic.head_info(uri)
 
           #perfom SSL checks
-          if (uri.scheme == 'https') && options.ssl
-            Yawast::Scanner::Ssl.info(uri)
-            Yawast::Scanner::Ssl.check_hsts(uri)
+          if uri.scheme == 'https' && !options.nossl
+              Yawast::Scanner::Ssl.info(uri)
+              Yawast::Scanner::Ssl.check_hsts(uri)
           end
 
           unless options.head

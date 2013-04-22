@@ -10,11 +10,19 @@ program :description, Yawast::DESCRIPTION
 default_command :help
 
 command :scan do |c|
-  c.syntax = 'yawast scan URL'
+  c.syntax = './yawast scan URL'
   c.description = 'Scans the provided URL'
 
   c.option '--ssl', 'Includes SSL information'
-  c.option '--head', 'Only checks information from HEAD'
+
+  c.action do |args, options|
+    Yawast::Commands::Scan.process(args, options)
+  end
+end
+
+command :head do |c|
+  c.syntax = './yawast head URL'
+  c.description = 'Scans the HEAD response of the provided URL'
 
   c.action do |args, options|
     Yawast::Commands::Scan.process(args, options)

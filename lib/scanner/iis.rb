@@ -4,12 +4,15 @@ module Yawast
       def self.check_banner(banner)
         #don't bother if this doesn't include IIS
         return if !banner.include? 'Microsoft-IIS/'
+        @iis = true
 
         Yawast::Utilities.puts_warn "IIS Version: #{banner}"
         puts ''
       end
 
       def self.check_asp_banner(uri)
+        return if !@iis
+
         headers = Yawast::Scanner::Http.head(uri)
 
         headers.each do |k, v|

@@ -23,6 +23,7 @@ The following tests are performed:
 * *(Generic)* X-XSS-Protection disabled header not present
 * *(Generic)* SSL: HSTS not enabled
 * *(Generic)* Source Control: Common source control directories present
+* *(Generic)* Presence of crossdomain.xml or clientaccesspolicy.xml
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version

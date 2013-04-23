@@ -15,6 +15,7 @@ This is meant to provide a easy way to perform initial analysis and information 
 The following tests are performed:
 
 * *(Generic)* Info Disclosure: X-Powered-By header present
+* *(Generic)* Info Disclosure: X-Pingback header present
 * *(Generic)* SSL: HSTS not enabled
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version

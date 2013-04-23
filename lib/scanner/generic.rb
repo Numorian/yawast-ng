@@ -29,6 +29,7 @@ module Yawast
           server = ''
           powered_by = ''
           cookies = Array.new
+          pingback = ''
 
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -36,6 +37,7 @@ module Yawast
 
             server = v if k.downcase == 'server'
             powered_by = v if k.downcase == 'x-powered-by'
+            pingback = v if k.downcase == 'x-pingback'
 
             if k.downcase == 'set-cookie'
               #this chunk of magic manages to properly split cookies, when multiple are sent together
@@ -53,6 +55,11 @@ module Yawast
 
           if powered_by != ''
             Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}"
+            puts ''
+          end
+
+          unless pingback == ''
+            Yawast::Utilities.puts_info "X-Pingback Header Present: #{pingback}"
             puts ''
           end
 

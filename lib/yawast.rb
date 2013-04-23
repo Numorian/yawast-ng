@@ -13,7 +13,7 @@ require 'resolv'
 require 'net/http'
 require 'socket'
 
-require './lib/colorization'
+require './lib/string_ext'
 require './lib/util'
 
 require_all '/commands'

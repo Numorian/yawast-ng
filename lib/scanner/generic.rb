@@ -70,7 +70,12 @@ module Yawast
           end
 
           unless runtime == ''
-            Yawast::Utilities.puts_warn "X-Runtime Header Present: #{runtime}"
+            if runtime.is_number?
+              Yawast::Utilities.puts_warn 'X-Runtime Header Present; likely indicates a RoR application'
+            else
+              Yawast::Utilities.puts_warn "X-Runtime Header Present: #{runtime}"
+            end
+
             puts ''
           end
 

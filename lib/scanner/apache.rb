@@ -39,7 +39,7 @@ module Yawast
         uri.path = '/server-status'
         uri.query = '' if uri.query != nil
 
-        ret = Yawast::Scanner::Http.get(uri)
+        ret = Yawast::Shared::Http.get(uri)
 
         if ret.include? 'Apache Server Status'
           Yawast::Utilities.puts_vuln "Apache Server Status page found: #{uri}"
@@ -54,7 +54,7 @@ module Yawast
         uri.path = '/server-info'
         uri.query = '' if uri.query != nil
 
-        ret = Yawast::Scanner::Http.get(uri)
+        ret = Yawast::Shared::Http.get(uri)
 
         if ret.include? 'Apache Server Information'
           Yawast::Utilities.puts_vuln "Apache Server Info page found: #{uri}"

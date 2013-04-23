@@ -8,7 +8,7 @@ module Yawast
 
         begin
           #cache the HEAD result, so that we can minimize hits
-          head = Yawast::Scanner::Http.head(uri)
+          head = Yawast::Shared::Http.head(uri)
 
           Yawast::Scanner::Generic.server_info(uri)
           Yawast::Scanner::Generic.head_info(head)

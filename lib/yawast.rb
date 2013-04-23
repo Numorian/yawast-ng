@@ -18,6 +18,7 @@ require './lib/util'
 
 require_all '/commands'
 require_all '/scanner'
+require_all '/shared'
 
 module Yawast
   VERSION = '0.0.1'

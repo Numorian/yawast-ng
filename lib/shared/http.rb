@@ -1,5 +1,5 @@
 module Yawast
-  module Scanner
+  module Shared
     class Http
       def self.head(uri)
         req = Net::HTTP.new(uri.host, uri.port)

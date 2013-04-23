@@ -4,7 +4,7 @@ module Yawast
       def self.info(uri)
         begin
           #get the x509 cert so we can examine it
-          cert = Yawast::Scanner::Http.peer_cert(uri)
+          cert = Yawast::Shared::Http.peer_cert(uri)
 
           unless cert.nil?
             Yawast::Utilities.puts_info 'Found X509 Certificate:'

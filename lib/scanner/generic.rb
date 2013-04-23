@@ -34,6 +34,7 @@ module Yawast
           backend_server = ''
           runtime = ''
           xss_protection = ''
+          via = ''
 
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -46,6 +47,7 @@ module Yawast
             backend_server = v if k.downcase == 'x-backend-server'
             runtime = v if k.downcase == 'x-runtime'
             xss_protection = v if k.downcase == 'x-xss-protection'
+            via = v if k.downcase == 'via'
 
             if k.downcase == 'set-cookie'
               #this chunk of magic manages to properly split cookies, when multiple are sent together
@@ -88,6 +90,11 @@ module Yawast
 
           unless backend_server == ''
             Yawast::Utilities.puts_warn "X-Backend-Server Header Present: #{backend_server}"
+            puts ''
+          end
+
+          unless via == ''
+            Yawast::Utilities.puts_warn "Via Header Present: #{via}"
             puts ''
           end
 

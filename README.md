@@ -18,6 +18,7 @@ The following tests are performed:
 * *(Generic)* Info Disclosure: X-Pingback header present
 * *(Generic)* Info Disclosure: X-Backend-Server header present
 * *(Generic)* Info Disclosure: X-Runtime header present
+* *(Generic)* Info Disclosure: Via header present
 * *(Generic)* X-Frame-Options header not present
 * *(Generic)* X-XSS-Protection disabled header not present
 * *(Generic)* SSL: HSTS not enabled

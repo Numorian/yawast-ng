@@ -32,6 +32,7 @@ module Yawast
           pingback = ''
           frame_options = ''
           backend_server = ''
+          runtime = ''
 
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -42,6 +43,7 @@ module Yawast
             pingback = v if k.downcase == 'x-pingback'
             frame_options = v if k.downcase == 'x-frame-options'
             backend_server = v if k.downcase == 'x-backend-server'
+            runtime = v if k.downcase == 'x-runtime'
 
             if k.downcase == 'set-cookie'
               #this chunk of magic manages to properly split cookies, when multiple are sent together
@@ -64,6 +66,11 @@ module Yawast
 
           unless pingback == ''
             Yawast::Utilities.puts_info "X-Pingback Header Present: #{pingback}"
+            puts ''
+          end
+
+          unless runtime == ''
+            Yawast::Utilities.puts_warn "X-Runtime Header Present: #{runtime}"
             puts ''
           end
 

@@ -9,6 +9,8 @@ module Yawast
       end
 
       def self.check_path(uri, path)
+        #note: this only checks directly at the root, I'm not sure if this is what we want
+        # should probably be relative to what's passed in, instead of overriding the path.
         uri.path = "/#{path}/"
         code = Yawast::Shared::Http.get_status_code(uri)
 

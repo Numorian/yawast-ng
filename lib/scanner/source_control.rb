@@ -15,7 +15,7 @@ module Yawast
         code = Yawast::Shared::Http.get_status_code(uri)
 
         if code == 200
-          Yawast::Utilities.puts_vuln "'#{path}' Directory found: #{uri}"
+          Yawast::Utilities.puts_vuln "'#{path}' Source Control Directory found: #{uri}"
           puts ''
         end
       end

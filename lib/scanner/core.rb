@@ -19,10 +19,13 @@ module Yawast
               Yawast::Scanner::Ssl.check_hsts(head)
           end
 
+          #process the 'scan' stuff that goes beyond 'head'
           unless options.head
             #server specific checks
             Yawast::Scanner::Apache.check_all(uri, head)
             Yawast::Scanner::Iis.check_all(uri, head)
+
+            Yawast::Scanner::SourceControl.check_all(uri)
           end
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.message})"

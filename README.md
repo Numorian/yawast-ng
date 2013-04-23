@@ -19,6 +19,7 @@ The following tests are performed:
 * *(Generic)* Info Disclosure: X-Backend-Server header present
 * *(Generic)* Info Disclosure: X-Runtime header present
 * *(Generic)* X-Frame-Options header not present
+* *(Generic)* X-XSS-Protection disabled header not present
 * *(Generic)* SSL: HSTS not enabled
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version

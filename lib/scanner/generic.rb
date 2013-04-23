@@ -33,6 +33,7 @@ module Yawast
           frame_options = ''
           backend_server = ''
           runtime = ''
+          xss_protection = ''
 
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -44,6 +45,7 @@ module Yawast
             frame_options = v if k.downcase == 'x-frame-options'
             backend_server = v if k.downcase == 'x-backend-server'
             runtime = v if k.downcase == 'x-runtime'
+            xss_protection = v if k.downcase == 'x-xss-protection'
 
             if k.downcase == 'set-cookie'
               #this chunk of magic manages to properly split cookies, when multiple are sent together
@@ -61,6 +63,11 @@ module Yawast
 
           if powered_by != ''
             Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}"
+            puts ''
+          end
+
+          if xss_protection == '0'
+            Yawast::Utilities.puts_warn 'X-XSS-Protection Disabled Header Present'
             puts ''
           end
 

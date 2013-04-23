@@ -25,7 +25,7 @@ module Yawast
             Yawast::Scanner::Apache.check_all(uri, head)
             Yawast::Scanner::Iis.check_all(uri, head)
 
-            Yawast::Scanner::ObjectPresence.check_all(uri)
+            Yawast::Scanner::ObjectPresence.check_source_control(uri)
           end
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.message})"

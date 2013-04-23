@@ -1,7 +1,7 @@
 module Yawast
   module Scanner
     class ObjectPresence
-      def self.check_all(uri)
+      def self.check_source_control(uri)
         check_path(uri, '.git', true)
         check_path(uri, '.hg', true)
         check_path(uri, '.svn', true)

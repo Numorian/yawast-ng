@@ -16,7 +16,7 @@ module Yawast
           dns = Resolv::DNS.new()
           dns.getaddress(uri.host)
         rescue => e
-          raise ArgumentError.new("Invalid URL (#{e.message})")
+          raise ArgumentError.new("Invalid URL (#{e.message})") unless uri.host == 'localhost'
         end
 
         return uri

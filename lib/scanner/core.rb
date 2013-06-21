@@ -29,6 +29,7 @@ module Yawast
             Yawast::Scanner::ObjectPresence.check_cross_domain(uri)
             Yawast::Scanner::ObjectPresence.check_wsftp_log(uri)
             Yawast::Scanner::ObjectPresence.check_trace_axd(uri)
+            Yawast::Scanner::ObjectPresence.check_elmah_axd(uri)
           end
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.message})"

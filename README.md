@@ -25,15 +25,16 @@ The following tests are performed:
 * *(Generic)* Source Control: Common source control directories present
 * *(Generic)* Presence of crossdomain.xml or clientaccesspolicy.xml
 * *(Generic)* Presence of WS_FTP.LOG
-* *(Generic)* Presence of Trace.axd
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version
 * *(Apache)* Presence of /server-status
 * *(Apache)* Presence of /server-info
 * *(IIS)* Info Disclosure: Server version
-* *(IIS)* Info Disclosure: ASP.NET version
-* *(IIS)* Info Disclosure: ASP.NET MVC version
+* *(ASP.NET)* Info Disclosure: ASP.NET version
+* *(ASP.NET)* Info Disclosure: ASP.NET MVC version
+* *(ASP.NET)* Presence of Trace.axd
+* *(ASP.NET)* Presence of Elmah.axd
 * *(nginx)* Info Disclosure: Server version
 * *(PHP)* Info Disclosure: PHP version
 

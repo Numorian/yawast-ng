@@ -42,8 +42,8 @@ In addition to these test, certain basic information is also displayed, such as 
 
 ####Usage
 
-Standard scan: `./yawast scan <url>`
-HEAD-only scan: `./yawast head <url>`
+* Standard scan: `./yawast scan <url>`
+* HEAD-only scan: `./yawast head <url>`
 
 For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
 

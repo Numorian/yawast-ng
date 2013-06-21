@@ -38,6 +38,10 @@ The following tests are performed:
 * *(nginx)* Info Disclosure: Server version
 * *(PHP)* Info Disclosure: PHP version
 
+CMS Detection:
+
+* Generic (Generator meta tag)
+
 In addition to these test, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 
 ####Usage

@@ -39,7 +39,8 @@ module Yawast
       end
 
       def self.get_cms(uri, options)
-        Yawast::Scanner::Cms.get_generator(uri)
+        body = Yawast::Shared::Http.get(uri)
+        Yawast::Scanner::Cms.get_generator(body)
       end
     end
   end

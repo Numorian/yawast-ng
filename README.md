@@ -20,7 +20,7 @@ The following tests are performed:
 * *(Generic)* Info Disclosure: X-Runtime header present
 * *(Generic)* Info Disclosure: Via header present
 * *(Generic)* X-Frame-Options header not present
-* *(Generic)* X-XSS-Protection disabled header not present
+* *(Generic)* X-XSS-Protection disabled header present
 * *(Generic)* SSL: HSTS not enabled
 * *(Generic)* Source Control: Common source control directories present
 * *(Generic)* Presence of crossdomain.xml or clientaccesspolicy.xml

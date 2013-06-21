@@ -30,3 +30,12 @@ command :head do |c|
     Yawast::Commands::Scan.process(args, options)
   end
 end
+
+command :cms do |c|
+  c.syntax = './yawast cms URL'
+  c.description = 'Detect the CMS in use'
+
+  c.action do |args, options|
+    Yawast::Commands::Cms.process(args, options)
+  end
+end

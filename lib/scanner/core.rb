@@ -30,10 +30,16 @@ module Yawast
             Yawast::Scanner::ObjectPresence.check_wsftp_log(uri)
             Yawast::Scanner::ObjectPresence.check_trace_axd(uri)
             Yawast::Scanner::ObjectPresence.check_elmah_axd(uri)
+
+            get_cms(uri, options)
           end
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.message})"
         end
+      end
+
+      def self.get_cms(uri, options)
+        Yawast::Scanner::Cms.get_generator(uri)
       end
     end
   end

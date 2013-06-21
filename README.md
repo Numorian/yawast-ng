@@ -24,6 +24,8 @@ The following tests are performed:
 * *(Generic)* SSL: HSTS not enabled
 * *(Generic)* Source Control: Common source control directories present
 * *(Generic)* Presence of crossdomain.xml or clientaccesspolicy.xml
+* *(Generic)* Presence of WS_FTP.LOG
+* *(Generic)* Presence of Trace.axd
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version

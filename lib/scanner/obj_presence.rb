@@ -19,6 +19,10 @@ module Yawast
         check_path(uri, '/ws_ftp.log', false)
       end
 
+      def self.check_trace_axd(uri)
+        check_path(uri, '/Trace.axd', false)
+      end
+
       def self.check_path(uri, path, vuln)
         #note: this only checks directly at the root, I'm not sure if this is what we want
         # should probably be relative to what's passed in, instead of overriding the path.

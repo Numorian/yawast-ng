@@ -13,6 +13,12 @@ module Yawast
         check_path(uri, '/clientaccesspolicy.xml', false)
       end
 
+      def self.check_wsftp_log(uri)
+        #check both upper and lower, as they are both seen in the wild
+        check_path(uri, '/WS_FTP.LOG', false)
+        check_path(uri, '/ws_ftp.log', false)
+      end
+
       def self.check_path(uri, path, vuln)
         #note: this only checks directly at the root, I'm not sure if this is what we want
         # should probably be relative to what's passed in, instead of overriding the path.

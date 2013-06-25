@@ -31,6 +31,15 @@ command :head do |c|
   end
 end
 
+command :ssl do |c|
+  c.syntax = './yawast ssl URL'
+  c.description = 'Displays SSL information'
+
+  c.action do |args, options|
+    Yawast::Commands::Ssl.process(args, options)
+  end
+end
+
 command :cms do |c|
   c.syntax = './yawast cms URL'
   c.description = 'Detect the CMS in use'

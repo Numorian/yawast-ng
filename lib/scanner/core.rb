@@ -22,10 +22,7 @@ module Yawast
           Yawast::Scanner::Generic.head_info(head)
 
           #perfom SSL checks
-          if uri.scheme == 'https' && !options.nossl
-              Yawast::Scanner::Ssl.info(uri)
-              Yawast::Scanner::Ssl.check_hsts(head)
-          end
+          check_ssl(uri, options, head)
 
           #process the 'scan' stuff that goes beyond 'head'
           unless options.head
@@ -51,6 +48,17 @@ module Yawast
 
         body = Yawast::Shared::Http.get(uri)
         Yawast::Scanner::Cms.get_generator(body)
+      end
+
+      def self.check_ssl(uri, options, head)
+        print_header(uri)
+
+        if uri.scheme == 'https' && !options.nossl
+          head = Yawast::Shared::Http.head(uri) if head == nil
+
+          Yawast::Scanner::Ssl.info(uri)
+          Yawast::Scanner::Ssl.check_hsts(head)
+        end
       end
     end
   end

@@ -1,10 +1,18 @@
 module Yawast
   module Scanner
     class Core
+      def self.print_header(uri)
+        if @header != true
+          Yawast.header
+          puts "Scanning: #{uri.to_s}"
+          puts ''
+        end
+
+        @header = true
+      end
+
       def self.process(uri, options)
-        Yawast.header
-        puts "Scanning: #{uri.to_s}"
-        puts ''
+        print_header(uri)
 
         begin
           #cache the HEAD result, so that we can minimize hits
@@ -39,6 +47,8 @@ module Yawast
       end
 
       def self.get_cms(uri, options)
+        print_header(uri)
+
         body = Yawast::Shared::Http.get(uri)
         Yawast::Scanner::Cms.get_generator(body)
       end

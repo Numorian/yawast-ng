@@ -1,5 +1,6 @@
 require 'openssl'
 require 'openssl-extensions/all'
+require 'digest/sha1'
 
 module Yawast
   module Scanner
@@ -26,6 +27,7 @@ module Yawast
             Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{cert.public_key.strength}"
             Yawast::Utilities.puts_info "\t\tExtensions:"
             cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" }
+            Yawast::Utilities.puts_info "\t\tHash: #{Digest::SHA1.hexdigest(cert.to_der)}"
             puts ''
           end
 
@@ -39,6 +41,7 @@ module Yawast
               Yawast::Utilities.puts_info "\t\t\tExpires: #{c.not_after}"
               Yawast::Utilities.puts_info "\t\t\tKey: #{c.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{c.public_key.strength}"
               Yawast::Utilities.puts_info "\t\t\tSignature Algorithm: #{c.signature_algorithm}"
+              Yawast::Utilities.puts_info "\t\t\tHash: #{Digest::SHA1.hexdigest(c.to_der)}"
               puts ''
             end
 

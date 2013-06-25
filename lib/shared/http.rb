@@ -4,6 +4,7 @@ module Yawast
       def self.head(uri)
         req = Net::HTTP.new(uri.host, uri.port)
         req.use_ssl = uri.scheme == 'https'
+        req.verify_mode = OpenSSL::SSL::VERIFY_NONE
         headers = { 'User-Agent' => HTTP_UA }
         req.head(uri.path, headers)
       end
@@ -14,6 +15,7 @@ module Yawast
         begin
           req = Net::HTTP.new(uri.host, uri.port)
           req.use_ssl = uri.scheme == 'https'
+          req.verify_mode = OpenSSL::SSL::VERIFY_NONE
           headers = { 'User-Agent' => HTTP_UA }
           res = req.request_get(uri.path, headers)
           body = res.read_body
@@ -27,6 +29,7 @@ module Yawast
       def self.get_status_code(uri)
         req = Net::HTTP.new(uri.host, uri.port)
         req.use_ssl = uri.scheme == 'https'
+        req.verify_mode = OpenSSL::SSL::VERIFY_NONE
         headers = { 'User-Agent' => HTTP_UA }
         res = req.head(uri.path, headers)
         res.code

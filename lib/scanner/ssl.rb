@@ -52,7 +52,13 @@ module Yawast
 
           unless cipher.nil?
             Yawast::Utilities.puts_info 'Connection Cipher Information:'
-            Yawast::Utilities.puts_info "\t\tName: #{cipher[0]} - #{cipher[2]} bits"
+
+            if cipher[2] >= 128
+              Yawast::Utilities.puts_info "\t\tName: #{cipher[0]} - #{cipher[2]} bits"
+            else
+              Yawast::Utilities.puts_warn "\t\tName: #{cipher[0]} - #{cipher[2]} bits"
+            end
+
             puts ''
           end
 
@@ -83,7 +89,13 @@ module Yawast
               ssl = OpenSSL::SSL::SSLSocket.new(socket, context)
 
               ssl.connect
-              Yawast::Utilities.puts_info "\t\tVersion: #{version}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+
+              if cipher[2] >= 128
+                Yawast::Utilities.puts_info "\t\tVersion: #{version}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+              else
+                Yawast::Utilities.puts_warn "\t\tVersion: #{version}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+              end
+
               ssl.sysclose
             rescue
               #just ignore anything that goes wrong here; we don't care

@@ -3,7 +3,7 @@ require 'openssl'
 module Yawast
   module Scanner
     class Ssl
-      def self.info(uri)
+      def self.info(uri, check_ciphers)
         begin
           socket = TCPSocket.new(uri.host, uri.port)
           ssl = OpenSSL::SSL::SSLSocket.new(socket)
@@ -35,16 +35,45 @@ module Yawast
 
           unless cipher.nil?
             Yawast::Utilities.puts_info 'Connection Cipher Information:'
-            Yawast::Utilities.puts_info "\t\tName: #{cipher[0]}"
-            Yawast::Utilities.puts_info "\t\tVersion: #{cipher[1]}"
-            Yawast::Utilities.puts_info "\t\tBits: #{cipher[2]}"
+            Yawast::Utilities.puts_info "\t\tName: #{cipher[0]} - #{cipher[2]} bits"
             puts ''
+          end
+
+          if check_ciphers
+            get_ciphers(uri)
           end
 
           ssl.sysclose
         rescue => e
           Yawast::Utilities.puts_error "SSL: Error Reading X509 Details: #{e.message}"
         end
+      end
+
+      def self.get_ciphers(uri)
+        Yawast::Utilities.puts_info 'Supported Ciphers:'
+
+        #find all versions that don't include '_server' or '_client'
+        versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
+        versions.each do |version|
+          ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
+          ciphers.each do |cipher|
+            #try to connect and see what happens
+            begin
+              socket = TCPSocket.new(uri.host, uri.port)
+              context = OpenSSL::SSL::SSLContext.new(version)
+              context.ciphers = cipher[0]
+              ssl = OpenSSL::SSL::SSLSocket.new(socket, context)
+
+              ssl.connect
+              Yawast::Utilities.puts_info "\t\tVersion: #{version}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+              ssl.sysclose
+            rescue
+              #just ignore anything that goes wrong here; we don't care
+            end
+          end
+        end
+
+        puts ''
       end
 
       def self.check_hsts(head)

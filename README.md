@@ -2,7 +2,7 @@
 
 Yet Another Web Application Security Tool
 
-*Don't expect anything here to work yet - way too early.* This should be considered pre-alpha, don't expect things to work correctly or results to be comprehensive. It'll take time before this is a useful tool, it's not there yet.
+This application is still very much in the early development phase; as such it should be viewed as alpha software, and thus may have bugs, perform unexpectedly, or be missing features you'd expect from a tool like this. Please keep this in mind as you use this.
 
 ####Why?
 
@@ -41,6 +41,12 @@ The following tests are performed:
 CMS Detection:
 
 * Generic (Generator meta tag) *[Real detection coming as soon as I get around to it...]*
+
+SSL Information:
+
+* Certificate details
+* Certificate chain
+* Supported ciphers
 
 In addition to these test, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 

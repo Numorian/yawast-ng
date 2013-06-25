@@ -56,7 +56,7 @@ module Yawast
         if uri.scheme == 'https' && !options.nossl
           head = Yawast::Shared::Http.head(uri) if head == nil
 
-          Yawast::Scanner::Ssl.info(uri)
+          Yawast::Scanner::Ssl.info(uri, !options.nociphers)
           Yawast::Scanner::Ssl.check_hsts(head)
         end
       end

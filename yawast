@@ -25,6 +25,7 @@ command :head do |c|
   c.description = 'Scans the HEAD response of the provided URL'
 
   c.option '--nossl', 'Disables SSL checks'
+  c.option '--nociphers', 'Disables check for supported ciphers'
 
   c.action do |args, options|
     Yawast::Commands::Scan.process(args, options)
@@ -34,6 +35,8 @@ end
 command :ssl do |c|
   c.syntax = './yawast ssl URL'
   c.description = 'Displays SSL information'
+
+  c.option '--nociphers', 'Disables check for supported ciphers'
 
   c.action do |args, options|
     Yawast::Commands::Ssl.process(args, options)

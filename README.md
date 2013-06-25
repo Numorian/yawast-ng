@@ -40,7 +40,7 @@ The following tests are performed:
 
 CMS Detection:
 
-* Generic (Generator meta tag)
+* Generic (Generator meta tag) *[Real detection coming as soon as I get around to it...]*
 
 In addition to these test, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 
@@ -48,6 +48,8 @@ In addition to these test, certain basic information is also displayed, such as 
 
 * Standard scan: `./yawast scan <url>`
 * HEAD-only scan: `./yawast head <url>`
+* SSL information: `./yawast ssl <url>`
+* CMS detection: `./yawast cms <url>`
 
 For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
 

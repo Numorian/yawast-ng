@@ -1,4 +1,5 @@
 require 'openssl'
+require 'openssl-extensions/all'
 
 module Yawast
   module Scanner
@@ -6,18 +7,23 @@ module Yawast
       def self.info(uri, check_ciphers)
         begin
           socket = TCPSocket.new(uri.host, uri.port)
-          ssl = OpenSSL::SSL::SSLSocket.new(socket)
+          ctx = OpenSSL::SSL::SSLContext.new
+          ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          ssl = OpenSSL::SSL::SSLSocket.new(socket, ctx)
           ssl.connect
 
           cert = ssl.peer_cert
 
           unless cert.nil?
             Yawast::Utilities.puts_info 'Found X509 Certificate:'
-            Yawast::Utilities.puts_info "\t\tIssuer: #{cert.issuer}"
+            Yawast::Utilities.puts_info "\t\tIssued To: #{cert.subject.common_name} / #{cert.subject.organization}"
+            Yawast::Utilities.puts_info "\t\tIssuer: #{cert.issuer.common_name} / #{cert.issuer.organization}"
             Yawast::Utilities.puts_info "\t\tVersion: #{cert.version}"
             Yawast::Utilities.puts_info "\t\tSerial: #{cert.serial}"
             Yawast::Utilities.puts_info "\t\tSubject: #{cert.subject}"
             Yawast::Utilities.puts_info "\t\tExpires: #{cert.not_after}"
+            Yawast::Utilities.puts_info "\t\tSignature Algorithm: #{cert.signature_algorithm}"
+            Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{cert.public_key.strength}"
             Yawast::Utilities.puts_info "\t\tExtensions:"
             cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" }
             puts ''
@@ -27,7 +33,15 @@ module Yawast
 
           unless cert_chain.nil?
             Yawast::Utilities.puts_info 'Certificate: Chain'
-            cert_chain.each { |c| Yawast::Utilities.puts_info "\t\tIssuer: #{c.issuer}" }
+            cert_chain.each do |c|
+              Yawast::Utilities.puts_info "\t\tIssued To: #{c.subject.common_name} / #{c.subject.organization}"
+              Yawast::Utilities.puts_info "\t\t\tIssuer: #{c.issuer.common_name} / #{c.issuer.organization}"
+              Yawast::Utilities.puts_info "\t\t\tExpires: #{c.not_after}"
+              Yawast::Utilities.puts_info "\t\t\tKey: #{c.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{c.public_key.strength}"
+              Yawast::Utilities.puts_info "\t\t\tSignature Algorithm: #{c.signature_algorithm}"
+              puts ''
+            end
+
             puts ''
           end
 
@@ -62,6 +76,7 @@ module Yawast
               socket = TCPSocket.new(uri.host, uri.port)
               context = OpenSSL::SSL::SSLContext.new(version)
               context.ciphers = cipher[0]
+              context.verify_mode = OpenSSL::SSL::VERIFY_NONE
               ssl = OpenSSL::SSL::SSLSocket.new(socket, context)
 
               ssl.connect

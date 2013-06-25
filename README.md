@@ -48,7 +48,7 @@ SSL Information:
 * Certificate chain
 * Supported ciphers
 
-In addition to these test, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
+In addition to these tests, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 
 ####Usage
 

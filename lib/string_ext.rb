@@ -1,6 +1,8 @@
 class String
   # colorization
   def colorize(color_code)
+    raise ArgumentError, 'color_code must be numeric' unless color_code.is_a? Integer || color_code.is_number?
+
     "\e[#{color_code}m#{self}\e[0m"
   end
 

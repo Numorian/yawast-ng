@@ -7,7 +7,7 @@ class TestStringExtensions < Minitest::Test
   end
 
   def test_cant_colorize_string
-    assert_throws 'color_code must be numeric' do
+    assert_raises ArgumentError, 'color_code must be numeric' do
       'test'.colorize('test')
     end
   end

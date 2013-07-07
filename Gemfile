@@ -5,5 +5,6 @@ gem 'highline'
 gem 'openssl-extensions'
 
 group :test do
-  gem 'minitest'
+  gem 'minitest', '< 5.0.0'
+  gem 'minitest-reporters'
 end

@@ -1,7 +1,10 @@
 require 'minitest/autorun'
+require './test/base'
 require './lib/string_ext'
 
-class TestStringExtensions < Minitest::Test
+class TestStringExtensions < MiniTest::Unit::TestCase
+  include TestBase
+
   def test_can_colorize_number
     assert_equal "\e[1mtest\e[0m", 'test'.colorize(1)
   end

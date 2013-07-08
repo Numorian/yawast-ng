@@ -7,4 +7,5 @@ gem 'openssl-extensions'
 group :test do
   gem 'minitest', '< 5.0.0'
   gem 'minitest-reporters'
+  gem 'simplecov'
 end

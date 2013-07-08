@@ -59,6 +59,12 @@ In addition to these tests, certain basic information is also displayed, such as
 
 For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
 
+####Status
+
+Various automated status messages and tools:
+
+[![Build Status](https://www.travis-ci.org/adamcaudill/yawast.png?branch=master)](https://www.travis-ci.org/adamcaudill/yawast)
+
 ####License
 
 Copyright (c) 2013, Adam Caudill (adam@adamcaudill.com)

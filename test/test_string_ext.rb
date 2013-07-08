@@ -1,6 +1,6 @@
 require 'minitest/autorun'
+require './lib/yawast'
 require './test/base'
-require './lib/string_ext'
 
 class TestStringExtensions < MiniTest::Unit::TestCase
   include TestBase

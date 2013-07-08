@@ -23,7 +23,7 @@ require_all '/shared'
 module Yawast
   VERSION = '0.0.1'
   DESCRIPTION = 'Yawast: Yet Another Web Application Security Tool'
-  HTTP_UA = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0; Yawast/#{VERSION})"
+  HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Yawast/#{VERSION} Chrome/29.0.1547.3 Safari/537.36"
 
   def self.header
     puts "Yawast v#{VERSION} - #{DESCRIPTION}"

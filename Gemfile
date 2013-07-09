@@ -9,4 +9,5 @@ group :test do
   gem 'minitest', '< 5.0.0'
   gem 'minitest-reporters'
   gem 'simplecov'
+  gem 'coveralls', require: false
 end

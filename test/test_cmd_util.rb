@@ -11,6 +11,12 @@ class TestCommandUtils < MiniTest::Unit::TestCase
     assert_equal uri.to_s, 'http://www.apple.com/'
   end
 
+  def test_partial_url
+    args = ['www.apple.com']
+    uri = Yawast::Commands::Utils.extract_uri args
+    assert_equal uri.to_s, 'http://www.apple.com/'
+  end
+
   def test_invalid_url
     args = ['xxx:\invalid']
 

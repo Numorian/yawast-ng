@@ -7,6 +7,9 @@ module Yawast
         #this might be a bad assumption
         url = args[0]
 
+        #this might be buggy - actually, I know it is...
+        url = 'http://' + url unless url.include?('http://') || url.include?('https://')
+
         uri = URI.parse(url)
         uri.path = '/' if uri.path == ''
 

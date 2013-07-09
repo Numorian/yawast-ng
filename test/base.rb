@@ -1,8 +1,4 @@
-require 'minitest/reporters'
-
 module TestBase
-  MiniTest::Reporters.use!
-
   def override_stdout
     @orig_stdout = $stdout
     reset_stdout

@@ -65,6 +65,7 @@ Various automated status messages and tools:
 
 [![Build Status](https://www.travis-ci.org/adamcaudill/yawast.png?branch=master)](https://www.travis-ci.org/adamcaudill/yawast)
 [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast.png)](https://codeclimate.com/github/adamcaudill/yawast)
+[![Coverage Status](https://coveralls.io/repos/adamcaudill/yawast/badge.png)](https://coveralls.io/r/adamcaudill/yawast)
 
 ####License
 

@@ -1,3 +1,5 @@
+require 'colorize'
+
 module Yawast
   class Utilities
     def self.puts_msg(type, msg)
@@ -9,7 +11,7 @@ module Yawast
     end
 
     def self.puts_vuln(msg)
-      puts_msg('[V]'.pink, msg)
+      puts_msg('[V]'.magenta, msg)
     end
 
     def self.puts_warn(msg)

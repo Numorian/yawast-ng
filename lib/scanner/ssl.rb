@@ -33,7 +33,7 @@ module Yawast
             alt_names = cert.extensions.find {|e| e.oid == 'subjectAltName'}
             unless alt_names.nil?
               Yawast::Utilities.puts_info "\t\tAlternate Names:"
-              alt_names.to_s.split(',').each { |name| Yawast::Utilities.puts_info "\t\t\t#{name}" }
+              alt_names.value.split(',').each { |name| Yawast::Utilities.puts_info "\t\t\t#{name.strip.delete('DNS:')}" }
             end
 
             Yawast::Utilities.puts_info "\t\tHash: #{Digest::SHA1.hexdigest(cert.to_der)}"

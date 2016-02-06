@@ -28,4 +28,16 @@ module TestBase
 
     thr
   end
+
+  def parse_headers_from_file(file)
+    headers = {}
+    File.foreach(file) do |line|
+      key = line.partition(':').first.trim
+      value = line.partition(':').last.trim
+
+      headers[key] = value
+    end
+
+    headers
+  end
 end

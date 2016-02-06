@@ -1,0 +1,486 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html><head><title>Server Information</title></head>
+<body><h1 align="center">Apache Server Information</h1>
+<dl><dt><tt><a href="#server">Server Settings</a>, <a href="#mod_userdir.c">mod_userdir.c</a>, <a href="#mod_setenvif.c">mod_setenvif.c</a>, <a href="#mod_negotiation.c">mod_negotiation.c</a>, <a href="#mod_mime.c">mod_mime.c</a>, <a href="#mod_log_config.c">mod_log_config.c</a>, <a href="#mod_isapi.c">mod_isapi.c</a>, <a href="#mod_info.c">mod_info.c</a>, <a href="#mod_include.c">mod_include.c</a>, <a href="#mod_imap.c">mod_imap.c</a>, <a href="#mod_env.c">mod_env.c</a>, <a href="#mod_dir.c">mod_dir.c</a>, <a href="#mod_cgi.c">mod_cgi.c</a>, <a href="#mod_autoindex.c">mod_autoindex.c</a>, <a href="#mod_auth.c">mod_auth.c</a>, <a href="#mod_asis.c">mod_asis.c</a>, <a href="#mod_alias.c">mod_alias.c</a>, <a href="#mod_actions.c">mod_actions.c</a>, <a href="#mod_access.c">mod_access.c</a>, <a href="#mod_so.c">mod_so.c</a>, <a href="#http_core.c">http_core.c</a>, <a href="#mpm_winnt.c">mpm_winnt.c</a>, <a href="#mod_win32.c">mod_win32.c</a>, <a href="#core.c">core.c</a></tt></dt></dl><hr /><dl><dt><a name="server"><strong>Server Version:</strong> <font size="+1"><tt>Apache/2.0.44 (Win32)</tt></font></a></dt>
+<dt><strong>Server Built:</strong> <font size="+1"><tt>Jan 18 2003 11:47:09</tt></font></dt>
+<dt><strong>API Version:</strong> <tt>20020903:0</tt></dt>
+<dt><strong>Hostname/port:</strong> <tt>pub.perlig.de:80</tt></dt>
+<dt><strong>Timeouts:</strong> <tt>connection: 300 &nbsp;&nbsp; keep-alive: 300</tt></dt><dt><strong>MPM Name:</strong> <tt>WinNT</tt></dt>
+<dt><strong>MPM Information:</strong> <tt>Max Daemons: 64 Threaded: yes Forked: no</tt></dt>
+<dt><strong>Server Root:</strong> <tt>C:/Programme/Apache Group/Apache2</tt></dt>
+<dt><strong>Config File:</strong> <tt>conf/httpd.conf</tt></dt>
+</dl><hr /><dl><dt><a name="mod_userdir.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_userdir.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Server Config</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Translate Path</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>UserDir - <i>the public subdirectory in users' home directories, or 'disabled', or 'disabled username username...', or 'enabled username username...'</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>UserDir <i>"My Documents/My Website"</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_setenvif.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_setenvif.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt>, <tt>Create Server Config</tt>, <tt>Merge Server Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Post-Read Request</tt>, <tt>Header Parse</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>SetEnvIf - <i>A header-name, regex and a list of variables.</i></tt></dd>
+<dd><tt>SetEnvIfNoCase - <i>a header-name, regex and a list of variables.</i></tt></dd>
+<dd><tt>BrowserMatch - <i>A browser regex and a list of variables.</i></tt></dd>
+<dd><tt>BrowserMatchNoCase - <i>A browser regex and a list of variables.</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>BrowserMatch <i>"Mozilla/2" nokeepalive</i></tt></dd>
+<dd><tt>BrowserMatch <i>"MSIE 4\.0b2;" nokeepalive downgrade-1.0 force-response-1.0</i></tt></dd>
+<dd><tt>BrowserMatch <i>"RealPlayer 4\.0" force-response-1.0</i></tt></dd>
+<dd><tt>BrowserMatch <i>"Java/1\.0" force-response-1.0</i></tt></dd>
+<dd><tt>BrowserMatch <i>"JDK/1\.0" force-response-1.0</i></tt></dd>
+<dd><tt>BrowserMatch <i>"Microsoft Data Access Internet Publishing Provider" redirect-carefully</i></tt></dd>
+<dd><tt>BrowserMatch <i>"^WebDrive" redirect-carefully</i></tt></dd>
+<dd><tt>BrowserMatch <i>"^WebDAVFS/1.[012]" redirect-carefully</i></tt></dd>
+<dd><tt>BrowserMatch <i>"^gnome-vfs" redirect-carefully</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_negotiation.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_negotiation.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Check Type</tt>, <tt>Fixups</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>CacheNegotiatedDocs - <i>Either 'on' or 'off' (default)</i></tt></dd>
+<dd><tt>LanguagePriority - <i>space-delimited list of MIME language abbreviations</i></tt></dd>
+<dd><tt>ForceLanguagePriority - <i>Force LanguagePriority elections, either None, or Fallback and/or Prefer</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>LanguagePriority <i>en da nl et fr de el it ja ko no pl pt pt-br ltz ca es sv tw</i></tt></dd>
+<dd><tt>ForceLanguagePriority <i>Prefer Fallback</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_mime.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_mime.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Check Type</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>AddCharset - <i>a charset (e.g., iso-2022-jp), followed by one or more file extensions</i></tt></dd>
+<dd><tt>AddEncoding - <i>an encoding (e.g., gzip), followed by one or more file extensions</i></tt></dd>
+<dd><tt>AddHandler - <i>a handler name followed by one or more file extensions</i></tt></dd>
+<dd><tt>AddInputFilter - <i>input filter name (or ; delimited names) followed by one or more file extensions</i></tt></dd>
+<dd><tt>AddLanguage - <i>a language (e.g., fr), followed by one or more file extensions</i></tt></dd>
+<dd><tt>AddOutputFilter - <i>output filter name (or ; delimited names) followed by one or more file extensions</i></tt></dd>
+<dd><tt>AddType - <i>a mime type followed by one or more file extensions</i></tt></dd>
+<dd><tt>DefaultLanguage - <i>language to use for documents with no other language file extension</i></tt></dd>
+<dd><tt>MultiviewsMatch - <i>NegotiatedOnly (default), Handlers and/or Filters, or Any</i></tt></dd>
+<dd><tt>RemoveCharset - <i>one or more file extensions</i></tt></dd>
+<dd><tt>RemoveEncoding - <i>one or more file extensions</i></tt></dd>
+<dd><tt>RemoveHandler - <i>one or more file extensions</i></tt></dd>
+<dd><tt>RemoveInputFilter - <i>one or more file extensions</i></tt></dd>
+<dd><tt>RemoveLanguage - <i>one or more file extensions</i></tt></dd>
+<dd><tt>RemoveOutputFilter - <i>one or more file extensions</i></tt></dd>
+<dd><tt>RemoveType - <i>one or more file extensions</i></tt></dd>
+<dd><tt>TypesConfig - <i>the MIME types config file</i></tt></dd>
+<dd><tt>ModMimeUsePathInfo - <i>Set to 'yes' to allow mod_mime to use path info for type checking</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>TypesConfig <i>conf/mime.types</i></tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/manual"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;AddOutputFilter <i>Includes html</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>AddEncoding <i>x-compress Z</i></tt></dd>
+<dd><tt>AddEncoding <i>x-gzip gz tgz</i></tt></dd>
+<dd><tt>AddLanguage <i>da .dk</i></tt></dd>
+<dd><tt>AddLanguage <i>nl .nl</i></tt></dd>
+<dd><tt>AddLanguage <i>en .en</i></tt></dd>
+<dd><tt>AddLanguage <i>et .et</i></tt></dd>
+<dd><tt>AddLanguage <i>fr .fr</i></tt></dd>
+<dd><tt>AddLanguage <i>de .de</i></tt></dd>
+<dd><tt>AddLanguage <i>he .he</i></tt></dd>
+<dd><tt>AddLanguage <i>el .el</i></tt></dd>
+<dd><tt>AddLanguage <i>it .it</i></tt></dd>
+<dd><tt>AddLanguage <i>ja .ja</i></tt></dd>
+<dd><tt>AddLanguage <i>pl .po</i></tt></dd>
+<dd><tt>AddLanguage <i>ko .ko</i></tt></dd>
+<dd><tt>AddLanguage <i>pt .pt</i></tt></dd>
+<dd><tt>AddLanguage <i>nn .nn</i></tt></dd>
+<dd><tt>AddLanguage <i>no .no</i></tt></dd>
+<dd><tt>AddLanguage <i>pt-br .pt-br</i></tt></dd>
+<dd><tt>AddLanguage <i>ltz .ltz</i></tt></dd>
+<dd><tt>AddLanguage <i>ca .ca</i></tt></dd>
+<dd><tt>AddLanguage <i>es .es</i></tt></dd>
+<dd><tt>AddLanguage <i>sv .se</i></tt></dd>
+<dd><tt>AddLanguage <i>cz .cz</i></tt></dd>
+<dd><tt>AddLanguage <i>ru .ru</i></tt></dd>
+<dd><tt>AddLanguage <i>tw .tw</i></tt></dd>
+<dd><tt>AddLanguage <i>zh-tw .tw</i></tt></dd>
+<dd><tt>AddLanguage <i>hr .hr</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-1  .iso8859-1 .latin1</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-2  .iso8859-2 .latin2 .cen</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-3  .iso8859-3 .latin3</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-4  .iso8859-4 .latin4</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-5  .iso8859-5 .latin5 .cyr .iso-ru</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-6  .iso8859-6 .latin6 .arb</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-7  .iso8859-7 .latin7 .grk</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-8  .iso8859-8 .latin8 .heb</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-8859-9  .iso8859-9 .latin9 .trk</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-2022-JP .iso2022-jp .jis</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-2022-KR .iso2022-kr .kis</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-2022-CN .iso2022-cn .cis</i></tt></dd>
+<dd><tt>AddCharset <i>Big5        .Big5       .big5</i></tt></dd>
+<dd><tt>AddCharset <i>WINDOWS-1251 .cp-1251   .win-1251</i></tt></dd>
+<dd><tt>AddCharset <i>CP866       .cp866</i></tt></dd>
+<dd><tt>AddCharset <i>KOI8-r      .koi8-r .koi8-ru</i></tt></dd>
+<dd><tt>AddCharset <i>KOI8-ru     .koi8-uk .ua</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-10646-UCS-2 .ucs2</i></tt></dd>
+<dd><tt>AddCharset <i>ISO-10646-UCS-4 .ucs4</i></tt></dd>
+<dd><tt>AddCharset <i>UTF-8       .utf8</i></tt></dd>
+<dd><tt>AddCharset <i>GB2312      .gb2312 .gb</i></tt></dd>
+<dd><tt>AddCharset <i>utf-7       .utf7</i></tt></dd>
+<dd><tt>AddCharset <i>utf-8       .utf8</i></tt></dd>
+<dd><tt>AddCharset <i>big5        .big5 .b5</i></tt></dd>
+<dd><tt>AddCharset <i>EUC-TW      .euc-tw</i></tt></dd>
+<dd><tt>AddCharset <i>EUC-JP      .euc-jp</i></tt></dd>
+<dd><tt>AddCharset <i>EUC-KR      .euc-kr</i></tt></dd>
+<dd><tt>AddCharset <i>shift_jis   .sjis</i></tt></dd>
+<dd><tt>AddType <i>application/x-tar .tgz</i></tt></dd>
+<dd><tt>AddType <i>image/x-icon .ico</i></tt></dd>
+<dd><tt>AddHandler <i>type-map var</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_log_config.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_log_config.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Server Config</tt>, <tt>Merge Server Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Logging</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>CustomLog - <i>a file name, a custom log format string or format name, and an optional "env=" clause (see docs)</i></tt></dd>
+<dd><tt>TransferLog - <i>the filename of the access log</i></tt></dd>
+<dd><tt>LogFormat - <i>a log format string (see docs) and an optional format name</i></tt></dd>
+<dd><tt>CookieLog - <i>the filename of the cookie log</i></tt></dd>
+<dd><tt>BufferedLogs - <i>Enable Buffered Logging (experimental)</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>LogFormat <i>"%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined</i></tt></dd>
+<dd><tt>LogFormat <i>"%h %l %u %t \"%r\" %>s %b" common</i></tt></dd>
+<dd><tt>LogFormat <i>"%{Referer}i -> %U" referer</i></tt></dd>
+<dd><tt>LogFormat <i>"%{User-agent}i" agent</i></tt></dd>
+<dd><tt>CustomLog <i>logs/access.log common</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_isapi.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_isapi.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>ISAPIReadAheadBuffer - <i>Maximum client request body to initially pass to the ISAPI handler (default: 49152)</i></tt></dd>
+<dd><tt>ISAPILogNotSupported - <i>Log requests not supported by the ISAPI server on or off (default: off)</i></tt></dd>
+<dd><tt>ISAPIAppendLogToErrors - <i>Send all Append Log requests to the error log on or off (default: off)</i></tt></dd>
+<dd><tt>ISAPIAppendLogToQuery - <i>Append Log requests are concatinated to the query args on or off (default: on)</i></tt></dd>
+<dd><tt>ISAPIFakeAsync - <i>Fake Asynchronous support for isapi callbacks on or off [Experimental] (default: off)</i></tt></dd>
+<dd><tt>ISAPICacheFile - <i>Cache the specified ISAPI extension in-process</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_info.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_info.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Server Config</tt>, <tt>Merge Server Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>AddModuleInfo - <i>a module name and additional information on that module</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_include.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_include.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Create Server Config</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Fixups</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>XBitHack - <i>Off, On, or Full</i></tt></dd>
+<dd><tt>SSIErrorMsg - <i>a string</i></tt></dd>
+<dd><tt>SSITimeFormat - <i>a strftime(3) formatted string</i></tt></dd>
+<dd><tt>SSIStartTag - <i>SSI Start String Tag</i></tt></dd>
+<dd><tt>SSIEndTag - <i>SSI End String Tag</i></tt></dd>
+<dd><tt>SSIUndefinedEcho - <i>SSI Start String Tag</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_imap.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_imap.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>ImapMenu - <i>the type of menu generated: none, formatted, semiformatted, unformatted</i></tt></dd>
+<dd><tt>ImapDefault - <i>the action taken if no match: error, nocontent, referer, menu, URL</i></tt></dd>
+<dd><tt>ImapBase - <i>the base for all URL's: map, referer, URL (or start of)</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_env.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_env.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Fixups</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>PassEnv - <i>a list of environment variables to pass to CGI.</i></tt></dd>
+<dd><tt>SetEnv - <i>an environment variable name and optional value to pass to CGI.</i></tt></dd>
+<dd><tt>UnsetEnv - <i>a list of variables to remove from the CGI environment.</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_dir.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_dir.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Fixups</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>DirectoryIndex - <i>a list of file names</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>DirectoryIndex <i>index.html index.html.var</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_cgi.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_cgi.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Server Config</tt>, <tt>Merge Server Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>ScriptLog - <i>the name of a log for script debugging info</i></tt></dd>
+<dd><tt>ScriptLogLength - <i>the maximum length (in bytes) of the script debug log</i></tt></dd>
+<dd><tt>ScriptLogBuffer - <i>the maximum size (in bytes) to record of a POST request</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_autoindex.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_autoindex.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>AddIcon - <i>an icon URL followed by one or more filenames</i></tt></dd>
+<dd><tt>AddIconByType - <i>an icon URL followed by one or more MIME types</i></tt></dd>
+<dd><tt>AddIconByEncoding - <i>an icon URL followed by one or more content encodings</i></tt></dd>
+<dd><tt>AddAlt - <i>alternate descriptive text followed by one or more filenames</i></tt></dd>
+<dd><tt>AddAltByType - <i>alternate descriptive text followed by one or more MIME types</i></tt></dd>
+<dd><tt>AddAltByEncoding - <i>alternate descriptive text followed by one or more content encodings</i></tt></dd>
+<dd><tt>IndexOptions - <i>one or more index options [+|-][]</i></tt></dd>
+<dd><tt>IndexOrderDefault - <i>{Ascending,Descending} {Name,Size,Description,Date}</i></tt></dd>
+<dd><tt>IndexIgnore - <i>one or more file extensions</i></tt></dd>
+<dd><tt>AddDescription - <i>Descriptive text followed by one or more filenames</i></tt></dd>
+<dd><tt>HeaderName - <i>a filename</i></tt></dd>
+<dd><tt>ReadmeName - <i>a filename</i></tt></dd>
+<dd><tt>FancyIndexing - <i>The FancyIndexing directive is no longer supported.  Use IndexOptions FancyIndexing.</i></tt></dd>
+<dd><tt>DefaultIcon - <i>an icon URL</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>IndexOptions <i>FancyIndexing VersionSort</i></tt></dd>
+<dd><tt>AddIconByEncoding <i>(CMP,/icons/compressed.gif) x-compress x-gzip</i></tt></dd>
+<dd><tt>AddIconByType <i>(TXT,/icons/text.gif) text/*</i></tt></dd>
+<dd><tt>AddIconByType <i>(IMG,/icons/image2.gif) image/*</i></tt></dd>
+<dd><tt>AddIconByType <i>(SND,/icons/sound2.gif) audio/*</i></tt></dd>
+<dd><tt>AddIconByType <i>(VID,/icons/movie.gif) video/*</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/binary.gif .bin .exe</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/binhex.gif .hqx</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/tar.gif .tar</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/world2.gif .wrl .wrl.gz .vrml .vrm .iv</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/compressed.gif .Z .z .tgz .gz .zip</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/a.gif .ps .ai .eps</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/layout.gif .html .shtml .htm .pdf</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/text.gif .txt</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/c.gif .c</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/p.gif .pl .py</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/f.gif .for</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/dvi.gif .dvi</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/uuencoded.gif .uu</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/script.gif .conf .sh .shar .csh .ksh .tcl</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/tex.gif .tex</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/bomb.gif core</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/back.gif ..</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/hand.right.gif README</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/folder.gif ^^DIRECTORY^^</i></tt></dd>
+<dd><tt>AddIcon <i>/icons/blank.gif ^^BLANKICON^^</i></tt></dd>
+<dd><tt>DefaultIcon <i>/icons/unknown.gif</i></tt></dd>
+<dd><tt>ReadmeName <i>README.html</i></tt></dd>
+<dd><tt>HeaderName <i>HEADER.html</i></tt></dd>
+<dd><tt>IndexIgnore <i>.??* *~ *# HEADER* README* RCS CVS *,v *,t</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_auth.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_auth.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Verify User ID</tt>, <tt>Verify User Access</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>AuthUserFile - <i>text file containing user IDs and passwords</i></tt></dd>
+<dd><tt>AuthGroupFile - <i>text file containing group names and member user IDs</i></tt></dd>
+<dd><tt>AuthAuthoritative - <i>Set to 'no' to allow access control to be passed along to lower modules if the UserID is not known to this module</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_asis.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_asis.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt> <em>none</em></tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong> <tt>none</tt></dt></dl><hr />
+<dl><dt><a name="mod_alias.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_alias.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt>, <tt>Create Server Config</tt>, <tt>Merge Server Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Translate Path</tt>, <tt>Fixups</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>Alias - <i>a fakename and a realname</i></tt></dd>
+<dd><tt>ScriptAlias - <i>a fakename and a realname</i></tt></dd>
+<dd><tt>Redirect - <i>an optional status, then document to be redirected and destination URL</i></tt></dd>
+<dd><tt>AliasMatch - <i>a regular expression and a filename</i></tt></dd>
+<dd><tt>ScriptAliasMatch - <i>a regular expression and a filename</i></tt></dd>
+<dd><tt>RedirectMatch - <i>an optional status, then a regular expression and destination URL</i></tt></dd>
+<dd><tt>RedirectTemp - <i>a document to be redirected, then the destination URL</i></tt></dd>
+<dd><tt>RedirectPermanent - <i>a document to be redirected, then the destination URL</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>Alias <i>/icons/ "C:/Programme/Apache Group/Apache2/icons/"</i></tt></dd>
+<dd><tt>Alias <i>/manual "C:/Programme/Apache Group/Apache2/manual"</i></tt></dd>
+<dd><tt>ScriptAlias <i>/cgi-bin/ "C:/Programme/Apache Group/Apache2/cgi-bin/"</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_actions.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_actions.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>Action - <i>a media type followed by a script name</i></tt></dd>
+<dd><tt>Script - <i>a method followed by a script name</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="mod_access.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_access.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Check Access</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>order - <i>'allow,deny', 'deny,allow', or 'mutual-failure'</i></tt></dd>
+<dd><tt>allow - <i>'from' followed by hostnames or IP-address wildcards</i></tt></dd>
+<dd><tt>deny - <i>'from' followed by hostnames or IP-address wildcards</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/htdocs"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Order <i>allow,deny</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;Allow <i>from all</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>&lt;Files ~ "^\.ht"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Order <i>allow,deny</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;Deny <i>from all</i></tt></dd>
+<dd><tt>&lt;/Files&gt;</tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/icons"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Order <i>allow,deny</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;Allow <i>from all</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/manual"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Order <i>allow,deny</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;Allow <i>from all</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/cgi-bin"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Order <i>allow,deny</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;Allow <i>from all</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>&lt;Location /server-info&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Order <i>deny,allow</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;allow <i>from all</i></tt></dd>
+<dd><tt>&lt;/Location&gt;</tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_so.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_so.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Server Config</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>LoadModule - <i>a module name and the name of a shared object file to load it from</i></tt></dd>
+<dd><tt>LoadFile - <i>shared object file or library to load into the server at runtime</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="http_core.c"><strong>Module Name:</strong> <font size="+1"><tt>http_core.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt> <em>none</em></tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>KeepAliveTimeout - <i>Keep-Alive timeout duration (sec)</i></tt></dd>
+<dd><tt>MaxKeepAliveRequests - <i>Maximum number of Keep-Alive requests per connection, or 0 for infinite</i></tt></dd>
+<dd><tt>KeepAlive - <i>Whether persistent connections should be On or Off</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>KeepAlive <i>On</i></tt></dd>
+<dd><tt>MaxKeepAliveRequests <i>100</i></tt></dd>
+<dd><tt>KeepAliveTimeout <i>15</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mpm_winnt.c"><strong>Module Name:</strong> <font size="+1"><tt>mpm_winnt.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt> <em>none</em></tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>ListenBacklog - <i>Maximum length of the queue of pending connections, as used by listen(2)</i></tt></dd>
+<dd><tt>Listen - <i>A port number or a numeric IP address and a port number</i></tt></dd>
+<dd><tt>SendBufferSize - <i>Send buffer size in bytes</i></tt></dd>
+<dd><tt>ThreadsPerChild - <i>Number of threads each child creates</i></tt></dd>
+<dd><tt>ThreadLimit - <i>Maximum worker threads in a server for this run of Apache</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>ThreadsPerChild <i>250</i></tt></dd>
+<dd><tt>Listen <i>80</i></tt></dd>
+</dl><hr />
+<dl><dt><a name="mod_win32.c"><strong>Module Name:</strong> <font size="+1"><tt>mod_win32.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>none</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt> <em>none</em></tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>ScriptInterpreterSource - <i>Where to find interpreter to run Win32 scripts (Registry or script shebang line)</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+</dl><hr />
+<dl><dt><a name="core.c"><strong>Module Name:</strong> <font size="+1"><tt>core.c</tt></font></a></dt>
+<dt><strong>Content handlers:</strong> <tt> <em>yes</em></tt></dt><dt><strong>Configuration Phase Participation:</strong>
+<tt>Create Directory Config</tt>, <tt>Merge Directory Configs</tt>, <tt>Create Server Config</tt>, <tt>Merge Server Configs</tt></dt><dt><strong>Request Phase Participation:</strong>
+<tt>Translate Path</tt>, <tt>Check Access</tt>, <tt>Check Type</tt>, <tt>Fixups</tt></dt>
+<dt><strong>Module Directives:</strong></dt><dd><tt>&lt;Directory - <i>Container for directives affecting resources located in the specified directories</i></tt></dd>
+<dd><tt>&lt;Location - <i>Container for directives affecting resources accessed through the specified URL paths</i></tt></dd>
+<dd><tt>&lt;VirtualHost - <i>Container to map directives to a particular virtual host, takes one or more host addresses</i></tt></dd>
+<dd><tt>&lt;Files - <i>Container for directives affecting files matching specified patterns</i></tt></dd>
+<dd><tt>&lt;Limit - <i>Container for authentication directives when accessed using specified HTTP methods</i></tt></dd>
+<dd><tt>&lt;LimitExcept - <i>Container for authentication directives to be applied when any HTTP method other than those specified is used to access the resource</i></tt></dd>
+<dd><tt>&lt;IfModule - <i>Container for directives based on existance of specified modules</i></tt></dd>
+<dd><tt>&lt;IfDefine - <i>Container for directives based on existance of command line defines</i></tt></dd>
+<dd><tt>&lt;DirectoryMatch - <i>Container for directives affecting resources located in the specified directories</i></tt></dd>
+<dd><tt>&lt;LocationMatch - <i>Container for directives affecting resources accessed through the specified URL paths</i></tt></dd>
+<dd><tt>&lt;FilesMatch - <i>Container for directives affecting files matching specified patterns</i></tt></dd>
+<dd><tt>AuthType - <i>An HTTP authorization type (e.g., "Basic")</i></tt></dd>
+<dd><tt>AuthName - <i>The authentication realm (e.g. "Members Only")</i></tt></dd>
+<dd><tt>Require - <i>Selects which authenticated users or groups may access a protected space</i></tt></dd>
+<dd><tt>Satisfy - <i>access policy if both allow and require used ('all' or 'any')</i></tt></dd>
+<dd><tt>AddDefaultCharset - <i>The name of the default charset to add to any Content-Type without one or 'Off' to disable</i></tt></dd>
+<dd><tt>AcceptPathInfo - <i>Set to on or off for PATH_INFO to be accepted by handlers, or default for the per-handler preference</i></tt></dd>
+<dd><tt>AccessFileName - <i>Name(s) of per-directory config files (default: .htaccess)</i></tt></dd>
+<dd><tt>DocumentRoot - <i>Root directory of the document tree</i></tt></dd>
+<dd><tt>ErrorDocument - <i>Change responses for HTTP errors</i></tt></dd>
+<dd><tt>AllowOverride - <i>Controls what groups of directives can be configured by per-directory config files</i></tt></dd>
+<dd><tt>Options - <i>Set a number of attributes for a given directory</i></tt></dd>
+<dd><tt>DefaultType - <i>the default MIME type for untypable files</i></tt></dd>
+<dd><tt>FileETag - <i>Specify components used to construct a file's ETag</i></tt></dd>
+<dd><tt>EnableMMAP - <i>Controls whether memory-mapping may be used to read files</i></tt></dd>
+<dd><tt>EnableSendfile - <i>Controls whether sendfile may be used to transmit files</i></tt></dd>
+<dd><tt>Port - <i>Port was replaced with Listen in Apache 2.0</i></tt></dd>
+<dd><tt>HostnameLookups - <i>"on" to enable, "off" to disable reverse DNS lookups, or "double" to enable double-reverse DNS lookups</i></tt></dd>
+<dd><tt>ServerAdmin - <i>The email address of the server administrator</i></tt></dd>
+<dd><tt>ServerName - <i>The hostname and port of the server</i></tt></dd>
+<dd><tt>ServerSignature - <i>En-/disable server signature (on|off|email)</i></tt></dd>
+<dd><tt>ServerRoot - <i>Common directory of server-related files (logs, confs, etc.)</i></tt></dd>
+<dd><tt>ErrorLog - <i>The filename of the error log</i></tt></dd>
+<dd><tt>ServerAlias - <i>A name or names alternately used to access the server</i></tt></dd>
+<dd><tt>ServerPath - <i>The pathname the server can be reached at</i></tt></dd>
+<dd><tt>Timeout - <i>Timeout duration (sec)</i></tt></dd>
+<dd><tt>IdentityCheck - <i>Enable identd (RFC 1413) user lookups - SLOW</i></tt></dd>
+<dd><tt>ContentDigest - <i>whether or not to send a Content-MD5 header with each request</i></tt></dd>
+<dd><tt>UseCanonicalName - <i>How to work out the ServerName : Port when constructing URLs</i></tt></dd>
+<dd><tt>Include - <i>Name of the config file to be included</i></tt></dd>
+<dd><tt>LogLevel - <i>Level of verbosity in error logging</i></tt></dd>
+<dd><tt>NameVirtualHost - <i>A numeric IP address:port, or the name of a host</i></tt></dd>
+<dd><tt>ServerTokens - <i>Determine tokens displayed in the Server: header - Min(imal), OS or Full</i></tt></dd>
+<dd><tt>LimitRequestLine - <i>Limit on maximum size of an HTTP request line</i></tt></dd>
+<dd><tt>LimitRequestFieldsize - <i>Limit on maximum size of an HTTP request header field</i></tt></dd>
+<dd><tt>LimitRequestFields - <i>Limit (0 = unlimited) on max number of header fields in a request message</i></tt></dd>
+<dd><tt>LimitRequestBody - <i>Limit (in bytes) on maximum size of request message body</i></tt></dd>
+<dd><tt>LimitXMLRequestBody - <i>Limit (in bytes) on maximum size of an XML-based request body</i></tt></dd>
+<dd><tt>RLimitCPU - <i>Soft/hard limits for max CPU usage in seconds</i></tt></dd>
+<dd><tt>RLimitMEM - <i>Soft/hard limits for max memory usage per process</i></tt></dd>
+<dd><tt>RLimitNPROC - <i>soft/hard limits for max number of processes per uid</i></tt></dd>
+<dd><tt>ForceType - <i>a mime type that overrides other configured type</i></tt></dd>
+<dd><tt>SetHandler - <i>a handler name that overrides any other configured handler</i></tt></dd>
+<dd><tt>SetOutputFilter - <i>filter (or ; delimited list of filters) to be run on the request content</i></tt></dd>
+<dd><tt>SetInputFilter - <i>filter (or ; delimited list of filters) to be run on the request body</i></tt></dd>
+<dd><tt>AddOutputFilterByType - <i>output filter name followed by one or more content-types</i></tt></dd>
+<dd><tt>PidFile - <i>A file for logging the server process ID</i></tt></dd>
+<dd><tt>ScoreBoardFile - <i>A file for Apache to maintain runtime process management information</i></tt></dd>
+<dd><tt>MaxRequestsPerChild - <i>Maximum number of requests a particular child serves before dying.</i></tt></dd>
+<dd><tt>CoreDumpDirectory - <i>The location of the directory Apache changes to before dumping core</i></tt></dd>
+<dt><strong>Current Configuration:</strong></dt>
+<dd><tt>PidFile <i>logs/httpd.pid</i></tt></dd>
+<dd><tt>Timeout <i>300</i></tt></dd>
+<dd><tt>MaxRequestsPerChild <i>0</i></tt></dd>
+<dd><tt>ServerAdmin <i>nd@perlig.de</i></tt></dd>
+<dd><tt>ServerName <i>pub.perlig.de</i></tt></dd>
+<dd><tt>UseCanonicalName <i>On</i></tt></dd>
+<dd><tt>DocumentRoot <i>"C:/Programme/Apache Group/Apache2/htdocs"</i></tt></dd>
+<dd><tt>&lt;Directory /&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Options <i>FollowSymLinks</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;AllowOverride <i>None</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/htdocs"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Options <i>Indexes FollowSymLinks</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;AllowOverride <i>None</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>AccessFileName <i>.htaccess</i></tt></dd>
+<dd><tt>DefaultType <i>text/plain</i></tt></dd>
+<dd><tt>HostnameLookups <i>Off</i></tt></dd>
+<dd><tt>ErrorLog <i>logs/error.log</i></tt></dd>
+<dd><tt>LogLevel <i>warn</i></tt></dd>
+<dd><tt>ServerTokens <i>Full</i></tt></dd>
+<dd><tt>ServerSignature <i>On</i></tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/icons"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Options <i>Indexes MultiViews</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;AllowOverride <i>None</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/manual"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;Options <i>Indexes FollowSymLinks MultiViews IncludesNoExec</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;AllowOverride <i>None</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>&lt;Directory "C:/Programme/Apache Group/Apache2/cgi-bin"&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;AllowOverride <i>None</i></tt></dd>
+<dd><tt>&nbsp;&nbsp;Options <i>None</i></tt></dd>
+<dd><tt>&lt;/Directory&gt;</tt></dd>
+<dd><tt>AddDefaultCharset <i>ISO-8859-1</i></tt></dd>
+<dd><tt>&lt;Location /server-info&gt;</tt></dd>
+<dd><tt>&nbsp;&nbsp;SetHandler <i>server-info</i></tt></dd>
+<dd><tt>&lt;/Location&gt;</tt></dd>
+</dl><hr />
+<address>Apache/2.0.44 (Win32) Server at pub.perlig.de Port 80</address>
+<p>(Hinweis: dieses Dokument ist nat&uuml;rlich <em>nicht</em> echt!)</p>
+</body></html>

@@ -11,14 +11,14 @@ module Yawast
       end
 
       def self.check_all(uri, head)
+        return if !@iis
+
         #run all the defined checks
         check_asp_banner(head)
         check_mvc_version(head)
       end
 
       def self.check_asp_banner(head)
-        return if !@iis
-
         head.each do |k, v|
           if k.downcase == 'x-aspnet-version'
             Yawast::Utilities.puts_warn "ASP.NET Version: #{v}"
@@ -28,8 +28,6 @@ module Yawast
       end
 
       def self.check_mvc_version(head)
-        return if !@iis
-
         head.each do |k, v|
           if k.downcase == 'x-aspnetmvc-version'
             Yawast::Utilities.puts_warn "ASP.NET MVC Version: #{v}"

@@ -20,8 +20,8 @@ module TestBase
     thr = Thread.new {
       server = WEBrick::HTTPServer.new :Port => port,
                                        :BindAddress => 'localhost',
-                                       :AccessLog => []#,
-                                       #:Logger => WEBrick::Log.new('/dev/null')
+                                       :AccessLog => [],
+                                       :Logger => WEBrick::Log.new('/dev/null')
       server.mount "/#{url}", WEBrick::HTTPServlet::FileHandler, file
       server.start
     }

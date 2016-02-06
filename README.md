@@ -63,13 +63,13 @@ For detailed information, just call `./yawast -h` to see the help page. To see i
 
 Various automated status messages and tools:
 
-[![Build Status](https://www.travis-ci.org/adamcaudill/yawast.png?branch=master)](https://www.travis-ci.org/adamcaudill/yawast)
+[![Build Status](https://travis-ci.org/adamcaudill/yawast.png?branch=master)](https://travis-ci.org/adamcaudill/yawast)
 [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast.png)](https://codeclimate.com/github/adamcaudill/yawast)
 [![Coverage Status](https://coveralls.io/repos/adamcaudill/yawast/badge.png)](https://coveralls.io/r/adamcaudill/yawast)
 
 ####License
 
-Copyright (c) 2013, Adam Caudill (adam@adamcaudill.com)
+Copyright (c) 2013 - 2016, Adam Caudill (adam@adamcaudill.com)
 
 All rights reserved.
 

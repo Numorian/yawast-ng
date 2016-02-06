@@ -11,4 +11,5 @@ group :test do
   gem 'minitest-reporters'
   gem 'simplecov'
   gem 'coveralls', require: false
+  gem 'webrick'
 end

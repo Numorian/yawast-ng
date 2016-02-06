@@ -7,18 +7,20 @@ module Yawast
         @apache = true
 
         modules = banner.split(' ')
+        server = modules[0]
 
         #hack - fix '(distro)' issue, such as with 'Apache/2.2.22 (Ubuntu)'
         # if we don't do this, it triggers a false positive on the module check
         if /\(\w*\)/.match modules[1]
-          modules[0] += " #{modules[1]}"
+          server += " #{modules[1]}"
           modules.delete_at 1
         end
 
-        if modules.count == 1
-          #if there's only one item, it's just the server, no modules
-          Yawast::Utilities.puts_info "Apache Server: #{banner}"
-        else
+        #print the server info no matter what we do next
+        Yawast::Utilities.puts_info "Apache Server: #{server}"
+        modules.delete_at 0
+
+        if modules.count > 0
           Yawast::Utilities.puts_warn 'Apache Server: Module listing enabled'
           modules.each { |mod| Yawast::Utilities.puts_warn "\t\t#{mod}" }
           puts ''

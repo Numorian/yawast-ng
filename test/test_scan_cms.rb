@@ -6,7 +6,7 @@ class TestScannerCms < Minitest::Test
   include TestBase
 
   def test_generator_tag_valid
-    body = Yawast::Shared::Http.get URI::Parser.new.parse 'http://adamcaudill.com/'
+    body = File.read('test/data/cms_wordpress_body.txt')
     override_stdout
     Yawast::Scanner::Cms.get_generator body
 

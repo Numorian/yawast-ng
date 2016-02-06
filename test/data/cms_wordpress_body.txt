@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<script>(function(html){html.className = html.className.replace(/\bno-js\b/,'js')})(document.documentElement);</script>
+<title>Adam Caudill &#8211; Independent Security Researcher &amp; Software Developer</title>
+<link rel="alternate" type="application/rss+xml" title="Adam Caudill &raquo; Feed" href="https://adamcaudill.com/feed/"/>
+<link rel="alternate" type="application/rss+xml" title="Adam Caudill &raquo; Comments Feed" href="https://adamcaudill.com/comments/feed/"/>
+<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"http:\/\/adamcaudill.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.4.2"}};
+			!function(a,b,c){function d(a){var c,d=b.createElement("canvas"),e=d.getContext&&d.getContext("2d"),f=String.fromCharCode;return e&&e.fillText?(e.textBaseline="top",e.font="600 32px Arial","flag"===a?(e.fillText(f(55356,56806,55356,56826),0,0),d.toDataURL().length>3e3):"diversity"===a?(e.fillText(f(55356,57221),0,0),c=e.getImageData(16,16,1,1).data.toString(),e.fillText(f(55356,57221,55356,57343),0,0),c!==e.getImageData(16,16,1,1).data.toString()):("simple"===a?e.fillText(f(55357,56835),0,0):e.fillText(f(55356,57135),0,0),0!==e.getImageData(16,16,1,1).data[0])):!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g;c.supports={simple:d("simple"),flag:d("flag"),unicode8:d("unicode8"),diversity:d("diversity")},c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.simple&&c.supports.flag&&c.supports.unicode8&&c.supports.diversity||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+<style type="text/css">img.wp-smiley,img.emoji{display:inline!important;border:none!important;box-shadow:none!important;height:1em!important;width:1em!important;margin:0 .07em!important;vertical-align:-0.1em!important;background:none!important;padding:0!important;}</style>
+<link rel='stylesheet' id='twentysixteen-jetpack-css' href='http://adamcaudill.com/wp-content/plugins/jetpack/modules/theme-tools/compat/twentysixteen.css?ver=3.9.1' type='text/css' media='all'/>
+<link rel='stylesheet' id='crayon-css' href='http://adamcaudill.com/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min.css?ver=_2.7.2_beta' type='text/css' media='all'/>
+<link rel='stylesheet' id='crayon-theme-solarized-dark-css' href='http://adamcaudill.com/wp-content/plugins/crayon-syntax-highlighter/themes/solarized-dark/solarized-dark.css?ver=_2.7.2_beta' type='text/css' media='all'/>
+<link rel='stylesheet' id='crayon-font-monaco-css' href='http://adamcaudill.com/wp-content/plugins/crayon-syntax-highlighter/fonts/monaco.css?ver=_2.7.2_beta' type='text/css' media='all'/>
+<link rel='stylesheet' id='twentysixteen-fonts-css' href='https://fonts.googleapis.com/css?family=Merriweather%3A400%2C700%2C900%2C400italic%2C700italic%2C900italic%7CMontserrat%3A400%2C700%7CInconsolata%3A400&#038;subset=latin%2Clatin-ext' type='text/css' media='all'/>
+<link rel='stylesheet' id='genericons-css' href='http://adamcaudill.com/wp-content/plugins/jetpack/_inc/genericons/genericons/genericons.css?ver=3.1' type='text/css' media='all'/>
+<link rel='stylesheet' id='twentysixteen-style-css' href='http://adamcaudill.com/wp-content/themes/twentysixteen/style.css?ver=4.4.2' type='text/css' media='all'/>
+<style id='twentysixteen-style-inline-css' type='text/css'>body{background-color:#616a73;}.site{background-color:#4d545c;}mark,ins,button,button[disabled]:hover,button[disabled]:focus,input[type="button"],input[type="button"][disabled]:hover,input[type="button"][disabled]:focus,input[type="reset"],input[type="reset"][disabled]:hover,input[type="reset"][disabled]:focus,input[type="submit"],input[type="submit"][disabled]:hover,input[type="submit"][disabled]:focus,.menu-toggle.toggled-on,.menu-toggle.toggled-on:hover,.menu-toggle.toggled-on:focus,.pagination .prev,.pagination .next,.pagination .prev:hover,.pagination .prev:focus,.pagination .next:hover,.pagination .next:focus,.pagination .nav-links:before,.pagination .nav-links:after,.widget_calendar tbody a,.widget_calendar tbody a:hover,.widget_calendar tbody a:focus,.page-links a,.page-links a:hover,.page-links a:focus{color:#4d545c;}.menu-toggle:hover,.menu-toggle:focus,a,.main-navigation a:hover,.main-navigation a:focus,.dropdown-toggle:hover,.dropdown-toggle:focus,.social-navigation a:hover:before,.social-navigation a:focus:before,.post-navigation a:hover .post-title,.post-navigation a:focus .post-title,.tagcloud a:hover,.tagcloud a:focus,.site-branding .site-title a:hover,.site-branding .site-title a:focus,.entry-title a:hover,.entry-title a:focus,.entry-footer a:hover,.entry-footer a:focus,.comment-metadata a:hover,.comment-metadata a:focus,.pingback .comment-edit-link:hover,.pingback .comment-edit-link:focus,.comment-reply-link,.comment-reply-link:hover,.comment-reply-link:focus,.required,.site-info a:hover,.site-info a:focus{color:#c7c7c7;}mark,ins,button:hover,button:focus,input[type="button"]:hover,input[type="button"]:focus,input[type="reset"]:hover,input[type="reset"]:focus,input[type="submit"]:hover,input[type="submit"]:focus,.pagination .prev:hover,.pagination .prev:focus,.pagination .next:hover,.pagination .next:focus,.widget_calendar tbody a,.page-links a:hover,.page-links a:focus{background-color:#c7c7c7;}input[type="text"]:focus,input[type="email"]:focus,input[type="url"]:focus,input[type="password"]:focus,input[type="search"]:focus,textarea:focus,.tagcloud a:hover,.tagcloud a:focus,.menu-toggle:hover,.menu-toggle:focus{border-color:#c7c7c7;}body,blockquote cite,blockquote small,.main-navigation a,.menu-toggle,.dropdown-toggle,.social-navigation a,.post-navigation a,.pagination a:hover,.pagination a:focus,.widget-title a,.site-branding .site-title a,.entry-title a,.page-links>.page-links-title,.comment-author,.comment-reply-title small a:hover,.comment-reply-title small a:focus{color:#f2f2f2;}blockquote,.menu-toggle.toggled-on,.menu-toggle.toggled-on:hover,.menu-toggle.toggled-on:focus,.post-navigation,.post-navigation div+div,.pagination,.widget,.page-header,.page-links a,.comments-title,.comment-reply-title{border-color:#f2f2f2;}button,button[disabled]:hover,button[disabled]:focus,input[type="button"],input[type="button"][disabled]:hover,input[type="button"][disabled]:focus,input[type="reset"],input[type="reset"][disabled]:hover,input[type="reset"][disabled]:focus,input[type="submit"],input[type="submit"][disabled]:hover,input[type="submit"][disabled]:focus,.menu-toggle.toggled-on,.menu-toggle.toggled-on:hover,.menu-toggle.toggled-on:focus,.pagination:before,.pagination:after,.pagination .prev,.pagination .next,.page-links a{background-color:#f2f2f2;}body:not(.search-results) .entry-summary{color:#f2f2f2;}blockquote,.post-password-form label,a:hover,a:focus,a:active,.post-navigation .meta-nav,.image-navigation,.comment-navigation,.widget_recent_entries .post-date,.widget_rss .rss-date,.widget_rss cite,.site-description,.author-bio,.entry-footer,.entry-footer a,.sticky-post,.taxonomy-description,.entry-caption,.comment-metadata,.pingback .edit-link,.comment-metadata a,.pingback .comment-edit-link,.comment-form label,.comment-notes,.comment-awaiting-moderation,.logged-in-as,.form-allowed-tags,.site-info,.site-info a,.wp-caption .wp-caption-text,.gallery-caption,.widecolumn label,.widecolumn .mu_register label{color:#f2f2f2;}.widget_calendar tbody a:hover,.widget_calendar tbody a:focus{background-color:#f2f2f2;}fieldset,pre,abbr,acronym,table,th,td,input[type="text"],input[type="email"],input[type="url"],input[type="password"],input[type="search"],textarea,.main-navigation li,.main-navigation .primary-menu,.menu-toggle,.dropdown-toggle:after,.social-navigation a,.image-navigation,.comment-navigation,.tagcloud a,.entry-content,.entry-summary,.page-links a,.page-links>span,.comment-list article,.comment-list .pingback,.comment-list .trackback,.comment-reply-link,.no-comments,.widecolumn .mu_register .mu_alert{border-color:#f2f2f2;border-color:rgba(242,242,242,0.2);}hr,code{background-color:#f2f2f2;background-color:rgba(242,242,242,0.2);}@media screen and (min-width: 56.875em) {.main-navigation li:hover>a,.main-navigation li.focus>a{color:#c7c7c7;}.main-navigation ul ul,.main-navigation ul ul li{border-color:rgba(242,242,242,0.2);}.main-navigation ul ul:before{border-top-color:rgba(242,242,242,0.2);border-bottom-color:rgba(242,242,242,0.2);}.main-navigation ul ul li{background-color:#4d545c;}.main-navigation ul ul:after{border-top-color:#4d545c;border-bottom-color:#4d545c;}}</style>
+<!--[if lt IE 10]>
+<link rel='stylesheet' id='twentysixteen-ie-css'  href='http://adamcaudill.com/wp-content/themes/twentysixteen/css/ie.css?ver=20150930' type='text/css' media='all' />
+<![endif]-->
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentysixteen-ie8-css'  href='http://adamcaudill.com/wp-content/themes/twentysixteen/css/ie8.css?ver=20151230' type='text/css' media='all' />
+<![endif]-->
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='twentysixteen-ie7-css'  href='http://adamcaudill.com/wp-content/themes/twentysixteen/css/ie7.css?ver=20150930' type='text/css' media='all' />
+<![endif]-->
+<link rel='stylesheet' id='jetpack_css-css' href='http://adamcaudill.com/wp-content/plugins/jetpack/css/jetpack.css?ver=3.9.1' type='text/css' media='all'/>
+<script type='text/javascript' src='http://adamcaudill.com/wp-includes/js/jquery/jquery.js?ver=1.11.3'></script>
+<script type='text/javascript' src='http://adamcaudill.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"https:\/\/adamcaudill.com\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://adamcaudill.com/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min.js?ver=_2.7.2_beta'></script>
+<!--[if lt IE 9]>
+<script type='text/javascript' src='http://adamcaudill.com/wp-content/themes/twentysixteen/js/html5.js?ver=3.7.3'></script>
+<![endif]-->
+<link rel='https://api.w.org/' href='https://adamcaudill.com/wp-json/'/>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://adamcaudill.com/xmlrpc.php?rsd"/>
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://adamcaudill.com/wp-includes/wlwmanifest.xml"/>
+<meta name="generator" content="WordPress 4.4.2"/>
+<style type='text/css'>img#wpstats{display:none}</style>
+ 
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Adam Caudill"/>
+<meta property="og:description" content="Independent Security Researcher &amp; Software Developer"/>
+<meta property="og:url" content="https://adamcaudill.com/"/>
+<meta property="og:site_name" content="Adam Caudill"/>
+<meta property="og:image" content="https://s0.wp.com/i/blank.jpg"/>
+<meta property="og:locale" content="en_US"/>
+</head>
+<body class="home blog hfeed">
+<div id="page" class="site">
+<div class="site-inner">
+<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+<header id="masthead" class="site-header" role="banner">
+<div class="site-header-main">
+<div class="site-branding">
+<h1 class="site-title"><a href="https://adamcaudill.com/" rel="home">Adam Caudill</a></h1>
+<p class="site-description">Independent Security Researcher &amp; Software Developer</p>
+</div> 
+<button id="menu-toggle" class="menu-toggle">Menu</button>
+<div id="site-header-menu" class="site-header-menu">
+<nav id="site-navigation" class="main-navigation" role="navigation" aria-label="Primary Menu">
+<div class="menu-main-container"><ul id="menu-main" class="primary-menu"><li id="menu-item-263" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item menu-item-263"><a href="/">Home</a></li>
+<li id="menu-item-719" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-719"><a href="https://adamcaudill.com/category/essays/">Essays</a></li>
+<li id="menu-item-720" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-720"><a href="https://adamcaudill.com/category/security_research/">Research</a></li>
+<li id="menu-item-264" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-264"><a href="https://adamcaudill.com/speaking/">Speaking</a></li>
+<li id="menu-item-265" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-265"><a href="https://adamcaudill.com/about/">About</a></li>
+</ul></div> </nav> 
+</div> 
+</div> 
+</header> 
+<div id="content" class="site-content">
+<div id="primary" class="content-area">
+<main id="main" class="site-main" role="main">
+<article id="post-802" class="post-802 post type-post status-publish format-standard hentry category-security_research">
+<header class="entry-header">
+<h2 class="entry-title"><a href="https://adamcaudill.com/2016/02/02/plsql-developer-nonexistent-encryption/" rel="bookmark">PL/SQL Developer: Nonexistent Encryption</a></h2> </header> 
+<div class="entry-content">
+<p>PL/SQL Developer by <a href="http://www.allroundautomations.com/plsqldev.html">Allround Automations</a> has an option to store the user&#8217;s logon history with passwords &#8211; the passwords are encrypted with a proprietary algorithm. At this point, you should know how this is going to go.</p>
+<p>For those that don&#8217;t know, PL/SQL Developer is a tool for developers and database administrators to access Oracle &#8211; an essential tool in many enterprise environments. Instead of using something that provides some actual security like <a href="https://en.wikipedia.org/wiki/Data_Protection_API">DPAPI</a> (which itself is far from perfect, as we saw with the <a href="https://adamcaudill.com/2012/10/07/upek-windows-password-decryption/">UPEK fiasco</a>), they opted to use a proprietary &#8220;encryption&#8221; algorithm to protect these passwords &#8211; making it trivial to recover the passwords for any attacker that can access the preferences file(s).</p>
+<p>Some time ago I asked the vendor about the security of the password storage &#8211; they are aware of the lack of security, but don&#8217;t make it clear to their customers.</p>
+<p></p> 
+<div id="crayon-56b648985798c224162324" class="crayon-syntax crayon-theme-solarized-dark crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+From: Allround Automations Support [support@allroundautomations.com] 
+Sent: Monday, February 09, 2015 12:37 PM
+To: Adam Caudill
+Subject: RE: PL/SQL Developer - Password Storage
+ 
+Hello Adam,
+ 
+The encryption is proprietary. If a user copies the config file, 
+the passwords are also copied, so it's not secure.
+ 
+Greetings,
+Marco Kalter
+Allround Automations (http://www.allroundautomations.com)</textarea></div>
+<div class="crayon-main" style="">
+<table class="crayon-table">
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="show">
+<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-56b648985798c224162324-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985798c224162324-2">2</div><div class="crayon-num" data-line="crayon-56b648985798c224162324-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985798c224162324-4">4</div><div class="crayon-num" data-line="crayon-56b648985798c224162324-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985798c224162324-6">6</div><div class="crayon-num" data-line="crayon-56b648985798c224162324-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985798c224162324-8">8</div><div class="crayon-num" data-line="crayon-56b648985798c224162324-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985798c224162324-10">10</div><div class="crayon-num" data-line="crayon-56b648985798c224162324-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985798c224162324-12">12</div><div class="crayon-num" data-line="crayon-56b648985798c224162324-13">13</div></div>
+</td>
+<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-56b648985798c224162324-1">From: Allround Automations Support [<a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="94e7e1e4e4fbe6e0d4f5f8f8e6fbe1faf0f5e1e0fbf9f5e0fdfbfae7baf7fbf9">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">
+/* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("data-cfhash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}t.parentNode.removeChild(t);}}catch(u){}}()/* ]]> */</script>] </div><div class="crayon-line crayon-striped-line" id="crayon-56b648985798c224162324-2">Sent: Monday, February 09, 2015 12:37 PM</div><div class="crayon-line" id="crayon-56b648985798c224162324-3">To: Adam Caudill</div><div class="crayon-line crayon-striped-line" id="crayon-56b648985798c224162324-4">Subject: RE: PL/SQL Developer - Password Storage</div><div class="crayon-line" id="crayon-56b648985798c224162324-5"> </div><div class="crayon-line crayon-striped-line" id="crayon-56b648985798c224162324-6">Hello Adam,</div><div class="crayon-line" id="crayon-56b648985798c224162324-7"> </div><div class="crayon-line crayon-striped-line" id="crayon-56b648985798c224162324-8">The encryption is proprietary. If a user copies the config file, </div><div class="crayon-line" id="crayon-56b648985798c224162324-9">the passwords are also copied, so it's not secure.</div><div class="crayon-line crayon-striped-line" id="crayon-56b648985798c224162324-10"> </div><div class="crayon-line" id="crayon-56b648985798c224162324-11">Greetings,</div><div class="crayon-line crayon-striped-line" id="crayon-56b648985798c224162324-12">Marco Kalter</div><div class="crayon-line" id="crayon-56b648985798c224162324-13">Allround Automations (http://www.allroundautomations.com)</div></div></td>
+</tr>
+</table>
+</div>
+</div>
+ 
+<p></p>
+<p>The fact that they are aware that it isn&#8217;t secure, yet this issue has existed for years &#8211; nor made it clear to users what they are risking by activating the option is extremely disappointing. Vendors have a responsibility to protect customer information, and broken features like this completely ignore that.</p>
+<h2>The Algorithm</h2>
+<p>The encryption algorithm is quite simple, primarily consisting of a bit shift and xor &#8211; let&#8217;s take a closer look at how it works. The ciphertext produced looks like this:</p>
+<p><code>273645624572423045763066456443024120413041724566408044424900...</code></p>
+<p>The first group of four digits (<code>2736</code>) is the key &#8211; it&#8217;s generated based on the system uptime, producing an integer between 0 and 999, then 2,000 is added. This means that the key is has 1,000 possible values, or just under 10 bits. Of course, when you store the key with the encrypted data &#8211; key size really doesn&#8217;t matter.</p>
+<p>After the key at the beginning, each group of four digits represents one byte &#8211; this simple code is all that&#8217;s needed to encrypt:</p>
+<p></p> 
+<div id="crayon-56b648985799c325174236" class="crayon-syntax crayon-theme-solarized-dark crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+for (int i = 0; i &lt; plaintext.Length; i++)
+{
+  var mask = plaintext[i] &lt;&lt; 4;
+  var n = (mask ^ (key + (i + 1)*10)) + 1000;
+
+  ret += Convert.ToString(n).PadLeft(4, '0');
+}</textarea></div>
+<div class="crayon-main" style="">
+<table class="crayon-table">
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="show">
+<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-56b648985799c325174236-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985799c325174236-2">2</div><div class="crayon-num" data-line="crayon-56b648985799c325174236-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985799c325174236-4">4</div><div class="crayon-num" data-line="crayon-56b648985799c325174236-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b648985799c325174236-6">6</div><div class="crayon-num" data-line="crayon-56b648985799c325174236-7">7</div></div>
+</td>
+<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-56b648985799c325174236-1"><span class="crayon-st">for</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-t">int</span><span class="crayon-h"> </span><span class="crayon-v">i</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-cn">0</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-v">i</span><span class="crayon-h"> </span><span class="crayon-o">&lt;</span><span class="crayon-h"> </span><span class="crayon-v">plaintext</span><span class="crayon-sy">.</span><span class="crayon-v">Length</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-v">i</span><span class="crayon-o">++</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-56b648985799c325174236-2"><span class="crayon-sy">{</span></div><div class="crayon-line" id="crayon-56b648985799c325174236-3"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-t">var</span><span class="crayon-h"> </span><span class="crayon-v">mask</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">plaintext</span><span class="crayon-sy">[</span><span class="crayon-v">i</span><span class="crayon-sy">]</span><span class="crayon-h"> </span><span class="crayon-o">&lt;&lt;</span><span class="crayon-h"> </span><span class="crayon-cn">4</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-56b648985799c325174236-4"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-t">var</span><span class="crayon-h"> </span><span class="crayon-v">n</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">mask</span><span class="crayon-h"> </span><span class="crayon-o">^</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">key</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">i</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span><span class="crayon-cn">1</span><span class="crayon-sy">)</span><span class="crayon-o">*</span><span class="crayon-cn">10</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span><span class="crayon-cn">1000</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-56b648985799c325174236-5">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-56b648985799c325174236-6"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">ret</span><span class="crayon-h"> </span><span class="crayon-o">+=</span><span class="crayon-h"> </span><span class="crayon-v">Convert</span><span class="crayon-sy">.</span><span class="crayon-e">ToString</span><span class="crayon-sy">(</span><span class="crayon-v">n</span><span class="crayon-sy">)</span><span class="crayon-sy">.</span><span class="crayon-e">PadLeft</span><span class="crayon-sy">(</span><span class="crayon-cn">4</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-s">'0'</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-56b648985799c325174236-7"><span class="crayon-sy">}</span></div></div></td>
+</tr>
+</table>
+</div>
+</div>
+ 
+<p></p>
+<p>When you encrypt the string <code>user/password@server</code>, here&#8217;s what the encrypted data breaks down to:</p>
+<ul>
+<li><code>2736</code> = Key</li>
+<li><code>4562</code> = <code>u</code></li>
+<li><code>4572</code> = <code>s</code></li>
+<li><code>4230</code> = <code>e</code></li>
+<li><code>4576</code> = <code>r</code></li>
+<li><code>3066</code> = <code>/</code></li>
+<li><code>4564</code> = <code>p</code></li>
+<li><code>4302</code> = <code>a</code></li>
+<li><code>4120</code> = <code>s</code></li>
+<li><code>4130</code> = <code>s</code></li>
+<li><code>4172</code> = <code>w</code></li>
+<li><code>4566</code> = <code>o</code></li>
+<li><code>4080</code> = <code>r</code></li>
+<li><code>4442</code> = <code>d</code></li>
+<li><code>4900</code> = <code>@</code></li>
+<li><code>4190</code> = <code>s</code></li>
+<li><code>4328</code> = <code>e</code></li>
+<li><code>4194</code> = <code>r</code></li>
+<li><code>4076</code> = <code>v</code></li>
+<li><code>4390</code> = <code>e</code></li>
+<li><code>4160</code> = <code>r</code></li>
+</ul>
+<h2>The Data</h2>
+<p>The login information is stored in an INI-like file called <code>user.prefs</code> &#8211; under the headings of <code>[LogonHistory]</code> and <code>[CurrentConnections]</code>; storage of passwords is an option that is turned off by default, though storage of history is turned on by default. All data stored in these sections is encrypted using this method, so the presence of data in these sections does not necessarily mean that passwords are present.</p>
+<p>These files can be stored in a number of locations (the latter are more common with older versions of the application):</p>
+<ul>
+<li><code>C:\Users\&lt;username&gt;\AppData\Roaming\PLSQL Developer\Preferences\&lt;username&gt;\</code></li>
+<li><code>C:\Program Files\PLSQL Developer\Preferences\&lt;username&gt;\</code></li>
+<li><code>C:\Program Files (x86)\PLSQL Developer\Preferences\&lt;username&gt;\</code></li>
+</ul>
+<p>The data format for the two sections is somewhat different, in <code>[LogonHistory]</code>, the data is in the following format:</p>
+<p><code>&lt;username&gt;/&lt;password&gt;@&lt;server&gt;</code></p>
+<p>In <code>[CurrentConnections]</code>, the format is <code>&lt;username&gt;,&lt;password&gt;,&lt;server&gt;,,,</code>; the login can also be stored in <code>C:\Users\&lt;username&gt;\AppData\Roaming\PLSQL Developer\PLS-Recovery\*.cfg</code>, in this same format.</p>
+<p>This encryption method is also used in other files, though in less predictable locations.</p>
+<h2>The Proof of Concept</h2>
+<p>We have <a href="https://github.com/adamcaudill/PLSQLDevPass/releases">released</a> a proof of concept tool to decrypt these logins, and as is typical, it&#8217;s <a href="https://github.com/adamcaudill/PLSQLDevPass">open source</a>. Simply run the executable from the command line, and it will search for the preference files and print any information it&#8217;s able to retrieve.</p>
+<p></p> 
+<div id="crayon-56b64898579a1003880750" class="crayon-syntax crayon-theme-solarized-dark crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+PL/SQL Developer: Password 'Decrypter'
+  Copyright 2016 Adam Caudill &amp; Brandon Wilson
+  v1.0.0.0 - https://github.com/adamcaudill/PLSQLDevPass
+
+Found 1 config files...
+Result! 'user/password@server'
+Done.</textarea></div>
+<div class="crayon-main" style="">
+<table class="crayon-table">
+<tr class="crayon-row">
+<td class="crayon-nums " data-settings="show">
+<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-56b64898579a1003880750-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b64898579a1003880750-2">2</div><div class="crayon-num" data-line="crayon-56b64898579a1003880750-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b64898579a1003880750-4">4</div><div class="crayon-num" data-line="crayon-56b64898579a1003880750-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-56b64898579a1003880750-6">6</div><div class="crayon-num" data-line="crayon-56b64898579a1003880750-7">7</div></div>
+</td>
+<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-56b64898579a1003880750-1">PL/SQL Developer: Password 'Decrypter'</div><div class="crayon-line crayon-striped-line" id="crayon-56b64898579a1003880750-2">&nbsp;&nbsp;Copyright 2016 Adam Caudill &amp; Brandon Wilson</div><div class="crayon-line" id="crayon-56b64898579a1003880750-3">&nbsp;&nbsp;v1.0.0.0 - https://github.com/adamcaudill/PLSQLDevPass</div><div class="crayon-line crayon-striped-line" id="crayon-56b64898579a1003880750-4">&nbsp;</div><div class="crayon-line" id="crayon-56b64898579a1003880750-5">Found 1 config files...</div><div class="crayon-line crayon-striped-line" id="crayon-56b64898579a1003880750-6">Result! 'user/password@server'</div><div class="crayon-line" id="crayon-56b64898579a1003880750-7">Done.</div></div></td>
+</tr>
+</table>
+</div>
+</div>
+ 
+<p></p>
+<p>You can also pass in the name of a remote machine, and it will attempt to use the administrative (<code>c$</code>) share.</p>
+<h2>Credit</h2>
+<p>Special thanks to my frequent research partner, <a href="http://brandonw.net/">Brandon Wilson</a>, for his help with this project.</p>
+</div> 
+<footer class="entry-footer">
+<span class="byline"><span class="author vcard"><img alt='' src='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=49&#038;d=mm&#038;r=g' srcset='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=98&amp;d=mm&amp;r=g 2x' class='avatar avatar-49 photo' height='49' width='49'/><span class="screen-reader-text">Author </span> <a class="url fn n" href="https://adamcaudill.com/author/adam/">Adam Caudill</a></span></span><span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://adamcaudill.com/2016/02/02/plsql-developer-nonexistent-encryption/" rel="bookmark"><time class="entry-date published updated" datetime="2016-02-02T18:45:01+00:00">February 2, 2016</time></a></span><span class="cat-links"><span class="screen-reader-text">Categories </span><a href="https://adamcaudill.com/category/security_research/" rel="category tag">Security Research</a></span> </footer> 
+</article> 
+<article id="post-796" class="post-796 post type-post status-publish format-standard hentry category-uncategorized">
+<header class="entry-header">
+<h2 class="entry-title"><a href="https://adamcaudill.com/2016/01/08/rance-goodbye-friend/" rel="bookmark">Rance, Goodbye Friend</a></h2> </header> 
+<div class="entry-content">
+<p><img src="https://adamcaudill.com/files/A5CpkjHCIAAQARj-300x225.jpg" width="300" height="225" class="alignleft size-medium wp-image-797" srcset="https://adamcaudill.com/files/A5CpkjHCIAAQARj-300x225.jpg 300w, https://adamcaudill.com/files/A5CpkjHCIAAQARj.jpg 600w" sizes="(max-width: 300px) 85vw, 300px"/> If you never had the oppertunity to meet Rance, known as David Jones to some, you don&#8217;t know what a friend you missed. Today, you lost the chance to find out.</p>
+<p>He was truly something special &#8211; one of the most genuine, kind, and caring people I&#8217;ve ever met. I met him at the first security conference I ever attended &#8211; while I had always been somewhat involved with security work, I really wasn&#8217;t a member of the community, I was an outsider, and every word I said, I was painfully aware of that. Rance knew I was an outsider, and he did everything he could to make me feel welcome &#8211; within a couple days I had been introduced to everyone, and he treated me like an old friend.</p>
+<p>Had it not been for Rance, for his kindness to a stranger, I&#8217;m not sure I would have become so active in the community.</p>
+<p>There are a thousand other stories like this, of him going above and beyond at every opportunity &#8211; anyone you talk to that knew him has something similar to say. He was truly something special, a one of kind person that made the community better for all.</p>
+<p>Of all that has been said about him, this, I think, is the most important:</p>
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">Really want to show what <a href="https://twitter.com/revrance">@revrance</a> means to you? Be more like him.</p>
+<p>&mdash; Jack Daniel (@jack_daniel) <a href="https://twitter.com/jack_daniel/status/684936983219728385">January 7, 2016</a></p></blockquote>
+<p><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+</div> 
+<footer class="entry-footer">
+<span class="byline"><span class="author vcard"><img alt='' src='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=49&#038;d=mm&#038;r=g' srcset='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=98&amp;d=mm&amp;r=g 2x' class='avatar avatar-49 photo' height='49' width='49'/><span class="screen-reader-text">Author </span> <a class="url fn n" href="https://adamcaudill.com/author/adam/">Adam Caudill</a></span></span><span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://adamcaudill.com/2016/01/08/rance-goodbye-friend/" rel="bookmark"><time class="entry-date published updated" datetime="2016-01-08T11:29:15+00:00">January 8, 2016</time></a></span><span class="cat-links"><span class="screen-reader-text">Categories </span><a href="https://adamcaudill.com/category/uncategorized/" rel="category tag">Uncategorized</a></span> </footer> 
+</article> 
+<article id="post-792" class="post-792 post type-post status-publish format-standard hentry category-news">
+<header class="entry-header">
+<h2 class="entry-title"><a href="https://adamcaudill.com/2016/01/01/new-atheism-the-philosophy-of-atheism/" rel="bookmark">&#8220;New Atheism&#8221; &#038; The Philosophy of Atheism</a></h2> </header> 
+<div class="entry-content">
+<p>A recent (very) public fracas between <a href="https://twitter.com/RichardDawkins">Richard Dawkins</a> and <a href="https://twitter.com/ggreenwald">Glenn Greenwald</a> (both people who I respect, though for rather different reasons) left me thinking about the direction that the &#8220;New Atheism&#8221; movement is taking, and where atheism itself should be going. Religion is a difficult topic to discuss, as it evokes such passion that you often move past logic into purely emotional discussions. Some atheists, unfortunately, are just as zealous that they too lose sight of logical discourse.</p>
+<p>Dawkins is unquestionably brilliant, his book, <a href="http://www.amazon.com/The-God-Delusion-Richard-Dawkins/dp/0618918248">The God Delusion</a>, had a profound impact on me &#8211; I was taught as a child that I should believe in a god, at age 5 I began asking hard questions and was told to just accept what I was told. Further, I was told that even thinking of such questions was a sin, much less actually asking them. I kept my mouth shut and my questions to myself; for years, while being prepared to become a minister, I said nothing. I was always an atheist, though I didn&#8217;t have the courage to say it. Reading The God Delusion didn&#8217;t change my views, but it did help me find the courage to admit the truth to myself.</p>
+<h2>New Atheism &amp; Islamophobia</h2>
+<p>I couldn&#8217;t even began to catalog all of the instances where the leaders of the New Atheism movement have been <a href="http://www.theguardian.com/commentisfree/2013/apr/03/sam-harris-muslim-animus">questioned on their anti-Muslim statements</a>, and there are a goldmine of quotes that illustrate why:</p>
+<blockquote><p>
+&#8220;The idea that Islam is a ‘peaceful religion hijacked by extremists’ is a fantasy, and is now a particularly dangerous fantasy for Muslims to indulge&#8221;
+</p></blockquote>
+<p><a href="https://twitter.com/SamHarrisOrg">Sam Harris</a>, a founding member of the movement, has been especially outspoken on Islam; he has of course been critical of Christianity and other major religions, though his disdain for Islam and Muslims is clear:</p>
+<blockquote><p>
+&#8220;While the other major world religions have been fertile sources of intolerance, it is clear that the doctrine of Islam poses unique problems for the emergence of a global civilization.&#8221;
+</p></blockquote>
+<p>another gem:</p>
+<blockquote><p>
+&#8220;It should be of particular concern to us that the beliefs of devout Muslims pose a special problem for nuclear deterrence.&#8221;
+</p></blockquote>
+<p>What we see here is that one religion is being singled out, attacked with greater intensity, and its adherents being criticized in a far more direct and vicious way. There are countless examples, these were simply the first ones I came across; with a few minutes of searching, you can find some truly shocking statements from these leaders of what should be a purely intellectual movement.</p>
+<p>How Harris defends such attacks is even more disappointing &#8211; when faced with legitimate criticism, a clear, logical, honest response should be the reaction. What we see from Harris is instead an attack, a distraction from the issue:</p>
+<blockquote><p>
+&#8220;There is no such thing as &#8216;Islamophobia.&#8217; This is a term of propaganda designed to protect Islam from the forces of secularism by conflating all criticism of it with racism and xenophobia. And it is doing its job, because people like you have been taken in by it.&#8221;
+</p></blockquote>
+<p>I wish I could say this is ignorance, but I can&#8217;t &#8211; it&#8217;s dishonest at best, no one could look at the world truly believe this statement. In the United States, the fear of Muslims is palpable, <a href="http://abcnews.go.com/US/southern-california-mosques-attacked-vandals-fbi-investigating/story?id=35755233">attacks</a>, <a href="http://www.chicagotribune.com/news/nationworld/ct-protests-toward-muslim-americans-20151211-story.html">overt threats</a>, and <a href="http://www.theguardian.com/us-news/2015/dec/07/donald-trump-ban-all-muslims-entering-us-san-bernardino-shooting">blatant racism</a> are all becoming normal. In such a toxic atmosphere, there is no question that it is very real, and is ongoing. To feed such irrational fear is truly abhorrent.</p>
+<h2>Emotionalism vs. Intellectualism</h2>
+<p>Atheism, as a philosophy, is purely intellectual &#8211; it is applying the scientific method, evidence based analysis, to one&#8217;s world view. It is rejecting the emotionalism that is so common with religion and focusing instead on logic. To do otherwise, is to reject the core tenet that lead to atheism &#8211; the factual analysis of existence.</p>
+<p>New Atheism, on the other hand, has a zealous component that borders on the religious itself.</p>
+<p>Dawkins has been <a href="https://newrepublic.com/article/119596/appetite-wonder-review-closed-mind-richard-dawkins">criticized</a> for this, for creating a religion of intellectual elitism; a religion that promotes the same zeal for conversion that drives the Evangelical Christians. The world view he, and the other founders of the New Atheism movement promote is simple:</p>
+<p><em>All religion is evil.</em></p>
+<p>That view though, is at best naïve, and at worst intentionally dishonest. Attempting to reduce the world to good or bad is a mistake that is common in religion &#8211; and their movement makes the same mistake. New Atheism assumes all religious people are evil, just as many religions have taught that all atheists were evil. At least the religious have started to correct this error; the Pope himself acknowledged that atheists can do good in the world.</p>
+<p>I can say, with no uncertainty, that classifying all religious people, including the most devout, as evil (or ignorant, or naïve, etc.) is intellectually dishonest. If there is one sin in atheism, it&#8217;s intellectual dishonesty.</p>
+<p>The world is not so simple as to allow this clean and clear division of good and bad &#8211; some atheists <a href="https://en.wikipedia.org/wiki/2015_Chapel_Hill_shooting">are bad</a>, many religious people are good. Anything that inspires hate or intolerance should be treated and viewed with suspicion &#8211; over the last thousand years, both Christianity and Islam have inspired unspeakable hate and violence. Despite the harm done in the name of religion, it&#8217;s unfair to universally condemn the religious.</p>
+<h2>Religion &amp; Hate</h2>
+<p>It is hard to think of any group that has been exempt from religious violence; racism, sexism, ethnocentrism, supremacism, and even nationalism have ties to religion &#8211; countless innocent people have died because they didn&#8217;t fit into a religious group&#8217;s view of what&#8217;s right. Sexual orientation to skin color, there is no shortage of reasons that some religious people use to justify their hate &#8211; many religious leaders fuel such hate as part of their recruiting process.</p>
+<p>All of the major Abrahamic religions include hate and violence in their founding texts; there is an undeniable history of violence against outsiders. In Christianity for example, there is a great amount of hate and violence in the Old Testament; the New Testament teaches peace instead &#8211; though it is the Old Testament that is often used to justify violence. This ancient penchant for violence still haunts the world today.</p>
+<p>There is good reason to believe that we should teach science, logic, and peace instead of religion &#8211; and I firmly believe that&#8217;s what we should do. When children are taught to look at a challenge with logic instead of fear, you move away from the emotional basis that leads to such hate and violence in the first place. There are those that naturally argue that religion teaches peace and love &#8211; but it also teaches vengeance, hate, and intolerance &#8211; primal emotions that are difficult to control and too often exploited.</p>
+<h2>Hijacking Atheism</h2>
+<p>As I have said, atheism is intellectual; there is no room for hate, for intolerance, for racism, for sexism &#8211; in an honest, fact-based, analysis, this type of discrimination is instantly seen for the wrong that it is. People are judged for their actions, for their deeds, for the impact they have &#8211; not which sex they are attracted to, not the color of their skin or eyes or hair, not the anatomical components they do or don&#8217;t have. Critically, especially to this discussion, the same thing applies to titles &#8211; it is entirely unfair to judge a person based on them being called a Christian, Muslim, Jew, or any other religious designation.</p>
+<p>&#8220;New Atheism&#8221; does just this, it attacks religion, <em>and those that hold religious beliefs</em> &#8211; this is a violation of fact-based analysis, it is intellectually dishonest, it is morally wrong.</p>
+<p>I disagree with religion, but I have many religious friends &#8211; we have very open discussions on religion, we debate on legitimate points of philosophy and morality. I do not attack them because they hold religious views &#8211; I may attack the religion and illogical things that it teaches, but I <em>never</em> attack them.</p>
+<p>The movement that is called &#8220;New Atheism&#8221; &#8211; is, I believe, a religion itself, it has no deity, but is still a religion. It has coopted the term atheist to serve its own purposes. It has diverged from the roots of atheism to pursue a course of political and religious zealotry.</p>
+<p>I respect Richard Dawkins, but I do not respect all of his beliefs.</p>
+<h2>Philosophy &amp; Atheism</h2>
+<p>Modern atheism was born of the scientific method, of fact-based analysis; it eschewed the dogma of religion for the philosophy of <a href="https://en.wikipedia.org/wiki/Secular_humanism">secular humanism</a>.</p>
+<p>I am an atheist, I wear it on my sleeve &#8211; literally. A symbol of atheism is tattooed on my arm for the world to see, it is a public statement that I reject religion and all the negative it inspires. I also do my best to be a good person; I expect no reward, I do not believe in heaven, what I do believe that we all have a duty to leave the world a better place than we found it. When I die, I hope that I will be remembered for doing more good than ill.</p>
+<p>Promoting hate, promoting intolerance of any sort is entirely incompatible with that goal &#8211; why should I fight religious people who aren&#8217;t doing harm? It simply isn&#8217;t logical. I will fight those that do harm, I will (and do, and have) fought those that espouse hate, for they are making the world worse for all. It is quite clear, there are some that operate under the banner of atheism that espouse hate, and they should be fought as well.</p>
+<p>As an atheist, I believe in making the world a better place, I believe in being a good person that does good things. I believe in making up for the mistakes of the past, I believe in promoting peace as the most important need of humanity. I am not perfect, but I do try.</p>
+<p>I respect Glenn Greenwald, and I do not agree with all of his beliefs &#8211; but it is clear that he was right to call out those that have coopted atheism and have allowed themselves to be consumed by emotionalism and hate.</p>
+<p>We should promote peace, not hate.</p>
+</div> 
+<footer class="entry-footer">
+<span class="byline"><span class="author vcard"><img alt='' src='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=49&#038;d=mm&#038;r=g' srcset='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=98&amp;d=mm&amp;r=g 2x' class='avatar avatar-49 photo' height='49' width='49'/><span class="screen-reader-text">Author </span> <a class="url fn n" href="https://adamcaudill.com/author/adam/">Adam Caudill</a></span></span><span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://adamcaudill.com/2016/01/01/new-atheism-the-philosophy-of-atheism/" rel="bookmark"><time class="entry-date published" datetime="2016-01-01T19:59:57+00:00">January 1, 2016</time><time class="updated" datetime="2016-01-03T04:37:39+00:00">January 3, 2016</time></a></span><span class="cat-links"><span class="screen-reader-text">Categories </span><a href="https://adamcaudill.com/category/news/" rel="category tag">News</a></span> </footer> 
+</article> 
+<article id="post-754" class="post-754 post type-post status-publish format-standard hentry category-news">
+<header class="entry-header">
+<h2 class="entry-title"><a href="https://adamcaudill.com/2016/01/01/2015-year-in-review/" rel="bookmark">2015: Year In Review</a></h2> </header> 
+<div class="entry-content">
+<p>For the <a href="/2015/01/01/2014-a-year-in-review/">second year</a> I am publishing a year-in-review &#8211; something I had generally avoided in the past, as the tone of these posts is typically just cynicism and negativity. Looking back at 2015, it wasn&#8217;t all positive (what year is?), but there was certainly some good, and there are great things to look forward to.</p>
+<p>In a season filled with empty marketing pitches, worthless predictions, and pointless projections &#8211; it&#8217;s important to look at the good and avoid the cynicism overload that is all too common. As a community, there is a great deal of good that we can do, changes that can be made, lessons taught, and minds opened &#8211; it is critical that we focus on the good we can do, not all the negative that we encounter on the way.</p>
+<h2>2015 In Review</h2>
+<p>A brief, personal, and not entirely positive look back at 2015. It was a complicated year with a lot going on; some goals were exceeded, others missed completely. Lessons were learned, and progress was made.</p>
+<h3>Security Research &amp; Related</h3>
+<p>Last you I said I would spend more time on research:</p>
+<blockquote><p>
+Research – I plan on spending more time evaluation open source applications for security issues. In just a few hours a week, can have a real impact on making applications and users more secure.
+</p></blockquote>
+<p>How did I do? Well, I added only one CVE to my list (<a href="/2015/12/18/dovestones-software-ad-self-password-reset-cve-2015-8267/">CVE-2015-8267</a>) &#8211; so publicly, I didn&#8217;t publish much, though I did more privately. This work likely didn&#8217;t have as much of an impact as I had hoped, though there were some small quiet wins.</p>
+<h3>Speaking</h3>
+<p>I spent more time speaking, especially to developers. I spent quite a bit of time talking to developers about cryptography &#8211; it&#8217;s a topic that is complicated, hard to grasp, and has too little good documentation that tells developers what they need to do. A lot of time was put into this effort, but I truly believe that it made a real difference.</p>
+<p>Security conferences, while important to me personally for the interaction with others that I don&#8217;t get to see often, took a backseat as I focused on developers. I still spoke at a couple, but less than last year.</p>
+<p>A major accomplishment was <a href="/2015/05/18/making-bsides-knoxville/">BSides Knoxville</a>; had a great team, exceptional speakers, and an excellent team of volunteers that made it happen. Organizing a security conference is quite a bit of work, but is, without question, one of the things I am most proud of.</p>
+<h3>Personal</h3>
+<p>This year was certainly less trying than last year; from finances to stress levels, the year was better. In May, my wife and I had a daughter &#8211; Ava Marie:</p>
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">Hello World &#8211; Ava Marie Caudill, 5lb 14oz. <a href="http://t.co/VyBl65NuKW">pic.twitter.com/VyBl65NuKW</a></p>
+<p>&mdash; Adam Caudill (@adamcaudill) <a href="https://twitter.com/adamcaudill/status/604394629354528768">May 29, 2015</a></p></blockquote>
+<p><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p>There were issues though; in October, my wife and I separated after being married for seven years &#8211; we have remained friends, though she and our kids moved closer to her family, several hours away. While life has been less trying, other things have been quite difficult.</p>
+<p>One of my goals for last year was to be more transparent:</p>
+<blockquote><p>
+Personal Transparency – I’ve always been very concerned with my professional image, and as such tend to keep many details of my life to myself. One personal goal for this year is to be just a bit more open and transparent.
+</p></blockquote>
+<p>There are some people who are very good at this; they can share intimate details of their life, I am not one of those people. I&#8217;ve attempted to share more, to be a more open person &#8211; I think I&#8217;ve failed at this. For example, a bit over a week ago I was in the hospital &#8211; a fact that very few people were aware of. It may just not be in me to be less guarded.</p>
+<h3>Projects</h3>
+<p>Various projects took up much of my available time this year; here&#8217;s a quick update on them:</p>
+<h4>SMIMP</h4>
+<p>The <a href="https://github.com/smimp/smimp_spec">SMIMP</a> project was a response to the failures of email security &#8211; trying to bolt security on to a protocol that has no concept of secrecy or privacy will never work. It was an interesting attempt at designing a from-scratch replacement to email, I enjoyed the effort. At this point, it&#8217;s a failed project and I don&#8217;t anticipate spending more time on it. There simply isn&#8217;t meaningful movement (in any direction) on finding a real fix for email.</p>
+<p>I still have hope that something will happen, but we simply aren&#8217;t there yet.</p>
+<h4>CurveLock</h4>
+<p><a href="https://github.com/adamcaudill/CurveLock">CurveLock</a> was an experimental high-security message and file encryption application for Windows. Simple, easy to use, and designed to be a bit paranoid when it comes to security level. A stable version was released; at this point the project is stable and usable.</p>
+<h4>EncryptingCamera</h4>
+<p><a href="https://github.com/EncryptingCamera/encryptingcamera-spec">EncryptingCamera</a> is an effort to create camera applications for popular mobile devices, that perform seamless encryption &#8211; ensuring that if a device is later stolen or seized, the photos on it can&#8217;t be accessed.</p>
+<p>The idea was solid, but unfortunately due to limited time, the project has advanced little over the last year, though hopefully it still has a chance.</p>
+<h4>Blog</h4>
+<blockquote><p>
+Blog – Last time that I promised to blog more often, I didn’t post again for months, so I’m hoping that I don’t repeat that this time. But I promise to write more, and do my best to keep the content interesting.
+</p></blockquote>
+<p>Last year I published 16 articles with 18,040 words &#8211; this year it was only 14,104 words. This is largely due to one issue: I published nothing between May and November. During this time, I didn&#8217;t get much writing done, my open source projects fell behind, as a matter of fact, with competing priorities, most things lost. I&#8217;ve been working hard to turn this around.</p>
+<p>In 2012 I <a href="/2012/04/12/moving-to-octopress/">moved to Octopress</a>, I really liked that it was a static site and extremely fast (withstood being at the top of hacker news with less than 10% CPU) &#8211; what I didn&#8217;t like was the workflow. As time went on, it became more of a hinderance to writing than an aid. A few weeks ago, I switched back to WordPress &#8211; it may not be perfect, but the workflow is better. It&#8217;s far easier to write and update, especially when on a mobile device. Based on recently productivity, I think this change is working; more writing, and more updates to published content.</p>
+<h4>The Novel</h4>
+<blockquote><p>
+Novel – I intend to have either a deal signed with a publisher, or to publish as an ebook on Amazon before the end of 2015. One way or the other, I’ll be done with it by the end of the year.
+</p></blockquote>
+<p>Nope. Completely missed that goal.</p>
+<p>The novel is still a work in progress, I still haven&#8217;t talked to any publishers, but it&#8217;s making progress (as I find time). Writing fiction is certainly a challenge, but a rewarding one.</p>
+<h2>Looking forward to 2016</h2>
+<ul>
+<li>Blog &#8211; I&#8217;m trying to spend more time writing about current events, but only in cases where I can add real value to a topic. It&#8217;s easy to find high-level summaries of an event, such as the Juniper incident, so in that case I tried to provide <a href="/2015/12/17/much-ado-about-juniper/">useful insight</a>. If I can&#8217;t add something over what you&#8217;d get at your average news site, I just won&#8217;t say anything.</li>
+<li>Novel &#8211; I don&#8217;t know when it&#8217;ll be done, but I&#8217;m hoping to see it published sometime in 2016. Fingers crossed.</li>
+<li>Research &#8211; Performing publishable research is important to me &#8211; it takes time, which is in limited supply, but still deserves the time it takes. I&#8217;m going to do my best to identify and report more issues (that can be publicly documented).</li>
+<li>EncryptingCamera &#8211; There is still real value to this project, and I&#8217;m hoping to jumpstart it so we can get it released.</li>
+<li>Escaping The Echo Chamber &#8211; One of my goals for 2015 was to spend time outside of the echo chamber; I think I did that and it made a difference. I plan on continuing this trend.</li>
+<li>Open Source &#8211; Except for the time when I wasn&#8217;t getting anything done, I did more work on my projects, and others. Hopefully I can spend more time working on these projects next year.</li>
+</ul>
+<p>Overall, the year was less productive than I had hoped, but it was a good year, and 2016 will be something special.</p>
+</div> 
+<footer class="entry-footer">
+<span class="byline"><span class="author vcard"><img alt='' src='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=49&#038;d=mm&#038;r=g' srcset='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=98&amp;d=mm&amp;r=g 2x' class='avatar avatar-49 photo' height='49' width='49'/><span class="screen-reader-text">Author </span> <a class="url fn n" href="https://adamcaudill.com/author/adam/">Adam Caudill</a></span></span><span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://adamcaudill.com/2016/01/01/2015-year-in-review/" rel="bookmark"><time class="entry-date published" datetime="2016-01-01T15:15:39+00:00">January 1, 2016</time><time class="updated" datetime="2016-01-01T15:12:46+00:00">January 1, 2016</time></a></span><span class="cat-links"><span class="screen-reader-text">Categories </span><a href="https://adamcaudill.com/category/news/" rel="category tag">News</a></span> </footer> 
+</article> 
+<article id="post-777" class="post-777 post type-post status-publish format-standard hentry category-news">
+<header class="entry-header">
+<h2 class="entry-title"><a href="https://adamcaudill.com/2015/12/27/battle-fronts-in-the-crypto-war/" rel="bookmark">Battle Fronts in the Crypto War</a></h2> </header> 
+<div class="entry-content">
+<p><em>or, These aren&#8217;t the <del>droids</del> apps you are looking for&#8230;</em></p>
+<p>The Chinese government has passed new <a href="http://www.nytimes.com/2015/12/28/world/asia/china-passes-antiterrorism-law-that-critics-fear-may-overreach.html?_r=0">anti-terror</a> legislation, drafts of which have been <a href="https://iapp.org/news/a/the-implications-of-chinas-draft-anti-terrorism-law-for-global-technology/">criticized</a> for months due to broad language, and the massive privacy concerns. This legislation is a critical move in the global Crypto War &#8211; effectively giving the Chinese what the FBI has been seeking for well over a decade: a <a href="https://en.wikipedia.org/wiki/Communications_Assistance_for_Law_Enforcement_Act">CALEA</a>-style law, that mandates providers be able to supply law enforcement with decrypted data. This means no end-to-end encryption, this means adding backdoors (even if they are called something different, they are still backdoors).</p>
+<h2>Who is really being targeted here?</h2>
+<p>Seeing a <a href="https://twitter.com/digiphile/status/681146604104056832">tweet</a> talking about it, I started to comment on the need for open-source, easy to use, hard to censor communication tools &#8211; then I realized, that&#8217;s not what this is about. They couldn&#8217;t care less about open encryption tools; this isn&#8217;t about GPG, or Tor, or any of a thousand other tools. This is about iMessage, about WhatsApp, about a small number of widely used applications that are operated as a service and are (sometimes) secure by default.</p>
+<p>As a developer, a contributor to open source projects, there is a bit of ego involved here &#8211; I&#8217;d like to think that something I could do would be enough of a threat to their surveillance programs that they&#8217;d care. But that&#8217;s not the case, and that isn&#8217;t the case for the vast majority of people. Unless you work for one of an exceedingly small number of companies, this doesn&#8217;t target your work.</p>
+<blockquote class="twitter-tweet" lang="en"><p lang="und" dir="ltr"><a href="https://t.co/PBZbglaPgm">pic.twitter.com/PBZbglaPgm</a></p>
+<p>&mdash; the grugq (@thegrugq) <a href="https://twitter.com/thegrugq/status/681044445114941440">December 27, 2015</a></p></blockquote>
+<p><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p>The type of people who really care about security, about hiding their tracks will do so no matter what a government mandates &#8211; they will master the tools, they will understand the technology, they will understand the threats they face, and often go to great lengths to protect their identity. Then there&#8217;s everybody else.</p>
+<p>The vast, and I do mean <em>vast</em>, majority of targets are not nearly so careful, they only use the easiest, most available tools, leak information at every step, don&#8217;t fully understand how their enemy operates or how they would be attacked. They are paranoid of the wrong things, and blissfully ignorant of the most pressing threats.</p>
+<p>For those that are going to put the effort into hiding, <a href="https://en.wikipedia.org/wiki/Human_intelligence_(intelligence_gathering)">HUMINT</a> is likely the only way they will be discovered, for the rest &#8211; all the work can be done from a desk. Some behavioral analysis (likely fairly automated), some paperwork to gain access to their data, and done. A target identified without even leaving the office.</p>
+<p>There is a <a href="https://en.wikipedia.org/wiki/Telephone_tapping#History">long history</a> of law enforcement using wiretaps to get easy answers &#8211; sometimes identifying those involved, other times verifying what actually happened (there is also a long history of abuse). Law enforcement has long sought to extend this ability beyond phone systems to every form of communication, regardless of medium or method of transport. With the advent of accessible encryption, a new complication was put in place that pushed them further away from this rich source of data.</p>
+<p>Many in government see encryption the same way: <em>it&#8217;s great, as long as we can easily get around it.</em></p>
+<p>Laws like this are aimed at the majority of people who look for easy security, and expect it from a service provider such as Apple. It&#8217;s aimed at putting them under the same rules for backdoor access that telecommunications companies are under now. It doesn&#8217;t touch those that truly care about protecting themselves, but by adding new backdoors, it does put everyone else at risk.</p>
+</div> 
+<footer class="entry-footer">
+<span class="byline"><span class="author vcard"><img alt='' src='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=49&#038;d=mm&#038;r=g' srcset='http://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?s=98&amp;d=mm&amp;r=g 2x' class='avatar avatar-49 photo' height='49' width='49'/><span class="screen-reader-text">Author </span> <a class="url fn n" href="https://adamcaudill.com/author/adam/">Adam Caudill</a></span></span><span class="posted-on"><span class="screen-reader-text">Posted on </span><a href="https://adamcaudill.com/2015/12/27/battle-fronts-in-the-crypto-war/" rel="bookmark"><time class="entry-date published updated" datetime="2015-12-27T17:30:51+00:00">December 27, 2015</time></a></span><span class="cat-links"><span class="screen-reader-text">Categories </span><a href="https://adamcaudill.com/category/news/" rel="category tag">News</a></span> </footer> 
+</article> 
+<nav class="navigation pagination" role="navigation">
+<h2 class="screen-reader-text">Posts navigation</h2>
+<div class="nav-links"><span class='page-numbers current'><span class="meta-nav screen-reader-text">Page </span>1</span>
+<a class='page-numbers' href='https://adamcaudill.com/page/2/'><span class="meta-nav screen-reader-text">Page </span>2</a>
+<span class="page-numbers dots">&hellip;</span>
+<a class='page-numbers' href='https://adamcaudill.com/page/52/'><span class="meta-nav screen-reader-text">Page </span>52</a>
+<a class="next page-numbers" href="https://adamcaudill.com/page/2/">Next page</a></div>
+</nav>
+</main> 
+</div> 
+<aside id="secondary" class="sidebar widget-area" role="complementary">
+<section id="text-3" class="widget widget_text"><h2 class="widget-title">About Me</h2> <div class="textwidget"><p><img src="https://1.gravatar.com/avatar/49e14cf9f67c48aad082dec4f106f19a?size=250" class="aligncenter"></p>
+<p>I am an independent security researcher and software developer with more than 15 years of experience. I primarily focus on application security, secure communications, and cryptography, though often research new areas if I get too bored. I write about my research and security in general, development and software design, and whatever hobby has my attention at the moment.</p>
+<p>Email: <a href="/cdn-cgi/l/email-protection#74151015193415101519171501101d18185a171b19"><span class="__cf_email__" data-cfemail="f8999c9995b8999c99959b998d9c919494d69b9795">[email&#160;protected]</span><script data-cfhash='f9e31' type="text/javascript">
+/* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("data-cfhash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}t.parentNode.removeChild(t);}}catch(u){}}()/* ]]> */</script></a> (<a href="https://adamcaudill.com/pgp/">PGP</a>)</p></div>
+</section><section id="wpcom_social_media_icons_widget-3" class="widget widget_wpcom_social_media_icons_widget"><h2 class="widget-title">Social</h2><ul><li><a title="View adamcaudill&#8217;s profile on Twitter" href="https://twitter.com/adamcaudill/" class="genericon genericon-twitter" target="_blank"><span class="screen-reader-text">View adamcaudill&#8217;s profile on Twitter</span></a></li><li><a title="View adamcaudill&#8217;s profile on LinkedIn" href="https://www.linkedin.com/in/adamcaudill/" class="genericon genericon-linkedin" target="_blank"><span class="screen-reader-text">View adamcaudill&#8217;s profile on LinkedIn</span></a></li><li><a title="View adamcaudill&#8217;s profile on GitHub" href="https://github.com/adamcaudill/" class="genericon genericon-github" target="_blank"><span class="screen-reader-text">View adamcaudill&#8217;s profile on GitHub</span></a></li></ul></section> <section id="recent-posts-2" class="widget widget_recent_entries"> <h2 class="widget-title">Recent Posts</h2> <ul>
+<li>
+<a href="https://adamcaudill.com/2016/02/02/plsql-developer-nonexistent-encryption/">PL/SQL Developer: Nonexistent Encryption</a>
+</li>
+<li>
+<a href="https://adamcaudill.com/2016/01/08/rance-goodbye-friend/">Rance, Goodbye Friend</a>
+</li>
+<li>
+<a href="https://adamcaudill.com/2016/01/01/new-atheism-the-philosophy-of-atheism/">&#8220;New Atheism&#8221; &#038; The Philosophy of Atheism</a>
+</li>
+<li>
+<a href="https://adamcaudill.com/2016/01/01/2015-year-in-review/">2015: Year In Review</a>
+</li>
+<li>
+<a href="https://adamcaudill.com/2015/12/27/battle-fronts-in-the-crypto-war/">Battle Fronts in the Crypto War</a>
+</li>
+</ul>
+</section> <section id="twitter_timeline-3" class="widget widget_twitter_timeline"><h2 class="widget-title">Follow me on Twitter</h2><a class="twitter-timeline" data-widget-id="676213057849303040" data-theme="light" data-link-color="#f96e5b" data-border-color="#e8e8e8" height="400" lang="EN">My Tweets</a></section><section id="search-2" class="widget widget_search">
+<form role="search" method="get" class="search-form" action="https://adamcaudill.com/">
+<label>
+<span class="screen-reader-text">Search for:</span>
+<input type="search" class="search-field" placeholder="Search &hellip;" value="" name="s" title="Search for:"/>
+</label>
+<button type="submit" class="search-submit"><span class="screen-reader-text">Search</span></button>
+</form>
+</section> </aside> 
+</div> 
+<footer id="colophon" class="site-footer" role="contentinfo">
+<nav class="main-navigation" role="navigation" aria-label="Footer Primary Menu">
+<div class="menu-main-container"><ul id="menu-main-1" class="primary-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item menu-item-263"><a href="/">Home</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-719"><a href="https://adamcaudill.com/category/essays/">Essays</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-720"><a href="https://adamcaudill.com/category/security_research/">Research</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-264"><a href="https://adamcaudill.com/speaking/">Speaking</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-265"><a href="https://adamcaudill.com/about/">About</a></li>
+</ul></div> </nav> 
+<div class="site-info">
+<span class="site-title"><a href="https://adamcaudill.com/" rel="home">Adam Caudill</a></span>
+<a href="https://wordpress.org/">Proudly powered by WordPress</a>
+</div> 
+</footer> 
+</div> 
+</div> 
+<script type="text/javascript">
+			!function(d,s,id){
+				var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+				if(!d.getElementById(id)){
+					js=d.createElement(s);
+					js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+					fjs.parentNode.insertBefore(js,fjs);
+				}
+			}(document,"script","twitter-wjs");
+		</script>
+<script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201605'></script>
+<script type='text/javascript' src='http://adamcaudill.com/wp-content/themes/twentysixteen/js/skip-link-focus-fix.js?ver=20151112'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var screenReaderText = {"expand":"expand child menu","collapse":"collapse child menu"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://adamcaudill.com/wp-content/themes/twentysixteen/js/functions.js?ver=20151204'></script>
+<script type='text/javascript' src='http://adamcaudill.com/wp-includes/js/wp-embed.min.js?ver=4.4.2'></script>
+<script type='text/javascript' src='http://stats.wp.com/e-201605.js' async defer></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:3.9.1',blog:'104021626',post:'0',tz:'-5',srv:'adamcaudill.com'} ]);
+	_stq.push([ 'clickTrackerInit', '104021626', '0' ]);
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+(function(){try{var s,a,i,j,r,c,l=document.getElementsByTagName("a"),t=document.createElement("textarea");for(i=0;l.length-i;i++){try{a=l[i].getAttribute("href");if(a&&a.indexOf("/cdn-cgi/l/email-protection") > -1  && (a.length > 28)){s='';j=27+ 1 + a.indexOf("/cdn-cgi/l/email-protection");if (a.length > j) {r=parseInt(a.substr(j,2),16);for(j+=2;a.length>j&&a.substr(j,1)!='X';j+=2){c=parseInt(a.substr(j,2),16)^r;s+=String.fromCharCode(c);}j+=1;s+=a.substr(j,a.length-j);}t.innerHTML=s.replace(/</g,"&lt;").replace(/>/g,"&gt;");l[i].setAttribute("href","mailto:"+t.value);}}catch(e){}}}catch(e){}})();
+/* ]]> */
+</script>
+</body>
+</html>
+ 
+ 
+ 

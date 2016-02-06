@@ -1,16 +1,16 @@
-##Yawast
+## Yawast
 
 Yet Another Web Application Security Tool
 
 This application is still very much in the early development phase; as such it should be viewed as alpha software, and thus may have bugs, perform unexpectedly, or be missing features you'd expect from a tool like this. Please keep this in mind as you use this.
 
-####Why?
+#### Why?
 
 Because.
 
 This is meant to provide a easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests.
 
-####Tests
+#### Tests
 
 The following tests are performed:
 
@@ -50,7 +50,7 @@ SSL Information:
 
 In addition to these tests, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 
-####Usage
+#### Usage
 
 * Standard scan: `./yawast scan <url>`
 * HEAD-only scan: `./yawast head <url>`
@@ -59,7 +59,7 @@ In addition to these tests, certain basic information is also displayed, such as
 
 For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
 
-####Status
+#### Status
 
 Various automated status messages and tools:
 
@@ -67,7 +67,7 @@ Various automated status messages and tools:
 [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast.png)](https://codeclimate.com/github/adamcaudill/yawast)
 [![Coverage Status](https://coveralls.io/repos/adamcaudill/yawast/badge.png)](https://coveralls.io/r/adamcaudill/yawast)
 
-####License
+#### License
 
 Copyright (c) 2013 - 2016, Adam Caudill (adam@adamcaudill.com)
 

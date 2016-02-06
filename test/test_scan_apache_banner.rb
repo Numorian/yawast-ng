@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require './lib/yawast'
 require './test/base'
 
-class TestScannerCms < Minitest::Test
+class TestScannerApacheBanner < Minitest::Test
   include TestBase
 
   def test_apache_basic_banner_no_version

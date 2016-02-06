@@ -16,9 +16,9 @@ module TestBase
     $stdout = @orig_stdout
   end
 
-  def start_web_server(file, url)
+  def start_web_server(file, url, port = 1234)
     thr = Thread.new {
-      server = WEBrick::HTTPServer.new :Port => 1234,
+      server = WEBrick::HTTPServer.new :Port => port,
                                        :BindAddress => 'localhost',
                                        :AccessLog => []#,
                                        #:Logger => WEBrick::Log.new('/dev/null')

@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require './lib/yawast'
 require './test/base'
 
-class TestStringExtensions < MiniTest::Unit::TestCase
+class TestStringExtensions < Minitest::Test
   include TestBase
 
   def test_valid_number

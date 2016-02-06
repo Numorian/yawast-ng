@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require './lib/yawast'
 require './test/base'
 
-class TestSharedHttp < MiniTest::Unit::TestCase
+class TestSharedHttp < Minitest::Test
   include TestBase
 
   def setup

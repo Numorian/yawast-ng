@@ -3,7 +3,7 @@ require './lib/yawast'
 require './test/base'
 require 'colorize'
 
-class TestSharedUtils < MiniTest::Unit::TestCase
+class TestSharedUtils < Minitest::Test
   include TestBase
 
   def test_puts_error

@@ -2,11 +2,11 @@ require 'minitest/autorun'
 require './lib/yawast'
 require './test/base'
 
-class TestScannerCms < MiniTest::Unit::TestCase
+class TestScannerCms < Minitest::Test
   include TestBase
 
   def test_generator_tag_valid
-    body = Yawast::Shared::Http.get URI::Parser.new.parse 'http://wordpress.org/news/'
+    body = Yawast::Shared::Http.get URI::Parser.new.parse 'http://adamcaudill.com/'
     override_stdout
     Yawast::Scanner::Cms.get_generator body
 

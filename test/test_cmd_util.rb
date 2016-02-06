@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require './lib/yawast'
 require './test/base'
 
-class TestCommandUtils < MiniTest::Unit::TestCase
+class TestCommandUtils < Minitest::Test
   include TestBase
 
   def test_valid_url

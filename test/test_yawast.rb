@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require './lib/yawast'
 require './test/base'
 
-class TestYawast < MiniTest::Unit::TestCase
+class TestYawast < Minitest::Test
   include TestBase
 
   def test_header

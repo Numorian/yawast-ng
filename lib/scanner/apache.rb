@@ -36,15 +36,15 @@ module Yawast
       end
 
       def self.check_all(uri, head)
-        #run all the defined checks
-        check_server_status(uri)
-        check_server_info(uri)
+        #this check for @apache may yield false negatives.. meh.
+        if @apache
+          #run all the defined checks
+          check_server_status(uri)
+          check_server_info(uri)
+        end
       end
 
       def self.check_server_status(uri)
-        #this may yield false negatives.. meh.
-        return if !@apache
-
         uri.path = '/server-status'
         uri.query = '' if uri.query != nil
 
@@ -57,9 +57,6 @@ module Yawast
       end
 
       def self.check_server_info(uri)
-        #this may yield false negatives.. meh.
-        return if !@apache
-
         uri.path = '/server-info'
         uri.query = '' if uri.query != nil
 

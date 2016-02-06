@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html><head>
+<title>Apache Status</title>
+</head><body>
+<h1>Apache Server Status for www.apache.org (via 140.211.11.105)</h1>
+
+<dl><dt>Server Version: Apache/2.4.7 (Ubuntu) OpenSSL/1.0.1f</dt>
+<dt>Server MPM: event</dt>
+<dt>Server Built: Sep  2 2015 13:02:10
+</dt></dl><hr /><dl>
+<dt>Current Time: Saturday, 06-Feb-2016 21:08:34 UTC</dt>
+<dt>Restart Time: Monday, 02-Nov-2015 20:22:09 UTC</dt>
+<dt>Parent Server Config. Generation: 97</dt>
+<dt>Parent Server MPM Generation: 96</dt>
+<dt>Server uptime:  96 days 46 minutes 25 seconds</dt>
+<dt>Server load: 1.74 1.98 1.99</dt>
+<dt>Total accesses: 1003515622 - Total Traffic: 44137.0 GB</dt>
+<dt>CPU Usage: u38687.4 s1293.05 cu0 cs0 - .482% CPU load</dt>
+<dt>121 requests/sec - 5.4 MB/second - 46.1 kB/request</dt>
+<dt>221 requests currently being processed, 529 idle workers</dt>
+</dl>
+
+<table rules="all" cellpadding="1%">
+<tr><th rowspan="2">PID</th><th colspan="2">Connections</th>
+<th colspan="2">Threads</th><th colspan="4">Async connections</th></tr>
+<tr><th>total</th><th>accepting</th><th>busy</th><th>idle</th><th>writing</th><th>keep-alive</th><th>closing</th></tr>
+<tr><td>6819</td><td>148</td><td>yes</td><td>32</td><td>118</td><td>1</td><td>89</td><td>26</td></tr>
+<tr><td>46349</td><td>340</td><td>no</td><td>68</td><td>82</td><td>3</td><td>241</td><td>28</td></tr>
+<tr><td>8306</td><td>281</td><td>yes</td><td>68</td><td>82</td><td>1</td><td>176</td><td>38</td></tr>
+<tr><td>7921</td><td>91</td><td>yes</td><td>23</td><td>127</td><td>1</td><td>49</td><td>17</td></tr>
+<tr><td>8076</td><td>118</td><td>yes</td><td>30</td><td>120</td><td>0</td><td>76</td><td>15</td></tr>
+<tr><td>Sum</td><td>978</td><td>&nbsp;</td><td>221</td><td>529</td><td>6</td><td>631</td><td>124</td></tr>
+</table>
+<pre>................................................................
+................................................................
+................................................................
+................................................................
+............................................R_R___WR____________
+____RW__R____W____W____RR_____R___WR_____________W____W____R___R
+__R_W_R_R_R___W_________________W_RR_________W_________RR_R_____
+W_..............................................................
+................................................................
+........................RW_RR___R____WR__W______W_R_RWW_WR__RR_R
+__WRR_R____R_W_WR____R________R_R_WW__RWRWRRW___R_RW_R___RR_RR_R
+__R_W_____RWW__R_R_WRR__WW_RWWW_RWW__R__R_____..................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+......__R_WR______R_R_RRW___WW_RR__R_____W_RR__RR_R__R___R_W_WRW
+R____RR_RW_WWW_W______W________R_W_RW_RW__WRR__R__RRR__RWRR_____
+W_RR___WRW_RRRW_WR_W_____WRR....................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+..............................__________W__W_WR_____R_______R__R
+________________WWW________________R___R________W__W________R___
+_______________R_W_RW_____________R____W_____R_R_____W_________W
+____W__R________W__________________R_________R__R__W_W_______W__
+R__W___________R______R__W___WW____R___RW__R_R__RWWR___W________
+__R_R_____......................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+................................................................
+......................................</pre>
+<p>Scoreboard Key:<br />
+"<b><code>_</code></b>" Waiting for Connection, 
+"<b><code>S</code></b>" Starting up, 
+"<b><code>R</code></b>" Reading Request,<br />
+"<b><code>W</code></b>" Sending Reply, 
+"<b><code>K</code></b>" Keepalive (read), 
+"<b><code>D</code></b>" DNS Lookup,<br />
+"<b><code>C</code></b>" Closing connection, 
+"<b><code>L</code></b>" Logging, 
+"<b><code>G</code></b>" Gracefully finishing,<br /> 
+"<b><code>I</code></b>" Idle cleanup of worker, 
+"<b><code>.</code></b>" Open slot with no current process<br />
+<p />
+
+
+<table border="0"><tr><th>Srv</th><th>PID</th><th>Acc</th><th>M</th><th>CPU
+</th><th>SS</th><th>Req</th><th>Conn</th><th>Child</th><th>Slot</th><th>Client</th><th>VHost</th><th>Request</th></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/872812</td><td>.
+</td><td>2278.44</td><td>8185</td><td>364</td><td>0.0</td><td>0.00</td><td>38242.98
+</td><td>12.3.83.92</td><td nowrap></td><td nowrap></td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/873334</td><td>.
+</td><td>2277.17</td><td>8185</td><td>10921</td><td>0.0</td><td>0.00</td><td>38862.97
+</td><td>212.47.227.72</td><td nowrap>www.apache.org:80</td><td nowrap>POST / HTTP/1.1</td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/872621</td><td>.
+</td><td>2277.42</td><td>8185</td><td>10599</td><td>0.0</td><td>0.00</td><td>39611.80
+</td><td>212.47.227.72</td><td nowrap>www.apache.org:80</td><td nowrap>POST / HTTP/1.1</td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/871925</td><td>.
+</td><td>2277.11</td><td>8185</td><td>10023</td><td>0.0</td><td>0.00</td><td>36812.04
+</td><td>81.180.113.103</td><td nowrap>www.openoffice.org:443</td><td nowrap>NULL</td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/872323</td><td>.
+</td><td>2279.20</td><td>8185</td><td>10495</td><td>0.0</td><td>0.00</td><td>38449.78
+</td><td>212.47.227.72</td><td nowrap>www.apache.org:80</td><td nowrap>POST / HTTP/1.1</td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/871983</td><td>.
+</td><td>2277.91</td><td>8185</td><td>0</td><td>0.0</td><td>0.00</td><td>37707.66
+</td><td>41.249.5.187</td><td nowrap>www.openoffice.org:80</td><td nowrap>GET /art/galleries/marketing/web_buttons/nicu/80x15_3.png HTTP/</td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/871124</td><td>.
+</td><td>2278.12</td><td>8185</td><td>0</td><td>0.0</td><td>0.00</td><td>39098.86
+</td><td>75.107.253.26</td><td nowrap></td><td nowrap></td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/873393</td><td>.
+</td><td>2277.67</td><td>8185</td><td>0</td><td>0.0</td><td>0.00</td><td>40089.63
+</td><td>54.82.59.182</td><td nowrap>www.apache.org:80</td><td nowrap>GET /index.html?org/apache/struts2/views/freemarker/tags/ElseMo</td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/869937</td><td>.
+</td><td>2279.25</td><td>8185</td><td>120101</td><td>0.0</td><td>0.00</td><td>41553.07
+</td><td>12.3.83.92</td><td nowrap></td><td nowrap></td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/871280</td><td>.
+</td><td>2277.40</td><td>8185</td><td>10710</td><td>0.0</td><td>0.00</td><td>38879.65
+</td><td>212.47.227.72</td><td nowrap>www.apache.org:80</td><td nowrap>POST / HTTP/1.1</td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/874224</td><td>.
+</td><td>2277.11</td><td>8185</td><td>10013</td><td>0.0</td><td>0.00</td><td>39515.29
+</td><td>78.88.84.145</td><td nowrap></td><td nowrap></td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/873554</td><td>.
+</td><td>2279.25</td><td>8185</td><td>120101</td><td>0.0</td><td>0.00</td><td>41065.53
+</td><td>12.3.83.92</td><td nowrap></td><td nowrap></td></tr>
+
+<tr><td><b>0-96</b></td><td>-</td><td>0/0/872863</td><td>.
+</td><td>2277.40</td><td>8185</td><td>3</td><td>0.0</td><td>0.00</td><td>39486.19
+</td><td>54.147.44.13</td><td nowrap></td><td nowrap></td></tr>
+
+</table>
+ <hr /> <table>
+ <tr><th>Srv</th><td>Child Server number - generation</td></tr>
+ <tr><th>PID</th><td>OS process ID</td></tr>
+ <tr><th>Acc</th><td>Number of accesses this connection / this child / this slot</td></tr>
+ <tr><th>M</th><td>Mode of operation</td></tr>
+<tr><th>CPU</th><td>CPU usage, number of seconds</td></tr>
+<tr><th>SS</th><td>Seconds since beginning of most recent request</td></tr>
+ <tr><th>Req</th><td>Milliseconds required to process most recent request</td></tr>
+ <tr><th>Conn</th><td>Kilobytes transferred this connection</td></tr>
+ <tr><th>Child</th><td>Megabytes transferred this child</td></tr>
+ <tr><th>Slot</th><td>Total megabytes transferred this slot</td></tr>
+ </table>
+<hr>
+<table cellspacing=0 cellpadding=0>
+<tr><td bgcolor="#000000">
+<b><font color="#ffffff" face="Arial,Helvetica">SSL/TLS Session Cache Status:</font></b>
+</td></tr>
+<tr><td bgcolor="#ffffff">
+cache type: <b>SHMCB</b>, shared memory: <b>512000</b> bytes, current entries: <b>1673</b><br>subcaches: <b>32</b>, indexes per subcache: <b>88</b><br>time left on oldest entries' objects: avg: <b>4</b> seconds, (range: 0...11)<br>index usage: <b>59%</b>, cache usage: <b>68%</b><br>total entries stored since starting: <b>305201</b><br>total entries replaced since starting: <b>0</b><br>total entries expired since starting: <b>301083</b><br>total (pre-expiry) entries scrolled out of the cache: <b>2319</b><br>total retrieves since starting: <b>21725</b> hit, <b>11162</b> miss<br>total removes since starting: <b>0</b> hit, <b>0</b> miss<br></td></tr>
+</table>
+</body></html>

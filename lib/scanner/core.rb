@@ -2,8 +2,9 @@ module Yawast
   module Scanner
     class Core
       def self.print_header(uri)
-        if @header != true
+        if !@header
           Yawast.header
+
           puts "Scanning: #{uri.to_s}"
           puts ''
         end

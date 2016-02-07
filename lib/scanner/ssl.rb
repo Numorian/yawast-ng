@@ -140,7 +140,11 @@ module Yawast
         private
         def get_x509_pub_key_strength(cert)
           begin
-            cert.public_key.strength
+            if cert.public_key.class == OpenSSL::PKey::EC
+              cert.public_key.group.curve_name
+            else
+              cert.public_key.strength
+            end
           rescue => e
             "(Strength Unknown: #{e.message})"
           end

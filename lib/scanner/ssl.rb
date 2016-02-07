@@ -97,6 +97,7 @@ module Yawast
               context.ciphers = cipher[0]
               context.verify_mode = OpenSSL::SSL::VERIFY_NONE
               ssl = OpenSSL::SSL::SSLSocket.new(socket, context)
+              ssl.hostname = uri.host
 
               ssl.connect
 

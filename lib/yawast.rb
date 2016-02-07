@@ -27,7 +27,8 @@ module Yawast
 
   def self.header
     puts "Yawast v#{VERSION} - #{DESCRIPTION}"
-    puts ' Copyright (c) 2013 Adam Caudill <adam@adamcaudill.com>'
+    puts ' Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>'
+    puts ' Support & Documentation: https://github.com/adamcaudill/yawast'
     puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION}; #{RUBY_PLATFORM}"
     puts ''
   end

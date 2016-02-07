@@ -11,6 +11,7 @@ module Yawast
           ctx = OpenSSL::SSL::SSLContext.new
           ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
           ssl = OpenSSL::SSL::SSLSocket.new(socket, ctx)
+          ssl.hostname = uri.host
           ssl.connect
 
           cert = ssl.peer_cert

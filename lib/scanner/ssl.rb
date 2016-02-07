@@ -25,7 +25,7 @@ module Yawast
             Yawast::Utilities.puts_info "\t\tSubject: #{cert.subject}"
             Yawast::Utilities.puts_info "\t\tExpires: #{cert.not_after}"
             Yawast::Utilities.puts_info "\t\tSignature Algorithm: #{cert.signature_algorithm}"
-            Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{cert.public_key.strength}"
+            Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(cert)}"
             Yawast::Utilities.puts_info "\t\t\tKey Hash: #{Digest::SHA1.hexdigest(cert.public_key.to_s)}"
             Yawast::Utilities.puts_info "\t\tExtensions:"
             cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' }
@@ -49,7 +49,7 @@ module Yawast
               Yawast::Utilities.puts_info "\t\tIssued To: #{c.subject.common_name} / #{c.subject.organization}"
               Yawast::Utilities.puts_info "\t\t\tIssuer: #{c.issuer.common_name} / #{c.issuer.organization}"
               Yawast::Utilities.puts_info "\t\t\tExpires: #{c.not_after}"
-              Yawast::Utilities.puts_info "\t\t\tKey: #{c.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{c.public_key.strength}"
+              Yawast::Utilities.puts_info "\t\t\tKey: #{c.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(c)}"
               Yawast::Utilities.puts_info "\t\t\tSignature Algorithm: #{c.signature_algorithm}"
               Yawast::Utilities.puts_info "\t\t\tHash: #{Digest::SHA1.hexdigest(c.to_der)}"
               puts ''
@@ -132,6 +132,18 @@ module Yawast
         end
 
         puts ''
+      end
+
+      #private methods
+      class << self
+        private
+        def get_x509_pub_key_strength(cert)
+          begin
+            cert.public_key.strength
+          rescue => e
+            "(Strength Unknown: #{e.message})"
+          end
+        end
       end
     end
   end

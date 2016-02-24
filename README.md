@@ -1,8 +1,14 @@
 ## Yawast [![Build Status](https://travis-ci.org/adamcaudill/yawast.png?branch=master)](https://travis-ci.org/adamcaudill/yawast) [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast.png)](https://codeclimate.com/github/adamcaudill/yawast) [![Coverage Status](https://coveralls.io/repos/github/adamcaudill/yawast/badge.svg?branch=master)](https://coveralls.io/github/adamcaudill/yawast?branch=master)
 
-Yet Another Web Application Security Tool
+**YAWAST: Antecedent Web Application Security Toolkit**
 
-This application is still very much in the early development phase; as such it should be viewed as alpha software, and thus may have bugs, perform unexpectedly, or be missing features you'd expect from a tool like this. Please keep this in mind as you use this.
+YAWAST is an application meant to simplify initial analysis and information gathering for penetration testers and security auditors. It performs basic checks in these categories:
+
+* TLS/SSL - Versions and cipher suites supported; common issues.
+* Information Disclosure - Checks for common information leaks.
+* Presence of Files or Directories - Checks for files or directories that could indicate a security issue.
+* Common Vulnerabilities
+* Missing Security Headers
 
 #### Why?
 

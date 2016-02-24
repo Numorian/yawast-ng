@@ -87,29 +87,34 @@ module Yawast
 
         #find all versions that don't include '_server' or '_client'
         versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
+
         versions.each do |version|
-          ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
-          ciphers.each do |cipher|
-            #try to connect and see what happens
-            begin
-              socket = TCPSocket.new(uri.host, uri.port)
-              context = OpenSSL::SSL::SSLContext.new(version)
-              context.ciphers = cipher[0]
-              context.verify_mode = OpenSSL::SSL::VERIFY_NONE
-              ssl = OpenSSL::SSL::SSLSocket.new(socket, context)
-              ssl.hostname = uri.host
+          #ignore SSLv23, as it's an auto-negotiate, which just adds noise
+          if version.to_s != "SSLv23"
+            ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
 
-              ssl.connect
+            ciphers.each do |cipher|
+              #try to connect and see what happens
+              begin
+                socket = TCPSocket.new(uri.host, uri.port)
+                context = OpenSSL::SSL::SSLContext.new(version)
+                context.ciphers = cipher[0]
+                context.verify_mode = OpenSSL::SSL::VERIFY_NONE
+                ssl = OpenSSL::SSL::SSLSocket.new(socket, context)
+                ssl.hostname = uri.host
 
-              if cipher[2] >= 128
-                Yawast::Utilities.puts_info "\t\tVersion: #{version}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
-              else
-                Yawast::Utilities.puts_warn "\t\tVersion: #{version}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+                ssl.connect
+
+                if cipher[2] >= 128
+                  Yawast::Utilities.puts_info "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+                else
+                  Yawast::Utilities.puts_warn "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+                end
+
+                ssl.sysclose
+              rescue
+                #just ignore anything that goes wrong here; we don't care
               end
-
-              ssl.sysclose
-            rescue
-              #just ignore anything that goes wrong here; we don't care
             end
           end
         end

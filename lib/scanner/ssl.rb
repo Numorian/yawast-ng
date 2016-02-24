@@ -94,6 +94,9 @@ module Yawast
 
                 if cipher[2] >= 128
                   Yawast::Utilities.puts_info "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+                elsif cipher[2] < 112 || cipher[0].include?('RC4')
+                  #less than 112 bits or RC4, flag as a vuln
+                  Yawast::Utilities.puts_vuln "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
                 else
                   Yawast::Utilities.puts_warn "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
                 end

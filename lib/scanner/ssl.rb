@@ -8,8 +8,10 @@ module Yawast
       def self.info(uri, check_ciphers)
         begin
           socket = TCPSocket.new(uri.host, uri.port)
+
           ctx = OpenSSL::SSL::SSLContext.new
-          ctx.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          ctx.ciphers = OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers]
+
           ssl = OpenSSL::SSL::SSLSocket.new(socket, ctx)
           ssl.hostname = uri.host
           ssl.connect
@@ -58,20 +60,6 @@ module Yawast
             puts ''
           end
 
-          cipher = ssl.cipher
-
-          unless cipher.nil?
-            Yawast::Utilities.puts_info 'Connection Cipher Information:'
-
-            if cipher[2] >= 128
-              Yawast::Utilities.puts_info "\t\tName: #{cipher[0]} - #{cipher[2]} bits"
-            else
-              Yawast::Utilities.puts_warn "\t\tName: #{cipher[0]} - #{cipher[2]} bits"
-            end
-
-            puts ''
-          end
-
           if check_ciphers
             get_ciphers(uri)
           end
@@ -83,7 +71,7 @@ module Yawast
       end
 
       def self.get_ciphers(uri)
-        Yawast::Utilities.puts_info 'Supported Ciphers:'
+        Yawast::Utilities.puts_info 'Supported Ciphers (based on your OpenSSL version):'
 
         #find all versions that don't include '_server' or '_client'
         versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
@@ -99,7 +87,6 @@ module Yawast
                 socket = TCPSocket.new(uri.host, uri.port)
                 context = OpenSSL::SSL::SSLContext.new(version)
                 context.ciphers = cipher[0]
-                context.verify_mode = OpenSSL::SSL::VERIFY_NONE
                 ssl = OpenSSL::SSL::SSLSocket.new(socket, context)
                 ssl.hostname = uri.host
 
@@ -112,8 +99,14 @@ module Yawast
                 end
 
                 ssl.sysclose
+              rescue OpenSSL::SSL::SSLError => e
+                unless e.message.include?('alert handshake failure') ||
+                    e.message.include?('no ciphers available') ||
+                    e.message.include?('wrong version number')
+                  Yawast::Utilities.puts_error "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(Supported But Failed)"
+                end
               rescue
-                #just ignore anything that goes wrong here; we don't care
+                #don't care, just ignore it
               end
             end
           end

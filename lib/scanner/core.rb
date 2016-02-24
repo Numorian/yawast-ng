@@ -2,34 +2,39 @@ module Yawast
   module Scanner
     class Core
       def self.print_header(uri)
-        if !@header
-          Yawast.header
+        Yawast.header
 
-          puts "Scanning: #{uri.to_s}"
+        puts "Scanning: #{uri.to_s}"
 
-          begin
-            dns = Resolv::DNS.new()
-            addrs = dns.getaddresses(uri.host)
+        begin
+          dns = Resolv::DNS.new()
+          addrs = dns.getaddresses(uri.host)
 
-            addrs.each do |ip|
-              begin
-                puts "\t#{ip} - #{dns.getname(ip.to_s)}"
-              rescue
-                puts "\t#{ip}"
-              end
+          addrs.each do |ip|
+            begin
+              puts "\t#{ip} - #{dns.getname(ip.to_s)}"
+            rescue
+              puts "\t#{ip}"
             end
-          rescue
-            # meh.
           end
-
-          puts ''
+        rescue
+          # meh.
         end
 
-        @header = true
+        puts ''
+      end
+
+      def self.setup(uri)
+        unless @setup
+          print_header(uri)
+          Yawast.set_openssl_options
+        end
+
+        @setup = true
       end
 
       def self.process(uri, options)
-        print_header(uri)
+        setup(uri)
 
         begin
           #cache the HEAD result, so that we can minimize hits
@@ -61,14 +66,14 @@ module Yawast
       end
 
       def self.get_cms(uri, options)
-        print_header(uri)
+        setup(uri)
 
         body = Yawast::Shared::Http.get(uri)
         Yawast::Scanner::Cms.get_generator(body)
       end
 
       def self.check_ssl(uri, options, head)
-        print_header(uri)
+        setup(uri)
 
         if uri.scheme == 'https' && !options.nossl
           head = Yawast::Shared::Http.head(uri) if head == nil

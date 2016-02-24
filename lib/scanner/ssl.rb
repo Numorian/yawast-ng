@@ -71,7 +71,7 @@ module Yawast
       end
 
       def self.get_ciphers(uri)
-        Yawast::Utilities.puts_info 'Supported Ciphers (based on your OpenSSL version):'
+        puts 'Supported Ciphers (based on your OpenSSL version):'
 
         #find all versions that don't include '_server' or '_client'
         versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}

@@ -126,8 +126,8 @@ module Yawast
                     e.message.include?('wrong version number')
                   Yawast::Utilities.puts_error "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(Supported But Failed)"
                 end
-              rescue
-                #don't care, just ignore it
+              rescue => e
+                Yawast::Utilities.puts_error "\t\tVersion: #{''.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(#{e.message})"
               end
             end
           end

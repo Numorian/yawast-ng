@@ -85,6 +85,9 @@ module Yawast
       def self.get_ciphers(uri)
         puts 'Supported Ciphers (based on your OpenSSL version):'
 
+        dns = Resolv::DNS.new()
+        ip = dns.getaddresses(uri.host)[0]
+
         #find all versions that don't include '_server' or '_client'
         versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
 
@@ -97,7 +100,7 @@ module Yawast
             ciphers.each do |cipher|
               #try to connect and see what happens
               begin
-                socket = TCPSocket.new(uri.host, uri.port)
+                socket = TCPSocket.new(ip.to_s, uri.port)
                 context = OpenSSL::SSL::SSLContext.new(version)
                 context.ciphers = cipher[0]
                 ssl = OpenSSL::SSL::SSLSocket.new(socket, context)

@@ -92,6 +92,7 @@ module Yawast
           #ignore SSLv23, as it's an auto-negotiate, which just adds noise
           if version.to_s != "SSLv23"
             ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
+            puts "\tChecking for #{version.to_s} suites (#{ciphers.count} possible suites)"
 
             ciphers.each do |cipher|
               #try to connect and see what happens

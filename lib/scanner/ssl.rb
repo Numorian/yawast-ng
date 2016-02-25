@@ -128,6 +128,8 @@ module Yawast
                 end
               rescue => e
                 Yawast::Utilities.puts_error "\t\tVersion: #{''.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(#{e.message})"
+              ensure
+                ssl.sysclose unless ssl == nil
               end
             end
           end

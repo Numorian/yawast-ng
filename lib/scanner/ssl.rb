@@ -52,6 +52,11 @@ module Yawast
 
           cert_chain = ssl.peer_cert_chain
 
+          if cert_chain.count == 1
+            Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Singed"
+            puts ''
+          end
+
           unless cert_chain.nil?
             Yawast::Utilities.puts_info 'Certificate: Chain'
             cert_chain.each do |c|

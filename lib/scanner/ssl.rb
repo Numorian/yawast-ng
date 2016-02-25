@@ -25,7 +25,14 @@ module Yawast
             Yawast::Utilities.puts_info "\t\tVersion: #{cert.version}"
             Yawast::Utilities.puts_info "\t\tSerial: #{cert.serial}"
             Yawast::Utilities.puts_info "\t\tSubject: #{cert.subject}"
-            Yawast::Utilities.puts_info "\t\tExpires: #{cert.not_after}"
+
+            #check to see if cert is expired
+            if cert.not_after > Time.now
+              Yawast::Utilities.puts_info "\t\tExpires: #{cert.not_after}"
+            else
+              Yawast::Utilities.puts_vuln "\t\tExpires: #{cert.not_after} (Expired)"
+            end
+
             Yawast::Utilities.puts_info "\t\tSignature Algorithm: #{cert.signature_algorithm}"
             Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(cert)}"
             Yawast::Utilities.puts_info "\t\t\tKey Hash: #{Digest::SHA1.hexdigest(cert.public_key.to_s)}"

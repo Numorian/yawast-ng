@@ -30,11 +30,12 @@ module Yawast
       def self.check_path(uri, path, vuln)
         #note: this only checks directly at the root, I'm not sure if this is what we want
         # should probably be relative to what's passed in, instead of overriding the path.
-        uri.path = "#{path}"
-        code = Yawast::Shared::Http.get_status_code(uri)
+        check = URI.parse(uri.to_s)
+        check.path = "#{path}"
+        code = Yawast::Shared::Http.get_status_code(check)
 
         if code == "200"
-          msg = "'#{path}' found: #{uri}"
+          msg = "'#{path}' found: #{check}"
 
           if vuln
             Yawast::Utilities.puts_vuln msg

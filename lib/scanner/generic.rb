@@ -67,17 +67,14 @@ module Yawast
 
           if powered_by != ''
             Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}"
-            puts ''
           end
 
           if xss_protection == '0'
             Yawast::Utilities.puts_warn 'X-XSS-Protection Disabled Header Present'
-            puts ''
           end
 
           unless pingback == ''
             Yawast::Utilities.puts_info "X-Pingback Header Present: #{pingback}"
-            puts ''
           end
 
           unless runtime == ''
@@ -86,26 +83,20 @@ module Yawast
             else
               Yawast::Utilities.puts_warn "X-Runtime Header Present: #{runtime}"
             end
-
-            puts ''
           end
 
           unless backend_server == ''
             Yawast::Utilities.puts_warn "X-Backend-Server Header Present: #{backend_server}"
-            puts ''
           end
 
           unless via == ''
             Yawast::Utilities.puts_warn "Via Header Present: #{via}"
-            puts ''
           end
 
           if frame_options == ''
             Yawast::Utilities.puts_warn 'X-Frame-Options Header Not Present'
-            puts ''
           else
             Yawast::Utilities.puts_info "X-Frame-Options Header: #{frame_options}"
-            puts ''
           end
 
           if content_options == ''
@@ -123,6 +114,8 @@ module Yawast
 
             puts ''
           end
+
+          puts ''
         rescue => e
           Yawast::Utilities.puts_error "Error getting head information: #{e.message}"
           raise

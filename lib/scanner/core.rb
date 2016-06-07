@@ -37,6 +37,9 @@ module Yawast
         setup(uri)
 
         begin
+          #setup the proxy
+          Yawast::Shared::Http.setup(options.proxy)
+
           #cache the HEAD result, so that we can minimize hits
           head = Yawast::Shared::Http.head(uri)
 

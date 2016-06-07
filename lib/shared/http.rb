@@ -1,7 +1,7 @@
 module Yawast
   module Shared
     class Http
-      def self.setup(proxy)
+      def self.setup(proxy, cookie)
         if proxy != nil && proxy.include?(':')
           @proxy_host, @proxy_port = proxy.split(':')
           @proxy = true
@@ -10,13 +10,15 @@ module Yawast
         else
           @proxy = false
         end
+
+        @cookie = cookie
+        puts "Using Cookie: #{@cookie}" if @cookie != nil
       end
 
       def self.head(uri)
         req = get_http(uri)
         req.use_ssl = uri.scheme == 'https'
-        headers = { 'User-Agent' => HTTP_UA }
-        req.head(uri.path, headers)
+        req.head(uri.path, get_headers)
       end
 
       def self.get(uri)
@@ -25,8 +27,7 @@ module Yawast
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          headers = { 'User-Agent' => HTTP_UA }
-          res = req.request_get(uri.path, headers)
+          res = req.request_get(uri.path, get_headers)
           body = res.read_body
         rescue
           #do nothing for now
@@ -38,8 +39,7 @@ module Yawast
       def self.get_status_code(uri)
         req = get_http(uri)
         req.use_ssl = uri.scheme == 'https'
-        headers = { 'User-Agent' => HTTP_UA }
-        res = req.head(uri.path, headers)
+        res = req.head(uri.path, get_headers)
         res.code
       end
 
@@ -51,6 +51,16 @@ module Yawast
         end
 
         req
+      end
+
+      def self.get_headers
+        if @cookie == nil
+          headers = { 'User-Agent' => HTTP_UA }
+        else
+          headers = { 'User-Agent' => HTTP_UA, 'Cookie' => @cookie }
+        end
+
+        headers
       end
     end
   end

@@ -15,6 +15,7 @@ command :scan do |c|
 
   c.option '--nossl', 'Disables SSL checks'
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
+  c.option '--cookie STRING', String, 'Session cookie'
 
   c.action do |args, options|
     Yawast::Commands::Scan.process(args, options)
@@ -28,6 +29,7 @@ command :head do |c|
   c.option '--nossl', 'Disables SSL checks'
   c.option '--nociphers', 'Disables check for supported ciphers'
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
+  c.option '--cookie STRING', String, 'Session cookie'
 
   c.action do |args, options|
     Yawast::Commands::Scan.process(args, options)
@@ -50,6 +52,7 @@ command :cms do |c|
   c.description = 'Detect the CMS in use'
 
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
+  c.option '--cookie STRING', String, 'Session cookie'
 
   c.action do |args, options|
     Yawast::Commands::Cms.process(args, options)

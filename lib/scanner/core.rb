@@ -67,6 +67,8 @@ module Yawast
             end
 
             get_cms(uri, options)
+
+            puts 'Scan complete.'
           end
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.message})"

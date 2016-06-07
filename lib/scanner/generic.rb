@@ -127,7 +127,7 @@ module Yawast
 
         File.open("lib/resources/common.txt", "r") do |f|
           f.each_line do |line|
-            check = URI.parse(uri.to_s)
+            check = uri.copy
             check.path = check.path + "#{line.strip}/"
 
             code = Yawast::Shared::Http.get_status_code(check)

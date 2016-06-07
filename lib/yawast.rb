@@ -14,6 +14,7 @@ require 'net/http'
 require 'socket'
 
 require './lib/string_ext'
+require './lib/uri_ext'
 require './lib/util'
 
 require_all '/commands'

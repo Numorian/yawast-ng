@@ -25,7 +25,7 @@ module Yawast
   DESCRIPTION = 'YAWAST: Antecedent Web Application Security Toolkit'
   HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Yawast/#{VERSION} Chrome/52.0.2743.24 Safari/537.36"
   def self.header
-    puts "Yawast v#{VERSION} - #{DESCRIPTION}"
+    puts "YAWAST v#{VERSION} - #{DESCRIPTION}"
     puts ' Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>'
     puts ' Support & Documentation: https://github.com/adamcaudill/yawast'
     puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION}; #{RUBY_PLATFORM}"

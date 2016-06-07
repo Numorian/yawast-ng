@@ -68,11 +68,18 @@ For detailed information, just call `./yawast -h` to see the help page. To see i
 Using `scan` - the normal go-to option, here's what you get when scanning my website:
 
 ```
-$ ./yawast scan https://adamcaudill.com
-Yawast v0.0.1 - YAWAST: Antecedent Web Application Security Toolkit
+yawast scan https://adamcaudill.com
+__   _____  _    _  ___   _____ _____
+\ \ / / _ \| |  | |/ _ \ /  ___|_   _|
+ \ V / /_\ \ |  | / /_\ \\ `--.  | |
+  \ /|  _  | |/\| |  _  | `--. \ | |
+  | || | | \  /\  / | | |/\__/ / | |
+  \_/\_| |_/\/  \/\_| |_/\____/  \_/
+
+YAWAST v0.1.0 - The YAWAST Antecedent Web Application Security Toolkit
  Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>
  Support & Documentation: https://github.com/adamcaudill/yawast
- Ruby 2.2.4-p230; OpenSSL 1.0.2f  28 Jan 2016; x86_64-darwin15
+ Ruby 2.2.4-p230; OpenSSL 1.0.2f  28 Jan 2016 (x86_64-darwin15)
 
 Scanning: https://adamcaudill.com/
 	104.28.26.55
@@ -88,22 +95,25 @@ Scanning: https://adamcaudill.com/
 [I] 		2400:CB00:2048:1::681C:1B37 (N/A)
 
 [I] HEAD:
-[I] 		date: Tue, 07 Jun 2016 18:09:29 GMT
+[I] 		date: Tue, 07 Jun 2016 23:31:56 GMT
 [I] 		content-type: text/html; charset=UTF-8
 [I] 		connection: close
-[I] 		set-cookie: __cfduid=d367aac8693589690989798ca95e37aee1465322968; expires=Wed, 07-Jun-17 18:09:28 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[I] 		set-cookie: __cfduid=afe15fe3ded876244b7de9999; expires=Wed, 07-Jun-17 23:31:56 GMT; path=/; domain=.adamcaudill.com; HttpOnly
 [I] 		vary: Accept-Encoding,Cookie
-[I] 		link: <https://adamcaudill.com/wp-json/>; rel="https://api.w.org/"
+[I] 		cache-control: max-age=3, must-revalidate
+[I] 		wp-super-cache: Served supercache file from PHP
+[I] 		last-modified: Tue, 07 Jun 2016 23:27:36 GMT
 [I] 		x-frame-options: sameorigin
 [I] 		strict-transport-security: max-age=15552000; preload
 [I] 		x-content-type-options: nosniff
 [I] 		server: cloudflare-nginx
-[I] 		cf-ray: 2af60e2a6cc73858-ATL
+[I] 		cf-ray: 2af7e6836d8d0a18-ATL
 
 [I] X-Frame-Options Header: sameorigin
-
+[I] X-Content-Type-Options Header: nosniff
 [I] Cookies:
-[I] 		__cfduid=d367aac8693589690989798ca95e37aee1465322968; expires=Wed, 07-Jun-17 18:09:28 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[I] 		__cfduid=dae15411d2ce3fe3dec876244b7de99991465342316; expires=Wed, 07-Jun-17 23:31:56 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+
 
 [I] Found X509 Certificate:
 [I] 		Issued To: sni67677.cloudflaressl.com /
@@ -114,7 +124,7 @@ Scanning: https://adamcaudill.com/
 [I] 		Expires: 2016-09-11 23:59:59 UTC
 [I] 		Signature Algorithm: ecdsa-with-SHA256
 [I] 		Key: EC-prime256v1
-[I] 			Key Hash: 799aec42074864ed800bd5c6eb3d6189839376e2
+[I] 			Key Hash: a6591ce2ebeacf45b867eb5c3023b78a59cb4922
 [I] 		Extensions:
 [I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96,
 [I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
@@ -161,6 +171,8 @@ Scanning: https://adamcaudill.com/
 [I] 			Hash: ae223cbf20191b40d7ffb4ea5701b65fdc68a1ca
 
 
+		Qualys SSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=adamcaudill.com&hideResults=on
+
 Supported Ciphers (based on your OpenSSL version):
 	Checking for TLSv1 suites (98 possible suites)
 [I] 		Version: TLSv1  	Bits: 256	Cipher: ECDHE-ECDSA-AES256-SHA
@@ -182,7 +194,30 @@ Supported Ciphers (based on your OpenSSL version):
 
 [I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
 
+Searching for common directories...
+[I] 	Found: 'https://adamcaudill.com/0/'
+[I] 	Found: 'https://adamcaudill.com/2006/'
+[I] 	Found: 'https://adamcaudill.com/2007/'
+[I] 	Found: 'https://adamcaudill.com/2008/'
+[I] 	Found: 'https://adamcaudill.com/2009/'
+[I] 	Found: 'https://adamcaudill.com/2010/'
+[I] 	Found: 'https://adamcaudill.com/2011/'
+[I] 	Found: 'https://adamcaudill.com/2013/'
+[I] 	Found: 'https://adamcaudill.com/2014/'
+[I] 	Found: 'https://adamcaudill.com/2015/'
+[I] 	Found: 'https://adamcaudill.com/2016/'
+[I] 	Found: 'https://adamcaudill.com/About/'
+[I] 	Found: 'https://adamcaudill.com/about/'
+[I] 	Found: 'https://adamcaudill.com/feed/'
+[I] 	Found: 'https://adamcaudill.com/pgp/'
+[I] 	Found: 'https://adamcaudill.com/photo/'
+[I] 	Found: 'https://adamcaudill.com/resume/'
+[I] 	Found: 'https://adamcaudill.com/tools/'
+[I] 	Found: 'https://adamcaudill.com/wp-content/'
+[I] 	Found: 'https://adamcaudill.com/wp-includes/'
+
 [I] Meta Generator: WordPress 4.5.2
+Scan complete.
 ```
 
 #### License

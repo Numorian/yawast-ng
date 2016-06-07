@@ -10,11 +10,7 @@ YAWAST is an application meant to simplify initial analysis and information gath
 * Common Vulnerabilities
 * Missing Security Headers
 
-#### Why?
-
-Because.
-
-This is meant to provide a easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests.
+This is meant to provide a easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests. It is especially useful when used in conjunction with Burp Suite (via the `--proxy` parameter).
 
 #### Tests
 

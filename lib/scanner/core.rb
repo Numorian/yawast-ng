@@ -62,7 +62,9 @@ module Yawast
             Yawast::Scanner::ObjectPresence.check_elmah_axd(uri)
 
             #check for common directories
-            Yawast::Scanner::Generic.directory_search(uri)
+            unless options.nodir
+              Yawast::Scanner::Generic.directory_search(uri)
+            end
 
             get_cms(uri, options)
           end

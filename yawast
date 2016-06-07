@@ -14,6 +14,7 @@ command :scan do |c|
   c.description = 'Scans the provided URL'
 
   c.option '--nossl', 'Disables SSL checks'
+  c.option '--nodir', 'Disables directory search'
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
   c.option '--cookie STRING', String, 'Session cookie'
 
@@ -28,6 +29,7 @@ command :head do |c|
 
   c.option '--nossl', 'Disables SSL checks'
   c.option '--nociphers', 'Disables check for supported ciphers'
+  c.option '--nodir', 'Disables directory search'
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
   c.option '--cookie STRING', String, 'Session cookie'
 

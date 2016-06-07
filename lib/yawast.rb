@@ -23,9 +23,16 @@ require_all '/shared'
 
 module Yawast
   VERSION = '0.1.0'
-  DESCRIPTION = 'YAWAST: Antecedent Web Application Security Toolkit'
+  DESCRIPTION = 'The YAWAST Antecedent Web Application Security Toolkit'
   HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Yawast/#{VERSION} Chrome/52.0.2743.24 Safari/537.36"
   def self.header
+    puts '__   _____  _    _  ___   _____ _____ '
+    puts '\ \ / / _ \| |  | |/ _ \ /  ___|_   _|'
+    puts ' \ V / /_\ \ |  | / /_\ \\\ `--.  | |  '
+    puts '  \ /|  _  | |/\| |  _  | `--. \ | |  '
+    puts '  | || | | \  /\  / | | |/\__/ / | |  '
+    puts '  \_/\_| |_/\/  \/\_| |_/\____/  \_/  '
+    puts ''
     puts "YAWAST v#{VERSION} - #{DESCRIPTION}"
     puts ' Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>'
     puts ' Support & Documentation: https://github.com/adamcaudill/yawast'

@@ -72,6 +72,9 @@ module Yawast
             puts ''
           end
 
+          puts "\t\tQualys SSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=#{uri.host}&hideResults=on"
+          puts ''
+
           if check_ciphers
             get_ciphers(uri)
           end

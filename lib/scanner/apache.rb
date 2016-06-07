@@ -39,8 +39,8 @@ module Yawast
         #this check for @apache may yield false negatives.. meh.
         if @apache
           #run all the defined checks
-          check_server_status(uri)
-          check_server_info(uri)
+          check_server_status(uri.copy)
+          check_server_info(uri.copy)
         end
       end
 

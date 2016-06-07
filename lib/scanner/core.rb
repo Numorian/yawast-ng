@@ -61,6 +61,9 @@ module Yawast
             Yawast::Scanner::ObjectPresence.check_trace_axd(uri)
             Yawast::Scanner::ObjectPresence.check_elmah_axd(uri)
 
+            #check for common directories
+            Yawast::Scanner::Generic.directory_search(uri)
+
             get_cms(uri, options)
           end
         rescue => e

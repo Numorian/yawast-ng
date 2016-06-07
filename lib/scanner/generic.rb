@@ -121,6 +121,25 @@ module Yawast
           raise
         end
       end
+
+      def self.directory_search(uri)
+        puts 'Searching for common directories...'
+
+        File.open("lib/resources/common.txt", "r") do |f|
+          f.each_line do |line|
+            check = URI.parse(uri.to_s)
+            check.path = check.path + "#{line.strip}/"
+
+            code = Yawast::Shared::Http.get_status_code(check)
+
+            if code == "200"
+              Yawast::Utilities.puts_info "\tFound: '#{check.to_s}'"
+            end
+          end
+        end
+
+        puts ''
+      end
     end
   end
 end

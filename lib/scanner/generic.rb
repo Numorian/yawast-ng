@@ -110,6 +110,18 @@ module Yawast
 
             cookies.each do |val|
               Yawast::Utilities.puts_info "\t\t#{val.strip}"
+
+              elements = val.strip.split(';')
+
+              #check for secure cookies
+              unless elements.include? ' Secure'
+                Yawast::Utilities.puts_warn "\t\t\tCookie missing Secure flag"
+              end
+
+              #check for HttpOnly cookies
+              unless elements.include? ' HttpOnly'
+                Yawast::Utilities.puts_warn "\t\t\tCookie missing HttpOnly flag"
+              end
             end
 
             puts ''

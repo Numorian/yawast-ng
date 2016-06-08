@@ -56,6 +56,7 @@ module Yawast
             Yawast::Scanner::Iis.check_all(uri, head)
 
             Yawast::Scanner::ObjectPresence.check_source_control(uri)
+            Yawast::Scanner::ObjectPresence.check_sitemap(uri)
             Yawast::Scanner::ObjectPresence.check_cross_domain(uri)
             Yawast::Scanner::ObjectPresence.check_wsftp_log(uri)
             Yawast::Scanner::ObjectPresence.check_trace_axd(uri)

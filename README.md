@@ -27,6 +27,7 @@ The following tests are performed:
 * *(Generic)* SSL: HSTS not enabled
 * *(Generic)* Source Control: Common source control directories present
 * *(Generic)* Presence of crossdomain.xml or clientaccesspolicy.xml
+* *(Generic)* Presence of sitemap.xml
 * *(Generic)* Presence of WS_FTP.LOG
 * *(Generic)* Missing cookie flags (Secure & HttpOnly)
 * *(Generic)* Search for common directories

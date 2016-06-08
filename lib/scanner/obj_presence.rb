@@ -13,6 +13,10 @@ module Yawast
         check_path(uri, '/clientaccesspolicy.xml', false)
       end
 
+      def self.check_sitemap(uri)
+        check_path(uri, '/sitemap.xml', false)
+      end
+
       def self.check_wsftp_log(uri)
         #check both upper and lower, as they are both seen in the wild
         check_path(uri, '/WS_FTP.LOG', false)

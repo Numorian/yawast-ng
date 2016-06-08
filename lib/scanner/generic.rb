@@ -32,6 +32,7 @@ module Yawast
           pingback = ''
           frame_options = ''
           content_options = ''
+          csp = ''
           backend_server = ''
           runtime = ''
           xss_protection = ''
@@ -46,6 +47,7 @@ module Yawast
             pingback = v if k.downcase == 'x-pingback'
             frame_options = v if k.downcase == 'x-frame-options'
             content_options = v if k.downcase == 'x-content-type-options'
+            csp = v if k.downcase == 'content-security-policy'
             backend_server = v if k.downcase == 'x-backend-server'
             runtime = v if k.downcase == 'x-runtime'
             xss_protection = v if k.downcase == 'x-xss-protection'
@@ -104,6 +106,12 @@ module Yawast
           else
             Yawast::Utilities.puts_info "X-Content-Type-Options Header: #{content_options}"
           end
+
+          if csp == ''
+            Yawast::Utilities.puts_warn 'Content-Security-Policy Header Not Present'
+          end
+
+          puts ''
 
           unless cookies.empty?
             Yawast::Utilities.puts_info 'Cookies:'

@@ -44,7 +44,7 @@ module Yawast
           headers = Yawast::Shared::Http.get_headers
           headers['Command'] = 'stop-debug'
           headers['Accept'] = '*/*'
-          res = req.request(Debug.new('/'))
+          res = req.request(Debug.new('/', headers))
 
           if res.code == 200
             Yawast::Utilities.puts_vuln 'ASP.NET Debugging Enabled'

@@ -39,7 +39,7 @@ module Yawast
             else
               Yawast::Utilities.puts_info "\t\tSignature Algorithm: #{cert.signature_algorithm}"
             end
-            
+
             Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(cert)}"
             Yawast::Utilities.puts_info "\t\t\tKey Hash: #{Digest::SHA1.hexdigest(cert.public_key.to_s)}"
             Yawast::Utilities.puts_info "\t\tExtensions:"
@@ -59,7 +59,15 @@ module Yawast
           cert_chain = ssl.peer_cert_chain
 
           if cert_chain.count == 1
-            Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Singed"
+            #HACK: This is an ugly way to guess if it's a missing intermediate, or self-signed
+            #tIt looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
+
+            if cert.issuer == cert.subject
+              Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Singed"
+            else
+              Yawast::Utilities.puts_warn "\t\tCertificate Chain Is Incomplete"
+            end
+            
             puts ''
           end
 

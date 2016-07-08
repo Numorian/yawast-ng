@@ -44,6 +44,7 @@ The following tests are performed:
 * *(ASP.NET)* Info Disclosure: ASP.NET MVC version
 * *(ASP.NET)* Presence of Trace.axd
 * *(ASP.NET)* Presence of Elmah.axd
+* *(ASP.NET)* Debugging Enabled
 * *(nginx)* Info Disclosure: Server version
 * *(PHP)* Info Disclosure: PHP version
 

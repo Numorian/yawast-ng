@@ -62,6 +62,7 @@ module Yawast
             Yawast::Scanner::ObjectPresence.check_trace_axd(uri)
             Yawast::Scanner::ObjectPresence.check_elmah_axd(uri)
             Yawast::Scanner::ObjectPresence.check_readme_html(uri)
+            Yawast::Scanner::ObjectPresence.check_release_notes_txt(uri)
 
             #check for common directories
             if options.dir

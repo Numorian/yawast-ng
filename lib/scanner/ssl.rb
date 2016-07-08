@@ -67,7 +67,7 @@ module Yawast
             else
               Yawast::Utilities.puts_warn "\t\tCertificate Chain Is Incomplete"
             end
-            
+
             puts ''
           end
 

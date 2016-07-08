@@ -61,6 +61,7 @@ module Yawast
             Yawast::Scanner::ObjectPresence.check_wsftp_log(uri)
             Yawast::Scanner::ObjectPresence.check_trace_axd(uri)
             Yawast::Scanner::ObjectPresence.check_elmah_axd(uri)
+            Yawast::Scanner::ObjectPresence.check_readme_html(uri)
 
             #check for common directories
             if options.dir

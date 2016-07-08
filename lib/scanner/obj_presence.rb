@@ -31,6 +31,10 @@ module Yawast
         check_path(uri, '/elmah.axd', false)
       end
 
+      def self.check_readme_html(uri)
+        check_path(uri, '/readme.html', false)
+      end
+
       def self.check_path(uri, path, vuln)
         #note: this only checks directly at the root, I'm not sure if this is what we want
         # should probably be relative to what's passed in, instead of overriding the path.

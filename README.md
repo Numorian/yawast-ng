@@ -30,6 +30,8 @@ The following tests are performed:
 * *(Generic)* Presence of crossdomain.xml or clientaccesspolicy.xml
 * *(Generic)* Presence of sitemap.xml
 * *(Generic)* Presence of WS_FTP.LOG
+* *(Generic)* Presence of RELEASE-NOTES.txt
+* *(Generic)* Presence of readme.html
 * *(Generic)* Missing cookie flags (Secure & HttpOnly)
 * *(Generic)* Search for common directories
 * *(Apache)* Info Disclosure: Module listing enabled

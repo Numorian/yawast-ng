@@ -168,7 +168,7 @@ module Yawast
           headers = Yawast::Shared::Http.get_headers
           res = req.request(Propfind.new('/', headers))
 
-          if res.code.to_i <= 400
+          if res.code.to_i <= 400 && res.body.length > 0 && res['Content-Type'] == 'text/xml'
             Yawast::Utilities.puts_warn 'Possible Info Disclosure: PROPFIND Enabled'
           end
         end

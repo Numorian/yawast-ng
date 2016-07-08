@@ -57,6 +57,15 @@ SSL Information:
 * Certificate chain
 * Supported ciphers
 
+Checks for the following SSL issues are performed:
+
+* Expired Certificate
+* Self-Signed Certificate
+* MD5 Signature
+* SHA1 Signature
+* RC4 Cipher Suites
+* Weak (< 128 bit) Cipher Suites
+
 In addition to these tests, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 
 #### Usage

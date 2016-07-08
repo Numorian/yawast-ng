@@ -160,6 +160,28 @@ module Yawast
 
         puts ''
       end
+
+      def self.check_propfind(uri)
+        begin
+          req = Yawast::Shared::Http.get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          headers = Yawast::Shared::Http.get_headers
+          res = req.request(Propfind.new('/', headers))
+
+          if res.code.to_i <= 400
+            Yawast::Utilities.puts_warn 'Possible Info Disclosure: PROPFIND Enabled'
+          end
+        end
+
+        puts ''
+      end
+    end
+
+    #Custom class to allow using the PROPFIND verb
+    class Propfind < Net::HTTPRequest
+      METHOD = "PROPFIND"
+      REQUEST_HAS_BODY = false
+      RESPONSE_HAS_BODY = true
     end
   end
 end

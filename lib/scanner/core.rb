@@ -64,6 +64,8 @@ module Yawast
             Yawast::Scanner::ObjectPresence.check_readme_html(uri)
             Yawast::Scanner::ObjectPresence.check_release_notes_txt(uri)
 
+            Yawast::Scanner::Generic.check_propfind(uri)
+
             #check for common directories
             if options.dir
               Yawast::Scanner::Generic.directory_search(uri)

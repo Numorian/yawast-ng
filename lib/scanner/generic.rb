@@ -170,6 +170,7 @@ module Yawast
 
           if res.code.to_i <= 400 && res.body.length > 0 && res['Content-Type'] == 'text/xml'
             Yawast::Utilities.puts_warn 'Possible Info Disclosure: PROPFIND Enabled'
+            puts "\t\t\"curl -X PROPFIND #{uri}\""
           end
         end
 

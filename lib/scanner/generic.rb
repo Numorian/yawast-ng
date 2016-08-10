@@ -3,23 +3,62 @@ module Yawast
     class Generic
       def self.server_info(uri)
         begin
-          Yawast::Utilities.puts_info "Full URI: #{uri}"
+          puts 'DNS Information:'
 
-          Yawast::Utilities.puts_info 'IP(s):'
           dns = Resolv::DNS.new()
-          addr = dns.getaddresses(uri.host)
-          addr.each do |ip|
-            begin
-              host_name = dns.getname(ip.to_s)
-            rescue
-              host_name = 'N/A'
+          Resolv::DNS.open do |resv|
+            a = resv.getresources(uri.host, Resolv::DNS::Resource::IN::A)
+            unless a.empty?
+              a.each do |ip|
+                begin
+                  host_name = dns.getname(ip.address)
+                rescue
+                  host_name = 'N/A'
+                end
+
+                Yawast::Utilities.puts_info "\t\t#{ip.address} (#{host_name})"
+                puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address}"
+                puts "\t\t\t\thttps://censys.io/ipv4/#{ip.address}"
+              end
             end
 
-            Yawast::Utilities.puts_info "\t\t#{ip} (#{host_name})"
-            puts "\t\t\t\thttps://www.shodan.io/host/#{ip}"
-            puts "\t\t\t\thttps://censys.io/ipv4/#{ip}"
+            aaaa = resv.getresources(uri.host, Resolv::DNS::Resource::IN::AAAA)
+            unless aaaa.empty?
+              aaaa.each do |ip|
+                begin
+                  host_name = dns.getname(ip.address)
+                rescue
+                  host_name = 'N/A'
+                end
+
+                Yawast::Utilities.puts_info "\t\t#{ip.address} (#{host_name})"
+                puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
+              end
+            end
+
+            txt = resv.getresources(uri.host, Resolv::DNS::Resource::IN::TXT)
+            unless txt.empty?
+              txt.each do |rec|
+                Yawast::Utilities.puts_info "\t\tTXT: #{rec.data}"
+              end
+            end
+
+            mx = resv.getresources(uri.host, Resolv::DNS::Resource::IN::MX)
+            unless mx.empty?
+              mx.each do |rec|
+                Yawast::Utilities.puts_info "\t\tMX: #{rec.exchange} (#{rec.preference})"
+              end
+            end
+
+            ns = resv.getresources(uri.host, Resolv::DNS::Resource::IN::NS)
+            unless ns.empty?
+              ns.each do |rec|
+                Yawast::Utilities.puts_info "\t\tNS: #{rec.name}"
+              end
+            end
           end
-          puts ''
+
+          puts
         rescue => e
           Yawast::Utilities.puts_error "Error getting basic information: #{e.message}"
           raise

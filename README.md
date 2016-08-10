@@ -84,13 +84,13 @@ For detailed information, just call `./yawast -h` to see the help page. To see i
 Using `scan` - the normal go-to option, here's what you get when scanning my website:
 
 ```
-yawast scan https://adamcaudill.com
-__   _____  _    _  ___   _____ _____
+yawast scan https://adamcaudill.com --dir
+__   _____  _    _  ___   _____ _____ 
 \ \ / / _ \| |  | |/ _ \ /  ___|_   _|
- \ V / /_\ \ |  | / /_\ \\ `--.  | |
-  \ /|  _  | |/\| |  _  | `--. \ | |
-  | || | | \  /\  / | | |/\__/ / | |
-  \_/\_| |_/\/  \/\_| |_/\____/  \_/
+ \ V / /_\ \ |  | / /_\ \\ `--.  | |  
+  \ /|  _  | |/\| |  _  | `--. \ | |  
+  | || | | \  /\  / | | |/\__/ / | |  
+  \_/\_| |_/\/  \/\_| |_/\____/  \_/  
 
 YAWAST v0.1.0 - The YAWAST Antecedent Web Application Security Toolkit
  Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>
@@ -100,39 +100,55 @@ YAWAST v0.1.0 - The YAWAST Antecedent Web Application Security Toolkit
 Scanning: https://adamcaudill.com/
 	104.28.26.55
 	104.28.27.55
-	2400:CB00:2048:1::681C:1B37
-	2400:CB00:2048:1::681C:1A37
 
-[I] Full URI: https://adamcaudill.com/
-[I] IP(s):
+DNS Information:
 [I] 		104.28.27.55 (N/A)
+				https://www.shodan.io/host/104.28.27.55
+				https://censys.io/ipv4/104.28.27.55
 [I] 		104.28.26.55 (N/A)
-[I] 		2400:CB00:2048:1::681C:1A37 (N/A)
+				https://www.shodan.io/host/104.28.26.55
+				https://censys.io/ipv4/104.28.26.55
 [I] 		2400:CB00:2048:1::681C:1B37 (N/A)
+				https://www.shodan.io/host/2400:cb00:2048:1::681c:1b37
+[I] 		2400:CB00:2048:1::681C:1A37 (N/A)
+				https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
+[I] 		TXT: v=spf1 mx a ptr include:_spf.google.com ~all
+[I] 		MX: aspmx4.googlemail.com (30)
+[I] 		MX: aspmx.l.google.com (10)
+[I] 		MX: alt1.aspmx.l.google.com (20)
+[I] 		MX: aspmx2.googlemail.com (30)
+[I] 		MX: alt2.aspmx.l.google.com (20)
+[I] 		MX: aspmx3.googlemail.com (30)
+[I] 		MX: aspmx5.googlemail.com (30)
+[I] 		NS: vera.ns.cloudflare.com
+[I] 		NS: hal.ns.cloudflare.com
 
 [I] HEAD:
-[I] 		date: Tue, 07 Jun 2016 23:31:56 GMT
+[I] 		date: Wed, 10 Aug 2016 20:54:59 GMT
 [I] 		content-type: text/html; charset=UTF-8
 [I] 		connection: close
-[I] 		set-cookie: __cfduid=afe15fe3ded876244b7de9999; expires=Wed, 07-Jun-17 23:31:56 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[I] 		set-cookie: __cfduid=1; expires=Thu, 10-Aug-17 20:54:59 GMT; path=/; domain=.adamcaudill.com; HttpOnly
 [I] 		vary: Accept-Encoding,Cookie
-[I] 		cache-control: max-age=3, must-revalidate
-[I] 		wp-super-cache: Served supercache file from PHP
-[I] 		last-modified: Tue, 07 Jun 2016 23:27:36 GMT
+[I] 		link: <https://adamcaudill.com/wp-json/>; rel="https://api.w.org/"
 [I] 		x-frame-options: sameorigin
 [I] 		strict-transport-security: max-age=15552000; preload
 [I] 		x-content-type-options: nosniff
 [I] 		server: cloudflare-nginx
-[I] 		cf-ray: 2af7e6836d8d0a18-ATL
+[I] 		cf-ray: 2d06589d45dd5350-MIA
+
+[I] NOTE: Server appears to be Cloudflare; WAF may be in place.
 
 [I] X-Frame-Options Header: sameorigin
 [I] X-Content-Type-Options Header: nosniff
+[W] Content-Security-Policy Header Not Present
+
 [I] Cookies:
-[I] 		__cfduid=dae15411d2ce3fe3dec876244b7de99991465342316; expires=Wed, 07-Jun-17 23:31:56 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[I] 		__cfduid=1; expires=Thu, 10-Aug-17 20:54:59 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[W] 			Cookie missing Secure flag
 
 
 [I] Found X509 Certificate:
-[I] 		Issued To: sni67677.cloudflaressl.com /
+[I] 		Issued To: sni67677.cloudflaressl.com / 
 [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2 / COMODO CA Limited
 [I] 		Version: 2
 [I] 		Serial: 14171089194524384184707003668844347326
@@ -140,16 +156,16 @@ Scanning: https://adamcaudill.com/
 [I] 		Expires: 2016-09-11 23:59:59 UTC
 [I] 		Signature Algorithm: ecdsa-with-SHA256
 [I] 		Key: EC-prime256v1
-[I] 			Key Hash: a6591ce2ebeacf45b867eb5c3023b78a59cb4922
+[I] 			Key Hash: 1a23d84441f9b811dc188bab42b2375873c42ba2
 [I] 		Extensions:
-[I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96,
+[I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96, 
 [I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
 [I] 			keyUsage = critical, Digital Signature
 [I] 			basicConstraints = critical, CA:FALSE
 [I] 			extendedKeyUsage = TLS Web Server Authentication, TLS Web Client Authentication
-[I] 			certificatePolicies = Policy: 1.3.6.1.4.1.6449.1.2.2.7,   CPS: https://secure.comodo.com/CPS, Policy: 2.23.140.1.2.1,
-[I] 			crlDistributionPoints = , Full Name:,   URI:http://crl.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crl,
-[I] 			authorityInfoAccess = CA Issuers - URI:http://crt.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crt, OCSP - URI:http://ocsp.comodoca4.com,
+[I] 			certificatePolicies = Policy: 1.3.6.1.4.1.6449.1.2.2.7,   CPS: https://secure.comodo.com/CPS, Policy: 2.23.140.1.2.1, 
+[I] 			crlDistributionPoints = , Full Name:,   URI:http://crl.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crl, 
+[I] 			authorityInfoAccess = CA Issuers - URI:http://crt.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crt, OCSP - URI:http://ocsp.comodoca4.com, 
 [I] 		Alternate Names:
 [I] 			sni67677.cloudflaressl.com
 [I] 			*.adamcaudill.com
@@ -165,7 +181,7 @@ Scanning: https://adamcaudill.com/
 [I] 		Hash: 9be2091903a01bcff3ec4049ed1d037a8c611010
 
 [I] Certificate: Chain
-[I] 		Issued To: sni67677.cloudflaressl.com /
+[I] 		Issued To: sni67677.cloudflaressl.com / 
 [I] 			Issuer: COMODO ECC Domain Validation Secure Server CA 2 / COMODO CA Limited
 [I] 			Expires: 2016-09-11 23:59:59 UTC
 [I] 			Key: EC-prime256v1
@@ -210,6 +226,11 @@ Supported Ciphers (based on your OpenSSL version):
 
 [I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
 
+[W] '/sitemap.xml' found: https://adamcaudill.com/sitemap.xml
+
+[W] '/readme.html' found: https://adamcaudill.com/readme.html
+
+
 Searching for common directories...
 [I] 	Found: 'https://adamcaudill.com/0/'
 [I] 	Found: 'https://adamcaudill.com/2006/'
@@ -232,7 +253,7 @@ Searching for common directories...
 [I] 	Found: 'https://adamcaudill.com/wp-content/'
 [I] 	Found: 'https://adamcaudill.com/wp-includes/'
 
-[I] Meta Generator: WordPress 4.5.2
+[I] Meta Generator: WordPress 4.5.3
 Scan complete.
 ```
 

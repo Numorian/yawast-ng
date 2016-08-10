@@ -16,6 +16,8 @@ module Yawast
             end
 
             Yawast::Utilities.puts_info "\t\t#{ip} (#{host_name})"
+            puts "\t\t\t\thttps://www.shodan.io/host/#{ip}"
+            puts "\t\t\t\thttps://censys.io/ipv4/#{ip}"
           end
           puts ''
         rescue => e

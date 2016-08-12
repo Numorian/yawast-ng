@@ -78,6 +78,7 @@ module Yawast
           runtime = ''
           xss_protection = ''
           via = ''
+          hpkp = ''
 
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -93,6 +94,7 @@ module Yawast
             runtime = v if k.downcase == 'x-runtime'
             xss_protection = v if k.downcase == 'x-xss-protection'
             via = v if k.downcase == 'via'
+            hpkp = v if k.downcase == 'public-key-pins'
 
             if k.downcase == 'set-cookie'
               #this chunk of magic manages to properly split cookies, when multiple are sent together
@@ -155,6 +157,10 @@ module Yawast
 
           if csp == ''
             Yawast::Utilities.puts_warn 'Content-Security-Policy Header Not Present'
+          end
+
+          if hpkp == ''
+            Yawast::Utilities.puts_warn 'Public-Key-Pins Header Not Present'
           end
 
           puts ''

@@ -26,6 +26,7 @@ The following tests are performed:
 * *(Generic)* X-Frame-Options header not present
 * *(Generic)* X-Content-Type-Options header not present
 * *(Generic)* Content-Security-Policy header not present
+* *(Generic)* Public-Key-Pins header not present
 * *(Generic)* X-XSS-Protection disabled header present
 * *(Generic)* SSL: HSTS not enabled
 * *(Generic)* Source Control: Common source control directories present

@@ -222,6 +222,22 @@ module Yawast
         puts ''
       end
 
+      def self.check_trace(uri)
+        begin
+          req = Yawast::Shared::Http.get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          headers = Yawast::Shared::Http.get_headers
+          res = req.request(Trace.new('/', headers))
+
+          if res.body.include? 'TRACE / HTTP/1.1'
+            Yawast::Utilities.puts_warn 'HTTP TRACE Enabled'
+            puts "\t\t\"curl -X TRACE #{uri}\""
+          end
+        end
+
+        puts ''
+      end
+
       def self.check_propfind(uri)
         begin
           req = Yawast::Shared::Http.get_http(uri)
@@ -249,6 +265,13 @@ module Yawast
     #Custom class to allow using the OPTIONS verb
     class Options < Net::HTTPRequest
       METHOD = "OPTIONS"
+      REQUEST_HAS_BODY = false
+      RESPONSE_HAS_BODY = true
+    end
+
+    #Custom class to allow using the TRACE verb
+    class Trace < Net::HTTPRequest
+      METHOD = "TRACE"
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end

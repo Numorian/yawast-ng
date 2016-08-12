@@ -66,6 +66,7 @@ module Yawast
 
             Yawast::Scanner::Generic.check_propfind(uri)
             Yawast::Scanner::Generic.check_options(uri)
+            Yawast::Scanner::Generic.check_trace(uri)
 
             #check for common directories
             if options.dir

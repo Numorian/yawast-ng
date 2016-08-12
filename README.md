@@ -22,6 +22,7 @@ The following tests are performed:
 * *(Generic)* Info Disclosure: X-Runtime header present
 * *(Generic)* Info Disclosure: Via header present
 * *(Generic)* Info Disclosure: PROPFIND Enabled
+* *(Generic)* TRACE Enabled
 * *(Generic)* X-Frame-Options header not present
 * *(Generic)* X-Content-Type-Options header not present
 * *(Generic)* Content-Security-Policy header not present

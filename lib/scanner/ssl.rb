@@ -52,7 +52,10 @@ module Yawast
               alt_names.value.split(',').each { |name| Yawast::Utilities.puts_info "\t\t\t#{name.strip.delete('DNS:')}" }
             end
 
-            Yawast::Utilities.puts_info "\t\tHash: #{Digest::SHA1.hexdigest(cert.to_der)}"
+            hash = Digest::SHA1.hexdigest(cert.to_der)
+            Yawast::Utilities.puts_info "\t\tHash: #{hash}"
+            puts "\t\t\thttps://censys.io/certificates?q=#{hash}"
+            puts "\t\t\thttps://crt.sh/?q=#{hash}"
             puts ''
           end
 

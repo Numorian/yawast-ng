@@ -216,10 +216,10 @@ module Yawast
 
           if res['Public'] != nil
             Yawast::Utilities.puts_info "Public HTTP Verbs (OPTIONS): #{res['Public']}"
+
+            puts ''
           end
         end
-
-        puts ''
       end
 
       def self.check_trace(uri)
@@ -232,10 +232,10 @@ module Yawast
           if res.body.include? 'TRACE / HTTP/1.1'
             Yawast::Utilities.puts_warn 'HTTP TRACE Enabled'
             puts "\t\t\"curl -X TRACE #{uri}\""
+
+            puts ''
           end
         end
-
-        puts ''
       end
 
       def self.check_propfind(uri)
@@ -248,10 +248,10 @@ module Yawast
           if res.code.to_i <= 400 && res.body.length > 0 && res['Content-Type'] == 'text/xml'
             Yawast::Utilities.puts_warn 'Possible Info Disclosure: PROPFIND Enabled'
             puts "\t\t\"curl -X PROPFIND #{uri}\""
+
+            puts ''
           end
         end
-
-        puts ''
       end
     end
 

@@ -207,6 +207,21 @@ module Yawast
         puts ''
       end
 
+      def self.check_options(uri)
+        begin
+          req = Yawast::Shared::Http.get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          headers = Yawast::Shared::Http.get_headers
+          res = req.request(Options.new('/', headers))
+
+          if res['Public'] != nil
+            Yawast::Utilities.puts_info "Public HTTP Verbs (OPTIONS): #{res['Public']}"
+          end
+        end
+
+        puts ''
+      end
+
       def self.check_propfind(uri)
         begin
           req = Yawast::Shared::Http.get_http(uri)
@@ -227,6 +242,13 @@ module Yawast
     #Custom class to allow using the PROPFIND verb
     class Propfind < Net::HTTPRequest
       METHOD = "PROPFIND"
+      REQUEST_HAS_BODY = false
+      RESPONSE_HAS_BODY = true
+    end
+
+    #Custom class to allow using the OPTIONS verb
+    class Options < Net::HTTPRequest
+      METHOD = "OPTIONS"
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end

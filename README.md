@@ -81,6 +81,18 @@ In addition to these tests, certain basic information is also displayed, such as
 
 For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
 
+#### Using with Burp Suite
+
+By default, Burp Suite's proxy listens on localhost at port 8080, to use YAWAST with Burp Suite (or any proxy for that matter), just add this to the command line:
+
+`--proxy localhost:8080`
+
+#### Authenticated Testing
+
+For authenticated testing, YAWAST allows you to specify a cookie to be passed via the `--cookie` parameter.
+
+`--cookie SESSIONID=1234567890`
+
 #### Sample
 
 Using `scan` - the normal go-to option, here's what you get when scanning my website:

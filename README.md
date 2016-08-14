@@ -271,6 +271,10 @@ Searching for common directories...
 Scan complete.
 ```
 
+#### Special Thanks
+
+[dirbuster-ng](https://github.com/digination/dirbuster-ng) For the use of their `common.txt` directoty list. This list was the foundation of the list used by YAWAST.
+
 #### License
 
 Copyright (c) 2013 - 2016, Adam Caudill (adam@adamcaudill.com)

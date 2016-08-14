@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+gem 'ssllabs', github: 'Shopify/ssllabs.rb'
 gem 'commander'
 gem 'highline'
 gem 'openssl-extensions'

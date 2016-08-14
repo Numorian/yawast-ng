@@ -74,10 +74,10 @@ In addition to these tests, certain basic information is also displayed, such as
 
 #### Usage
 
-* Standard scan: `./yawast scan <url>`
-* HEAD-only scan: `./yawast head <url>`
-* SSL information: `./yawast ssl <url>`
-* CMS detection: `./yawast cms <url>`
+* Standard scan: `./yawast scan <url> [--nossl] [--nociphers] [--dir] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* HEAD-only scan: `./yawast head <url> [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* SSL information: `./yawast ssl <url> [--nociphers]`
+* CMS detection: `./yawast cms <url> [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 
 For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
 

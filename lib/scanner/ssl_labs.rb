@@ -331,11 +331,14 @@ module Yawast
 
         if ep.details.reneg_support & 1 != 0
           Yawast::Utilities.puts_vuln "\t\t\tSecure Renegotiation: insecure client-initiated renegotiation supported"
-        elsif ep.details.reneg_support & (1<<1) != 0
+        end
+        if ep.details.reneg_support & (1<<1) != 0
           Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure renegotiation supported"
-        elsif ep.details.reneg_support & (1<<2) != 0
+        end
+        if ep.details.reneg_support & (1<<2) != 0
           Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure client-initiated renegotiation supported"
-        elsif ep.details.reneg_support & (1<<3) != 0
+        end
+        if ep.details.reneg_support & (1<<3) != 0
           Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: server requires secure renegotiation support"
         end
 

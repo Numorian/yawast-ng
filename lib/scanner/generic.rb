@@ -5,7 +5,7 @@ module Yawast
         begin
           puts 'DNS Information:'
 
-          dns = Resolv::DNS.new()
+          dns = Resolv::DNS.new
           Resolv::DNS.open do |resv|
             a = resv.getresources(uri.host, Resolv::DNS::Resource::IN::A)
             unless a.empty?

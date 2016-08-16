@@ -232,14 +232,16 @@ module Yawast
         if ep.details.suites.list != nil
           ep.details.suites.list.each do |suite|
             ke = nil
-            if suite.name.include? 'ECDHE'
-              ke = "ECDHE-#{suite.ecdh_bits}-bits"
-            elsif suite.name.include? 'ECDH'
-              ke = "ECDH-#{suite.ecdh_bits}"
-            elsif suite.name.include? 'DHE'
-              ke = "DHE-#{suite.dh_strength}-bits"
-            elsif suite.name.include? 'DH'
-              ke = "DH-#{suite.dh_strength}-bits"
+            if suite.ecdh_bits != nil || suite.dh_strength != nil
+              if suite.name.include? 'ECDHE'
+                ke = "ECDHE-#{suite.ecdh_bits}-bits"
+              elsif suite.name.include? 'ECDH'
+                ke = "ECDH-#{suite.ecdh_bits}"
+              elsif suite.name.include? 'DHE'
+                ke = "DHE-#{suite.dh_strength}-bits"
+              elsif suite.name.include? 'DH'
+                ke = "DH-#{suite.dh_strength}-bits"
+              end
             end
 
             strength = suite.cipher_strength

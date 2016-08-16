@@ -242,11 +242,18 @@ module Yawast
               ke = "DH-#{suite.dh_strength}-bits"
             end
 
+            strength = suite.cipher_strength
+            if suite.name.include? '3DES'
+              # in this case, the effective strength is only 112 bits,
+              #  which is what we want to report. So override SSL Labs
+              strength = 112
+            end
+
             suite_info = nil
             if ke != nil
-              suite_info = "#{suite.name.ljust(50)} - #{suite.cipher_strength}-bits - #{ke}"
+              suite_info = "#{suite.name.ljust(50)} - #{strength}-bits - #{ke}"
             else
-              suite_info = "#{suite.name.ljust(50)} - #{suite.cipher_strength}-bits"
+              suite_info = "#{suite.name.ljust(50)} - #{strength}-bits"
             end
 
             if suite.secure?

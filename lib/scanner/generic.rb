@@ -146,7 +146,11 @@ module Yawast
           if frame_options == ''
             Yawast::Utilities.puts_warn 'X-Frame-Options Header Not Present'
           else
-            Yawast::Utilities.puts_info "X-Frame-Options Header: #{frame_options}"
+            if frame_options.downcase == 'allow'
+              Yawast::Utilities.puts_vuln "X-Frame-Options Header: #{frame_options}"
+            else
+              Yawast::Utilities.puts_info "X-Frame-Options Header: #{frame_options}"
+            end
           end
 
           if content_options == ''

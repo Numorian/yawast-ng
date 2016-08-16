@@ -207,8 +207,6 @@ YAWAST v0.1.0 - The YAWAST Antecedent Web Application Security Toolkit
  Ruby 2.2.4-p230; OpenSSL 1.0.2f  28 Jan 2016 (x86_64-darwin15)
 
 Scanning: https://adamcaudill.com/
-	104.28.27.55
-	104.28.26.55
 
 DNS Information:
 [I] 		104.28.27.55 (N/A)
@@ -233,19 +231,19 @@ DNS Information:
 [I] 		NS: hal.ns.cloudflare.com
 
 [I] HEAD:
-[I] 		date: Sun, 14 Aug 2016 23:25:20 GMT
+[I] 		date: Tue, 16 Aug 2016 07:50:45 GMT
 [I] 		content-type: text/html; charset=UTF-8
 [I] 		connection: close
-[I] 		set-cookie: __cfduid=1; expires=Mon, 14-Aug-17 23:25:20 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[I] 		set-cookie: __cfduid=1; expires=Wed, 16-Aug-17 07:50:45 GMT; path=/; domain=.adamcaudill.com; HttpOnly
 [I] 		vary: Accept-Encoding,Cookie
 [I] 		cache-control: max-age=3, must-revalidate
 [I] 		wp-super-cache: Served supercache file from PHP
-[I] 		last-modified: Sun, 14 Aug 2016 23:20:07 GMT
+[I] 		last-modified: Tue, 16 Aug 2016 07:47:59 GMT
 [I] 		x-frame-options: sameorigin
 [I] 		strict-transport-security: max-age=15552000; preload
 [I] 		x-content-type-options: nosniff
 [I] 		server: cloudflare-nginx
-[I] 		cf-ray: 2d282a5922bc1816-MIA
+[I] 		cf-ray: 2d334c1687ed2e75-MIA
 
 [I] NOTE: Server appears to be Cloudflare; WAF may be in place.
 
@@ -255,7 +253,7 @@ DNS Information:
 [W] Public-Key-Pins Header Not Present
 
 [I] Cookies:
-[I] 		__cfduid=1; expires=Mon, 14-Aug-17 23:25:20 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[I] 		__cfduid=1; expires=Wed, 16-Aug-17 07:50:45 GMT; path=/; domain=.adamcaudill.com; HttpOnly
 [W] 			Cookie missing Secure flag
 
 
@@ -279,14 +277,19 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 		Not Before: 2016-08-13T00:00:00+00:00
 [I] 		Not After: 2017-02-12T23:59:59+00:00
 [I] 		Key: EC 256 (RSA equivalent: 3072)
+[I] 		Key Hash: 1a8aa5b45b60dfbafab92c0f11704c2aebe45d31
+[I] 		Serial: 18930702358496442989903109042193740748
 [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
 [I] 		Signature algorithm: SHA256withECDSA
-[I] 		Extended Validation: No
+[I] 		Extended Validation: No (Domain Control)
 [I] 		Certificate Transparency: No
 [I] 		OCSP Must Staple: No
 [I] 		Revocation information: CRL information available
 [I] 		Revocation information: OCSP information available
 [I] 		Revocation status: certificate not revoked
+[I] 		Hash: 1ae6362e4fc377cccb6df6261838a5d9bb49663d
+			https://censys.io/certificates?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
+			https://crt.sh/?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
 
 	Configuration Information:
 		Protocol Support:
@@ -301,7 +304,7 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384            - 256-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384            - 256-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA               - 256-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 168-bits - ECDHE-256-bits
+[W] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 112-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256      - 256-bits - ECDHE-256-bits
 [I] 			OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256  - 256-bits - ECDHE-256-bits
 
@@ -366,6 +369,7 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 			OCSP Stapling: Yes
 [I] 			FREAK: No
 [I] 			Logjam: No
+[I] 			DH public server param (Ys) reuse: No
 
 
 [I] IP: 104.28.26.55 - Grade: A+
@@ -380,14 +384,19 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 		Not Before: 2016-08-13T00:00:00+00:00
 [I] 		Not After: 2017-02-12T23:59:59+00:00
 [I] 		Key: EC 256 (RSA equivalent: 3072)
+[I] 		Key Hash: c6c369ae2f94fdeeb382099922fa1febe80d6642
+[I] 		Serial: 18930702358496442989903109042193740748
 [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
 [I] 		Signature algorithm: SHA256withECDSA
-[I] 		Extended Validation: No
+[I] 		Extended Validation: No (Domain Control)
 [I] 		Certificate Transparency: No
 [I] 		OCSP Must Staple: No
 [I] 		Revocation information: CRL information available
 [I] 		Revocation information: OCSP information available
 [I] 		Revocation status: certificate not revoked
+[I] 		Hash: 1ae6362e4fc377cccb6df6261838a5d9bb49663d
+			https://censys.io/certificates?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
+			https://crt.sh/?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
 
 	Configuration Information:
 		Protocol Support:
@@ -402,7 +411,7 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384            - 256-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384            - 256-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA               - 256-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 168-bits - ECDHE-256-bits
+[W] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 112-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256      - 256-bits - ECDHE-256-bits
 [I] 			OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256  - 256-bits - ECDHE-256-bits
 
@@ -467,6 +476,7 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 			OCSP Stapling: Yes
 [I] 			FREAK: No
 [I] 			Logjam: No
+[I] 			DH public server param (Ys) reuse: No
 
 
 [I] IP: 2400:cb00:2048:1:0:0:681c:1a37 - Grade: A+
@@ -481,14 +491,19 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 		Not Before: 2016-08-13T00:00:00+00:00
 [I] 		Not After: 2017-02-12T23:59:59+00:00
 [I] 		Key: EC 256 (RSA equivalent: 3072)
+[I] 		Key Hash: cc8cc14246778e98d0792316d299b9c452dd0f68
+[I] 		Serial: 18930702358496442989903109042193740748
 [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
 [I] 		Signature algorithm: SHA256withECDSA
-[I] 		Extended Validation: No
+[I] 		Extended Validation: No (Domain Control)
 [I] 		Certificate Transparency: No
 [I] 		OCSP Must Staple: No
 [I] 		Revocation information: CRL information available
 [I] 		Revocation information: OCSP information available
 [I] 		Revocation status: certificate not revoked
+[I] 		Hash: 1ae6362e4fc377cccb6df6261838a5d9bb49663d
+			https://censys.io/certificates?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
+			https://crt.sh/?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
 
 	Configuration Information:
 		Protocol Support:
@@ -503,7 +518,7 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384            - 256-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384            - 256-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA               - 256-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 168-bits - ECDHE-256-bits
+[W] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 112-bits - ECDHE-256-bits
 [I] 			TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256      - 256-bits - ECDHE-256-bits
 [I] 			OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256  - 256-bits - ECDHE-256-bits
 
@@ -568,6 +583,7 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 			OCSP Stapling: Yes
 [I] 			FREAK: No
 [I] 			Logjam: No
+[I] 			DH public server param (Ys) reuse: No
 
 
 [I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)

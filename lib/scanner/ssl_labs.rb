@@ -261,6 +261,14 @@ module Yawast
             if suite.dh_strength != nil && suite.dh_strength < 2048
               secure = false
             end
+            # check for RC4
+            if suite.name.include? 'RC4'
+              secure = false
+            end
+            # check for weak suites
+            if suite.cipher_strength < 112
+              secure = false
+            end
 
             if secure
               if suite.cipher_strength >= 128

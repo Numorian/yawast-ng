@@ -256,7 +256,13 @@ module Yawast
               suite_info = "#{suite.name.ljust(50)} - #{strength}-bits"
             end
 
-            if suite.secure?
+            secure = suite.secure?
+            # check for weak DH
+            if suite.dh_strength != nil && suite.dh_strength < 2048
+              secure = false
+            end
+
+            if secure
               if suite.cipher_strength >= 128
                 Yawast::Utilities.puts_info "\t\t\t#{suite_info}"
               else

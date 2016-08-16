@@ -333,6 +333,11 @@ module Yawast
 
         if ep.details.drown_vulnerable?
           Yawast::Utilities.puts_vuln "\t\t\tDROWN: Vulnerable"
+
+          ep.details.drown_hosts.each do |dh|
+            Yawast::Utilities.puts_vuln "\t\t\t\t#{dh['ip']}:#{dh['port']} - #{dh['status']}"
+            puts "\t\t\t\thttps://test.drownattack.com/?site=#{dh['ip']}"
+          end
         else
           Yawast::Utilities.puts_info "\t\t\tDROWN: No"
         end

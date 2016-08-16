@@ -1,5 +1,7 @@
 require 'ssllabs'
 require 'date'
+require 'openssl'
+require 'digest/sha1'
 
 module Yawast
   module Scanner
@@ -21,6 +23,8 @@ module Yawast
           status = ''
           host = nil
           until status == 'READY' || status == 'ERROR' || status == 'DNS'
+            # poll for updates every 5 seconds
+            # don't want to poll faster, to avoid excess load / errors
             sleep(5)
 
             host = api.analyse(host: uri.host, publish: 'off', all: 'done', ignoreMismatch: 'on')
@@ -57,9 +61,11 @@ module Yawast
       def self.get_cert_info (ep)
         # get the ChainCert info for the server cert - needed for extra details
         cert = nil
+        ossl_cert = nil
         ep.details.chain.certs.each do |c|
           if c.subject == ep.details.cert.subject
             cert = c
+            ossl_cert = OpenSSL::X509::Certificate.new cert.raw
           end
         end
 
@@ -126,6 +132,10 @@ module Yawast
           end
         end
 
+        Yawast::Utilities.puts_info "\t\tKey Hash: #{Digest::SHA1.hexdigest(ossl_cert.public_key.to_s)}"
+
+        Yawast::Utilities.puts_info "\t\tSerial: #{ossl_cert.serial}"
+
         Yawast::Utilities.puts_info "\t\tIssuer: #{ep.details.cert.issuer_label}"
 
         if ep.details.cert.sig_alg.include?('SHA1') || ep.details.cert.sig_alg.include?('MD5')
@@ -137,6 +147,8 @@ module Yawast
         #todo - figure out what the options for this value are
         if ep.details.cert.validation_type == 'E'
           Yawast::Utilities.puts_info "\t\tExtended Validation: Yes"
+        elsif ep.details.cert.validation_type == 'D'
+          Yawast::Utilities.puts_info "\t\tExtended Validation: No (Domain Control)"
         else
           Yawast::Utilities.puts_info "\t\tExtended Validation: No"
         end
@@ -194,6 +206,11 @@ module Yawast
           else
             Yawast::Utilities.puts_error "\t\tRevocation status: Unknown response #{ep.details.cert.revocation_status}"
         end
+
+        hash = Digest::SHA1.hexdigest(ossl_cert.to_der)
+        Yawast::Utilities.puts_info "\t\tHash: #{hash}"
+        puts "\t\t\thttps://censys.io/certificates?q=#{hash}"
+        puts "\t\t\thttps://crt.sh/?q=#{hash}"
 
         puts
       end

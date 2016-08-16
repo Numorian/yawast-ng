@@ -271,7 +271,7 @@ module Yawast
             end
 
             if secure
-              if suite.cipher_strength >= 128
+              if strength >= 128
                 Yawast::Utilities.puts_info "\t\t\t#{suite_info}"
               else
                 Yawast::Utilities.puts_warn "\t\t\t#{suite_info}"

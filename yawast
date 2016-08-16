@@ -37,7 +37,7 @@ command :head do |c|
   c.option '--cookie STRING', String, 'Session cookie'
 
   c.action do |args, options|
-    Yawast::Commands::Scan.process(args, options)
+    Yawast::Commands::Head.process(args, options)
   end
 end
 

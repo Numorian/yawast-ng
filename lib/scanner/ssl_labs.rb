@@ -258,21 +258,7 @@ module Yawast
               suite_info = "#{suite.name.ljust(50)} - #{strength}-bits"
             end
 
-            secure = suite.secure?
-            # check for weak DH
-            if suite.dh_strength != nil && suite.dh_strength < 2048
-              secure = false
-            end
-            # check for RC4
-            if suite.name.include? 'RC4'
-              secure = false
-            end
-            # check for weak suites
-            if suite.cipher_strength < 112
-              secure = false
-            end
-
-            if secure
+            if cipher_suite_secure? suite
               if strength >= 128
                 Yawast::Utilities.puts_info "\t\t\t#{suite_info}"
               else
@@ -310,7 +296,7 @@ module Yawast
               ep.details.suites.list.each do |suite|
                 if sim.suite_id == suite.id
                   suite_name = suite.name
-                  secure = suite.secure?
+                  secure = cipher_suite_secure? suite
                 end
               end
 
@@ -474,6 +460,24 @@ module Yawast
         end
 
         puts
+      end
+
+      def self.cipher_suite_secure?(suite)
+        secure = suite.secure?
+        # check for weak DH
+        if suite.dh_strength != nil && suite.dh_strength < 2048
+          secure = false
+        end
+        # check for RC4
+        if suite.name.include? 'RC4'
+          secure = false
+        end
+        # check for weak suites
+        if suite.cipher_strength < 112
+          secure = false
+        end
+
+        secure
       end
     end
   end

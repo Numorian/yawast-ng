@@ -460,6 +460,12 @@ module Yawast
             end
         end
 
+        if ep.details.dh_ys_reuse?
+          Yawast::Utilities.puts_vuln "\t\t\tDH public server param (Ys) reuse: Yes"
+        else
+          Yawast::Utilities.puts_info "\t\t\tDH public server param (Ys) reuse: No"
+        end
+
         puts
       end
     end

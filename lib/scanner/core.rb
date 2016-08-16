@@ -5,23 +5,7 @@ module Yawast
         Yawast.header
 
         puts "Scanning: #{uri.to_s}"
-
-        begin
-          dns = Resolv::DNS.new()
-          addrs = dns.getaddresses(uri.host)
-
-          addrs.each do |ip|
-            begin
-              puts "\t#{ip} - #{dns.getname(ip.to_s)}"
-            rescue
-              puts "\t#{ip}"
-            end
-          end
-        rescue
-          # meh.
-        end
-
-        puts ''
+        puts
       end
 
       def self.setup(uri)

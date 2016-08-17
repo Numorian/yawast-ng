@@ -198,8 +198,8 @@ module Yawast
         end
       end
 
-      def self.directory_search(uri)
-        puts 'Searching for common directories...'
+      def self.directory_search(uri, banner = true)
+        puts 'Searching for common directories...' if banner
 
         File.open("lib/resources/common.txt", "r") do |f|
           f.each_line do |line|
@@ -210,11 +210,12 @@ module Yawast
 
             if code == "200"
               Yawast::Utilities.puts_info "\tFound: '#{check.to_s}'"
+              directory_search check, false
             end
           end
         end
 
-        puts ''
+        puts '' if banner
       end
 
       def self.check_options(uri)

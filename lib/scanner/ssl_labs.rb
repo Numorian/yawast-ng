@@ -18,7 +18,7 @@ module Yawast
         end
 
         begin
-          api.analyse(host: uri.host, publish: 'off', fromCache: 'on', all: 'done', ignoreMismatch: 'on')
+          api.analyse(host: uri.host, publish: 'off', startNew: 'on', all: 'done', ignoreMismatch: 'on')
 
           status = ''
           host = nil

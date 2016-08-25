@@ -17,6 +17,7 @@ command :scan do |c|
   c.option '--nossl', 'Disables SSL checks'
   c.option '--nociphers', 'Disables check for supported ciphers'
   c.option '--internalssl', 'Disable SSL Labs integration'
+  c.option '--sweet32count', 'Counts the number of messages that can be sent in a single session'
   c.option '--dir', 'Enables directory search'
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
   c.option '--cookie STRING', String, 'Session cookie'
@@ -33,6 +34,7 @@ command :head do |c|
   c.option '--nossl', 'Disables SSL checks'
   c.option '--nociphers', 'Disables check for supported ciphers'
   c.option '--internalssl', 'Disable SSL Labs integration'
+  c.option '--sweet32count', 'Counts the number of messages that can be sent in a single session'
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
   c.option '--cookie STRING', String, 'Session cookie'
 
@@ -47,6 +49,7 @@ command :ssl do |c|
 
   c.option '--nociphers', 'Disables check for supported ciphers'
   c.option '--internalssl', 'Disable SSL Labs integration'
+  c.option '--sweet32count', 'Counts the number of messages that can be sent in a single session'
 
   c.action do |args, options|
     Yawast::Commands::Ssl.process(args, options)

@@ -80,9 +80,9 @@ module Yawast
           head = Yawast::Shared::Http.head(uri) if head == nil
 
           if options.internalssl
-            Yawast::Scanner::Ssl.info(uri, !options.nociphers)
+            Yawast::Scanner::Ssl.info(uri, !options.nociphers, options.sweet32count)
           else
-            Yawast::Scanner::SslLabs.info(uri)
+            Yawast::Scanner::SslLabs.info(uri, options.sweet32count)
           end
 
           Yawast::Scanner::Ssl.check_hsts(head)

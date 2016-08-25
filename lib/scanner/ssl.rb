@@ -5,7 +5,7 @@ require 'digest/sha1'
 module Yawast
   module Scanner
     class Ssl
-      def self.info(uri, check_ciphers, sweet32_count)
+      def self.info(uri, check_ciphers, sslsessioncount)
         begin
           socket = TCPSocket.new(uri.host, uri.port)
 
@@ -98,7 +98,7 @@ module Yawast
 
           ssl.sysclose
 
-          get_session_msg_count(uri) if sweet32_count
+          get_session_msg_count(uri) if sslsessioncount
         rescue => e
           Yawast::Utilities.puts_error "SSL: Error Reading X509 Details: #{e.message}"
         end
@@ -181,7 +181,7 @@ module Yawast
         def self.get_session_msg_count(uri)
           # this method will send a number of HEAD requests to see
           #  if the connection is eventually killed.
-          puts 'SWEET32: Checking number of requests accepted...'
+          puts 'SSL Session Request Limit: Checking number of requests accepted...'
 
           count = 0
           begin
@@ -208,12 +208,12 @@ module Yawast
             end
           rescue => e
             puts
-            Yawast::Utilities.puts_info "SWEET32: Connection terminated after #{count} requests (#{e.message})"
+            Yawast::Utilities.puts_info "SSL Session Request Limit: Connection terminated after #{count} requests (#{e.message})"
             return
           end
 
           puts
-          Yawast::Utilities.puts_warn 'SWEET32: Connection not terminated after 10,000 requests'
+          Yawast::Utilities.puts_warn 'SSL Session Request Limit: Connection not terminated after 10,000 requests; may be affected by SWEET32'
         end
 
       #private methods

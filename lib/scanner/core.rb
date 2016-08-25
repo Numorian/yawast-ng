@@ -82,7 +82,7 @@ module Yawast
           if options.internalssl
             Yawast::Scanner::Ssl.info(uri, !options.nociphers, options.sweet32count)
           else
-            Yawast::Scanner::SslLabs.info(uri, options.sweet32count)
+            Yawast::Scanner::SslLabs.info(uri, options.sslsessioncount)
           end
 
           Yawast::Scanner::Ssl.check_hsts(head)

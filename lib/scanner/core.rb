@@ -8,17 +8,19 @@ module Yawast
         puts
       end
 
-      def self.setup(uri)
+      def self.setup(uri, options)
         unless @setup
           print_header(uri)
           Yawast.set_openssl_options
         end
 
+        Yawast::Scanner::Generic.server_info(uri, options)
+
         @setup = true
       end
 
       def self.process(uri, options)
-        setup(uri)
+        setup(uri, options)
 
         begin
           #setup the proxy
@@ -26,8 +28,6 @@ module Yawast
 
           #cache the HEAD result, so that we can minimize hits
           head = Yawast::Shared::Http.head(uri)
-
-          Yawast::Scanner::Generic.server_info(uri)
           Yawast::Scanner::Generic.head_info(head)
 
           #perfom SSL checks
@@ -67,14 +67,14 @@ module Yawast
       end
 
       def self.get_cms(uri, options)
-        setup(uri)
+        setup(uri, options)
 
         body = Yawast::Shared::Http.get(uri)
         Yawast::Scanner::Cms.get_generator(body)
       end
 
       def self.check_ssl(uri, options, head)
-        setup(uri)
+        setup(uri, options)
 
         if uri.scheme == 'https' && !options.nossl
           head = Yawast::Shared::Http.head(uri) if head == nil

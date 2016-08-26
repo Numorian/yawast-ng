@@ -1,7 +1,9 @@
+require 'ipaddr_extensions'
+
 module Yawast
   module Scanner
     class Generic
-      def self.server_info(uri)
+      def self.server_info(uri, options)
         begin
           puts 'DNS Information:'
 
@@ -17,8 +19,14 @@ module Yawast
                 end
 
                 Yawast::Utilities.puts_info "\t\t#{ip.address} (#{host_name})"
-                puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address}"
-                puts "\t\t\t\thttps://censys.io/ipv4/#{ip.address}"
+
+                # if address is private, force internal SSL mode, don't show links
+                if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
+                  options.internalssl = true
+                else
+                  puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address}"
+                  puts "\t\t\t\thttps://censys.io/ipv4/#{ip.address}"
+                end
               end
             end
 
@@ -32,7 +40,13 @@ module Yawast
                 end
 
                 Yawast::Utilities.puts_info "\t\t#{ip.address} (#{host_name})"
-                puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
+
+                # if address is private, force internal SSL mode, don't show links
+                if IPAddr.new(ip.address.to_s, Socket::AF_INET6).private?
+                  options.internalssl = true
+                else
+                  puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
+                end
               end
             end
 

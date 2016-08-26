@@ -5,6 +5,7 @@ gem 'commander'
 gem 'highline'
 gem 'openssl-extensions'
 gem 'colorize'
+gem 'ipaddr_extensions'
 
 group :test do
   gem 'rake'

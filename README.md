@@ -255,29 +255,6 @@ DNS Information:
 [I] 		__cfduid=1; expires=Sat, 26-Aug-17 17:32:35 GMT; path=/; domain=.adamcaudill.com; HttpOnly
 [W] 			Cookie missing Secure flag
 
-
-DNS Information:
-[I] 		104.28.26.55 (N/A)
-				https://www.shodan.io/host/104.28.26.55
-				https://censys.io/ipv4/104.28.26.55
-[I] 		104.28.27.55 (N/A)
-				https://www.shodan.io/host/104.28.27.55
-				https://censys.io/ipv4/104.28.27.55
-[I] 		2400:CB00:2048:1::681C:1A37 (N/A)
-				https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
-[I] 		2400:CB00:2048:1::681C:1B37 (N/A)
-				https://www.shodan.io/host/2400:cb00:2048:1::681c:1b37
-[I] 		TXT: v=spf1 mx a ptr include:_spf.google.com ~all
-[I] 		MX: aspmx4.googlemail.com (30)
-[I] 		MX: aspmx.l.google.com (10)
-[I] 		MX: alt1.aspmx.l.google.com (20)
-[I] 		MX: aspmx2.googlemail.com (30)
-[I] 		MX: alt2.aspmx.l.google.com (20)
-[I] 		MX: aspmx3.googlemail.com (30)
-[I] 		MX: aspmx5.googlemail.com (30)
-[I] 		NS: vera.ns.cloudflare.com
-[I] 		NS: hal.ns.cloudflare.com
-
 Beginning SSL Labs scan (this could take a minute or two)
 [SSL Labs]	This assessment service is provided free of charge by Qualys SSL Labs, subject to our terms and conditions: https://www.ssllabs.com/about/terms.html
 .

@@ -86,6 +86,8 @@ module Yawast
           end
 
           Yawast::Scanner::Ssl.check_hsts(head)
+        elsif uri.scheme == 'http'
+          puts 'Skipping TLS checks; URL is not HTTPS'
         end
       end
     end

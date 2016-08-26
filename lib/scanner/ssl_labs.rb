@@ -134,7 +134,9 @@ module Yawast
           end
         end
 
-        Yawast::Utilities.puts_info "\t\tKey Hash: #{Digest::SHA1.hexdigest(ossl_cert.public_key.to_s)}"
+        Yawast::Utilities.puts_info "\t\tPublic Key Hash: #{Digest::SHA1.hexdigest(ossl_cert.public_key.to_s)}"
+
+        Yawast::Utilities.puts_info "\t\tVersion: #{ossl_cert.version}"
 
         Yawast::Utilities.puts_info "\t\tSerial: #{ossl_cert.serial}"
 
@@ -208,6 +210,9 @@ module Yawast
           else
             Yawast::Utilities.puts_error "\t\tRevocation status: Unknown response #{ep.details.cert.revocation_status}"
         end
+
+        Yawast::Utilities.puts_info "\t\tExtensions:"
+        ossl_cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' }
 
         hash = Digest::SHA1.hexdigest(ossl_cert.to_der)
         Yawast::Utilities.puts_info "\t\tHash: #{hash}"

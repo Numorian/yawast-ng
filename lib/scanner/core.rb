@@ -12,9 +12,9 @@ module Yawast
         unless @setup
           print_header(uri)
           Yawast.set_openssl_options
+          
+          Yawast::Scanner::Generic.server_info(uri, options)
         end
-
-        Yawast::Scanner::Generic.server_info(uri, options)
 
         @setup = true
       end

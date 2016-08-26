@@ -181,7 +181,7 @@ module Yawast
         def self.get_session_msg_count(uri)
           # this method will send a number of HEAD requests to see
           #  if the connection is eventually killed.
-          puts 'SSL Session Request Limit: Checking number of requests accepted...'
+          puts 'TLS Session Request Limit: Checking number of requests accepted...'
 
           count = 0
           begin
@@ -196,7 +196,7 @@ module Yawast
 
                 # hack to detect transparent disconnects
                 if http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits] != 0
-                  raise 'SSL Reconnected'
+                  raise 'TLS Reconnected'
                 end
 
                 count += 1
@@ -208,12 +208,13 @@ module Yawast
             end
           rescue => e
             puts
-            Yawast::Utilities.puts_info "SSL Session Request Limit: Connection terminated after #{count} requests (#{e.message})"
+            Yawast::Utilities.puts_info "TLS Session Request Limit: Connection terminated after #{count} requests (#{e.message})"
             return
           end
 
           puts
-          Yawast::Utilities.puts_warn 'SSL Session Request Limit: Connection not terminated after 10,000 requests; may be affected by SWEET32'
+          Yawast::Utilities.puts_warn 'TLS Session Request Limit: Connection not terminated after 10,000 requests'
+          Yawast::Utilities.puts_warn 'TLS Session Request Limit: If server supports 3DES, may be affected by SWEET32'
         end
 
       #private methods

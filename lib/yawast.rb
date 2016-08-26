@@ -25,6 +25,7 @@ module Yawast
   VERSION = '0.1.0'
   DESCRIPTION = 'The YAWAST Antecedent Web Application Security Toolkit'
   HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Yawast/#{VERSION} Chrome/52.0.2743.24 Safari/537.36"
+
   def self.header
     puts '__   _____  _    _  ___   _____ _____ '
     puts '\ \ / / _ \| |  | |/ _ \ /  ___|_   _|'
@@ -46,5 +47,11 @@ module Yawast
     OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers] = "RSA:ALL:COMPLEMENTOFALL"
     OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
     OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:options] = OpenSSL::SSL::OP_ALL
+  end
+
+  trap 'SIGINT' do
+    puts
+    puts 'Scan cancelled by user.'
+    exit 0
   end
 end

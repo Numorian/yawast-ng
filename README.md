@@ -210,12 +210,59 @@ YAWAST v0.1.0 - The YAWAST Antecedent Web Application Security Toolkit
 Scanning: https://adamcaudill.com/
 
 DNS Information:
-[I] 		104.28.27.55 (N/A)
-				https://www.shodan.io/host/104.28.27.55
-				https://censys.io/ipv4/104.28.27.55
 [I] 		104.28.26.55 (N/A)
 				https://www.shodan.io/host/104.28.26.55
 				https://censys.io/ipv4/104.28.26.55
+[I] 		104.28.27.55 (N/A)
+				https://www.shodan.io/host/104.28.27.55
+				https://censys.io/ipv4/104.28.27.55
+[I] 		2400:CB00:2048:1::681C:1B37 (N/A)
+				https://www.shodan.io/host/2400:cb00:2048:1::681c:1b37
+[I] 		2400:CB00:2048:1::681C:1A37 (N/A)
+				https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
+[I] 		TXT: v=spf1 mx a ptr include:_spf.google.com ~all
+[I] 		MX: aspmx4.googlemail.com (30)
+[I] 		MX: aspmx.l.google.com (10)
+[I] 		MX: alt1.aspmx.l.google.com (20)
+[I] 		MX: aspmx2.googlemail.com (30)
+[I] 		MX: alt2.aspmx.l.google.com (20)
+[I] 		MX: aspmx3.googlemail.com (30)
+[I] 		MX: aspmx5.googlemail.com (30)
+[I] 		NS: vera.ns.cloudflare.com
+[I] 		NS: hal.ns.cloudflare.com
+
+[I] HEAD:
+[I] 		date: Fri, 26 Aug 2016 17:32:35 GMT
+[I] 		content-type: text/html; charset=UTF-8
+[I] 		connection: close
+[I] 		set-cookie: __cfduid=1; expires=Sat, 26-Aug-17 17:32:35 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[I] 		vary: Accept-Encoding,Cookie
+[I] 		link: <https://adamcaudill.com/wp-json/>; rel="https://api.w.org/"
+[I] 		x-frame-options: sameorigin
+[I] 		strict-transport-security: max-age=15552000; preload
+[I] 		x-content-type-options: nosniff
+[I] 		server: cloudflare-nginx
+[I] 		cf-ray: 2d890621bd172e93-MIA
+
+[I] NOTE: Server appears to be Cloudflare; WAF may be in place.
+
+[I] X-Frame-Options Header: sameorigin
+[I] X-Content-Type-Options Header: nosniff
+[W] Content-Security-Policy Header Not Present
+[W] Public-Key-Pins Header Not Present
+
+[I] Cookies:
+[I] 		__cfduid=1; expires=Sat, 26-Aug-17 17:32:35 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+[W] 			Cookie missing Secure flag
+
+
+DNS Information:
+[I] 		104.28.26.55 (N/A)
+				https://www.shodan.io/host/104.28.26.55
+				https://censys.io/ipv4/104.28.26.55
+[I] 		104.28.27.55 (N/A)
+				https://www.shodan.io/host/104.28.27.55
+				https://censys.io/ipv4/104.28.27.55
 [I] 		2400:CB00:2048:1::681C:1A37 (N/A)
 				https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
 [I] 		2400:CB00:2048:1::681C:1B37 (N/A)
@@ -231,34 +278,9 @@ DNS Information:
 [I] 		NS: vera.ns.cloudflare.com
 [I] 		NS: hal.ns.cloudflare.com
 
-[I] HEAD:
-[I] 		date: Thu, 25 Aug 2016 16:51:27 GMT
-[I] 		content-type: text/html; charset=UTF-8
-[I] 		connection: close
-[I] 		set-cookie: __cfduid=1; expires=Fri, 25-Aug-17 16:51:26 GMT; path=/; domain=.adamcaudill.com; HttpOnly
-[I] 		vary: Accept-Encoding,Cookie
-[I] 		link: <https://adamcaudill.com/wp-json/>; rel="https://api.w.org/"
-[I] 		x-frame-options: sameorigin
-[I] 		strict-transport-security: max-age=15552000; preload
-[I] 		x-content-type-options: nosniff
-[I] 		server: cloudflare-nginx
-[I] 		cf-ray: 2d808c7c54cd50b0-MIA
-
-[I] NOTE: Server appears to be Cloudflare; WAF may be in place.
-
-[I] X-Frame-Options Header: sameorigin
-[I] X-Content-Type-Options Header: nosniff
-[W] Content-Security-Policy Header Not Present
-[W] Public-Key-Pins Header Not Present
-
-[I] Cookies:
-[I] 		__cfduid=1; expires=Fri, 25-Aug-17 16:51:26 GMT; path=/; domain=.adamcaudill.com; HttpOnly
-[W] 			Cookie missing Secure flag
-
-
 Beginning SSL Labs scan (this could take a minute or two)
 [SSL Labs]	This assessment service is provided free of charge by Qualys SSL Labs, subject to our terms and conditions: https://www.ssllabs.com/about/terms.html
-...........................................
+.
 
 [I] IP: 104.28.27.55 - Grade: A+
 
@@ -268,11 +290,20 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 		Alternative names:
 [I] 			sni67677.cloudflaressl.com
 [I] 			*.adamcaudill.com
+[I] 			*.bsidesknoxville.com
+[I] 			*.secrypto.com
+[I] 			*.smimp.org
+[I] 			*.underhandedcrypto.com
 [I] 			adamcaudill.com
+[I] 			bsidesknoxville.com
+[I] 			secrypto.com
+[I] 			smimp.org
+[I] 			underhandedcrypto.com
 [I] 		Not Before: 2016-08-13T00:00:00+00:00
 [I] 		Not After: 2017-02-12T23:59:59+00:00
 [I] 		Key: EC 256 (RSA equivalent: 3072)
-[I] 		Key Hash: 5e224ee926c65431fbf5cf5d54abb9b9e32b3501
+[I] 		Public Key Hash: 365e26188f2e5913b9cbe68e0d80aff8e1754fd8
+[I] 		Version: 2
 [I] 		Serial: 18930702358496442989903109042193740748
 [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
 [I] 		Signature algorithm: SHA256withECDSA
@@ -282,6 +313,15 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 		Revocation information: CRL information available
 [I] 		Revocation information: OCSP information available
 [I] 		Revocation status: certificate not revoked
+[I] 		Extensions:
+[I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96, 
+[I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
+[I] 			keyUsage = critical, Digital Signature
+[I] 			basicConstraints = critical, CA:FALSE
+[I] 			extendedKeyUsage = TLS Web Server Authentication, TLS Web Client Authentication
+[I] 			certificatePolicies = Policy: 1.3.6.1.4.1.6449.1.2.2.7,   CPS: https://secure.comodo.com/CPS, Policy: 2.23.140.1.2.1, 
+[I] 			crlDistributionPoints = , Full Name:,   URI:http://crl.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crl, 
+[I] 			authorityInfoAccess = CA Issuers - URI:http://crt.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crt, OCSP - URI:http://ocsp.comodoca4.com, 
 [I] 		Hash: 1ae6362e4fc377cccb6df6261838a5d9bb49663d
 			https://censys.io/certificates?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
 			https://crt.sh/?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
@@ -366,9 +406,9 @@ Beginning SSL Labs scan (this could take a minute or two)
 [I] 			Logjam: No
 [I] 			DH public server param (Ys) reuse: No
 
-SSL Session Request Limit: Checking number of requests accepted...
+TLS Session Request Limit: Checking number of requests accepted...
 .....
-[I] SSL Session Request Limit: Connection terminated after 100 requests (SSL Reconnected)
+[I] TLS Session Request Limit: Connection terminated after 100 requests (TLS Reconnected)
 
 [I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
 

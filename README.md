@@ -419,6 +419,21 @@ Searching for common directories...
 Scan complete.
 ```
 
+### About The Output
+
+You'll notice that most lines begin with a letter in a bracket, this is to tell you how to interpret the result at a glance. There are four possible values:
+
+* [I] - This indicates that the line is informational, and doesn't necessarily indicate a security issue.
+* [W] - This is a Warning, which means that it could be an issue, or could expose useful information. These need to be evaluated on a case-by-case basis to determine the impact.
+* [V] - This is a Vulnerability, it indicates an issue that is known to be an issue, and needs to be addressed.
+* [E] - This indicates that an error occurred, sometimes these are serious and indicate an issue with your environment, the target server, or the application. In other cases, they may just be informational to let you know that something didn't go as planned.
+
+The indicator used may change over time based on new research or better detection techniques. In all cases, results should be carefully evaluated within the context of the application, how it's used, and what threats apply. The indicator is guidance, a hint if you will, it's up to you to determine the real impact.
+
+### About The Name
+
+When this project was started, the original name was "Yet Another Web Application Security Tool" - as the project became more serious, the name was changed. The current name better reflects the role of the tool, and its place in the penetration tester's workflow. It's meant to be a first step, to come before the serious manual work, and provide information to allow a tester to be up and running quicker. The tests that are performed are based on that goal, as well as the availability and complexity of tests in other tools. If another common tool can do a given task better, it won't be done here.
+
 ### Special Thanks
 
 [dirbuster-ng](https://github.com/digination/dirbuster-ng) For the use of their `common.txt` directoty list. This list was the foundation of the list used by YAWAST.

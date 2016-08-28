@@ -212,7 +212,7 @@ module Yawast
         end
       end
 
-      def self.directory_search(uri, banner = true)
+      def self.directory_search(uri, recursive, banner = true)
         puts 'Searching for common directories...' if banner
 
         begin
@@ -231,7 +231,7 @@ module Yawast
 
                 if code == "200"
                   Yawast::Utilities.puts_info "\tFound: '#{check.to_s}'"
-                  directory_search check, false
+                  directory_search check, recursive, false if recursive
                 end
               end
             end

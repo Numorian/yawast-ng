@@ -212,23 +212,33 @@ module Yawast
         end
       end
 
-      def self.directory_search(uri)
-        puts 'Searching for common directories...'
+      def self.directory_search(uri, banner = true)
+        puts 'Searching for common directories...' if banner
 
-        File.open("lib/resources/common.txt", "r") do |f|
-          f.each_line do |line|
-            check = uri.copy
-            check.path = check.path + "#{line.strip}/"
+        begin
+          req = Yawast::Shared::Http.get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          req.keep_alive_timeout = 600
+          headers = Yawast::Shared::Http.get_headers
 
-            code = Yawast::Shared::Http.get_status_code(check)
+          req.start do |http|
+            File.open("lib/resources/common.txt", "r") do |f|
+              f.each_line do |line|
+                check = uri.copy
+                check.path = check.path + "#{line.strip}/"
 
-            if code == "200"
-              Yawast::Utilities.puts_info "\tFound: '#{check.to_s}'"
+                code = http.head(check, headers).code
+
+                if code == "200"
+                  Yawast::Utilities.puts_info "\tFound: '#{check.to_s}'"
+                  directory_search check, false
+                end
+              end
             end
           end
         end
 
-        puts ''
+        puts '' if banner
       end
 
       def self.check_options(uri)

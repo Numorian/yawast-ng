@@ -233,15 +233,19 @@ module Yawast
                 check = uri.copy
                 check.path = check.path + "#{line.strip}/"
 
-                code = http.head(check, headers).code
+                res = http.head(check, headers)
 
-                if code == "200"
+                if res.code == '200'
                   Yawast::Utilities.puts_info "\tFound: '#{check.to_s}'"
                   directory_search check, recursive, false if recursive
+                elsif res.code == '301'
+                  Yawast::Utilities.puts_info "\tFound Redirect: '#{check.to_s} -> '#{res['Location']}'"
                 end
               end
             end
           end
+        rescue => e
+          Yawast::Utilities.puts_error "Error searching for directories (#{e.message})"
         end
 
         puts '' if banner

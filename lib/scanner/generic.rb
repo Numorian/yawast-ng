@@ -213,7 +213,13 @@ module Yawast
       end
 
       def self.directory_search(uri, recursive, banner = true)
-        puts 'Searching for common directories...' if banner
+        if banner
+          if recursive
+            puts 'Recursively searching for common directories (this will take a while)...'
+          else
+            puts 'Searching for common directories...'
+          end
+        end
 
         begin
           req = Yawast::Shared::Http.get_http(uri)

@@ -20,13 +20,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'colorize', '~> 0.8'
   s.add_runtime_dependency 'ipaddr_extensions', '~> 1.0'
 
-  s.add_development_dependency 'rake', '~> 0'
-  s.add_development_dependency 'minitest', '~> 0'
-  s.add_development_dependency 'minitest-reporters', '~> 0'
-  s.add_development_dependency 'simplecov', '~> 0'
-  s.add_development_dependency 'coveralls', '~> 0'
-  s.add_development_dependency 'webrick', '~> 0'
-
   s.bindir            = 'bin'
   s.files             = `git ls-files`.split("\n")
   s.test_files        = `git ls-files -- {test,spec,features}/*`.split("\n")

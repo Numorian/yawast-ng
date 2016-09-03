@@ -1,6 +1,6 @@
 require 'minitest/autorun'
-require './lib/yawast'
-require './test/base'
+require File.dirname(__FILE__) + '/../lib/yawast'
+require File.dirname(__FILE__) + '/base'
 
 class TestCommandUtils < Minitest::Test
   include TestBase

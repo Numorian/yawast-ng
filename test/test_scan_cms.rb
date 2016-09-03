@@ -1,12 +1,12 @@
 require 'minitest/autorun'
-require './lib/yawast'
-require './test/base'
+require File.dirname(__FILE__) + '/../lib/yawast'
+require File.dirname(__FILE__) + '/base'
 
 class TestScannerCms < Minitest::Test
   include TestBase
 
   def test_generator_tag_valid
-    body = File.read('test/data/cms_wordpress_body.txt')
+    body = File.read(File.dirname(__FILE__) + '/data/cms_wordpress_body.txt')
     override_stdout
     Yawast::Scanner::Cms.get_generator body
 
@@ -16,7 +16,7 @@ class TestScannerCms < Minitest::Test
   end
 
   def test_generator_tag_invalid
-    body = File.read('test/data/cms_none_body.txt')
+    body = File.read(File.dirname(__FILE__) + '/data/cms_none_body.txt')
     override_stdout
     Yawast::Scanner::Cms.get_generator body
 

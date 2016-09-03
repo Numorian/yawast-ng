@@ -1,6 +1,6 @@
 require 'minitest/autorun'
-require './lib/yawast'
-require './test/base'
+require File.dirname(__FILE__) + '/../lib/yawast'
+require File.dirname(__FILE__) + '/base'
 
 class TestScannerIisHeaders < Minitest::Test
   include TestBase
@@ -17,7 +17,7 @@ class TestScannerIisHeaders < Minitest::Test
   end
 
   def test_asp_version
-    headers = parse_headers_from_file 'test/data/iis_server_header.txt'
+    headers = parse_headers_from_file File.dirname(__FILE__) + '/data/iis_server_header.txt'
 
     override_stdout
     Yawast::Scanner::Iis.check_asp_banner headers
@@ -28,7 +28,7 @@ class TestScannerIisHeaders < Minitest::Test
   end
 
   def test_mvc_version
-    headers = parse_headers_from_file 'test/data/iis_server_header.txt'
+    headers = parse_headers_from_file File.dirname(__FILE__) + '/data/iis_server_header.txt'
 
     override_stdout
     Yawast::Scanner::Iis.check_mvc_version headers

@@ -16,13 +16,13 @@ require 'socket'
 require File.dirname(__FILE__) + '/string_ext'
 require File.dirname(__FILE__) + '/uri_ext'
 require File.dirname(__FILE__) + '/util'
+require File.dirname(__FILE__) + '/version'
 
 require_all '/commands'
 require_all '/scanner'
 require_all '/shared'
 
 module Yawast
-  VERSION = '0.2.0'
   DESCRIPTION = 'The YAWAST Antecedent Web Application Security Toolkit'
   HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Yawast/#{VERSION} Chrome/52.0.2743.24 Safari/537.36"
 

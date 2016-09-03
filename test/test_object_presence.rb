@@ -1,14 +1,14 @@
 require 'minitest/autorun'
 require 'webrick'
-require './lib/yawast'
-require './test/base'
+require File.dirname(__FILE__) + '/../lib/yawast'
+require File.dirname(__FILE__) + '/base'
 
 class TestScannerApacheServerStatus < Minitest::Test
   include TestBase
 
   def test_readme_html_present
     port = rand(60000) + 1024 # pick a random port number
-    server = start_web_server 'test/data/wordpress_readme_html.txt', 'readme.html', port
+    server = start_web_server File.dirname(__FILE__) + '/data/wordpress_readme_html.txt', 'readme.html', port
 
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
@@ -22,7 +22,7 @@ class TestScannerApacheServerStatus < Minitest::Test
 
   def test_release_notes_txt_present
     port = rand(60000) + 1024 # pick a random port number
-    server = start_web_server 'test/data/tomcat_release_notes.txt', 'RELEASE-NOTES.txt', port
+    server = start_web_server File.dirname(__FILE__) + '/data/tomcat_release_notes.txt', 'RELEASE-NOTES.txt', port
 
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])

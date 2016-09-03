@@ -228,7 +228,7 @@ module Yawast
           headers = Yawast::Shared::Http.get_headers
 
           req.start do |http|
-            File.open("lib/resources/common.txt", "r") do |f|
+            File.open(File.dirname(__FILE__) + '/../resources/common.txt', "r") do |f|
               f.each_line do |line|
                 check = uri.copy
                 check.path = check.path + "#{line.strip}/"

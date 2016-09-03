@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'commander/import'
-require './lib/yawast'
+require File.dirname(__FILE__) + '/../lib/yawast'
 
 program :name, 'yawast'
 program :version, Yawast::VERSION

@@ -13,9 +13,9 @@ require 'resolv'
 require 'net/http'
 require 'socket'
 
-require './lib/string_ext'
-require './lib/uri_ext'
-require './lib/util'
+require File.dirname(__FILE__) + '/string_ext'
+require File.dirname(__FILE__) + '/uri_ext'
+require File.dirname(__FILE__) + '/util'
 
 require_all '/commands'
 require_all '/scanner'

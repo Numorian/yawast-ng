@@ -13,6 +13,20 @@ Gem::Specification.new do |s|
   s.license           = 'MIT'
   s.rubyforge_project = "yawast"
 
+  s.add_runtime_dependency 'ssllabs', '~> 1.11'
+  s.add_runtime_dependency 'commander', '~> 4.4'
+  s.add_runtime_dependency 'highline', '~> 1.7'
+  s.add_runtime_dependency 'openssl-extensions', '~> 1.2'
+  s.add_runtime_dependency 'colorize', '~> 0.8'
+  s.add_runtime_dependency 'ipaddr_extensions', '~> 1.0'
+
+  s.add_development_dependency 'rake', '~> 0'
+  s.add_development_dependency 'minitest', '~> 0'
+  s.add_development_dependency 'minitest-reporters', '~> 0'
+  s.add_development_dependency 'simplecov', '~> 0'
+  s.add_development_dependency 'coveralls', '~> 0'
+  s.add_development_dependency 'webrick', '~> 0'
+
   s.bindir            = 'bin'
   s.files             = `git ls-files`.split("\n")
   s.test_files        = `git ls-files -- {test,spec,features}/*`.split("\n")

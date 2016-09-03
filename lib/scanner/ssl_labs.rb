@@ -56,6 +56,7 @@ module Yawast
             puts
           end
         rescue => e
+          puts
           Yawast::Utilities.puts_error "SSL Labs Error: #{e.message}"
         end
       end

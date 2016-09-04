@@ -12,6 +12,16 @@ YAWAST is an application meant to simplify initial analysis and information gath
 
 This is meant to provide a easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests. It is especially useful when used in conjunction with Burp Suite (via the `--proxy` parameter).
 
+### Installing
+
+The simplest method to install is to use the RubyGem installer:
+
+`gem install yawast`
+
+This allows for simple updates (`gem update yawast`) and makes it easy to ensure that you are always using the latest version.
+
+YAWAST requires Ruby 2.2+, and is tested on Mac OSX and Linux (Windows should work; please open a ticket if you have issues).
+
 ### Tests
 
 The following tests are performed:

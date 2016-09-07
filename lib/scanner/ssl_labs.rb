@@ -467,6 +467,32 @@ module Yawast
           Yawast::Utilities.puts_info "\t\t\tDH public server param (Ys) reuse: No"
         end
 
+        if ep.details.protocol_intolerance > 0
+          if ep.details.protocol_intolerance & 1 != 0
+            Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.0"
+          end
+
+          if ep.details.protocol_intolerance & (1<<1) != 0
+            Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.1"
+          end
+
+          if ep.details.protocol_intolerance & (1<<2) != 0
+            Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.2"
+          end
+
+          if ep.details.protocol_intolerance & (1<<3) != 0
+            Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.3"
+          end
+
+          if ep.details.protocol_intolerance & (1<<4) != 0
+            Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.152"
+          end
+
+          if ep.details.protocol_intolerance & (1<<5) != 0
+            Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 2.152"
+          end
+        end
+
         puts
       end
 

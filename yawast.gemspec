@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.license           = 'MIT'
   s.rubyforge_project = "yawast"
 
-  s.add_runtime_dependency 'ssllabs', '~> 1.11'
+  s.add_runtime_dependency 'ssllabs', '~> 1.24'
   s.add_runtime_dependency 'commander', '~> 4.4'
   s.add_runtime_dependency 'highline', '~> 1.7'
   s.add_runtime_dependency 'openssl-extensions', '~> 1.2'

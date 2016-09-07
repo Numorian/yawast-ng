@@ -491,6 +491,8 @@ module Yawast
           if ep.details.protocol_intolerance & (1<<5) != 0
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 2.152"
           end
+        else
+          Yawast::Utilities.puts_info "\t\t\tProtocol Intolerance: No"
         end
 
         puts

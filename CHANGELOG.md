@@ -1,3 +1,7 @@
+## 0.3.0 - In Development
+
+* [#61](https://github.com/adamcaudill/yawast/issues/61) - SSL Session Count: force 3DES suites
+
 ## 0.2.2 - 2016-08-07
 
 * [#55](https://github.com/adamcaudill/yawast/issues/55) - Add Protocol Intolerance information. 

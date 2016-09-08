@@ -181,7 +181,7 @@ module Yawast
         def self.get_session_msg_count(uri)
           # this method will send a number of HEAD requests to see
           #  if the connection is eventually killed.
-          puts 'TLS Session Request Limit: Checking number of requests accepted...'
+          puts 'TLS Session Request Limit: Checking number of requests accepted using 3DES suites...'
 
           count = 0
           begin
@@ -189,6 +189,9 @@ module Yawast
             req.use_ssl = uri.scheme == 'https'
             req.keep_alive_timeout = 600
             headers = Yawast::Shared::Http.get_headers
+
+            #force 3DES - this is to ensure that 3DES specific limits are caught
+            req.ciphers = ["3DES"]
 
             req.start do |http|
               10000.times do |i|
@@ -208,13 +211,18 @@ module Yawast
             end
           rescue => e
             puts
-            Yawast::Utilities.puts_info "TLS Session Request Limit: Connection terminated after #{count} requests (#{e.message})"
+
+            if e.message.include? 'alert handshake failure'
+              Yawast::Utilities.puts_info 'TLS Session Request Limit: Server does not support 3DES cipher suites'
+            else
+              Yawast::Utilities.puts_info "TLS Session Request Limit: Connection terminated after #{count} requests (#{e.message})"
+            end
+
             return
           end
 
           puts
-          Yawast::Utilities.puts_warn 'TLS Session Request Limit: Connection not terminated after 10,000 requests'
-          Yawast::Utilities.puts_warn 'TLS Session Request Limit: If server supports 3DES, may be affected by SWEET32'
+          Yawast::Utilities.puts_vuln 'TLS Session Request Limit: Connection not terminated after 10,000 requests; possibly vulnerable to SWEET32'
         end
 
       #private methods

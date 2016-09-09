@@ -88,11 +88,15 @@ module Yawast
           head = Yawast::Shared::Http.head(@uri)
 
           if head['Location'] != nil
-            location = URI.parse(head['Location'])
+            begin
+              location = URI.parse(head['Location'])
 
-            if location.scheme == 'https'
-              #we run this through extract_uri as it performs a few checks we need
-              return Yawast::Shared::Uri.extract_uri location.to_s
+              if location.scheme == 'https'
+                #we run this through extract_uri as it performs a few checks we need
+                return Yawast::Shared::Uri.extract_uri location.to_s
+              end
+            rescue
+              #we don't care if this fails
             end
           end
         end

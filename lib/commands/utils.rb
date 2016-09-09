@@ -23,7 +23,7 @@ module Yawast
         #see if we can resolve the host
         # we don't really need it, it just serves as validation
         begin
-          dns = Resolv::DNS.new()
+          dns = Resolv::DNS.new
           dns.getaddress(uri.host)
         rescue => e
           raise ArgumentError.new("Invalid URL (#{e.message})") unless uri.host == 'localhost'

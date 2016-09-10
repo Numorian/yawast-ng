@@ -273,7 +273,7 @@ module Yawast
           headers = Yawast::Shared::Http.get_headers
           res = req.request(Trace.new('/', headers))
 
-          if res.body.include? 'TRACE / HTTP/1.1'
+          if res.body.include? 'TRACE / HTTP/1.1' && res.code == '200'
             Yawast::Utilities.puts_warn 'HTTP TRACE Enabled'
             puts "\t\t\"curl -X TRACE #{uri}\""
 

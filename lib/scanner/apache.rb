@@ -3,7 +3,7 @@ module Yawast
     class Apache
       def self.check_banner(banner)
         #don't bother if this doesn't look like Apache
-        return if !banner.include? 'Apache'
+        return unless banner.include? 'Apache'
         @apache = true
 
         modules = banner.split(' ')

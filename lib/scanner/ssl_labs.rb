@@ -6,7 +6,7 @@ require 'digest/sha1'
 module Yawast
   module Scanner
     class SslLabs
-      def self.info(uri, sslsessioncount)
+      def self.info(uri, tdes_session_count)
         puts 'Beginning SSL Labs scan (this could take a minute or two)'
 
         api = Ssllabs::Api.new
@@ -51,7 +51,7 @@ module Yawast
               Yawast::Utilities.puts_error "Error getting information for IP: #{ep.ip_address}: #{e.message}"
             end
 
-            Yawast::Scanner::Ssl.get_session_msg_count(uri) if sslsessioncount
+            Yawast::Scanner::Ssl.get_tdes_session_msg_count(uri) if tdes_session_count
 
             puts
           end

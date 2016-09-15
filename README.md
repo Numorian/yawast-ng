@@ -80,6 +80,7 @@ Checks for the following SSL issues are performed:
 * SHA1 Signature
 * RC4 Cipher Suites
 * Weak (< 128 bit) Cipher Suites
+* SWEET32
 
 In addition to these tests, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 
@@ -180,9 +181,9 @@ This mode is the most comprehensive, and contains far more data than the Interna
 
 ### Usage
 
-* Standard scan: `./yawast scan <url> [--internalssl] [--nossl] [--nociphers] [--dir] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
-* HEAD-only scan: `./yawast head <url> [--internalssl] [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
-* SSL information: `./yawast ssl <url> [--internalssl] [--nociphers]`
+* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* HEAD-only scan: `./yawast head <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* SSL information: `./yawast ssl <url> [--internalssl] [--tdessessioncount] [--nociphers]`
 * CMS detection: `./yawast cms <url> [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 
 For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
@@ -204,7 +205,7 @@ For authenticated testing, YAWAST allows you to specify a cookie to be passed vi
 Using `scan` - the normal go-to option, here's what you get when scanning my website:
 
 ```
-$yawast scan https://adamcaudill.com --dir --sslsessioncount
+$yawast scan https://adamcaudill.com --dir --tdessessioncount
  __   _____  _    _  ___   _____ _____ 
  \ \ / / _ \| |  | |/ _ \ /  ___|_   _|
   \ V / /_\ \ |  | / /_\ \\ `--.  | |  

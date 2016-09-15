@@ -5,7 +5,7 @@ require 'digest/sha1'
 module Yawast
   module Scanner
     class Ssl
-      def self.info(uri, check_ciphers, sslsessioncount)
+      def self.info(uri, check_ciphers, tdes_session_count)
         begin
           socket = TCPSocket.new(uri.host, uri.port)
 
@@ -98,7 +98,7 @@ module Yawast
 
           ssl.sysclose
 
-          get_session_msg_count(uri) if sslsessioncount
+          get_tdes_session_msg_count(uri) if tdes_session_count
         rescue => e
           Yawast::Utilities.puts_error "SSL: Error Reading X509 Details: #{e.message}"
         end
@@ -178,7 +178,7 @@ module Yawast
         puts ''
       end
 
-        def self.get_session_msg_count(uri)
+        def self.get_tdes_session_msg_count(uri)
           # this method will send a number of HEAD requests to see
           #  if the connection is eventually killed.
           puts 'TLS Session Request Limit: Checking number of requests accepted using 3DES suites...'

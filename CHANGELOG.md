@@ -2,6 +2,7 @@
 
 * [#61](https://github.com/adamcaudill/yawast/issues/61) - SSL Session Count: force 3DES suites
 * [#23](https://github.com/adamcaudill/yawast/issues/23) - Add check for HTTP to HTTPS redirect
+* [#63](https://github.com/adamcaudill/yawast/issues/63) - Rename `--sslsessioncount` to `--tdessessioncount`
 
 ## 0.2.2 - 2016-08-07
 

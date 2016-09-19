@@ -49,6 +49,8 @@ module Yawast
     OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:options] = OpenSSL::SSL::OP_ALL
   end
 
+  STDOUT.sync = true
+
   trap 'SIGINT' do
     puts
     puts 'Scan cancelled by user.'

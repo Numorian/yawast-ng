@@ -1,3 +1,7 @@
+## 0.4.0 - In Development
+
+* [#65](https://github.com/adamcaudill/yawast/issues/65) - Bug: Output redirection doesn't work correctly
+
 ## 0.3.0 - 2016-09-15
 
 * [#61](https://github.com/adamcaudill/yawast/issues/61) - SSL Session Count: force 3DES suites

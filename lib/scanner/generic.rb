@@ -212,45 +212,6 @@ module Yawast
         end
       end
 
-      def self.directory_search(uri, recursive, banner = true)
-        if banner
-          if recursive
-            puts 'Recursively searching for common directories (this will take a while)...'
-          else
-            puts 'Searching for common directories...'
-          end
-        end
-
-        begin
-          req = Yawast::Shared::Http.get_http(uri)
-          req.use_ssl = uri.scheme == 'https'
-          req.keep_alive_timeout = 600
-          headers = Yawast::Shared::Http.get_headers
-
-          req.start do |http|
-            File.open(File.dirname(__FILE__) + '/../resources/common.txt', "r") do |f|
-              f.each_line do |line|
-                check = uri.copy
-                check.path = check.path + "#{line.strip}/"
-
-                res = http.head(check, headers)
-
-                if res.code == '200'
-                  Yawast::Utilities.puts_info "\tFound: '#{check.to_s}'"
-                  directory_search check, recursive, false if recursive
-                elsif res.code == '301'
-                  Yawast::Utilities.puts_info "\tFound Redirect: '#{check.to_s} -> '#{res['Location']}'"
-                end
-              end
-            end
-          end
-        rescue => e
-          Yawast::Utilities.puts_error "Error searching for directories (#{e.message})"
-        end
-
-        puts '' if banner
-      end
-
       def self.check_options(uri)
         begin
           req = Yawast::Shared::Http.get_http(uri)

@@ -1,5 +1,6 @@
 ## 0.4.0 - In Development
 
+* [#66](https://github.com/adamcaudill/yawast/issues/66) - Thread directory search for better performance
 * [#65](https://github.com/adamcaudill/yawast/issues/65) - Bug: Output redirection doesn't work correctly
 
 ## 0.3.0 - 2016-09-15

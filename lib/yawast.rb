@@ -2,7 +2,7 @@
 #
 # path - The String relative path from here to the directory.
 def require_all(path)
-  glob = File.join(File.dirname(__FILE__), path, '*.rb')
+  glob = File.join(File.dirname(__FILE__), path + '/**/', '*.rb')
   Dir[glob].each do |f|
     require f
   end

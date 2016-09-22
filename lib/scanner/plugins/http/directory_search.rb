@@ -1,7 +1,7 @@
 module Yawast
   module Scanner
     module Plugins
-      module Generic
+      module Http
         class DirectorySearch
           def self.search(uri, recursive)
             @recursive = recursive

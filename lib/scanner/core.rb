@@ -63,7 +63,7 @@ module Yawast
 
             #check for common directories
             if options.dir
-              Yawast::Scanner::Plugins::Http::DirectorySearch.search @uri, options.dirrecursive
+              Yawast::Scanner::Plugins::Http::DirectorySearch.search @uri, options.dirrecursive, options.dirlistredir
             end
 
             get_cms(@uri, options)

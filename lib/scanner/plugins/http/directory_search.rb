@@ -3,8 +3,9 @@ module Yawast
     module Plugins
       module Http
         class DirectorySearch
-          def self.search(uri, recursive)
+          def self.search(uri, recursive, list_redirects)
             @recursive = recursive
+            @list_redirects = list_redirects
 
             if recursive
               puts 'Recursively searching for common directories (this will take a while)...'
@@ -76,7 +77,7 @@ module Yawast
                 @results.push "\tFound: '#{uri.to_s}'"
 
                 load_queue uri if @recursive
-              elsif res.code == '301'
+              elsif res.code == '301' && @list_redirects
                 @results.push "\tFound Redirect: '#{uri.to_s} -> '#{res['Location']}'"
               end
             rescue => e

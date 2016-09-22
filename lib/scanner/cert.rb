@@ -21,7 +21,7 @@ module Yawast
 
         content = File.readlines options.input
 
-        pool_size = 16
+        pool_size = 32
         jobs = Queue.new
         @results = Queue.new
 
@@ -66,7 +66,7 @@ module Yawast
         return if domain == ''
 
         begin
-          socket = Socket.tcp(domain, 443, opts={connect_timeout: 3})
+          socket = Socket.tcp(domain, 443, opts={connect_timeout: 8})
 
           ctx = OpenSSL::SSL::SSLContext.new
           ctx.ciphers = OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers]
@@ -74,7 +74,7 @@ module Yawast
           ssl = OpenSSL::SSL::SSLSocket.new(socket, ctx)
           ssl.hostname = domain
 
-          Timeout::timeout(5) {
+          Timeout::timeout(16) {
             ssl.connect
           }
 

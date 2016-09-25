@@ -83,7 +83,7 @@ module Yawast
           if cert.nil?
             raise 'No certificate received.'
           else
-            @results.push "#{domain}: Issuer: '#{cert.issuer.common_name}' / '#{cert.issuer.organization}' Serial: #{cert.serial}"
+            @results.push "#{domain}: Issuer: '#{cert.issuer.common_name}' / '#{cert.issuer.organization}' Subject: '#{cert.subject}' Serial: #{cert.serial}"
           end
         rescue
           unless domain.start_with? 'www.'

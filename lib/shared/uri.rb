@@ -1,3 +1,5 @@
+require 'ipaddress'
+
 module Yawast
   module Shared
     class Uri
@@ -21,7 +23,14 @@ module Yawast
           dns = Resolv::DNS.new
           dns.getaddress(uri.host)
         rescue => e
-          raise ArgumentError.new("Invalid URL (#{e.message})") unless uri.host == 'localhost'
+          if uri.host == 'localhost'
+            #do nothing, in this case, we just don't care.
+          elsif IPAddress.valid? uri.host
+            #in this case the host name is actually a IP, let it go through.
+          else
+            #we've passed all the exceptions, if we are here, it's a problem
+            raise ArgumentError.new("Invalid URL (#{e.message})")
+          end
         end
 
         return uri

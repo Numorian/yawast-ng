@@ -12,6 +12,8 @@ class TestScannerApacheServerStatus < Minitest::Test
 
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
+
+    Yawast::Shared::Http.setup nil, nil
     Yawast::Scanner::Plugins::Http::FilePresence.check_readme_html uri
 
     assert stdout_value.include?('\'/readme.html\' found:'), 'readme.html page warning not found'
@@ -26,6 +28,8 @@ class TestScannerApacheServerStatus < Minitest::Test
 
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
+
+    Yawast::Shared::Http.setup nil, nil
     Yawast::Scanner::Plugins::Http::FilePresence.check_all uri
 
     assert stdout_value.include?('\'/readme.html\' found:'), 'readme.html page warning not found'
@@ -40,6 +44,8 @@ class TestScannerApacheServerStatus < Minitest::Test
 
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
+
+    Yawast::Shared::Http.setup nil, nil
     Yawast::Scanner::Plugins::Http::FilePresence.check_release_notes_txt uri
 
     assert stdout_value.include?('\'/RELEASE-NOTES.txt\' found:'), 'RELEASE-NOTES.txt page warning not found'

@@ -12,6 +12,8 @@ class TestScannerApacheServerInfo < Minitest::Test
 
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
+
+    Yawast::Shared::Http.setup nil, nil
     Yawast::Scanner::Apache.check_server_info uri
 
     assert stdout_value.include?('Apache Server Info page found'), 'Apache Server Info page warning not found'

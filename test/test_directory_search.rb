@@ -13,6 +13,7 @@ class TestDirectorySearch < Minitest::Test
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
 
+    Yawast::Shared::Http.setup nil, nil
     Yawast::Scanner::Plugins::Http::DirectorySearch.search uri, true, true, ['test', 'data']
 
     assert stdout_value.include?('Recursively searching for common directories'), 'Output not found'
@@ -28,6 +29,7 @@ class TestDirectorySearch < Minitest::Test
     override_stdout
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
 
+    Yawast::Shared::Http.setup nil, nil
     Yawast::Scanner::Plugins::Http::DirectorySearch.search uri, false, true, ['test', 'data']
 
     assert stdout_value.include?('Searching for common directories'), 'Output not found'

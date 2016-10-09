@@ -9,4 +9,5 @@ group :test do
   gem 'simplecov'
   gem 'coveralls', require: false
   gem 'webrick'
+  gem "codeclimate-test-reporter", require: nil
 end

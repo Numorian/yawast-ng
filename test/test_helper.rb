@@ -1,7 +1,7 @@
 require 'minitest/reporters'
-require 'simplecov'
 require 'coveralls'
+require "codeclimate-test-reporter"
 
-SimpleCov.start
+CodeClimate::TestReporter.start
 MiniTest::Reporters.use!
 Coveralls.wear!

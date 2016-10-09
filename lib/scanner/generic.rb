@@ -93,6 +93,7 @@ module Yawast
           xss_protection = ''
           via = ''
           hpkp = ''
+          acao = ''
 
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -109,6 +110,7 @@ module Yawast
             xss_protection = v if k.downcase == 'x-xss-protection'
             via = v if k.downcase == 'via'
             hpkp = v if k.downcase == 'public-key-pins'
+            acao = v if k.downcase == 'access-control-allow-origin'
 
             if k.downcase == 'set-cookie'
               #this chunk of magic manages to properly split cookies, when multiple are sent together
@@ -179,6 +181,10 @@ module Yawast
 
           if hpkp == ''
             Yawast::Utilities.puts_warn 'Public-Key-Pins Header Not Present'
+          end
+
+          if acao == '*'
+            Yawast::Utilities.puts_warn 'Access-Control-Allow-Origin: Unrestricted'
           end
 
           puts ''

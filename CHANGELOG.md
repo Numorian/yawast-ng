@@ -5,6 +5,7 @@
 * [#69](https://github.com/adamcaudill/yawast/issues/69) - False positives on non-standard 404 handling
 * [#65](https://github.com/adamcaudill/yawast/issues/65) - Bug: Output redirection doesn't work correctly
 * [#70](https://github.com/adamcaudill/yawast/issues/70) - Bug: Handle scans of IP addresses
+* [#72](https://github.com/adamcaudill/yawast/issues/72) - Bug: internalssl & Scanning IPs Fails
 
 ## 0.3.0 - 2016-09-15
 

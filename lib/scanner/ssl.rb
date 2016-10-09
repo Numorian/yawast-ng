@@ -108,7 +108,12 @@ module Yawast
         puts 'Supported Ciphers (based on your OpenSSL version):'
 
         dns = Resolv::DNS.new()
-        ip = dns.getaddresses(uri.host)[0]
+
+        if IPAddress.valid? uri.host
+          ip = IPAddress.parse uri.host
+        else
+          ip = dns.getaddresses(uri.host)[0]
+        end
 
         #find all versions that don't include '_server' or '_client'
         versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
@@ -145,7 +150,8 @@ module Yawast
               rescue OpenSSL::SSL::SSLError => e
                 unless e.message.include?('alert handshake failure') ||
                     e.message.include?('no ciphers available') ||
-                    e.message.include?('wrong version number')
+                    e.message.include?('wrong version number') ||
+                    e.message.include?('alert protocol version')
                   Yawast::Utilities.puts_error "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(Supported But Failed)"
                 end
               rescue => e

@@ -1,7 +1,8 @@
 require 'simplecov'
-require 'codeclimate-test-reporter'
-require 'minitest/reporters'
 
+dir = File.join(File.dirname(__FILE__), '../coverage')
+SimpleCov.coverage_dir(dir)
 SimpleCov.start
-CodeClimate::TestReporter.start
+
+require 'minitest/reporters'
 MiniTest::Reporters.use!

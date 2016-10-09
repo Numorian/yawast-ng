@@ -1,4 +1,3 @@
-require 'minitest/autorun'
 require File.dirname(__FILE__) + '/../lib/yawast'
 require File.dirname(__FILE__) + '/base'
 require 'colorize'

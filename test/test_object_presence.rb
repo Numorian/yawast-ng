@@ -1,4 +1,3 @@
-require 'minitest/autorun'
 require 'webrick'
 require File.dirname(__FILE__) + '/../lib/yawast'
 require File.dirname(__FILE__) + '/base'

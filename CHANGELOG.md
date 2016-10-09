@@ -2,6 +2,7 @@
 
 * [#66](https://github.com/adamcaudill/yawast/issues/66) - Thread directory search for better performance
 * [#67](https://github.com/adamcaudill/yawast/issues/67) - Make "Found Redirect" optional
+* [#69](https://github.com/adamcaudill/yawast/issues/69) - False positives on non-standard 404 handling
 * [#65](https://github.com/adamcaudill/yawast/issues/65) - Bug: Output redirection doesn't work correctly
 * [#70](https://github.com/adamcaudill/yawast/issues/70) - Bug: Handle scans of IP addresses
 

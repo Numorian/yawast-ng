@@ -48,14 +48,7 @@ module Yawast
             Yawast::Scanner::Apache.check_all(@uri, head)
             Yawast::Scanner::Iis.check_all(@uri, head)
 
-            Yawast::Scanner::ObjectPresence.check_source_control(@uri)
-            Yawast::Scanner::ObjectPresence.check_sitemap(@uri)
-            Yawast::Scanner::ObjectPresence.check_cross_domain(@uri)
-            Yawast::Scanner::ObjectPresence.check_wsftp_log(@uri)
-            Yawast::Scanner::ObjectPresence.check_trace_axd(@uri)
-            Yawast::Scanner::ObjectPresence.check_elmah_axd(@uri)
-            Yawast::Scanner::ObjectPresence.check_readme_html(@uri)
-            Yawast::Scanner::ObjectPresence.check_release_notes_txt(@uri)
+            Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri
 
             Yawast::Scanner::Generic.check_propfind(@uri)
             Yawast::Scanner::Generic.check_options(@uri)

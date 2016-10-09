@@ -1,5 +1,8 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
 
+#if we are running from RubyMine, we need this, but it breaks things when called from Rake.
+require 'minitest/autorun' unless ENV['FROM_RAKE'] == 'true'
+
 module TestBase
   def override_stdout
     @orig_stdout = $stdout

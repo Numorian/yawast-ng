@@ -3,7 +3,7 @@ module Yawast
     module Plugins
       module Http
         class DirectorySearch
-          def self.search(uri, recursive, list_redirects)
+          def self.search(uri, recursive, list_redirects, search_list = nil)
             @recursive = recursive
             @list_redirects = list_redirects
 
@@ -11,6 +11,18 @@ module Yawast
               puts 'Recursively searching for common directories (this will take a while)...'
             else
               puts 'Searching for common directories...'
+            end
+
+            if search_list == nil
+              @search_list = []
+
+              File.open(File.dirname(__FILE__) + '/../../../resources/common.txt', 'r') do |f|
+                f.each_line do |line|
+                  @search_list.push line.strip
+                end
+              end
+            else
+              @search_list = search_list
             end
 
             begin
@@ -58,14 +70,12 @@ module Yawast
           end
 
           def self.load_queue(uri)
-            File.open(File.dirname(__FILE__) + '/../../../resources/common.txt', "r") do |f|
-              f.each_line do |line|
-                check = uri.copy
-                check.path = check.path + "#{line.strip}/"
+            @search_list.each do |line|
+              check = uri.copy
+              check.path = check.path + "#{line}/"
 
-                #add the job to the queue
-                @jobs.push check
-              end
+              #add the job to the queue
+              @jobs.push check
             end
           end
 

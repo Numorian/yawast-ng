@@ -7,7 +7,6 @@ group :test do
   gem 'minitest'
   gem 'minitest-reporters'
   gem 'simplecov'
-  gem 'coveralls', require: false
   gem 'webrick'
   gem "codeclimate-test-reporter", require: nil
 end

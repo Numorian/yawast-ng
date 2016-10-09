@@ -1,3 +1,5 @@
+require File.join(File.dirname(__FILE__), 'test_helper')
+
 module TestBase
   def override_stdout
     @orig_stdout = $stdout

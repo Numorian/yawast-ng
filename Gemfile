@@ -8,5 +8,5 @@ group :test do
   gem 'minitest-reporters'
   gem 'simplecov'
   gem 'webrick'
-  gem "codeclimate-test-reporter", require: nil
+  gem 'codeclimate-test-reporter', require: nil
 end

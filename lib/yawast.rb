@@ -44,7 +44,7 @@ module Yawast
   def self.set_openssl_options
     #change certain defaults, to make things work better
     #we prefer RSA, to avoid issues with small DH keys
-    OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers] = "RSA:ALL:COMPLEMENTOFALL"
+    OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers] = 'RSA:ALL:COMPLEMENTOFALL'
     OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
     OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:options] = OpenSSL::SSL::OP_ALL
   end

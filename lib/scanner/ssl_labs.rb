@@ -5,6 +5,7 @@ require 'digest/sha1'
 
 module Yawast
   module Scanner
+    # noinspection RubyResolve
     class SslLabs
       def self.info(uri, tdes_session_count)
         puts 'Beginning SSL Labs scan (this could take a minute or two)'
@@ -259,7 +260,6 @@ module Yawast
               strength = 112
             end
 
-            suite_info = nil
             if ke != nil
               suite_info = "#{suite.name.ljust(50)} - #{strength}-bits - #{ke}"
             else

@@ -272,21 +272,21 @@ module Yawast
 
     #Custom class to allow using the PROPFIND verb
     class Propfind < Net::HTTPRequest
-      METHOD = "PROPFIND"
+      METHOD = 'PROPFIND'
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end
 
     #Custom class to allow using the OPTIONS verb
     class Options < Net::HTTPRequest
-      METHOD = "OPTIONS"
+      METHOD = 'OPTIONS'
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end
 
     #Custom class to allow using the TRACE verb
     class Trace < Net::HTTPRequest
-      METHOD = "TRACE"
+      METHOD = 'TRACE'
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end

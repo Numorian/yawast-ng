@@ -75,7 +75,7 @@ command :cert do |c|
 
   c.option '--input STRING', String, 'List of domains to check'
 
-  c.action do |args, options|
+  c.action do |_, options|
     Yawast::Commands::Cert.process(options)
   end
 end

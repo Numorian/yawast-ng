@@ -13,7 +13,7 @@ class TestDirectorySearch < Minitest::Test
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
 
     Yawast::Shared::Http.setup nil, nil
-    Yawast::Scanner::Plugins::Http::DirectorySearch.search uri, true, true, ['test', 'data']
+    Yawast::Scanner::Plugins::Http::DirectorySearch.search uri, true, true, %w(test data)
 
     assert stdout_value.include?('Recursively searching for common directories'), 'Output not found'
 
@@ -29,7 +29,7 @@ class TestDirectorySearch < Minitest::Test
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
 
     Yawast::Shared::Http.setup nil, nil
-    Yawast::Scanner::Plugins::Http::DirectorySearch.search uri, false, true, ['test', 'data']
+    Yawast::Scanner::Plugins::Http::DirectorySearch.search uri, false, true, %w(test data)
 
     assert stdout_value.include?('Searching for common directories'), 'Output not found'
 
@@ -38,7 +38,7 @@ class TestDirectorySearch < Minitest::Test
   end
 
   def run_server(port)
-    thr = Thread.new {
+    Thread.new {
       sockets = WEBrick::Utils.create_listeners nil, port
 
       server = WEBrick::HTTPServer.new :Port => port,
@@ -50,7 +50,5 @@ class TestDirectorySearch < Minitest::Test
       server.listeners.replace sockets
       server.start
     }
-
-    thr
   end
 end

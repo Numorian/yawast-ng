@@ -53,6 +53,7 @@ module Yawast
         req
       end
 
+      # noinspection RubyStringKeysInHashInspection
       def self.get_headers
         if @cookie == nil
           headers = { 'User-Agent' => HTTP_UA }

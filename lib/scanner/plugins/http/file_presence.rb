@@ -12,7 +12,7 @@ module Yawast
             check.path = "#{path}"
             code = Yawast::Shared::Http.get_status_code(check)
 
-            if code == "200"
+            if code == '200'
               msg = "'#{path}' found: #{check}"
 
               if vuln

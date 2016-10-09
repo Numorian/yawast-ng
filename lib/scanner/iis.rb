@@ -55,7 +55,7 @@ module Yawast
 
     #Custom class to allow using the DEBUG verb
     class Debug < Net::HTTPRequest
-      METHOD = "DEBUG"
+      METHOD = 'DEBUG'
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end

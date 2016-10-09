@@ -9,7 +9,7 @@ module Yawast
         modules = banner.split(' ')
         server = modules[0]
 
-        #hack - fix '(distro)' issue, such as with 'Apache/2.2.22 (Ubuntu)'
+        #fix '(distro)' issue, such as with 'Apache/2.2.22 (Ubuntu)'
         # if we don't do this, it triggers a false positive on the module check
         if /\(\w*\)/.match modules[1]
           server += " #{modules[1]}"
@@ -35,7 +35,7 @@ module Yawast
         end
       end
 
-      def self.check_all(uri, head)
+      def self.check_all(uri)
         #this check for @apache may yield false negatives.. meh.
         if @apache
           #run all the defined checks

@@ -107,7 +107,7 @@ module Yawast
       def self.get_ciphers(uri)
         puts 'Supported Ciphers (based on your OpenSSL version):'
 
-        dns = Resolv::DNS.new()
+        dns = Resolv::DNS.new
 
         if IPAddress.valid? uri.host
           ip = IPAddress.parse uri.host
@@ -120,7 +120,7 @@ module Yawast
 
         versions.each do |version|
           #ignore SSLv23, as it's an auto-negotiate, which just adds noise
-          if version.to_s != "SSLv23"
+          if version.to_s != 'SSLv23'
             ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
             puts "\tChecking for #{version.to_s} suites (#{ciphers.count} possible suites)"
 
@@ -197,7 +197,7 @@ module Yawast
             headers = Yawast::Shared::Http.get_headers
 
             #force 3DES - this is to ensure that 3DES specific limits are caught
-            req.ciphers = ["3DES"]
+            req.ciphers = ['3DES']
 
             req.start do |http|
               10000.times do |i|

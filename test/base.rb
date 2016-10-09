@@ -22,7 +22,7 @@ module TestBase
   end
 
   def start_web_server(file, url, port = 1234)
-    thr = Thread.new {
+    Thread.new {
       server = WEBrick::HTTPServer.new :Port => port,
                                        :BindAddress => 'localhost',
                                        :AccessLog => [],
@@ -30,8 +30,6 @@ module TestBase
       server.mount "/#{url}", WEBrick::HTTPServlet::FileHandler, file
       server.start
     }
-
-    thr
   end
 
   def parse_headers_from_file(file)

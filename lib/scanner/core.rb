@@ -45,7 +45,7 @@ module Yawast
           #process the 'scan' stuff that goes beyond 'head'
           unless options.head
             #server specific checks
-            Yawast::Scanner::Apache.check_all(@uri, head)
+            Yawast::Scanner::Apache.check_all(@uri)
             Yawast::Scanner::Iis.check_all(@uri, head)
 
             Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri

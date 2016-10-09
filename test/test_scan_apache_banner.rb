@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/base'
 class TestScannerApacheBanner < Minitest::Test
   include TestBase
 
-  def test_apache_basic_banner_no_version
+  def test_apache_banner_no_version
     server = 'Apache'
     override_stdout
     Yawast::Scanner::Apache.check_banner server
@@ -24,7 +24,7 @@ class TestScannerApacheBanner < Minitest::Test
     restore_stdout
   end
 
-  def test_apache_basic_banner_distro
+  def test_apache_banner_distro
     server = 'Apache/2.4.7 (Ubuntu)'
     override_stdout
     Yawast::Scanner::Apache.check_banner server

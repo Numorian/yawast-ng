@@ -4,6 +4,7 @@
 * [#67](https://github.com/adamcaudill/yawast/issues/67) - Make "Found Redirect" optional
 * [#69](https://github.com/adamcaudill/yawast/issues/69) - False positives on non-standard 404 handling
 * [#73](https://github.com/adamcaudill/yawast/issues/73) - Use `--internalssl` when host is an IP address
+* [#64](https://github.com/adamcaudill/yawast/issues/64) - Add check for secure cookie on HTTP host
 * [#65](https://github.com/adamcaudill/yawast/issues/65) - Bug: Output redirection doesn't work correctly
 * [#70](https://github.com/adamcaudill/yawast/issues/70) - Bug: Handle scans of IP addresses
 * [#72](https://github.com/adamcaudill/yawast/issues/72) - Bug: internalssl & Scanning IPs Fails

@@ -192,7 +192,11 @@ module Yawast
               elements = val.strip.split(';')
 
               #check for secure cookies
-              unless elements.include?(' Secure') || elements.include?(' secure')
+              if elements.include?(' Secure') || elements.include?(' secure')
+                if uri.scheme != 'https'
+                  Yawast::Utilities.puts_warn "\t\t\tCookie with Secure flag sent over non-HTTPS connection"
+                end
+              else
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing Secure flag"
               end
 

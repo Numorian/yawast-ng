@@ -103,7 +103,7 @@ module Yawast
         if @uri.scheme == 'https' && !options.nossl
           head = Yawast::Shared::Http.head(@uri) if head == nil
 
-          if options.internalssl
+          if options.internalssl || IPAddress.valid?(uri.host)
             Yawast::Scanner::Ssl.info(uri, !options.nociphers, options.tdessessioncount)
           else
             Yawast::Scanner::SslLabs.info(@uri, options.tdessessioncount)

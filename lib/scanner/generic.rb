@@ -192,7 +192,7 @@ module Yawast
               elements = val.strip.split(';')
 
               #check for secure cookies
-              unless elements.include? ' Secure'
+              unless elements.include?(' Secure') || elements.include?(' secure')
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing Secure flag"
               end
 

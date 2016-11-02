@@ -64,7 +64,7 @@ module Yawast
 
           puts 'Scan complete.'
         rescue => e
-          Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.message})"
+          Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.class}: #{e.message})"
         end
       end
 

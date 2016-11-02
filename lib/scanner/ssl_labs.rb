@@ -15,7 +15,7 @@ module Yawast
         info = api.info
 
         info.messages.each do |msg|
-          puts "[SSL Labs]\t#{msg}"
+          puts "[SSL Labs] #{msg}"
         end
 
         begin
@@ -34,6 +34,8 @@ module Yawast
             print '.'
           end
           puts
+          puts
+          puts "\tSSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=#{uri.host}&hideResults=on"
           puts
 
           host.endpoints.each do |ep|

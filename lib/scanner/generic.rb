@@ -207,7 +207,7 @@ module Yawast
               end
 
               #check for HttpOnly cookies
-              unless elements.include? ' HttpOnly'
+              unless elements.include?(' HttpOnly') || elements.include?(' httponly')
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing HttpOnly flag"
               end
             end

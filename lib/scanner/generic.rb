@@ -79,7 +79,7 @@ module Yawast
         end
       end
 
-      def self.head_info(head)
+      def self.head_info(head, uri)
         begin
           server = ''
           powered_by = ''

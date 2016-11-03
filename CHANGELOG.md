@@ -1,4 +1,4 @@
-## 0.4.0 - In Development
+## 0.4.0 - 2016-11-03
 
 * [#66](https://github.com/adamcaudill/yawast/issues/66) - Thread directory search for better performance
 * [#67](https://github.com/adamcaudill/yawast/issues/67) - Make "Found Redirect" optional

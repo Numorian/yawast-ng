@@ -232,436 +232,238 @@ Using `scan` - the normal go-to option, here's what you get when scanning my web
 
 ```
 $yawast scan https://adamcaudill.com --tdessessioncount --dir
-__   _____  _    _  ___   _____ _____ 
-\ \ / / _ \| |  | |/ _ \ /  ___|_   _|
- \ V / /_\ \ |  | / /_\ \\ `--.  | |  
-  \ /|  _  | |/\| |  _  | `--. \ | |  
-  | || | | \  /\  / | | |/\__/ / | |  
-  \_/\_| |_/\/  \/\_| |_/\____/  \_/  
-
-YAWAST v0.3.0 - The YAWAST Antecedent Web Application Security Toolkit
- Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>
- Support & Documentation: https://github.com/adamcaudill/yawast
- Ruby 2.2.4-p230; OpenSSL 1.0.2f  28 Jan 2016 (x86_64-darwin15)
-
-Scanning: https://adamcaudill.com/
-
-DNS Information:
-[I] 		104.28.27.55 (N/A)
-				https://www.shodan.io/host/104.28.27.55
-				https://censys.io/ipv4/104.28.27.55
-[I] 		104.28.26.55 (N/A)
-				https://www.shodan.io/host/104.28.26.55
-				https://censys.io/ipv4/104.28.26.55
-[I] 		2400:CB00:2048:1::681C:1A37 (N/A)
-				https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
-[I] 		2400:CB00:2048:1::681C:1B37 (N/A)
-				https://www.shodan.io/host/2400:cb00:2048:1::681c:1b37
-[I] 		TXT: v=spf1 mx a ptr include:_spf.google.com ~all
-[I] 		MX: aspmx4.googlemail.com (30)
-[I] 		MX: aspmx.l.google.com (10)
-[I] 		MX: alt1.aspmx.l.google.com (20)
-[I] 		MX: aspmx2.googlemail.com (30)
-[I] 		MX: alt2.aspmx.l.google.com (20)
-[I] 		MX: aspmx3.googlemail.com (30)
-[I] 		MX: aspmx5.googlemail.com (30)
-[I] 		NS: vera.ns.cloudflare.com
-[I] 		NS: hal.ns.cloudflare.com
-
-[I] HEAD:
-[I] 		date: Fri, 16 Sep 2016 00:24:15 GMT
-[I] 		content-type: text/html; charset=UTF-8
-[I] 		connection: close
-[I] 		set-cookie: __cfduid=df78c5171c732bf2104fd8cc2dd82afd41473985455; expires=Sat, 16-Sep-17 00:24:15 GMT; path=/; domain=.adamcaudill.com; HttpOnly
-[I] 		vary: Accept-Encoding,Cookie
-[I] 		cache-control: max-age=3, must-revalidate
-[I] 		wp-super-cache: Served supercache file from PHP
-[I] 		last-modified: Fri, 16 Sep 2016 00:20:05 GMT
-[I] 		x-frame-options: sameorigin
-[I] 		strict-transport-security: max-age=15552000; preload
-[I] 		x-content-type-options: nosniff
-[I] 		server: cloudflare-nginx
-[I] 		cf-ray: 2e302ca911c550da-MIA
-
-[I] NOTE: Server appears to be Cloudflare; WAF may be in place.
-
-[I] X-Frame-Options Header: sameorigin
-[I] X-Content-Type-Options Header: nosniff
-[W] Content-Security-Policy Header Not Present
-[W] Public-Key-Pins Header Not Present
-
-[I] Cookies:
-[I] 		__cfduid=df78c5171c732bf2104fd8cc2dd82afd41473985455; expires=Sat, 16-Sep-17 00:24:15 GMT; path=/; domain=.adamcaudill.com; HttpOnly
-[W] 			Cookie missing Secure flag
-
-
-Beginning SSL Labs scan (this could take a minute or two)
-[SSL Labs]	This assessment service is provided free of charge by Qualys SSL Labs, subject to our terms and conditions: https://www.ssllabs.com/about/terms.html
-..........................................
-
-[I] IP: 104.28.27.55 - Grade: A+
-
-	Certificate Information:
-[I] 		Subject: CN=sni67677.cloudflaressl.com,OU=PositiveSSL Multi-Domain,OU=Domain Control Validated
-[I] 		Common Names: ["sni67677.cloudflaressl.com"]
-[I] 		Alternative names:
-[I] 			sni67677.cloudflaressl.com
-[I] 			*.adamcaudill.com
-[I] 			*.bsidesknoxville.com
-[I] 			*.secrypto.com
-[I] 			*.smimp.org
-[I] 			*.underhandedcrypto.com
-[I] 			adamcaudill.com
-[I] 			bsidesknoxville.com
-[I] 			secrypto.com
-[I] 			smimp.org
-[I] 			underhandedcrypto.com
-[I] 		Not Before: 2016-08-13T00:00:00+00:00
-[I] 		Not After: 2017-02-12T23:59:59+00:00
-[I] 		Key: EC 256 (RSA equivalent: 3072)
-[I] 		Public Key Hash: b658ea09e127fafe0416588a17446b606499df6e
-[I] 		Version: 2
-[I] 		Serial: 18930702358496442989903109042193740748
-[I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
-[I] 		Signature algorithm: SHA256withECDSA
-[I] 		Extended Validation: No (Domain Control)
-[I] 		Certificate Transparency: No
-[I] 		OCSP Must Staple: No
-[I] 		Revocation information: CRL information available
-[I] 		Revocation information: OCSP information available
-[I] 		Revocation status: certificate not revoked
-[I] 		Extensions:
-[I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96, 
-[I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
-[I] 			keyUsage = critical, Digital Signature
-[I] 			basicConstraints = critical, CA:FALSE
-[I] 			extendedKeyUsage = TLS Web Server Authentication, TLS Web Client Authentication
-[I] 			certificatePolicies = Policy: 1.3.6.1.4.1.6449.1.2.2.7,   CPS: https://secure.comodo.com/CPS, Policy: 2.23.140.1.2.1, 
-[I] 			crlDistributionPoints = , Full Name:,   URI:http://crl.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crl, 
-[I] 			authorityInfoAccess = CA Issuers - URI:http://crt.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crt, OCSP - URI:http://ocsp.comodoca4.com, 
-[I] 		Hash: 1ae6362e4fc377cccb6df6261838a5d9bb49663d
-			https://censys.io/certificates?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
-			https://crt.sh/?q=1ae6362e4fc377cccb6df6261838a5d9bb49663d
-
-	Configuration Information:
-		Protocol Support:
-[I] 			TLS 1.0
-[I] 			TLS 1.1
-[I] 			TLS 1.2
-
-		Cipher Suite Support:
-[I] 			TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256            - 128-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256            - 128-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA               - 128-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384            - 256-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384            - 256-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA               - 256-bits - ECDHE-256-bits
-[W] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 112-bits - ECDHE-256-bits
-[I] 			TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256      - 256-bits - ECDHE-256-bits
-[I] 			OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256  - 256-bits - ECDHE-256-bits
-
-		Handshake Simulation:
-[E] 			Android 2.3.7                - Simulation Failed
-[I] 			Android 4.0.4                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			Android 4.1.1                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			Android 4.2.2                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			Android 4.3                  - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			Android 4.4.2                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Android 5.0.0                - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
-[I] 			Android 6.0                  - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
-[I] 			Baidu Jan 2015               - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			BingPreview Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Chrome 51 / Win 7            - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Firefox 31.3.0 ESR / Win 7   - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Firefox 46 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Firefox 47 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Googlebot Feb 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[E] 			IE 6 / XP                    - Simulation Failed
-[I] 			IE 7 / Vista                 - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[E] 			IE 8 / XP                    - Simulation Failed
-[I] 			IE 8-10 / Win 7              - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			IE 11 / Win 7                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			IE 11 / Win 8.1              - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			IE 10 / Win Phone 8.0        - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			IE 11 / Win Phone 8.1        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			IE 11 / Win Phone 8.1 Update - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			IE 11 / Win 10               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Edge 13 / Win 10             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Edge 13 / Win Phone 10       - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[E] 			Java 6u45                    - Simulation Failed
-[I] 			Java 7u25                    - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			Java 8u31                    - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[E] 			OpenSSL 0.9.8y               - Simulation Failed
-[I] 			OpenSSL 1.0.1l               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			OpenSSL 1.0.2e               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Safari 5.1.9 / OS X 10.6.8   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			Safari 6 / iOS 6.0.1         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
-[I] 			Safari 6.0.4 / OS X 10.8.4   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
-[I] 			Safari 7 / iOS 7.1           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
-[I] 			Safari 7 / OS X 10.9         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
-[I] 			Safari 8 / iOS 8.4           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
-[I] 			Safari 8 / OS X 10.10        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
-[I] 			Safari 9 / iOS 9             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Safari 9 / OS X 10.11        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Apple ATS 9 / iOS 9          - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			Yahoo Slurp Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-[I] 			YandexBot Jan 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-
-		Protocol & Vulnerability Information:
-[I] 			DROWN: No
-[I] 			Secure Renegotiation: secure renegotiation supported
-[I] 			POODLE (SSL): No
-[I] 			POODLE (TLS): No
-[I] 			Downgrade Prevention: Yes
-[I] 			Compression: No
-[I] 			Heartbleed: No
-[I] 			OpenSSL CCS (CVE-2014-0224): No
-[I] 			OpenSSL Padding Oracle (CVE-2016-2107): No
-[I] 			Forward Secrecy: Yes (all simulated clients)
-[I] 			OCSP Stapling: Yes
-[I] 			FREAK: No
-[I] 			Logjam: No
-[I] 			DH public server param (Ys) reuse: No
-[W] 			Protocol Intolerance: TLS 1.3
-
-TLS Session Request Limit: Checking number of requests accepted using 3DES suites...
-.....
-[I] TLS Session Request Limit: Connection terminated after 100 requests (TLS Reconnected)
-
-[I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
-
-[W] '/readme.html' found: https://adamcaudill.com/readme.html
-
-Searching for common directories...
-[I] 	Found Redirect: 'https://adamcaudill.com/0/ -> 'https://adamcaudill.com/'
-[I] 	Found Redirect: 'https://adamcaudill.com/1/ -> 'https://adamcaudill.com/2013/04/16/1password-pbkdf2-and-implementation-flaws/'
-[I] 	Found Redirect: 'https://adamcaudill.com/2/ -> 'https://adamcaudill.com/2015/01/01/2014-a-year-in-review/'
-[I] 	Found Redirect: 'https://adamcaudill.com/20/ -> 'https://adamcaudill.com/2015/01/01/2014-a-year-in-review/'
-[I] 	Found: 'https://adamcaudill.com/2003/'
-[I] 	Found: 'https://adamcaudill.com/2004/'
-[I] 	Found: 'https://adamcaudill.com/2005/'
-[I] 	Found: 'https://adamcaudill.com/2006/'
-[I] 	Found: 'https://adamcaudill.com/2007/'
-[I] 	Found: 'https://adamcaudill.com/2008/'
-[I] 	Found: 'https://adamcaudill.com/2009/'
-[I] 	Found: 'https://adamcaudill.com/2010/'
-[I] 	Found: 'https://adamcaudill.com/2011/'
-[I] 	Found: 'https://adamcaudill.com/2013/'
-[I] 	Found: 'https://adamcaudill.com/2014/'
-[I] 	Found: 'https://adamcaudill.com/2015/'
-[I] 	Found: 'https://adamcaudill.com/2016/'
-[I] 	Found Redirect: 'https://adamcaudill.com/A/ -> 'https://adamcaudill.com/2014/10/17/a-backdoor-by-any-other-name/'
-[I] 	Found: 'https://adamcaudill.com/About/'
-[I] 	Found Redirect: 'https://adamcaudill.com/Archive/ -> 'https://adamcaudill.com/archives/'
-[I] 	Found Redirect: 'https://adamcaudill.com/B/ -> 'https://adamcaudill.com/2005/09/22/back-from-new-york/'
-[I] 	Found: 'https://adamcaudill.com/Blog/'
-[I] 	Found Redirect: 'https://adamcaudill.com/C/ -> 'https://adamcaudill.com/2009/10/03/cancel-godaddys-domain-privacy/'
-[I] 	Found Redirect: 'https://adamcaudill.com/D/ -> 'https://adamcaudill.com/2006/06/02/data-theft-its-happened-again/'
-[I] 	Found Redirect: 'https://adamcaudill.com/E/ -> 'https://adamcaudill.com/2006/03/17/end-on-an-era/'
-[I] 	Found Redirect: 'https://adamcaudill.com/F/ -> 'https://adamcaudill.com/2011/05/14/facebook-scams/'
-[I] 	Found Redirect: 'https://adamcaudill.com/G/ -> 'https://adamcaudill.com/2003/11/26/get-cpu-speed/'
-[I] 	Found Redirect: 'https://adamcaudill.com/H/ -> 'https://adamcaudill.com/2011/05/21/happy-20th-birthday-visual-basic/'
-[I] 	Found Redirect: 'https://adamcaudill.com/Home/ -> 'https://adamcaudill.com/'
-[I] 	Found Redirect: 'https://adamcaudill.com/I/ -> 'https://adamcaudill.com/2007/02/10/i-love-my-job/'
-[I] 	Found Redirect: 'https://adamcaudill.com/Internet/ -> 'https://adamcaudill.com/2006/05/27/internet-explorer-7/'
-[I] 	Found Redirect: 'https://adamcaudill.com/J/ -> 'https://adamcaudill.com/2014/07/23/jumping-through-hoops-dot-dot-dot/'
-[I] 	Found Redirect: 'https://adamcaudill.com/L/ -> 'https://adamcaudill.com/lasers/'
-[I] 	Found Redirect: 'https://adamcaudill.com/M/ -> 'https://adamcaudill.com/2006/09/23/make-xp-pretty/'
-[I] 	Found Redirect: 'https://adamcaudill.com/N/ -> 'https://adamcaudill.com/2011/02/11/need-a-cheap-phone-charger-quick-buy-a-tracfone/'
-[I] 	Found Redirect: 'https://adamcaudill.com/O/ -> 'https://adamcaudill.com/2006/06/17/of-victory-and-pair-programming/'
-[I] 	Found Redirect: 'https://adamcaudill.com/P/ -> 'https://adamcaudill.com/2003/10/31/pagesource/'
-[I] 	Found Redirect: 'https://adamcaudill.com/PHP/ -> 'https://adamcaudill.com/2005/03/01/phpbb-2-0-13-released-dumbss-coders-strike-again/'
-[I] 	Found Redirect: 'https://adamcaudill.com/Pages/ -> 'https://adamcaudill.com/2003/10/31/pagesource/'
-[I] 	Found Redirect: 'https://adamcaudill.com/R/ -> 'https://adamcaudill.com/2011/01/28/rails-3-dreamhost-ps/'
-[I] 	Found Redirect: 'https://adamcaudill.com/S/ -> 'https://adamcaudill.com/2016/05/22/seamless-phishing/'
-[I] 	Found Redirect: 'https://adamcaudill.com/Security/ -> 'https://adamcaudill.com/2014/03/23/security-by-buzzword-why-i-dont-support-ensafer/'
-[I] 	Found Redirect: 'https://adamcaudill.com/T/ -> 'https://adamcaudill.com/2007/01/21/task-management-with-tasks/'
-[I] 	Found Redirect: 'https://adamcaudill.com/U/ -> 'https://adamcaudill.com/2007/03/22/under-the-weather/'
-[I] 	Found Redirect: 'https://adamcaudill.com/US/ -> 'https://adamcaudill.com/2006/07/08/useful-notepad-tip/'
-[I] 	Found Redirect: 'https://adamcaudill.com/V/ -> 'https://adamcaudill.com/2006/05/10/valleyschwag/'
-[I] 	Found Redirect: 'https://adamcaudill.com/W/ -> 'https://adamcaudill.com/2006/11/28/want-a-free-copy-of-vista/'
-[I] 	Found Redirect: 'https://adamcaudill.com/Windows/ -> 'https://adamcaudill.com/2007/03/01/windows-vista-user-experience-guidelines/'
-[I] 	Found Redirect: 'https://adamcaudill.com/X/ -> 'https://adamcaudill.com/2007/01/25/xceed-datagrid-for-wpf-released-free/'
-[I] 	Found Redirect: 'https://adamcaudill.com/XML/ -> 'https://adamcaudill.com/2006/09/03/xml-notepad-2006/'
-[I] 	Found Redirect: 'https://adamcaudill.com/a/ -> 'https://adamcaudill.com/2014/10/17/a-backdoor-by-any-other-name/'
-[I] 	Found: 'https://adamcaudill.com/about/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ad/ -> 'https://adamcaudill.com/2006/03/29/advanced-net-programming/'
-[I] 	Found Redirect: 'https://adamcaudill.com/adv/ -> 'https://adamcaudill.com/2006/03/29/advanced-net-programming/'
-[I] 	Found Redirect: 'https://adamcaudill.com/advanced/ -> 'https://adamcaudill.com/2006/03/29/advanced-net-programming/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ap/ -> 'https://adamcaudill.com/2003/11/17/apisettings/'
-[I] 	Found Redirect: 'https://adamcaudill.com/api/ -> 'https://adamcaudill.com/2003/11/17/apisettings/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ar/ -> 'https://adamcaudill.com/archives/'
-[I] 	Found Redirect: 'https://adamcaudill.com/archive/ -> 'https://adamcaudill.com/archives/'
-[I] 	Found: 'https://adamcaudill.com/archives/'
-[I] 	Found Redirect: 'https://adamcaudill.com/asp/ -> 'https://adamcaudill.com/2007/01/25/aspnet-ajax/'
-[I] 	Found Redirect: 'https://adamcaudill.com/atom/ -> 'https://adamcaudill.com/feed/atom/'
-[I] 	Found Redirect: 'https://adamcaudill.com/avatars/ -> 'https://adamcaudill.com/2009/06/19/avatars-why-roll-your-own/'
-[I] 	Found Redirect: 'https://adamcaudill.com/b/ -> 'https://adamcaudill.com/2005/09/22/back-from-new-york/'
-[I] 	Found Redirect: 'https://adamcaudill.com/back/ -> 'https://adamcaudill.com/2005/09/22/back-from-new-york/'
-[I] 	Found Redirect: 'https://adamcaudill.com/backup/ -> 'https://adamcaudill.com/2007/08/27/backups-with-jungledrive/'
-[I] 	Found Redirect: 'https://adamcaudill.com/backups/ -> 'https://adamcaudill.com/2007/08/27/backups-with-jungledrive/'
-[I] 	Found Redirect: 'https://adamcaudill.com/bb/ -> 'https://adamcaudill.com/2011/05/21/bbpress-20-beta-1-released/'
-[I] 	Found Redirect: 'https://adamcaudill.com/bl/ -> 'https://adamcaudill.com/blog/'
-[I] 	Found: 'https://adamcaudill.com/blog/'
-[I] 	Found Redirect: 'https://adamcaudill.com/blue/ -> 'https://adamcaudill.com/2006/06/04/blue-hole-waterfall/'
-[I] 	Found Redirect: 'https://adamcaudill.com/build/ -> 'https://adamcaudill.com/2007/01/04/building-a-windows-powertoy/'
-[I] 	Found Redirect: 'https://adamcaudill.com/buy/ -> 'https://adamcaudill.com/2006/12/19/buying-a-car/'
-[I] 	Found Redirect: 'https://adamcaudill.com/c/ -> 'https://adamcaudill.com/2009/10/03/cancel-godaddys-domain-privacy/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ca/ -> 'https://adamcaudill.com/2009/10/03/cancel-godaddys-domain-privacy/'
-[I] 	Found Redirect: 'https://adamcaudill.com/can/ -> 'https://adamcaudill.com/2009/10/03/cancel-godaddys-domain-privacy/'
-[I] 	Found Redirect: 'https://adamcaudill.com/cc/ -> 'https://adamcaudill.com/ccsrch/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ccs/ -> 'https://adamcaudill.com/ccsrch/'
-[I] 	Found Redirect: 'https://adamcaudill.com/cgi-bin// -> 'https://adamcaudill.com/cgi-bin/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ch/ -> 'https://adamcaudill.com/2010/08/06/christopher-adam-caudill-6lbs-7oz-born-822010/'
-[I] 	Found Redirect: 'https://adamcaudill.com/com/ -> 'https://adamcaudill.com/2006/03/11/common-sense-email/'
-[I] 	Found Redirect: 'https://adamcaudill.com/common/ -> 'https://adamcaudill.com/2006/03/11/common-sense-email/'
-[I] 	Found Redirect: 'https://adamcaudill.com/con/ -> 'https://adamcaudill.com/2003/11/11/conexant-formerly-rockwell-softmodem-hsf-modem/'
-[I] 	Found Redirect: 'https://adamcaudill.com/contact/ -> '/pgp/'
-[I] 	Found Redirect: 'https://adamcaudill.com/crypto/ -> 'https://adamcaudill.com/2016/03/12/crypto-crisis-fear-over-freedom/'
-[I] 	Found Redirect: 'https://adamcaudill.com/d/ -> 'https://adamcaudill.com/2006/06/02/data-theft-its-happened-again/'
-[I] 	Found Redirect: 'https://adamcaudill.com/dat/ -> 'https://adamcaudill.com/2006/06/02/data-theft-its-happened-again/'
-[I] 	Found Redirect: 'https://adamcaudill.com/data/ -> 'https://adamcaudill.com/2006/06/02/data-theft-its-happened-again/'
-[I] 	Found Redirect: 'https://adamcaudill.com/de/ -> 'https://adamcaudill.com/2012/07/27/decrypting-spark-saved-passwords/'
-[I] 	Found Redirect: 'https://adamcaudill.com/dec/ -> 'https://adamcaudill.com/2012/07/27/decrypting-spark-saved-passwords/'
-[I] 	Found Redirect: 'https://adamcaudill.com/detail/ -> 'https://adamcaudill.com/2006/09/03/detailed-css-changes-in-ie7/'
-[I] 	Found Redirect: 'https://adamcaudill.com/dev/ -> 'https://adamcaudill.com/2016/08/17/developers-placing-trust-in-strangers/'
-[I] 	Found Redirect: 'https://adamcaudill.com/devel/ -> 'https://adamcaudill.com/2016/08/17/developers-placing-trust-in-strangers/'
-[I] 	Found Redirect: 'https://adamcaudill.com/develop/ -> 'https://adamcaudill.com/2016/08/17/developers-placing-trust-in-strangers/'
-[I] 	Found Redirect: 'https://adamcaudill.com/developer/ -> 'https://adamcaudill.com/2016/08/17/developers-placing-trust-in-strangers/'
-[I] 	Found Redirect: 'https://adamcaudill.com/developers/ -> 'https://adamcaudill.com/2016/08/17/developers-placing-trust-in-strangers/'
-[I] 	Found Redirect: 'https://adamcaudill.com/development/ -> 'https://adamcaudill.com/2006/04/11/development-abstraction/'
-[I] 	Found Redirect: 'https://adamcaudill.com/do/ -> 'https://adamcaudill.com/2013/07/04/do-one-thing-right/'
-[I] 	Found Redirect: 'https://adamcaudill.com/e/ -> 'https://adamcaudill.com/2006/03/17/end-on-an-era/'
-[I] 	Found Redirect: 'https://adamcaudill.com/en/ -> 'https://adamcaudill.com/2006/03/17/end-on-an-era/'
-[I] 	Found Redirect: 'https://adamcaudill.com/error/ -> 'https://adamcaudill.com/2011/05/16/errors-on-gem-install-mysql2/'
-[I] 	Found Redirect: 'https://adamcaudill.com/errors/ -> 'https://adamcaudill.com/2011/05/16/errors-on-gem-install-mysql2/'
-[I] 	Found Redirect: 'https://adamcaudill.com/event/ -> 'https://adamcaudill.com/2006/09/24/eventargs-no-need-to-pass-a-new-instance/'
-[I] 	Found Redirect: 'https://adamcaudill.com/f/ -> 'https://adamcaudill.com/2011/05/14/facebook-scams/'
-[I] 	Found: 'https://adamcaudill.com/feed/'
-[I] 	Found: 'https://adamcaudill.com/files/'
-[I] 	Found Redirect: 'https://adamcaudill.com/firefox/ -> 'https://adamcaudill.com/2006/09/17/firefox-toys-errorzilla/'
-[I] 	Found Redirect: 'https://adamcaudill.com/first/ -> 'https://adamcaudill.com/2013/03/26/first-do-no-harm-developers-and-bad-apis/'
-[I] 	Found Redirect: 'https://adamcaudill.com/fr/ -> 'https://adamcaudill.com/2007/02/06/from-outlook-to-gmail-to-the-bat/'
-[I] 	Found Redirect: 'https://adamcaudill.com/g/ -> 'https://adamcaudill.com/2003/11/26/get-cpu-speed/'
-[I] 	Found Redirect: 'https://adamcaudill.com/get/ -> 'https://adamcaudill.com/2003/11/26/get-cpu-speed/'
-[I] 	Found Redirect: 'https://adamcaudill.com/go/ -> 'https://adamcaudill.com/2011/01/12/google-chrome-and-h-264/'
-[I] 	Found Redirect: 'https://adamcaudill.com/google/ -> 'https://adamcaudill.com/2011/01/12/google-chrome-and-h-264/'
-[I] 	Found Redirect: 'https://adamcaudill.com/gp/ -> 'https://adamcaudill.com/2012/05/13/gpg4win-idea/'
-[I] 	Found Redirect: 'https://adamcaudill.com/h/ -> 'https://adamcaudill.com/2011/05/21/happy-20th-birthday-visual-basic/'
-[I] 	Found Redirect: 'https://adamcaudill.com/holiday/ -> 'https://adamcaudill.com/2006/12/23/holiday-schwag/'
-[I] 	Found Redirect: 'https://adamcaudill.com/home/ -> 'https://adamcaudill.com/'
-[I] 	Found Redirect: 'https://adamcaudill.com/host/ -> 'https://adamcaudill.com/2011/04/11/hosting-change/'
-[I] 	Found Redirect: 'https://adamcaudill.com/hosting/ -> 'https://adamcaudill.com/2011/04/11/hosting-change/'
-[I] 	Found Redirect: 'https://adamcaudill.com/how/ -> 'https://adamcaudill.com/2006/02/26/how-it-projects-really-work/'
-[I] 	Found Redirect: 'https://adamcaudill.com/hp/ -> 'https://adamcaudill.com/2012/04/23/hp-folio-13/'
-[I] 	Found Redirect: 'https://adamcaudill.com/i/ -> 'https://adamcaudill.com/2007/02/10/i-love-my-job/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ie/ -> 'https://adamcaudill.com/2007/01/10/ie-developer-toolbar/'
-[I] 	Found Redirect: 'https://adamcaudill.com/in/ -> 'https://adamcaudill.com/2006/07/07/in-comes-the-schwag/'
-[I] 	Found Redirect: 'https://adamcaudill.com/install/ -> 'https://adamcaudill.com/2006/11/18/installing-vista/'
-[I] 	Found Redirect: 'https://adamcaudill.com/internet/ -> 'https://adamcaudill.com/2006/05/27/internet-explorer-7/'
-[I] 	Found Redirect: 'https://adamcaudill.com/it/ -> 'https://adamcaudill.com/2006/02/26/its-official-ie7-is-cool/'
-[I] 	Found Redirect: 'https://adamcaudill.com/j/ -> 'https://adamcaudill.com/2014/07/23/jumping-through-hoops-dot-dot-dot/'
-[I] 	Found Redirect: 'https://adamcaudill.com/jump/ -> 'https://adamcaudill.com/2014/07/23/jumping-through-hoops-dot-dot-dot/'
-[I] 	Found Redirect: 'https://adamcaudill.com/k/ -> 'https://adamcaudill.com/2006/09/16/kill-capslock/'
-[I] 	Found Redirect: 'https://adamcaudill.com/l/ -> 'https://adamcaudill.com/lasers/'
-[I] 	Found Redirect: 'https://adamcaudill.com/link/ -> 'https://adamcaudill.com/2012/06/06/linkedin-a-little-common-sense/'
-[I] 	Found Redirect: 'https://adamcaudill.com/m/ -> 'https://adamcaudill.com/2006/09/23/make-xp-pretty/'
-[I] 	Found Redirect: 'https://adamcaudill.com/microsoft/ -> 'https://adamcaudill.com/2007/01/21/microsoft-mice-another-reason-to-love-them/'
-[I] 	Found Redirect: 'https://adamcaudill.com/mini/ -> 'https://adamcaudill.com/2012/05/13/minipwner/'
-[I] 	Found Redirect: 'https://adamcaudill.com/monitor/ -> 'https://adamcaudill.com/2012/06/10/monitor-iphone-http-s-traffic-with-fiddler/'
-[I] 	Found Redirect: 'https://adamcaudill.com/my/ -> 'https://adamcaudill.com/2012/03/31/my-5-minutes-of-infamy/'
-[I] 	Found Redirect: 'https://adamcaudill.com/n/ -> 'https://adamcaudill.com/2011/02/11/need-a-cheap-phone-charger-quick-buy-a-tracfone/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ne/ -> 'https://adamcaudill.com/2011/02/11/need-a-cheap-phone-charger-quick-buy-a-tracfone/'
-[I] 	Found Redirect: 'https://adamcaudill.com/net/ -> 'https://adamcaudill.com/2006/11/08/net-framework-30-released/'
-[I] 	Found Redirect: 'https://adamcaudill.com/new/ -> 'https://adamcaudill.com/2016/01/01/new-atheism-the-philosophy-of-atheism/'
-[I] 	Found Redirect: 'https://adamcaudill.com/no/ -> 'https://adamcaudill.com/2006/10/05/not-not-a-good-idea/'
-[I] 	Found Redirect: 'https://adamcaudill.com/o/ -> 'https://adamcaudill.com/2006/06/17/of-victory-and-pair-programming/'
-[I] 	Found Redirect: 'https://adamcaudill.com/of/ -> 'https://adamcaudill.com/2006/06/17/of-victory-and-pair-programming/'
-[I] 	Found Redirect: 'https://adamcaudill.com/on/ -> 'https://adamcaudill.com/2010/06/19/on-hiring/'
-[I] 	Found Redirect: 'https://adamcaudill.com/open/ -> 'https://adamcaudill.com/2007/02/02/opendns/'
-[I] 	Found Redirect: 'https://adamcaudill.com/p/ -> 'https://adamcaudill.com/2003/10/31/pagesource/'
-[I] 	Found Redirect: 'https://adamcaudill.com/page/ -> 'https://adamcaudill.com/2003/10/31/pagesource/'
-[I] 	Found Redirect: 'https://adamcaudill.com/page2/ -> 'https://adamcaudill.com/page/2/'
-[I] 	Found Redirect: 'https://adamcaudill.com/pages/ -> 'https://adamcaudill.com/2003/10/31/pagesource/'
-[I] 	Found Redirect: 'https://adamcaudill.com/pass/ -> 'https://adamcaudill.com/2013/05/07/password-hashing-no-silver-bullets/'
-[I] 	Found Redirect: 'https://adamcaudill.com/passw/ -> 'https://adamcaudill.com/2013/05/07/password-hashing-no-silver-bullets/'
-[I] 	Found Redirect: 'https://adamcaudill.com/passwor/ -> 'https://adamcaudill.com/2013/05/07/password-hashing-no-silver-bullets/'
-[I] 	Found Redirect: 'https://adamcaudill.com/password/ -> 'https://adamcaudill.com/2013/05/07/password-hashing-no-silver-bullets/'
-[I] 	Found: 'https://adamcaudill.com/pgp/'
-[I] 	Found: 'https://adamcaudill.com/photo/'
-[I] 	Found Redirect: 'https://adamcaudill.com/php/ -> 'https://adamcaudill.com/2005/03/01/phpbb-2-0-13-released-dumbss-coders-strike-again/'
-[I] 	Found Redirect: 'https://adamcaudill.com/pl/ -> 'https://adamcaudill.com/2016/05/01/plsql-developer-http-to-command-execution/'
-[I] 	Found Redirect: 'https://adamcaudill.com/pls/ -> 'https://adamcaudill.com/2016/05/01/plsql-developer-http-to-command-execution/'
-[I] 	Found Redirect: 'https://adamcaudill.com/power/ -> 'https://adamcaudill.com/2006/11/15/power-users-rejoice/'
-[I] 	Found Redirect: 'https://adamcaudill.com/pr/ -> 'https://adamcaudill.com/2008/12/21/programmers-are-expensive/'
-[I] 	Found Redirect: 'https://adamcaudill.com/pro/ -> 'https://adamcaudill.com/2008/12/21/programmers-are-expensive/'
-[I] 	Found Redirect: 'https://adamcaudill.com/prog/ -> 'https://adamcaudill.com/2008/12/21/programmers-are-expensive/'
-[I] 	Found Redirect: 'https://adamcaudill.com/program/ -> 'https://adamcaudill.com/2008/12/21/programmers-are-expensive/'
-[I] 	Found Redirect: 'https://adamcaudill.com/q/ -> 'https://adamcaudill.com/2012/04/05/quickpacket-hosting/'
-[I] 	Found Redirect: 'https://adamcaudill.com/r/ -> 'https://adamcaudill.com/2011/01/28/rails-3-dreamhost-ps/'
-[I] 	Found Redirect: 'https://adamcaudill.com/random/ -> 'https://adamcaudill.com/2005/02/28/random-user-agent-in-vb-net/'
-[I] 	Found Redirect: 'https://adamcaudill.com/read/ -> 'https://adamcaudill.com/reading/'
-[I] 	Found Redirect: 'https://adamcaudill.com/reg/ -> 'https://adamcaudill.com/2003/10/26/register-activex-typelibs/'
-[I] 	Found Redirect: 'https://adamcaudill.com/register/ -> 'https://adamcaudill.com/2003/10/26/register-activex-typelibs/'
-[I] 	Found Redirect: 'https://adamcaudill.com/religion/ -> 'https://adamcaudill.com/2015/01/12/religion-free-speech-freedom-from-offense/'
-[I] 	Found: 'https://adamcaudill.com/resume/'
-[I] 	Found Redirect: 'https://adamcaudill.com/rss/ -> 'https://adamcaudill.com/feed/'
-[I] 	Found Redirect: 'https://adamcaudill.com/rss2/ -> 'https://adamcaudill.com/feed/'
-[I] 	Found Redirect: 'https://adamcaudill.com/ru/ -> 'https://adamcaudill.com/2006/09/17/running-regedit-as-system/'
-[I] 	Found Redirect: 'https://adamcaudill.com/run/ -> 'https://adamcaudill.com/2006/09/17/running-regedit-as-system/'
-[I] 	Found Redirect: 'https://adamcaudill.com/s/ -> 'https://adamcaudill.com/2016/05/22/seamless-phishing/'
-[I] 	Found Redirect: 'https://adamcaudill.com/se/ -> 'https://adamcaudill.com/2016/05/22/seamless-phishing/'
-[I] 	Found Redirect: 'https://adamcaudill.com/secure/ -> 'https://adamcaudill.com/2010/02/01/secure-password-storage/'
-[I] 	Found Redirect: 'https://adamcaudill.com/security/ -> 'https://adamcaudill.com/2014/03/23/security-by-buzzword-why-i-dont-support-ensafer/'
-[I] 	Found Redirect: 'https://adamcaudill.com/server/ -> 'https://adamcaudill.com/2006/03/25/server-move/'
-[I] 	Found Redirect: 'https://adamcaudill.com/set/ -> 'https://adamcaudill.com/2003/10/31/setfocusbycaption/'
-[I] 	Found Redirect: 'https://adamcaudill.com/simple/ -> 'https://adamcaudill.com/2003/11/26/simple-ini-api/'
-[I] 	Found Redirect: 'https://adamcaudill.com/site/ -> 'https://adamcaudill.com/2006/10/30/site-updates/'
-[I] 	Found Redirect: 'https://adamcaudill.com/sp/ -> 'https://adamcaudill.com/2006/12/19/spam-gmail/'
-[I] 	Found Redirect: 'https://adamcaudill.com/spam/ -> 'https://adamcaudill.com/2006/12/19/spam-gmail/'
-[I] 	Found Redirect: 'https://adamcaudill.com/st/ -> 'https://adamcaudill.com/2009/07/18/start-up-tools-microsoft-bizspark/'
-[I] 	Found Redirect: 'https://adamcaudill.com/star/ -> 'https://adamcaudill.com/2009/07/18/start-up-tools-microsoft-bizspark/'
-[I] 	Found Redirect: 'https://adamcaudill.com/start/ -> 'https://adamcaudill.com/2009/07/18/start-up-tools-microsoft-bizspark/'
-[I] 	Found Redirect: 'https://adamcaudill.com/stat/ -> 'https://adamcaudill.com/2010/07/30/state-of-the-virus-art/'
-[I] 	Found Redirect: 'https://adamcaudill.com/state/ -> 'https://adamcaudill.com/2010/07/30/state-of-the-virus-art/'
-[I] 	Found Redirect: 'https://adamcaudill.com/super/ -> 'https://adamcaudill.com/2006/04/07/superstars-monkeys/'
-[I] 	Found Redirect: 'https://adamcaudill.com/sw/ -> 'https://adamcaudill.com/2009/06/13/switching-hosts-again/'
-[I] 	Found Redirect: 'https://adamcaudill.com/t/ -> 'https://adamcaudill.com/2007/01/21/task-management-with-tasks/'
-[I] 	Found Redirect: 'https://adamcaudill.com/task/ -> 'https://adamcaudill.com/2007/01/21/task-management-with-tasks/'
-[I] 	Found Redirect: 'https://adamcaudill.com/technology/ -> '/'
-[I] 	Found Redirect: 'https://adamcaudill.com/tool/ -> 'https://adamcaudill.com/tools/'
-[I] 	Found: 'https://adamcaudill.com/tools/'
-[I] 	Found Redirect: 'https://adamcaudill.com/u/ -> 'https://adamcaudill.com/2007/03/22/under-the-weather/'
-[I] 	Found Redirect: 'https://adamcaudill.com/up/ -> 'https://adamcaudill.com/2012/10/07/upek-windows-password-decryption/'
-[I] 	Found Redirect: 'https://adamcaudill.com/us/ -> 'https://adamcaudill.com/2006/07/08/useful-notepad-tip/'
-[I] 	Found Redirect: 'https://adamcaudill.com/v/ -> 'https://adamcaudill.com/2006/05/10/valleyschwag/'
-[I] 	Found Redirect: 'https://adamcaudill.com/var/ -> 'https://adamcaudill.com/2005/09/26/varticles/'
-[I] 	Found Redirect: 'https://adamcaudill.com/vb/ -> 'https://adamcaudill.com/2006/04/02/vb-the-dumbing-of-a-great-language/'
-[I] 	Found Redirect: 'https://adamcaudill.com/vi/ -> 'https://adamcaudill.com/2013/10/23/vicidial-multiple-vulnerabilities/'
-[I] 	Found Redirect: 'https://adamcaudill.com/vista/ -> 'https://adamcaudill.com/2006/11/16/vista-available-via-msdn/'
-[I] 	Found Redirect: 'https://adamcaudill.com/w/ -> 'https://adamcaudill.com/2006/11/28/want-a-free-copy-of-vista/'
-[I] 	Found Redirect: 'https://adamcaudill.com/web/ -> 'https://adamcaudill.com/2006/05/17/web-developer-toolbar-menu-for-opera/'
-[I] 	Found Redirect: 'https://adamcaudill.com/what/ -> 'https://adamcaudill.com/2006/04/24/what-a-surprise/'
-[I] 	Found Redirect: 'https://adamcaudill.com/why/ -> 'https://adamcaudill.com/2011/10/15/why-cringely-is-wrong-about-java/'
-[I] 	Found Redirect: 'https://adamcaudill.com/wiki/ -> 'https://adamcaudill.com/2010/12/01/wikileaks-biggest-problem-julian-assange/'
-[I] 	Found Redirect: 'https://adamcaudill.com/win/ -> 'https://adamcaudill.com/2007/03/01/windows-vista-user-experience-guidelines/'
-[I] 	Found Redirect: 'https://adamcaudill.com/windows/ -> 'https://adamcaudill.com/2007/03/01/windows-vista-user-experience-guidelines/'
-[I] 	Found Redirect: 'https://adamcaudill.com/wink/ -> 'https://adamcaudill.com/2006/04/15/wink-20/'
-[I] 	Found Redirect: 'https://adamcaudill.com/word/ -> 'https://adamcaudill.com/2006/07/30/wordpress-204/'
-[I] 	Found Redirect: 'https://adamcaudill.com/wordpress/ -> 'https://adamcaudill.com/2006/07/30/wordpress-204/'
-[I] 	Found Redirect: 'https://adamcaudill.com/work/ -> 'https://adamcaudill.com/2008/12/08/working-late-again/'
-[I] 	Found: 'https://adamcaudill.com/wp-content/'
-[I] 	Found: 'https://adamcaudill.com/wp-includes/'
-[I] 	Found Redirect: 'https://adamcaudill.com/x/ -> 'https://adamcaudill.com/2007/01/25/xceed-datagrid-for-wpf-released-free/'
-[I] 	Found Redirect: 'https://adamcaudill.com/xml/ -> 'https://adamcaudill.com/2006/09/03/xml-notepad-2006/'
-[I] 	Found Redirect: 'https://adamcaudill.com/y/ -> 'https://adamcaudill.com/2012/07/12/yahoos-associated-content-hacked/'
-[I] 	Found Redirect: 'https://adamcaudill.com/yahoo/ -> 'https://adamcaudill.com/2012/07/12/yahoos-associated-content-hacked/'
-[I] 	Found Redirect: 'https://adamcaudill.com/z/ -> 'https://adamcaudill.com/2004/12/18/zipsight-2004-1-released/'
-[I] 	Found Redirect: 'https://adamcaudill.com/zip/ -> 'https://adamcaudill.com/2004/12/18/zipsight-2004-1-released/'
-[I] 	Found Redirect: 'https://adamcaudill.com/zips/ -> 'https://adamcaudill.com/2004/12/18/zipsight-2004-1-released/'
-
-[I] Meta Generator: WordPress 4.6.1
-Scan complete.
+ __   _____  _    _  ___   _____ _____ 
+ \ \ / / _ \| |  | |/ _ \ /  ___|_   _|
+  \ V / /_\ \ |  | / /_\ \\ `--.  | |  
+   \ /|  _  | |/\| |  _  | `--. \ | |  
+   | || | | \  /\  / | | |/\__/ / | |  
+   \_/\_| |_/\/  \/\_| |_/\____/  \_/  
+ 
+ YAWAST v0.4.0 - The YAWAST Antecedent Web Application Security Toolkit
+  Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>
+  Support & Documentation: https://github.com/adamcaudill/yawast
+  Ruby 2.2.4-p230; OpenSSL 1.0.2f  28 Jan 2016 (x86_64-darwin15)
+ 
+ Scanning: https://adamcaudill.com/
+ 
+ DNS Information:
+ [I] 		104.28.27.55 (N/A)
+ 				https://www.shodan.io/host/104.28.27.55
+ 				https://censys.io/ipv4/104.28.27.55
+ [I] 		104.28.26.55 (N/A)
+ 				https://www.shodan.io/host/104.28.26.55
+ 				https://censys.io/ipv4/104.28.26.55
+ [I] 		2400:CB00:2048:1::681C:1B37 (N/A)
+ 				https://www.shodan.io/host/2400:cb00:2048:1::681c:1b37
+ [I] 		2400:CB00:2048:1::681C:1A37 (N/A)
+ 				https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
+ [I] 		TXT: v=spf1 mx a ptr include:_spf.google.com ~all
+ [I] 		TXT: google-site-verification=QTO_7Q7UXmrUIwieJliLTXV3XuQdqNvTPVcug_TwH0w
+ [I] 		MX: alt1.aspmx.l.google.com (20)
+ [I] 		MX: aspmx2.googlemail.com (30)
+ [I] 		MX: alt2.aspmx.l.google.com (20)
+ [I] 		MX: aspmx3.googlemail.com (30)
+ [I] 		MX: aspmx5.googlemail.com (30)
+ [I] 		MX: aspmx4.googlemail.com (30)
+ [I] 		MX: aspmx.l.google.com (10)
+ [I] 		NS: vera.ns.cloudflare.com
+ [I] 		NS: hal.ns.cloudflare.com
+ 
+ [I] HEAD:
+ [I] 		date: Thu, 03 Nov 2016 16:01:17 GMT
+ [I] 		content-type: text/html; charset=UTF-8
+ [I] 		connection: close
+ [I] 		set-cookie: __cfduid=1; expires=Fri, 03-Nov-17 16:01:17 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+ [I] 		x-xss-protection: 1; mode=block
+ [I] 		content-security-policy-report-only: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.wp.com ajax.cloudflare.com platform.twitter.com s0.wp.com ssl.google-analytics.com cdn.syndication.twimg.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com *.twimg.com platform.twitter.com s0.wp.com; img-src 'self' data: *.wp.com static.flickr.com *.ted.com *.w.org *.gravatar.com *.twimg.com ssl.google-analytics.com *.twitter.com *.staticflickr.com; font-src 'self' data: fonts.googleapis.com fonts.gstatic.com public.slidesharecdn.com; media-src 'self' *.ted.com; child-src 'self' www.slideshare.net www.youtube.com *.twitter.com; frame-ancestors 'self'; reflected-xss block; referrer no-referrer-when-downgrade; report-uri https://adamcaudill.report-uri.io/r/default/csp/reportOnly;
+ [I] 		vary: Accept-Encoding,Cookie
+ [I] 		last-modified: Thu, 03 Nov 2016 14:48:39 GMT
+ [I] 		cache-control: public, max-age=86400
+ [I] 		expires: Fri, 04 Nov 2016 16:01:17 GMT
+ [I] 		x-frame-options: sameorigin
+ [I] 		pragma: public
+ [I] 		cf-cache-status: REVALIDATED
+ [I] 		strict-transport-security: max-age=15552000; preload
+ [I] 		x-content-type-options: nosniff
+ [I] 		server: cloudflare-nginx
+ [I] 		cf-ray: 2fc10b441b1d2ebd-MIA
+ 
+ [I] NOTE: Server appears to be Cloudflare; WAF may be in place.
+ 
+ [I] X-Frame-Options Header: sameorigin
+ [I] X-Content-Type-Options Header: nosniff
+ [W] Content-Security-Policy Header Not Present
+ [W] Public-Key-Pins Header Not Present
+ 
+ [I] Cookies:
+ [I] 		__cfduid=1; expires=Fri, 03-Nov-17 16:01:17 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+ [W] 			Cookie missing Secure flag
+ 
+ 
+ Beginning SSL Labs scan (this could take a minute or two)
+ [SSL Labs] This assessment service is provided free of charge by Qualys SSL Labs, subject to our terms and conditions: https://www.ssllabs.com/about/terms.html
+ ............................................
+ 
+ 	SSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=adamcaudill.com&hideResults=on
+ 
+ [I] IP: 104.28.27.55 - Grade: A+
+ 
+ 	Certificate Information:
+ [I] 		Subject: CN=sni67677.cloudflaressl.com,OU=PositiveSSL Multi-Domain,OU=Domain Control Validated
+ [I] 		Common Names: ["sni67677.cloudflaressl.com"]
+ [I] 		Alternative names:
+ [I] 			sni67677.cloudflaressl.com
+ [I] 			*.adamcaudill.com
+ [I] 			adamcaudill.com
+ [I] 		Not Before: 2016-10-25T00:00:00+00:00
+ [I] 		Not After: 2017-04-30T23:59:59+00:00
+ [I] 		Key: EC 256 (RSA equivalent: 3072)
+ [I] 		Public Key Hash: 228dcb22953a406066147ee04d853f921431677a
+ [I] 		Version: 2
+ [I] 		Serial: 218453950133730970752982267078511306496
+ [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
+ [I] 		Signature algorithm: SHA256withECDSA
+ [I] 		Extended Validation: No (Domain Control)
+ [I] 		Certificate Transparency: No
+ [I] 		OCSP Must Staple: No
+ [I] 		Revocation information: CRL information available
+ [I] 		Revocation information: OCSP information available
+ [I] 		Revocation status: certificate not revoked
+ [I] 		Extensions:
+ [I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96, 
+ [I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
+ [I] 			keyUsage = critical, Digital Signature
+ [I] 			basicConstraints = critical, CA:FALSE
+ [I] 			extendedKeyUsage = TLS Web Server Authentication, TLS Web Client Authentication
+ [I] 			certificatePolicies = Policy: 1.3.6.1.4.1.6449.1.2.2.7,   CPS: https://secure.comodo.com/CPS, Policy: 2.23.140.1.2.1, 
+ [I] 			crlDistributionPoints = , Full Name:,   URI:http://crl.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crl, 
+ [I] 			authorityInfoAccess = CA Issuers - URI:http://crt.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crt, OCSP - URI:http://ocsp.comodoca4.com, 
+ [I] 		Hash: fad37c378e602154ca707cfda874b0c21e9fc144
+ 			https://censys.io/certificates?q=fad37c378e602154ca707cfda874b0c21e9fc144
+ 			https://crt.sh/?q=fad37c378e602154ca707cfda874b0c21e9fc144
+ 
+ 	Configuration Information:
+ 		Protocol Support:
+ [I] 			TLS 1.0
+ [I] 			TLS 1.1
+ [I] 			TLS 1.2
+ 
+ 		Cipher Suite Support:
+ [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256            - 128-bits - ECDHE-256-bits
+ [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256            - 128-bits - ECDHE-256-bits
+ [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA               - 128-bits - ECDHE-256-bits
+ [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384            - 256-bits - ECDHE-256-bits
+ [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384            - 256-bits - ECDHE-256-bits
+ [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA               - 256-bits - ECDHE-256-bits
+ [I] 			TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256      - 256-bits - ECDHE-256-bits
+ [I] 			OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256  - 256-bits - ECDHE-256-bits
+ 
+ 		Handshake Simulation:
+ [E] 			Android 2.3.7                - Simulation Failed
+ [I] 			Android 4.0.4                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			Android 4.1.1                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			Android 4.2.2                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			Android 4.3                  - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			Android 4.4.2                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Android 5.0.0                - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+ [I] 			Android 6.0                  - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+ [I] 			Android 7.0                  - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+ [I] 			Baidu Jan 2015               - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			BingPreview Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [E] 			Chrome 49 / XP SP3           - Simulation Failed
+ [I] 			Chrome 51 / Win 7            - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Firefox 31.3.0 ESR / Win 7   - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Firefox 47 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Firefox 49 / XP SP3          - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Firefox 49 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Googlebot Feb 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [E] 			IE 6 / XP                    - Simulation Failed
+ [I] 			IE 7 / Vista                 - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [E] 			IE 8 / XP                    - Simulation Failed
+ [I] 			IE 8-10 / Win 7              - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			IE 11 / Win 7                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			IE 11 / Win 8.1              - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			IE 10 / Win Phone 8.0        - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			IE 11 / Win Phone 8.1        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			IE 11 / Win Phone 8.1 Update - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			IE 11 / Win 10               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Edge 13 / Win 10             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Edge 13 / Win Phone 10       - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [E] 			Java 6u45                    - Simulation Failed
+ [I] 			Java 7u25                    - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			Java 8u31                    - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [E] 			OpenSSL 0.9.8y               - Simulation Failed
+ [I] 			OpenSSL 1.0.1l               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			OpenSSL 1.0.2e               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Safari 5.1.9 / OS X 10.6.8   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			Safari 6 / iOS 6.0.1         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+ [I] 			Safari 6.0.4 / OS X 10.8.4   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+ [I] 			Safari 7 / iOS 7.1           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+ [I] 			Safari 7 / OS X 10.9         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+ [I] 			Safari 8 / iOS 8.4           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+ [I] 			Safari 8 / OS X 10.10        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+ [I] 			Safari 9 / iOS 9             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Safari 9 / OS X 10.11        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Safari 10 / iOS 10           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Safari 10 / OS X 10.12       - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Apple ATS 9 / iOS 9          - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			Yahoo Slurp Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ [I] 			YandexBot Jan 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+ 
+ 		Protocol & Vulnerability Information:
+ [I] 			DROWN: No
+ [I] 			Secure Renegotiation: secure renegotiation supported
+ [I] 			POODLE (SSL): No
+ [I] 			POODLE (TLS): No
+ [I] 			Downgrade Prevention: Yes
+ [I] 			Compression: No
+ [I] 			Heartbleed: No
+ [I] 			OpenSSL CCS (CVE-2014-0224): No
+ [I] 			OpenSSL Padding Oracle (CVE-2016-2107): No
+ [I] 			Forward Secrecy: Yes (all simulated clients)
+ [W] 			OCSP Stapling: No
+ [I] 			FREAK: No
+ [I] 			Logjam: No
+ [I] 			DH public server param (Ys) reuse: No
+ [I] 			Protocol Intolerance: No
+ 
+ TLS Session Request Limit: Checking number of requests accepted using 3DES suites...
+ 
+ [I] TLS Session Request Limit: Server does not support 3DES cipher suites
+ 
+ [I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
+ 
+ [W] '/readme.html' found: https://adamcaudill.com/readme.html
+ 
+ Searching for common directories...
+ [I] 	Found: 'https://adamcaudill.com/2004/'
+ [I] 	Found: 'https://adamcaudill.com/2003/'
+ [I] 	Found: 'https://adamcaudill.com/2011/'
+ [I] 	Found: 'https://adamcaudill.com/2005/'
+ [I] 	Found: 'https://adamcaudill.com/2008/'
+ [I] 	Found: 'https://adamcaudill.com/2006/'
+ [I] 	Found: 'https://adamcaudill.com/2007/'
+ [I] 	Found: 'https://adamcaudill.com/2013/'
+ [I] 	Found: 'https://adamcaudill.com/2016/'
+ [I] 	Found: 'https://adamcaudill.com/2015/'
+ [I] 	Found: 'https://adamcaudill.com/2010/'
+ [I] 	Found: 'https://adamcaudill.com/2014/'
+ [I] 	Found: 'https://adamcaudill.com/2009/'
+ [I] 	Found: 'https://adamcaudill.com/About/'
+ [I] 	Found: 'https://adamcaudill.com/Blog/'
+ [I] 	Found: 'https://adamcaudill.com/about/'
+ [I] 	Found: 'https://adamcaudill.com/archives/'
+ [I] 	Found: 'https://adamcaudill.com/blog/'
+ [I] 	Found: 'https://adamcaudill.com/feed/'
+ [I] 	Found: 'https://adamcaudill.com/photo/'
+ [I] 	Found: 'https://adamcaudill.com/pgp/'
+ [I] 	Found: 'https://adamcaudill.com/resume/'
+ [I] 	Found: 'https://adamcaudill.com/tools/'
+ [I] 	Found: 'https://adamcaudill.com/wp-content/'
+ [I] 	Found: 'https://adamcaudill.com/wp-includes/'
+ 
+ [I] Meta Generator: WordPress 4.6.1
+ Scan complete.
 ```
 
 ### About The Output

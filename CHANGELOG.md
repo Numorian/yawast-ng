@@ -1,3 +1,7 @@
+## 0.5.0 - In Development
+
+* [#75](https://github.com/adamcaudill/yawast/issues/75) - Use internal SSL scanner for non-standard ports
+
 ## 0.4.0 - 2016-11-03
 
 * [#66](https://github.com/adamcaudill/yawast/issues/66) - Thread directory search for better performance

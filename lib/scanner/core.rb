@@ -36,7 +36,7 @@ module Yawast
           Yawast::Shared::Http.setup(options.proxy, options.cookie)
 
           #cache the HEAD result, so that we can minimize hits
-          head = Yawast::Shared::Http.head(@uri)
+          head = get_head
           Yawast::Scanner::Generic.head_info(head, @uri)
 
           #perfom SSL checks
@@ -101,10 +101,10 @@ module Yawast
         setup(uri, options)
 
         if @uri.scheme == 'https' && !options.nossl
-          head = Yawast::Shared::Http.head(@uri) if head == nil
+          head = get_head if head == nil
 
-          if options.internalssl || IPAddress.valid?(uri.host) || uri.port != 443
-            Yawast::Scanner::Ssl.info(uri, !options.nociphers, options.tdessessioncount)
+          if options.internalssl || IPAddress.valid?(@uri.host) || @uri.port != 443
+            Yawast::Scanner::Ssl.info(@uri, !options.nociphers, options.tdessessioncount)
           else
             Yawast::Scanner::SslLabs.info(@uri, options.tdessessioncount)
           end
@@ -112,6 +112,15 @@ module Yawast
           Yawast::Scanner::Ssl.check_hsts(head)
         elsif @uri.scheme == 'http'
           puts 'Skipping TLS checks; URL is not HTTPS'
+        end
+      end
+
+      def self.get_head()
+        begin
+          Yawast::Shared::Http.head(@uri)
+        rescue => e
+          Yawast::Utilities.puts_error "Fatal Connection Error (#{e.class}: #{e.message})"
+          exit 1
         end
       end
     end

@@ -10,15 +10,15 @@ module Yawast
       def self.info(uri, tdes_session_count)
         puts 'Beginning SSL Labs scan (this could take a minute or two)'
 
-        api = Ssllabs::Api.new
-
-        info = api.info
-
-        info.messages.each do |msg|
-          puts "[SSL Labs] #{msg}"
-        end
-
         begin
+          api = Ssllabs::Api.new
+
+          info = api.info
+
+          info.messages.each do |msg|
+            puts "[SSL Labs] #{msg}"
+          end
+
           api.analyse(host: uri.host, publish: 'off', startNew: 'on', all: 'done', ignoreMismatch: 'on')
 
           status = ''

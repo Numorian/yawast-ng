@@ -1,6 +1,7 @@
 ## 0.5.0 - In Development
 
 * [#75](https://github.com/adamcaudill/yawast/issues/75) - Use internal SSL scanner for non-standard ports
+* [#76](https://github.com/adamcaudill/yawast/issues/76) - Bug: Handle error for OpenSSL version support error
 
 ## 0.4.0 - 2016-11-03
 

@@ -45,25 +45,21 @@ module Yawast
       end
 
       def self.check_server_status(uri)
-        uri.path = '/server-status'
-        uri.query = '' if uri.query != nil
-
-        ret = Yawast::Shared::Http.get(uri)
-
-        if ret.include? 'Apache Server Status'
-          Yawast::Utilities.puts_vuln "Apache Server Status page found: #{uri}"
-          puts ''
-        end
+        check_page_for_string uri, '/server-status', 'Apache Server Status'
       end
 
       def self.check_server_info(uri)
-        uri.path = '/server-info'
+        check_page_for_string uri, '/server-info', 'Apache Server Information'
+      end
+
+      def self.check_page_for_string(uri, path, search)
+        uri.path = path
         uri.query = '' if uri.query != nil
 
         ret = Yawast::Shared::Http.get(uri)
 
-        if ret.include? 'Apache Server Information'
-          Yawast::Utilities.puts_vuln "Apache Server Info page found: #{uri}"
+        if ret.include? search
+          Yawast::Utilities.puts_vuln "#{search} page found: #{uri}"
           puts ''
         end
       end

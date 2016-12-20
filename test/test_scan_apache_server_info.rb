@@ -15,7 +15,7 @@ class TestScannerApacheServerInfo < Minitest::Test
     Yawast::Shared::Http.setup nil, nil
     Yawast::Scanner::Apache.check_server_info uri
 
-    assert stdout_value.include?('Apache Server Info page found'), 'Apache Server Info page warning not found'
+    assert stdout_value.include?('Apache Server Information page found'), 'Apache Server Info page warning not found'
 
     server.exit
     restore_stdout

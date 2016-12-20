@@ -19,75 +19,11 @@ module Yawast
           cert = ssl.peer_cert
 
           unless cert.nil?
-            Yawast::Utilities.puts_info 'Found X509 Certificate:'
-            Yawast::Utilities.puts_info "\t\tIssued To: #{cert.subject.common_name} / #{cert.subject.organization}"
-            Yawast::Utilities.puts_info "\t\tIssuer: #{cert.issuer.common_name} / #{cert.issuer.organization}"
-            Yawast::Utilities.puts_info "\t\tVersion: #{cert.version}"
-            Yawast::Utilities.puts_info "\t\tSerial: #{cert.serial}"
-            Yawast::Utilities.puts_info "\t\tSubject: #{cert.subject}"
-
-            #check to see if cert is expired
-            if cert.not_after > Time.now
-              Yawast::Utilities.puts_info "\t\tExpires: #{cert.not_after}"
-            else
-              Yawast::Utilities.puts_vuln "\t\tExpires: #{cert.not_after} (Expired)"
-            end
-
-            #check for SHA1 & MD5 certs
-            if cert.signature_algorithm.include?('md5') || cert.signature_algorithm.include?('sha1')
-              Yawast::Utilities.puts_vuln "\t\tSignature Algorithm: #{cert.signature_algorithm}"
-            else
-              Yawast::Utilities.puts_info "\t\tSignature Algorithm: #{cert.signature_algorithm}"
-            end
-
-            Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(cert)}"
-            Yawast::Utilities.puts_info "\t\t\tKey Hash: #{Digest::SHA1.hexdigest(cert.public_key.to_s)}"
-            Yawast::Utilities.puts_info "\t\tExtensions:"
-            cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' }
-
-            #alt names
-            alt_names = cert.extensions.find {|e| e.oid == 'subjectAltName'}
-            unless alt_names.nil?
-              Yawast::Utilities.puts_info "\t\tAlternate Names:"
-              alt_names.value.split(',').each { |name| Yawast::Utilities.puts_info "\t\t\t#{name.strip.delete('DNS:')}" }
-            end
-
-            hash = Digest::SHA1.hexdigest(cert.to_der)
-            Yawast::Utilities.puts_info "\t\tHash: #{hash}"
-            puts "\t\t\thttps://censys.io/certificates?q=#{hash}"
-            puts "\t\t\thttps://crt.sh/?q=#{hash}"
-            puts ''
+            get_cert_info cert
           end
 
           cert_chain = ssl.peer_cert_chain
-
-          if cert_chain.count == 1
-            #HACK: This is an ugly way to guess if it's a missing intermediate, or self-signed
-            #tIt looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
-
-            if cert.issuer == cert.subject
-              Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Singed"
-            else
-              Yawast::Utilities.puts_warn "\t\tCertificate Chain Is Incomplete"
-            end
-
-            puts ''
-          end
-
-          unless cert_chain.nil?
-            Yawast::Utilities.puts_info 'Certificate: Chain'
-            cert_chain.each do |c|
-              Yawast::Utilities.puts_info "\t\tIssued To: #{c.subject.common_name} / #{c.subject.organization}"
-              Yawast::Utilities.puts_info "\t\t\tIssuer: #{c.issuer.common_name} / #{c.issuer.organization}"
-              Yawast::Utilities.puts_info "\t\t\tExpires: #{c.not_after}"
-              Yawast::Utilities.puts_info "\t\t\tKey: #{c.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(c)}"
-              Yawast::Utilities.puts_info "\t\t\tSignature Algorithm: #{c.signature_algorithm}"
-              Yawast::Utilities.puts_info "\t\t\tHash: #{Digest::SHA1.hexdigest(c.to_der)}"
-              puts ''
-            end
-
-            puts ''
-          end
+          get_cert_chain_info cert_chain, cert
 
           puts "\t\tQualys SSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=#{uri.host}&hideResults=on"
           puts ''
@@ -101,6 +37,77 @@ module Yawast
           get_tdes_session_msg_count(uri) if tdes_session_count
         rescue => e
           Yawast::Utilities.puts_error "SSL: Error Reading X509 Details: #{e.message}"
+        end
+      end
+
+      def self.get_cert_info(cert)
+        Yawast::Utilities.puts_info 'Found X509 Certificate:'
+        Yawast::Utilities.puts_info "\t\tIssued To: #{cert.subject.common_name} / #{cert.subject.organization}"
+        Yawast::Utilities.puts_info "\t\tIssuer: #{cert.issuer.common_name} / #{cert.issuer.organization}"
+        Yawast::Utilities.puts_info "\t\tVersion: #{cert.version}"
+        Yawast::Utilities.puts_info "\t\tSerial: #{cert.serial}"
+        Yawast::Utilities.puts_info "\t\tSubject: #{cert.subject}"
+
+        #check to see if cert is expired
+        if cert.not_after > Time.now
+          Yawast::Utilities.puts_info "\t\tExpires: #{cert.not_after}"
+        else
+          Yawast::Utilities.puts_vuln "\t\tExpires: #{cert.not_after} (Expired)"
+        end
+
+        #check for SHA1 & MD5 certs
+        if cert.signature_algorithm.include?('md5') || cert.signature_algorithm.include?('sha1')
+          Yawast::Utilities.puts_vuln "\t\tSignature Algorithm: #{cert.signature_algorithm}"
+        else
+          Yawast::Utilities.puts_info "\t\tSignature Algorithm: #{cert.signature_algorithm}"
+        end
+
+        Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(cert)}"
+        Yawast::Utilities.puts_info "\t\t\tKey Hash: #{Digest::SHA1.hexdigest(cert.public_key.to_s)}"
+        Yawast::Utilities.puts_info "\t\tExtensions:"
+        cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' }
+
+        #alt names
+        alt_names = cert.extensions.find {|e| e.oid == 'subjectAltName'}
+        unless alt_names.nil?
+          Yawast::Utilities.puts_info "\t\tAlternate Names:"
+          alt_names.value.split(',').each { |name| Yawast::Utilities.puts_info "\t\t\t#{name.strip.delete('DNS:')}" }
+        end
+
+        hash = Digest::SHA1.hexdigest(cert.to_der)
+        Yawast::Utilities.puts_info "\t\tHash: #{hash}"
+        puts "\t\t\thttps://censys.io/certificates?q=#{hash}"
+        puts "\t\t\thttps://crt.sh/?q=#{hash}"
+        puts ''
+      end
+
+      def self.get_cert_chain_info(cert_chain, cert)
+        if cert_chain.count == 1
+          #HACK: This is an ugly way to guess if it's a missing intermediate, or self-signed
+          #tIt looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
+
+          if cert.issuer == cert.subject
+            Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Singed"
+          else
+            Yawast::Utilities.puts_warn "\t\tCertificate Chain Is Incomplete"
+          end
+
+          puts ''
+        end
+
+        unless cert_chain.nil?
+          Yawast::Utilities.puts_info 'Certificate: Chain'
+          cert_chain.each do |c|
+            Yawast::Utilities.puts_info "\t\tIssued To: #{c.subject.common_name} / #{c.subject.organization}"
+            Yawast::Utilities.puts_info "\t\t\tIssuer: #{c.issuer.common_name} / #{c.issuer.organization}"
+            Yawast::Utilities.puts_info "\t\t\tExpires: #{c.not_after}"
+            Yawast::Utilities.puts_info "\t\t\tKey: #{c.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(c)}"
+            Yawast::Utilities.puts_info "\t\t\tSignature Algorithm: #{c.signature_algorithm}"
+            Yawast::Utilities.puts_info "\t\t\tHash: #{Digest::SHA1.hexdigest(c.to_der)}"
+            puts ''
+          end
+
+          puts ''
         end
       end
 
@@ -127,7 +134,7 @@ module Yawast
             begin
               ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
             rescue => e
-              Yawast::Utilities.puts_error "\tError getting cipher suites for #{version.to_s}, skipping. (#{e.message})"
+              Yawast::Utilities.puts_error "\tError getting cipher suites for #{version}, skipping. (#{e.message})"
             end
 
             if ciphers != nil
@@ -140,7 +147,7 @@ module Yawast
       end
 
       def self.check_version_suites(uri, ip, ciphers, version)
-        puts "\tChecking for #{version.to_s} suites (#{ciphers.count} possible suites)"
+        puts "\tChecking for #{version} suites (#{ciphers.count} possible suites)"
 
         ciphers.each do |cipher|
           #try to connect and see what happens
@@ -153,16 +160,7 @@ module Yawast
 
             ssl.connect
 
-            if cipher[2] < 112 || cipher[0].include?('RC4')
-              #less than 112 bits or RC4, flag as a vuln
-              Yawast::Utilities.puts_vuln "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
-            elsif cipher[2] >= 128
-              #secure, probably safe
-              Yawast::Utilities.puts_info "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
-            else
-              #weak, but not "omg!" weak.
-              Yawast::Utilities.puts_warn "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
-            end
+            check_cipher_strength cipher, ssl
 
             ssl.sysclose
           rescue OpenSSL::SSL::SSLError => e
@@ -177,6 +175,19 @@ module Yawast
           ensure
             ssl.sysclose unless ssl == nil
           end
+        end
+      end
+
+      def self.check_cipher_strength(cipher, ssl)
+        if cipher[2] < 112 || cipher[0].include?('RC4')
+          #less than 112 bits or RC4, flag as a vuln
+          Yawast::Utilities.puts_vuln "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+        elsif cipher[2] >= 128
+          #secure, probably safe
+          Yawast::Utilities.puts_info "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
+        else
+          #weak, but not "omg!" weak.
+          Yawast::Utilities.puts_warn "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
         end
       end
 

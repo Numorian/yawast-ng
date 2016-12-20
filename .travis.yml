@@ -2,11 +2,13 @@ language: ruby
 rvm:
   - 2.2.4
   - 2.3.1
+script:
+  - bundle exec rake
+  - bundle exec rake submitcodeclimate
 notifications:
   email:
     on_success: never
     on_failure: never
-
 addons:
     code_climate:
         repo_token: 6fd9c710b9a6e0da2011c62b81075b9bd620200a2a400f4dbeab9c88829f4cb6

@@ -20,4 +20,6 @@ task :codeclimate do
   require 'codeclimate-test-reporter'
 
   ENV['CODECLIMATE_REPO_TOKEN'] ='6fd9c710b9a6e0da2011c62b81075b9bd620200a2a400f4dbeab9c88829f4cb6'
+
+  system 'codeclimate-test-reporter'
 end

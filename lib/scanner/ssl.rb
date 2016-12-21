@@ -65,7 +65,14 @@ module Yawast
         Yawast::Utilities.puts_info "\t\tKey: #{cert.public_key.class.to_s.gsub('OpenSSL::PKey::', '')}-#{get_x509_pub_key_strength(cert)}"
         Yawast::Utilities.puts_info "\t\t\tKey Hash: #{Digest::SHA1.hexdigest(cert.public_key.to_s)}"
         Yawast::Utilities.puts_info "\t\tExtensions:"
-        cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' }
+        cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' || ext.oid == 'ct_precert_scts' }
+
+        #ct_precert_scts
+        scts = cert.extensions.find {|e| e.oid == 'ct_precert_scts'}
+        unless scts.nil?
+          Yawast::Utilities.puts_info "\t\tSCTs:"
+          scts.value.split("\n").each { |line| puts "\t\t\t#{line}" }
+        end
 
         #alt names
         alt_names = cert.extensions.find {|e| e.oid == 'subjectAltName'}

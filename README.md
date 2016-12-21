@@ -20,7 +20,7 @@ The simplest method to install is to use the RubyGem installer:
 
 This allows for simple updates (`gem update yawast`) and makes it easy to ensure that you are always using the latest version.
 
-YAWAST requires Ruby 2.2+, and is tested on Mac OSX and Linux (Windows should work; please open a ticket if you have issues).
+YAWAST requires Ruby 2.2+, and is tested on Mac OSX, Linux, and Windows.
 
 **Kali Rolling**
 
@@ -47,6 +47,10 @@ rvm install 2.2
 rvm use 2.2 --default
 gem install yawast
 ```
+
+**Windows**
+
+To install on Windows, you need to first install Ruby; this can be done easily with the latest version of [RubyInstaller](https://rubyinstaller.org/downloads/). Once Ruby is installed, YAWAST can be installed via `gem install yawast` as normal.
 
 ### Tests
 

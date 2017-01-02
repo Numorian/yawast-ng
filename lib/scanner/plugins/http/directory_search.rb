@@ -84,7 +84,7 @@ module Yawast
               res = Yawast::Shared::Http.head uri
 
               if res.code == '200'
-                @results.push "\tFound: '#{uri.to_s}'"
+                @results.push "\tFound: '#{uri}'"
 
                 load_queue uri if @recursive
               elsif res.code == '301' && @list_redirects

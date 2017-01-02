@@ -66,7 +66,7 @@ module Yawast
         return if domain == ''
 
         begin
-          socket = Socket.tcp(domain, 443, opts={connect_timeout: 8})
+          socket = Socket.tcp(domain, 443, {connect_timeout: 8})
 
           ctx = OpenSSL::SSL::SSLContext.new
           ctx.ciphers = OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers]

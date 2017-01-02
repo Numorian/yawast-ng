@@ -40,6 +40,7 @@ module Yawast
         check_server_status(uri.copy)
         check_server_info(uri.copy)
         check_tomcat_manager(uri.copy)
+        check_tomcat_version(uri.copy)
       end
 
       def self.check_server_status(uri)
@@ -48,6 +49,27 @@ module Yawast
 
       def self.check_server_info(uri)
         check_page_for_string uri, '/server-info', 'Apache Server Information'
+      end
+
+      def self.check_tomcat_version(uri)
+        begin
+          req = Yawast::Shared::Http.get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          headers = Yawast::Shared::Http.get_headers
+          res = req.request(Xyz.new('/', headers))
+
+          if res.body.include?('Apache Tomcat') && res.code == '501'
+            #check to see if there's a version number
+            version = /Apache Tomcat\/\d*.\d*.\d*\b/.match res.body
+
+            if version != nil && version[0] != nil
+              Yawast::Utilities.puts_warn "Version Found: #{version[0]}"
+              puts "\t\t\"curl -X XYZ #{uri}\""
+
+              puts ''
+            end
+          end
+        end
       end
 
       def self.check_tomcat_manager(uri)
@@ -111,6 +133,13 @@ module Yawast
           puts ''
         end
       end
+    end
+
+    #Custom class to allow using the PROPFIND verb
+    class Xyz < Net::HTTPRequest
+      METHOD = 'XYZ'
+      REQUEST_HAS_BODY = false
+      RESPONSE_HAS_BODY = true
     end
   end
 end

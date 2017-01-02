@@ -4,7 +4,7 @@ module Yawast
       def self.print_header
         Yawast.header
 
-        puts "Scanning: #{@uri.to_s}"
+        puts "Scanning: #{@uri}"
         puts
       end
 

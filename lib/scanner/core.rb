@@ -17,7 +17,7 @@ module Yawast
           ssl_redirect = check_for_ssl_redirect
           if ssl_redirect
             @uri = ssl_redirect
-            puts "Server redirects to TLS: Scanning: #{@uri.to_s}"
+            puts "Server redirects to TLS: Scanning: #{@uri}"
           end
 
           Yawast.set_openssl_options

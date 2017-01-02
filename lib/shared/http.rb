@@ -21,13 +21,13 @@ module Yawast
         req.head(uri.path, get_headers)
       end
 
-      def self.get(uri)
+      def self.get(uri, headers = nil)
         body = ''
 
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          res = req.request_get(uri.path, get_headers)
+          res = req.request_get(uri.path, get_headers(headers))
           body = res.read_body
         rescue
           #do nothing for now
@@ -54,11 +54,15 @@ module Yawast
       end
 
       # noinspection RubyStringKeysInHashInspection
-      def self.get_headers
+      def self.get_headers(extra_headers = nil)
         if @cookie == nil
           headers = { 'User-Agent' => HTTP_UA }
         else
           headers = { 'User-Agent' => HTTP_UA, 'Cookie' => @cookie }
+        end
+
+        if extra_headers != nil
+          headers.merge! extra_headers
         end
 
         headers

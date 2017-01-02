@@ -58,12 +58,12 @@ module Yawast
           headers = Yawast::Shared::Http.get_headers
           res = req.request(Xyz.new('/', headers))
 
-          if res.body.include?('Apache Tomcat') && res.code == '501'
+          if res.body != nil && res.body.include?('Apache Tomcat') && res.code == '501'
             #check to see if there's a version number
             version = /Apache Tomcat\/\d*.\d*.\d*\b/.match res.body
 
             if version != nil && version[0] != nil
-              Yawast::Utilities.puts_warn "Version Found: #{version[0]}"
+              Yawast::Utilities.puts_warn "Apache Tomcat Version Found: #{version[0]}"
               puts "\t\t\"curl -X XYZ #{uri}\""
 
               puts ''

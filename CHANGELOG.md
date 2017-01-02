@@ -2,6 +2,7 @@
 
 * [#75](https://github.com/adamcaudill/yawast/issues/75) - Use internal SSL scanner for non-standard ports
 * [#84](https://github.com/adamcaudill/yawast/issues/84) - Improve the display of ct_precert_scts
+* [#86](https://github.com/adamcaudill/yawast/issues/86) - Add check for Tomcat Manager & common passwords
 * [#76](https://github.com/adamcaudill/yawast/issues/76) - Bug: Handle error for OpenSSL version support error
 * Various code and other improvements.
 

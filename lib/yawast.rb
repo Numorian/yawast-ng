@@ -24,7 +24,7 @@ require_all '/shared'
 
 module Yawast
   DESCRIPTION = 'The YAWAST Antecedent Web Application Security Toolkit'
-  HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Yawast/#{VERSION} Chrome/52.0.2743.24 Safari/537.36"
+  HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Yawast/#{VERSION} Chrome/56.0.2924.28 Safari/537.36"
 
   def self.header
     puts '__   _____  _    _  ___   _____ _____ '

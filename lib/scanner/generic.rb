@@ -27,6 +27,7 @@ module Yawast
                 else
                   #show network info
                   get_network_info ip
+                  get_network_location_info ip
 
                   puts "\t\t\thttps://www.shodan.io/host/#{ip.address}"
                   puts "\t\t\thttps://censys.io/ipv4/#{ip.address}"
@@ -51,6 +52,7 @@ module Yawast
                 else
                   #show network info
                   get_network_info ip
+                  get_network_location_info ip
 
                   puts "\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
                 end
@@ -93,6 +95,41 @@ module Yawast
           Yawast::Utilities.puts_info "\t\t\t#{network_info['as_country_code']} - #{network_info['as_description']}"
         rescue => e
           Yawast::Utilities.puts_error "Error getting network information: #{e.message}"
+        end
+      end
+
+      def self.get_network_location_info(ip)
+        begin
+          info = JSON.parse(Net::HTTP.get(URI("https://freegeoip.net/json/#{ip.address}")))
+          location = ''
+
+          city = info['city']
+          region = info['region_name']
+          country = info['country_code']
+
+          if city != nil
+            location = city
+          end
+          if region != nil
+            if location != nil
+              location = "#{location}, #{region}"
+            else
+              location = region
+            end
+          end
+          if country != nil
+            if location != nil
+              location = "#{location}, #{country}"
+            else
+              location = country
+            end
+          end
+
+          if location != ''
+            Yawast::Utilities.puts_info "\t\t\t#{location}"
+          end
+        rescue => e
+          Yawast::Utilities.puts_error "Error getting location information: #{e.message}"
         end
       end
 

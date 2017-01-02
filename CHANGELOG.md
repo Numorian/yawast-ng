@@ -5,6 +5,7 @@
 * [#86](https://github.com/adamcaudill/yawast/issues/86) - Add check for Tomcat Manager & common passwords
 * [#87](https://github.com/adamcaudill/yawast/issues/87) - Tomcat version detection via invalid HTTP verb
 * [#88](https://github.com/adamcaudill/yawast/issues/88) - Add IP Network Info via [api.iptoasn.com](https://api.iptoasn.com/)
+* [#89](https://github.com/adamcaudill/yawast/issues/89) - Add IP Location Info
 * [#76](https://github.com/adamcaudill/yawast/issues/76) - Bug: Handle error for OpenSSL version support error
 * Various code and other improvements.
 

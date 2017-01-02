@@ -35,7 +35,7 @@ module Yawast
     puts '  \_/\_| |_/\/  \/\_| |_/\____/  \_/  '
     puts ''
     puts "YAWAST v#{VERSION} - #{DESCRIPTION}"
-    puts ' Copyright (c) 2013-2016 Adam Caudill <adam@adamcaudill.com>'
+    puts ' Copyright (c) 2013-2017 Adam Caudill <adam@adamcaudill.com>'
     puts ' Support & Documentation: https://github.com/adamcaudill/yawast'
     puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION} (#{RUBY_PLATFORM})"
     puts ''

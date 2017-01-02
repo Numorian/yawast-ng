@@ -496,7 +496,7 @@ When this project was started, the original name was "Yet Another Web Applicatio
 
 ### License
 
-Copyright (c) 2013 - 2016, Adam Caudill (adam@adamcaudill.com)
+Copyright (c) 2013 - 2017, Adam Caudill (adam@adamcaudill.com)
 
 All rights reserved.
 

@@ -1,3 +1,5 @@
+require "base64"
+
 module Yawast
   module Scanner
     class Apache
@@ -105,20 +107,19 @@ module Yawast
 
       def self.check_tomcat_manager_passwords(uri, manager)
         #check for known passwords
-        ret = Yawast::Shared::Http.get(uri, {'Authorization' => 'Basic dG9tY2F0OnRvbWNhdA=='}) #tomcat:tomcat
+        check_tomcat_manager_pwd_check uri, manager, 'tomcat:tomcat'
+        check_tomcat_manager_pwd_check uri, manager, 'tomcat:password'
+        check_tomcat_manager_pwd_check uri, manager, 'tomcat:'
+        check_tomcat_manager_pwd_check uri, manager, 'admin:admin'
+        check_tomcat_manager_pwd_check uri, manager, 'admin:password'
+        check_tomcat_manager_pwd_check uri, manager, 'admin:'
+      end
+
+      def self.check_tomcat_manager_pwd_check(uri, manager, credentials)
+        ret = Yawast::Shared::Http.get(uri, {'Authorization' => "Basic #{Base64.encode64(credentials)}"})
         if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
             ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
-          Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: tomcat:tomcat"
-        end
-        ret = Yawast::Shared::Http.get(uri, {'Authorization' => 'Basic YWRtaW46YWRtaW4='}) #admin:admin
-        if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
-            ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
-          Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: admin:admin"
-        end
-        ret = Yawast::Shared::Http.get(uri, {'Authorization' => 'Basic YWRtaW46'}) #admin:(blank)
-        if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
-            ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
-          Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: admin:(blank)"
+          Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: #{credentials}"
         end
       end
 

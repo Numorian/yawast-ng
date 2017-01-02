@@ -136,7 +136,7 @@ module Yawast
       end
     end
 
-    #Custom class to allow using the PROPFIND verb
+    #Custom class to allow using the XYZ verb
     class Xyz < Net::HTTPRequest
       METHOD = 'XYZ'
       REQUEST_HAS_BODY = false

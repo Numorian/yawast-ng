@@ -82,6 +82,7 @@ module Yawast
 
           def self.check_release_notes_txt(uri)
             check_path(uri, '/RELEASE-NOTES.txt', false)
+            check_path(uri, '/docs/RELEASE-NOTES.txt', false)
           end
         end
       end

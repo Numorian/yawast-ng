@@ -11,8 +11,6 @@ module Yawast
       end
 
       def self.check_all(uri, head)
-        return unless @iis
-
         #run all the defined checks
         check_asp_banner(head)
         check_mvc_version(head)

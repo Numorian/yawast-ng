@@ -36,12 +36,9 @@ module Yawast
       end
 
       def self.check_all(uri)
-        #this check for @apache may yield false negatives.. meh.
-        if @apache
-          #run all the defined checks
-          check_server_status(uri.copy)
-          check_server_info(uri.copy)
-        end
+        #run all the defined checks
+        check_server_status(uri.copy)
+        check_server_info(uri.copy)
       end
 
       def self.check_server_status(uri)

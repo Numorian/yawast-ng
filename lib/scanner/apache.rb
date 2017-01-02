@@ -51,44 +51,52 @@ module Yawast
       end
 
       def self.check_tomcat_manager(uri)
-        uri.path = '/manager/html'
+        check_tomcat_manager_paths uri, 'manager', 'Manager'
+        check_tomcat_manager_paths uri, 'host-manager', 'Host Manager'
+      end
+
+      def self.check_tomcat_manager_paths(uri, base_path, manager)
+        uri.path = "/#{base_path}/html"
         uri.query = '' if uri.query != nil
 
         ret = Yawast::Shared::Http.get(uri)
 
         if ret.include? '<tt>conf/tomcat-users.xml</tt>'
           #this will get Tomcat 7+
-          Yawast::Utilities.puts_warn "Apache Tomcat Manager page found: #{uri}"
-          check_tomcat_manager_passwords uri
+          Yawast::Utilities.puts_warn "Apache Tomcat #{manager} page found: #{uri}"
+          check_tomcat_manager_passwords uri, manager
 
           puts ''
         else
           #check for Tomcat 6 and below
-          uri.path = '/manager'
+          uri.path = "/#{base_path}"
           ret = Yawast::Shared::Http.get(uri)
 
           if ret.include? '<tt>conf/tomcat-users.xml</tt>'
-            Yawast::Utilities.puts_warn "Apache Tomcat Manager page found: #{uri}"
-            check_tomcat_manager_passwords uri
+            Yawast::Utilities.puts_warn "Apache Tomcat #{manager} page found: #{uri}"
+            check_tomcat_manager_passwords uri, manager
 
             puts ''
           end
         end
       end
 
-      def self.check_tomcat_manager_passwords(uri)
+      def self.check_tomcat_manager_passwords(uri, manager)
         #check for known passwords
         ret = Yawast::Shared::Http.get(uri, {'Authorization' => 'Basic dG9tY2F0OnRvbWNhdA=='}) #tomcat:tomcat
-        if ret.include? '<font size="+2">Tomcat Web Application Manager</font>'
-          Yawast::Utilities.puts_vuln 'Apache Tomcat Manager weak password: tomcat:tomcat'
+        if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
+            ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
+          Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: tomcat:tomcat"
         end
         ret = Yawast::Shared::Http.get(uri, {'Authorization' => 'Basic YWRtaW46YWRtaW4='}) #admin:admin
-        if ret.include? '<font size="+2">Tomcat Web Application Manager</font>'
-          Yawast::Utilities.puts_vuln 'Apache Tomcat Manager weak password: admin:admin'
+        if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
+            ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
+          Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: admin:admin"
         end
         ret = Yawast::Shared::Http.get(uri, {'Authorization' => 'Basic YWRtaW46'}) #admin:(blank)
-        if ret.include? '<font size="+2">Tomcat Web Application Manager</font>'
-          Yawast::Utilities.puts_vuln 'Apache Tomcat Manager weak password: admin:(blank)'
+        if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
+            ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
+          Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: admin:(blank)"
         end
       end
 

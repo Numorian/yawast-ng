@@ -83,7 +83,9 @@ The following tests are performed:
 * *(Apache)* Presence of /server-status
 * *(Apache)* Presence of /server-info
 * *(Apache Tomcat)* Presence of Tomcat Manager
+* *(Apache Tomcat)* Presence of Tomcat Host Manager
 * *(Apache Tomcat)* Tomcat Manager Weak Password
+* *(Apache Tomcat)* Tomcat Host Manager Weak Password
 * *(IIS)* Info Disclosure: Server version
 * *(ASP.NET)* Info Disclosure: ASP.NET version
 * *(ASP.NET)* Info Disclosure: ASP.NET MVC version

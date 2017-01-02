@@ -1,4 +1,5 @@
 require 'ipaddr_extensions'
+require 'json'
 
 module Yawast
   module Scanner
@@ -24,8 +25,11 @@ module Yawast
                 if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
                   options.internalssl = true
                 else
-                  puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address}"
-                  puts "\t\t\t\thttps://censys.io/ipv4/#{ip.address}"
+                  #show network info
+                  get_network_info ip
+
+                  puts "\t\t\thttps://www.shodan.io/host/#{ip.address}"
+                  puts "\t\t\thttps://censys.io/ipv4/#{ip.address}"
                 end
               end
             end
@@ -45,7 +49,10 @@ module Yawast
                 if IPAddr.new(ip.address.to_s, Socket::AF_INET6).private?
                   options.internalssl = true
                 else
-                  puts "\t\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
+                  #show network info
+                  get_network_info ip
+
+                  puts "\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
                 end
               end
             end
@@ -76,6 +83,16 @@ module Yawast
         rescue => e
           Yawast::Utilities.puts_error "Error getting basic information: #{e.message}"
           raise
+        end
+      end
+
+      def self.get_network_info(ip)
+        begin
+          network_info = JSON.parse(Net::HTTP.get(URI("https://api.iptoasn.com/v1/as/ip/#{ip.address}")))
+
+          Yawast::Utilities.puts_info "\t\t\t#{network_info['as_country_code']} - #{network_info['as_description']}"
+        rescue => e
+          Yawast::Utilities.puts_error "Error getting network information: #{e.message}"
         end
       end
 

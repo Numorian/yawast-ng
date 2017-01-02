@@ -20,18 +20,17 @@ module Yawast
       end
 
       def self.check_asp_banner(head)
-        head.each do |k, v|
-          if k.downcase == 'x-aspnet-version'
-            Yawast::Utilities.puts_warn "ASP.NET Version: #{v}"
-            puts ''
-          end
-        end
+        check_header_value head, 'x-aspnet-version', 'ASP.NET'
       end
 
       def self.check_mvc_version(head)
+        check_header_value head, 'x-aspnetmvc-version', 'ASP.NET MVC'
+      end
+
+      def self.check_header_value(head, search, message)
         head.each do |k, v|
-          if k.downcase == 'x-aspnetmvc-version'
-            Yawast::Utilities.puts_warn "ASP.NET MVC Version: #{v}"
+          if k.downcase == search
+            Yawast::Utilities.puts_warn "#{message} Version: #{v}"
             puts ''
           end
         end

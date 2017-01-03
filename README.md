@@ -413,12 +413,12 @@ To use the custom internal TLS / SSL scanner (which uses your copy of OpenSSL), 
 [I] 		Issued To: sni67677.cloudflaressl.com / 
 [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2 / COMODO CA Limited
 [I] 		Version: 2
-[I] 		Serial: 14171089194524384184707003668844347326
+[I] 		Serial: 167670175484361448885961646389808341945
 [I] 		Subject: /OU=Domain Control Validated/OU=PositiveSSL Multi-Domain/CN=sni67677.cloudflaressl.com
-[I] 		Expires: 2016-09-11 23:59:59 UTC
+[I] 		Expires: 2017-07-02 23:59:59 UTC
 [I] 		Signature Algorithm: ecdsa-with-SHA256
 [I] 		Key: EC-prime256v1
-[I] 			Key Hash: 1a23d84441f9b811dc188bab42b2375873c42ba2
+[I] 			Key Hash: 26c91946d32c2e664dd4c131ffd2b11bd6270331
 [I] 		Extensions:
 [I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96, 
 [I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
@@ -431,24 +431,18 @@ To use the custom internal TLS / SSL scanner (which uses your copy of OpenSSL), 
 [I] 		Alternate Names:
 [I] 			sni67677.cloudflaressl.com
 [I] 			*.adamcaudill.com
-[I] 			*.bsidesknoxville.com
-[I] 			*.secrypto.com
-[I] 			*.smimp.org
-[I] 			*.underhandedcrypto.com
 [I] 			adamcaudill.com
-[I] 			bsidesknoxville.com
-[I] 			secrypto.com
-[I] 			smimp.org
-[I] 			underhandedcrypto.com
-[I] 		Hash: 9be2091903a01bcff3ec4049ed1d037a8c611010
+[I] 		Hash: 06746b606927dab24f9b339329639151112c9363
+			https://censys.io/certificates?q=06746b606927dab24f9b339329639151112c9363
+			https://crt.sh/?q=06746b606927dab24f9b339329639151112c9363
 
 [I] Certificate: Chain
 [I] 		Issued To: sni67677.cloudflaressl.com / 
 [I] 			Issuer: COMODO ECC Domain Validation Secure Server CA 2 / COMODO CA Limited
-[I] 			Expires: 2016-09-11 23:59:59 UTC
+[I] 			Expires: 2017-07-02 23:59:59 UTC
 [I] 			Key: EC-prime256v1
 [I] 			Signature Algorithm: ecdsa-with-SHA256
-[I] 			Hash: 9be2091903a01bcff3ec4049ed1d037a8c611010
+[I] 			Hash: 06746b606927dab24f9b339329639151112c9363
 
 [I] 		Issued To: COMODO ECC Domain Validation Secure Server CA 2 / COMODO CA Limited
 [I] 			Issuer: COMODO ECC Certification Authority / COMODO CA Limited
@@ -479,12 +473,12 @@ Supported Ciphers (based on your OpenSSL version):
 [I] 		Version: TLSv1.2	Bits: 128	Cipher: ECDHE-ECDSA-AES128-GCM-SHA256
 [I] 		Version: TLSv1.2	Bits: 128	Cipher: ECDHE-ECDSA-AES128-SHA256
 [I] 		Version: TLSv1.2	Bits: 128	Cipher: ECDHE-ECDSA-AES128-SHA
-[W] 		Version: TLSv1.2	Bits: 112	Cipher: ECDHE-ECDSA-DES-CBC3-SHA
 	Checking for TLSv1_1 suites (98 possible suites)
 [I] 		Version: TLSv1.1	Bits: 256	Cipher: ECDHE-ECDSA-AES256-SHA
 [I] 		Version: TLSv1.1	Bits: 128	Cipher: ECDHE-ECDSA-AES128-SHA
-[W] 		Version: TLSv1.1	Bits: 112	Cipher: ECDHE-ECDSA-DES-CBC3-SHA
 	Checking for SSLv3 suites (98 possible suites)
+
+[I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
 ```
 
 This version is more limited than the SSL Labs option, though will work in cases where SSL Labs is unable to connect to the target server.

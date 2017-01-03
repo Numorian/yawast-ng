@@ -101,31 +101,9 @@ module Yawast
       def self.get_network_location_info(ip)
         begin
           info = JSON.parse(Net::HTTP.get(URI("https://freegeoip.net/json/#{ip.address}")))
-          location = ''
+          location = [info['city'], info['region_name'], info['country_code']].reject { |c| c.empty? }.join(', ')
 
-          city = info['city']
-          region = info['region_name']
-          country = info['country_code']
-
-          if city != nil
-            location = city
-          end
-          if region != nil
-            if location != nil
-              location = "#{location}, #{region}"
-            else
-              location = region
-            end
-          end
-          if country != nil
-            if location != nil
-              location = "#{location}, #{country}"
-            else
-              location = country
-            end
-          end
-
-          if location != ''
+          if location != nil && !location.empty?
             Yawast::Utilities.puts_info "\t\t\t#{location}"
           end
         rescue => e

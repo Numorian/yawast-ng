@@ -212,8 +212,20 @@ module Yawast
         else
           Yawast::Utilities.puts_info "HSTS: Enabled (#{found})"
         end
+      end
 
-        puts ''
+      def self.check_hsts_preload(uri)
+        begin
+          info = JSON.parse(Net::HTTP.get(URI("https://hstspreload.com/api/v1/status/#{uri.host}")))
+
+          chrome = info['chrome'] != nil
+          firefox = info['firefox'] != nil
+          tor = info['tor'] != nil
+
+          Yawast::Utilities.puts_info "HSTS Preload: Chrome - #{chrome}; Firefox - #{firefox}; Tor - #{tor}"
+        rescue => e
+          Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message}"
+        end
       end
 
       def self.get_tdes_session_msg_count(uri)

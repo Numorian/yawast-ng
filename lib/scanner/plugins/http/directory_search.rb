@@ -16,7 +16,7 @@ module Yawast
             if search_list == nil
               @search_list = []
 
-              File.open(File.dirname(__FILE__) + '/../../../resources/common.txt', 'r') do |f|
+              File.open(File.dirname(__FILE__) + '/../../../resources/common_dir.txt', 'r') do |f|
                 f.each_line do |line|
                   @search_list.push line.strip
                 end

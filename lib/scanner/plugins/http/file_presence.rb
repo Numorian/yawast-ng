@@ -44,6 +44,11 @@ module Yawast
             check_elmah_axd uri
             check_readme_html uri
             check_release_notes_txt uri
+
+            puts ''
+            puts 'Checking for common files (this will take a few minutes)...'
+            check_common uri
+            puts ''
           end
 
           def self.check_source_control(uri)
@@ -51,6 +56,7 @@ module Yawast
             check_path(uri, '/.hg/', true)
             check_path(uri, '/.svn/', true)
             check_path(uri, '/.bzr/', true)
+            check_path(uri, '/.csv/', true)
           end
 
           def self.check_cross_domain(uri)
@@ -83,6 +89,84 @@ module Yawast
           def self.check_release_notes_txt(uri)
             check_path(uri, '/RELEASE-NOTES.txt', false)
             check_path(uri, '/docs/RELEASE-NOTES.txt', false)
+          end
+
+          def self.check_common(uri)
+            begin
+              @search_list = []
+
+              File.open(File.dirname(__FILE__) + '/../../../resources/common_file.txt', 'r') do |f|
+                f.each_line do |line|
+                  @search_list.push line.strip
+                end
+              end
+
+              pool_size = 16
+              @jobs = Queue.new
+              @results = Queue.new
+
+              #load the queue, starting at /
+              base = uri.copy
+              base.path = '/'
+              load_queue base
+
+              workers = (pool_size).times.map do
+                Thread.new do
+                  begin
+                    while (check = @jobs.pop(true))
+                      process check
+                    end
+                  rescue ThreadError
+                    #do nothing
+                  end
+                end
+              end
+
+              results = Thread.new do
+                begin
+                  while true
+                    if @results.length > 0
+                      out = @results.pop(true)
+                      Yawast::Utilities.puts_info out
+                    end
+                  end
+                rescue ThreadError
+                  #do nothing
+                end
+              end
+
+              workers.map(&:join)
+              results.terminate
+            rescue => e
+              Yawast::Utilities.puts_error "Error searching for files (#{e.message})"
+            end
+          end
+
+          def self.load_queue(uri)
+            @search_list.each do |line|
+              check = uri.copy
+
+              begin
+                check.path = "/#{line}"
+
+                #add the job to the queue
+                @jobs.push check
+              rescue
+                #who cares
+              end
+            end
+          end
+
+          def self.process(uri)
+            begin
+              res = Yawast::Shared::Http.head uri
+
+              if res.code == '200'
+                @results.push "'#{uri.path}' found: #{uri}"
+              end
+            rescue => e
+              Yawast::Utilities.puts_error "Error searching for file '#{uri.path}' (#{e.message})"
+            end
           end
         end
       end

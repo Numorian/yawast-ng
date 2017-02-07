@@ -72,10 +72,15 @@ module Yawast
           def self.load_queue(uri)
             @search_list.each do |line|
               check = uri.copy
-              check.path = check.path + "#{line}/"
 
-              #add the job to the queue
-              @jobs.push check
+              begin
+                check.path = check.path + "#{line}/"
+
+                #add the job to the queue
+                @jobs.push check
+              rescue
+                #who cares
+              end
             end
           end
 

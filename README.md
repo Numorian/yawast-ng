@@ -495,5 +495,5 @@ When this project was started, the original name was "Yet Another Web Applicatio
 
 ### Special Thanks
 
-[dirbuster-ng](https://github.com/digination/dirbuster-ng) For the use of their `common.txt` directoty list. This list was the foundation of the list used by YAWAST.
-[Shopify](https://www.shopify.com/) for [ssllabs.rb](https://github.com/Shopify/ssllabs.rb), which provides the Qualsys SSL Labs integration.
+* [SecLists](https://github.com/danielmiessler/SecLists) - Various lists are based on the resources collected by this project.
+* [Shopify](https://www.shopify.com/) for [ssllabs.rb](https://github.com/Shopify/ssllabs.rb), which provides the Qualsys SSL Labs integration.

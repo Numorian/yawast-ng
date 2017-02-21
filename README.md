@@ -76,7 +76,7 @@ The following tests are performed:
 * *(Generic)* Presence of RELEASE-NOTES.txt
 * *(Generic)* Presence of readme.html
 * *(Generic)* Missing cookie flags (Secure & HttpOnly)
-* *(Generic)* Search for common directories
+* *(Generic)* Search for files & common directories
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version

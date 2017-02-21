@@ -48,7 +48,7 @@ module Yawast
             Yawast::Scanner::Apache.check_all(@uri)
             Yawast::Scanner::Iis.check_all(@uri, head)
 
-            Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri
+            Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
 
             Yawast::Scanner::Generic.check_propfind(@uri)
             Yawast::Scanner::Generic.check_options(@uri)

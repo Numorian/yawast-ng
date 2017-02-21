@@ -7,6 +7,7 @@
 * [#88](https://github.com/adamcaudill/yawast/issues/88) - Add IP Network Info via [api.iptoasn.com](https://api.iptoasn.com/)
 * [#89](https://github.com/adamcaudill/yawast/issues/89) - Add IP Location Info
 * [#90](https://github.com/adamcaudill/yawast/issues/90) - Add HSTS Preload check via [HSTSPreload.com](https://hstspreload.com/)
+* [#91](https://github.com/adamcaudill/yawast/issues/91) - Enhanced file search
 * [#76](https://github.com/adamcaudill/yawast/issues/76) - Bug: Handle error for OpenSSL version support error
 * Various code and other improvements.
 

@@ -25,7 +25,7 @@ module Yawast
             end
           end
 
-          def self.check_all(uri)
+          def self.check_all(uri, common_files)
             #first, we need to see if the site responds to 404 in a reasonable way
             fake_uri = uri.copy
             fake_uri.path = "/#{SecureRandom.hex}/"
@@ -45,9 +45,12 @@ module Yawast
             check_readme_html uri
             check_release_notes_txt uri
 
-            puts ''
-            puts 'Checking for common files (this will take a few minutes)...'
-            check_common uri
+            if common_files
+              puts ''
+              puts 'Checking for common files (this will take a few minutes)...'
+              check_common uri
+            end
+
             puts ''
           end
 

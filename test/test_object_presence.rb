@@ -29,7 +29,7 @@ class TestScannerApacheServerStatus < Minitest::Test
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
 
     Yawast::Shared::Http.setup nil, nil
-    Yawast::Scanner::Plugins::Http::FilePresence.check_all uri
+    Yawast::Scanner::Plugins::Http::FilePresence.check_all uri, false
 
     assert stdout_value.include?('\'/readme.html\' found:'), 'readme.html page warning not found'
 

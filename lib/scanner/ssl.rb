@@ -263,6 +263,24 @@ module Yawast
           #force 3DES - this is to ensure that 3DES specific limits are caught
           req.ciphers = ['3DES']
 
+          #attempt to find a version that supports 3DES
+          versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
+          versions.each do |version|
+            if version.to_s != 'SSLv23'
+              req.ssl_version = version
+
+              begin
+                req.start do |http|
+                  http.head(uri.path, headers)
+                end
+
+                break
+              rescue
+                #we don't care
+              end
+            end
+          end
+
           req.start do |http|
             10000.times do |i|
               http.head(uri.path, headers)

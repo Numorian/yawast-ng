@@ -138,14 +138,18 @@ module Yawast
             #try to get the list of ciphers supported for each version
             ciphers = nil
 
+            get_ciphers_failed = false
             begin
               ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
             rescue => e
               Yawast::Utilities.puts_error "\tError getting cipher suites for #{version}, skipping. (#{e.message})"
+              get_ciphers_failed = true
             end
 
             if ciphers != nil
               check_version_suites uri, ip, ciphers, version
+            elsif get_ciphers_failed == false
+              Yawast::Utilities.puts_info "\t#{version}: No cipher suites available."
             end
           end
         end
@@ -174,7 +178,8 @@ module Yawast
             unless e.message.include?('alert handshake failure') ||
                 e.message.include?('no ciphers available') ||
                 e.message.include?('wrong version number') ||
-                e.message.include?('alert protocol version')
+                e.message.include?('alert protocol version') ||
+                e.message.include?('Connection reset by peer')
               Yawast::Utilities.puts_error "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(Supported But Failed)"
             end
           rescue => e

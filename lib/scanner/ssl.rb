@@ -160,6 +160,19 @@ module Yawast
       def self.check_version_suites(uri, ip, ciphers, version)
         puts "\tChecking for #{version} suites (#{ciphers.count} possible suites)"
 
+        #first, let's see if we can connect using this version - so we don't do pointless checks
+        req = Yawast::Shared::Http.get_http(uri)
+        req.use_ssl = uri.scheme == 'https'
+        req.ssl_version = version
+        begin
+          req.start do |http|
+            http.head(uri.path, Yawast::Shared::Http.get_headers)
+          end
+        rescue
+          Yawast::Utilities.puts_info "\t\tVersion: #{version}\tNo Supported Cipher Suites"
+          return
+        end
+
         ciphers.each do |cipher|
           #try to connect and see what happens
           begin

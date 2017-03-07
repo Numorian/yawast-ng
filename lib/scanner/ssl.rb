@@ -183,7 +183,9 @@ module Yawast
               Yawast::Utilities.puts_error "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(Supported But Failed)"
             end
           rescue => e
-            Yawast::Utilities.puts_error "\t\tVersion: #{''.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(#{e.message})"
+            unless e.message.include?('Connection reset by peer')
+              Yawast::Utilities.puts_error "\t\tVersion: #{''.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}\t(#{e.message})"
+            end
           ensure
             ssl.sysclose unless ssl == nil
           end

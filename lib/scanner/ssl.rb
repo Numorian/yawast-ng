@@ -148,7 +148,7 @@ module Yawast
 
             if ciphers != nil
               check_version_suites uri, ip, ciphers, version
-            elsif get_ciphers_failed == false
+            elsif !get_ciphers_failed
               Yawast::Utilities.puts_info "\t#{version}: No cipher suites available."
             end
           end

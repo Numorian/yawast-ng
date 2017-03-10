@@ -1,5 +1,6 @@
 ## 0.5.0 - In Development
 
+* [#35](https://github.com/adamcaudill/yawast/issues/35) - Add check for SameSite cookie attribute
 * [#53](https://github.com/adamcaudill/yawast/issues/53) - Added checks for .well-known URLs
 * [#75](https://github.com/adamcaudill/yawast/issues/75) - Use internal SSL scanner for non-standard ports
 * [#84](https://github.com/adamcaudill/yawast/issues/84) - Improve the display of ct_precert_scts

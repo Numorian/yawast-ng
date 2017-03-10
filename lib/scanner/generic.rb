@@ -242,6 +242,11 @@ module Yawast
               unless elements.include?(' HttpOnly') || elements.include?(' httponly')
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing HttpOnly flag"
               end
+
+              #check for SameSite cookies
+              unless elements.include?(' SameSite') || elements.include?(' samesite')
+                Yawast::Utilities.puts_warn "\t\t\tCookie missing SameSite flag"
+              end
             end
 
             puts ''

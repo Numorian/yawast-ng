@@ -26,7 +26,7 @@ module Yawast
                   options.internalssl = true
                 else
                   #show network info
-                  get_network_info ip
+                  Yawast::Utilities.puts_info "\t\t\t#{get_network_info(ip.address)}"
                   get_network_location_info ip
 
                   puts "\t\t\thttps://www.shodan.io/host/#{ip.address}"
@@ -51,7 +51,7 @@ module Yawast
                   options.internalssl = true
                 else
                   #show network info
-                  get_network_info ip
+                  Yawast::Utilities.puts_info "\t\t\t#{get_network_info(ip.address)}"
                   get_network_location_info ip
 
                   puts "\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
@@ -69,14 +69,18 @@ module Yawast
             mx = resv.getresources(uri.host, Resolv::DNS::Resource::IN::MX)
             unless mx.empty?
               mx.each do |rec|
-                Yawast::Utilities.puts_info "\t\tMX: #{rec.exchange} (#{rec.preference})"
+                ip = resv.getaddress rec.exchange
+
+                Yawast::Utilities.puts_info "\t\tMX: #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
               end
             end
 
             ns = resv.getresources(uri.host, Resolv::DNS::Resource::IN::NS)
             unless ns.empty?
               ns.each do |rec|
-                Yawast::Utilities.puts_info "\t\tNS: #{rec.name}"
+                ip = resv.getaddress rec.name
+
+                Yawast::Utilities.puts_info "\t\tNS: #{rec.name} - #{ip} (#{get_network_info(ip.to_s)})"
               end
             end
           end
@@ -90,11 +94,11 @@ module Yawast
 
       def self.get_network_info(ip)
         begin
-          network_info = JSON.parse(Net::HTTP.get(URI("https://api.iptoasn.com/v1/as/ip/#{ip.address}")))
+          network_info = JSON.parse(Net::HTTP.get(URI("https://api.iptoasn.com/v1/as/ip/#{ip}")))
 
-          Yawast::Utilities.puts_info "\t\t\t#{network_info['as_country_code']} - #{network_info['as_description']}"
+          return "#{network_info['as_country_code']} - #{network_info['as_description']}"
         rescue => e
-          Yawast::Utilities.puts_error "Error getting network information: #{e.message}"
+          return "Error: getting network information failed (#{e.message})"
         end
       end
 

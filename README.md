@@ -121,7 +121,7 @@ In addition to these tests, certain basic information is also displayed, such as
 
 ### Usage
 
-* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--dirrecursive] [--dirlistredir] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--files] [--dirrecursive] [--dirlistredir] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 * HEAD-only scan: `./yawast head <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 * SSL information: `./yawast ssl <url> [--internalssl] [--tdessessioncount] [--nociphers]`
 * CMS detection: `./yawast cms <url> [--proxy localhost:8080] [--cookie SESSIONID=12345]`

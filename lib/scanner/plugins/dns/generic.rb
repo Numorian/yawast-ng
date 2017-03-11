@@ -110,14 +110,18 @@ module Yawast
                   File.open(File.dirname(__FILE__) + '/../../../resources/srv_list.txt', 'r') do |f|
                     f.each_line do |line|
                       host = line.strip + '.' + root_domain
-                      srv = resv.getresources(host, Resolv::DNS::Resource::IN::SRV)
+                      begin
+                        srv = resv.getresources(host, Resolv::DNS::Resource::IN::SRV)
 
-                      unless srv.empty?
-                        srv.each do |rec|
-                          ip = resv.getaddress rec.target
+                        unless srv.empty?
+                          srv.each do |rec|
+                            ip = resv.getaddress rec.target
 
-                          Yawast::Utilities.puts_info "\t\tSRV: #{host}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
+                            Yawast::Utilities.puts_info "\t\tSRV: #{host}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
+                          end
                         end
+                      rescue
+                        #if this fails, don't really care
                       end
                     end
                   end
@@ -127,16 +131,21 @@ module Yawast
                   File.open(File.dirname(__FILE__) + '/../../../resources/subdomain_list.txt', 'r') do |f|
                     f.each_line do |line|
                       host = line.strip + '.' + root_domain
-                      a = resv.getresources(host, Resolv::DNS::Resource::IN::A)
 
-                      unless a.empty?
-                        a.each do |ip|
-                          if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
-                            Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address}"
-                          else
-                            Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
+                      begin
+                        a = resv.getresources(host, Resolv::DNS::Resource::IN::A)
+
+                        unless a.empty?
+                          a.each do |ip|
+                            if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
+                              Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address}"
+                            else
+                              Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
+                            end
                           end
                         end
+                      rescue
+                        #if this fails, don't really care
                       end
                     end
                   end
@@ -151,10 +160,17 @@ module Yawast
           end
 
           def self.get_network_info(ip)
+            #check to see if we have this one cached
+            @netinfo = Hash.new if @netinfo == nil
+            return @netinfo[ip] if @netinfo[ip] != nil
+
             begin
               network_info = JSON.parse(Net::HTTP.get(URI("https://api.iptoasn.com/v1/as/ip/#{ip}")))
 
-              return "#{network_info['as_country_code']} - #{network_info['as_description']}"
+              ret = "#{network_info['as_country_code']} - #{network_info['as_description']}"
+              @netinfo[ip] = ret
+
+              return ret
             rescue => e
               return "Error: getting network information failed (#{e.message})"
             end

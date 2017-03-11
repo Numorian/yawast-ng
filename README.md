@@ -185,248 +185,276 @@ For authenticated testing, YAWAST allows you to specify a cookie to be passed vi
 Using `scan` - the normal go-to option, here's what you get when scanning my website:
 
 ```
-$ yawast scan https://adamcaudill.com --dir --tdessessioncount
- __   _____  _    _  ___   _____ _____ 
- \ \ / / _ \| |  | |/ _ \ /  ___|_   _|
-  \ V / /_\ \ |  | / /_\ \\ `--.  | |  
-   \ /|  _  | |/\| |  _  | `--. \ | |  
-   | || | | \  /\  / | | |/\__/ / | |  
-   \_/\_| |_/\/  \/\_| |_/\____/  \_/  
- 
- YAWAST v0.5.0.beta2 - The YAWAST Antecedent Web Application Security Toolkit
-  Copyright (c) 2013-2017 Adam Caudill <adam@adamcaudill.com>
-  Support & Documentation: https://github.com/adamcaudill/yawast
-  Ruby 2.2.4-p230; OpenSSL 1.0.2f  28 Jan 2016 (x86_64-darwin15)
- 
- Scanning: https://adamcaudill.com/
- 
- DNS Information:
- [I] 		104.28.26.55 (N/A)
- [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
- [I] 			San Francisco, California, US
- 			https://www.shodan.io/host/104.28.26.55
- 			https://censys.io/ipv4/104.28.26.55
- [I] 		104.28.27.55 (N/A)
- [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
- [I] 			San Francisco, California, US
- 			https://www.shodan.io/host/104.28.27.55
- 			https://censys.io/ipv4/104.28.27.55
- [I] 		2400:CB00:2048:1::681C:1A37 (N/A)
- [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
- [I] 			US
- 			https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
- [I] 		2400:CB00:2048:1::681C:1B37 (N/A)
- [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
- [I] 			US
- 			https://www.shodan.io/host/2400:cb00:2048:1::681c:1b37
- [I] 		TXT: v=spf1 mx a ptr include:_spf.google.com ~all
- [I] 		TXT: google-site-verification=QTO_7Q7UXmrUIwieJliLTXV3XuQdqNvTPVcug_TwH0w
- [I] 		MX: aspmx4.googlemail.com (30)
- [I] 		MX: aspmx.l.google.com (10)
- [I] 		MX: alt1.aspmx.l.google.com (20)
- [I] 		MX: aspmx2.googlemail.com (30)
- [I] 		MX: alt2.aspmx.l.google.com (20)
- [I] 		MX: aspmx3.googlemail.com (30)
- [I] 		MX: aspmx5.googlemail.com (30)
- [I] 		NS: vera.ns.cloudflare.com
- [I] 		NS: hal.ns.cloudflare.com
- 
- [I] HEAD:
- [I] 		date: Tue, 03 Jan 2017 03:05:26 GMT
- [I] 		content-type: text/html; charset=UTF-8
- [I] 		connection: close
- [I] 		set-cookie: __cfduid=a; expires=Wed, 03-Jan-18 03:05:26 GMT; path=/; domain=.adamcaudill.com; HttpOnly
- [I] 		x-xss-protection: 1; mode=block
- [I] 		content-security-policy-report-only: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.wp.com ajax.cloudflare.com platform.twitter.com s0.wp.com ssl.google-analytics.com cdn.syndication.twimg.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com *.twimg.com platform.twitter.com s0.wp.com; img-src 'self' data: *.wp.com static.flickr.com *.ted.com *.w.org *.gravatar.com *.twimg.com ssl.google-analytics.com *.twitter.com *.staticflickr.com; font-src 'self' data: fonts.googleapis.com fonts.gstatic.com public.slidesharecdn.com; media-src 'self' *.ted.com; child-src 'self' www.slideshare.net www.youtube.com *.twitter.com; frame-ancestors 'self'; reflected-xss block; referrer no-referrer-when-downgrade; report-uri https://adamcaudill.report-uri.io/r/default/csp/reportOnly;
- [I] 		vary: Accept-Encoding,Cookie
- [I] 		last-modified: Tue, 03 Jan 2017 01:49:31 GMT
- [I] 		cache-control: public, max-age=86400
- [I] 		expires: Wed, 04 Jan 2017 03:05:26 GMT
- [I] 		x-frame-options: sameorigin
- [I] 		pragma: public
- [I] 		cf-cache-status: REVALIDATED
- [I] 		strict-transport-security: max-age=15552000; preload
- [I] 		x-content-type-options: nosniff
- [I] 		server: cloudflare-nginx
- [I] 		cf-ray: a-MIA
- 
- [I] NOTE: Server appears to be Cloudflare; WAF may be in place.
- 
- [I] X-Frame-Options Header: sameorigin
- [I] X-Content-Type-Options Header: nosniff
- [W] Content-Security-Policy Header Not Present
- [W] Public-Key-Pins Header Not Present
- 
- [I] Cookies:
- [I] 		__cfduid=a; expires=Wed, 03-Jan-18 03:05:26 GMT; path=/; domain=.adamcaudill.com; HttpOnly
- [W] 			Cookie missing Secure flag
- 
- 
- Beginning SSL Labs scan (this could take a minute or two)
- [SSL Labs] This assessment service is provided free of charge by Qualys SSL Labs, subject to our terms and conditions: https://www.ssllabs.com/about/terms.html
- .............................................
- 
- 	SSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=adamcaudill.com&hideResults=on
- 
- [I] IP: 104.28.27.55 - Grade: A+
- 
- 	Certificate Information:
- [I] 		Subject: CN=sni67677.cloudflaressl.com,OU=PositiveSSL Multi-Domain,OU=Domain Control Validated
- [I] 		Common Names: ["sni67677.cloudflaressl.com"]
- [I] 		Alternative names:
- [I] 			sni67677.cloudflaressl.com
- [I] 			*.adamcaudill.com
- [I] 			adamcaudill.com
- [I] 		Not Before: 2016-12-29T00:00:00+00:00
- [I] 		Not After: 2017-07-02T23:59:59+00:00
- [I] 		Key: EC 256 (RSA equivalent: 3072)
- [I] 		Public Key Hash: a2e0276e6a44138fea0f4afc01a4e6a3e165d15e
- [I] 		Version: 2
- [I] 		Serial: 167670175484361448885961646389808341945
- [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
- [I] 		Signature algorithm: SHA256withECDSA
- [I] 		Extended Validation: No (Domain Control)
- [I] 		Certificate Transparency: No
- [I] 		OCSP Must Staple: No
- [I] 		Revocation information: CRL information available
- [I] 		Revocation information: OCSP information available
- [I] 		Revocation status: certificate not revoked
- [I] 		Extensions:
- [I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96, 
- [I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
- [I] 			keyUsage = critical, Digital Signature
- [I] 			basicConstraints = critical, CA:FALSE
- [I] 			extendedKeyUsage = TLS Web Server Authentication, TLS Web Client Authentication
- [I] 			certificatePolicies = Policy: 1.3.6.1.4.1.6449.1.2.2.7,   CPS: https://secure.comodo.com/CPS, Policy: 2.23.140.1.2.1, 
- [I] 			crlDistributionPoints = , Full Name:,   URI:http://crl.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crl, 
- [I] 			authorityInfoAccess = CA Issuers - URI:http://crt.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crt, OCSP - URI:http://ocsp.comodoca4.com, 
- [I] 		Hash: 06746b606927dab24f9b339329639151112c9363
- 			https://censys.io/certificates?q=06746b606927dab24f9b339329639151112c9363
- 			https://crt.sh/?q=06746b606927dab24f9b339329639151112c9363
- 
- 	Configuration Information:
- 		Protocol Support:
- [I] 			TLS 1.0
- [I] 			TLS 1.1
- [I] 			TLS 1.2
- 
- 		Cipher Suite Support:
- [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256            - 128-bits - ECDHE-256-bits
- [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256            - 128-bits - ECDHE-256-bits
- [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA               - 128-bits - ECDHE-256-bits
- [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384            - 256-bits - ECDHE-256-bits
- [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384            - 256-bits - ECDHE-256-bits
- [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA               - 256-bits - ECDHE-256-bits
- [I] 			TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256      - 256-bits - ECDHE-256-bits
- [I] 			OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256  - 256-bits - ECDHE-256-bits
- 
- 		Handshake Simulation:
- [E] 			Android 2.3.7                - Simulation Failed
- [I] 			Android 4.0.4                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			Android 4.1.1                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			Android 4.2.2                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			Android 4.3                  - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			Android 4.4.2                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Android 5.0.0                - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
- [I] 			Android 6.0                  - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
- [I] 			Android 7.0                  - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
- [I] 			Baidu Jan 2015               - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			BingPreview Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [E] 			Chrome 49 / XP SP3           - Simulation Failed
- [I] 			Chrome 51 / Win 7            - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Firefox 31.3.0 ESR / Win 7   - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Firefox 47 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Firefox 49 / XP SP3          - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Firefox 49 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Googlebot Feb 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [E] 			IE 6 / XP                    - Simulation Failed
- [I] 			IE 7 / Vista                 - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [E] 			IE 8 / XP                    - Simulation Failed
- [I] 			IE 8-10 / Win 7              - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			IE 11 / Win 7                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			IE 11 / Win 8.1              - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			IE 10 / Win Phone 8.0        - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			IE 11 / Win Phone 8.1        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			IE 11 / Win Phone 8.1 Update - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			IE 11 / Win 10               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Edge 13 / Win 10             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Edge 13 / Win Phone 10       - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [E] 			Java 6u45                    - Simulation Failed
- [I] 			Java 7u25                    - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			Java 8u31                    - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [E] 			OpenSSL 0.9.8y               - Simulation Failed
- [I] 			OpenSSL 1.0.1l               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			OpenSSL 1.0.2e               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Safari 5.1.9 / OS X 10.6.8   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			Safari 6 / iOS 6.0.1         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
- [I] 			Safari 6.0.4 / OS X 10.8.4   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
- [I] 			Safari 7 / iOS 7.1           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
- [I] 			Safari 7 / OS X 10.9         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
- [I] 			Safari 8 / iOS 8.4           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
- [I] 			Safari 8 / OS X 10.10        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
- [I] 			Safari 9 / iOS 9             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Safari 9 / OS X 10.11        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Safari 10 / iOS 10           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Safari 10 / OS X 10.12       - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Apple ATS 9 / iOS 9          - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			Yahoo Slurp Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- [I] 			YandexBot Jan 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
- 
- 		Protocol & Vulnerability Information:
- [I] 			DROWN: No
- [I] 			Secure Renegotiation: secure renegotiation supported
- [I] 			POODLE (SSL): No
- [I] 			POODLE (TLS): No
- [I] 			Downgrade Prevention: Yes
- [I] 			Compression: No
- [I] 			Heartbleed: No
- [I] 			OpenSSL CCS (CVE-2014-0224): No
- [I] 			OpenSSL Padding Oracle (CVE-2016-2107): No
- [I] 			Forward Secrecy: Yes (all simulated clients)
- [W] 			OCSP Stapling: No
- [I] 			FREAK: No
- [I] 			Logjam: No
- [I] 			DH public server param (Ys) reuse: No
- [I] 			Protocol Intolerance: No
- 
- TLS Session Request Limit: Checking number of requests accepted using 3DES suites...
- 
- [I] TLS Session Request Limit: Server does not support 3DES cipher suites
- 
- [I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
- 
- [W] '/readme.html' found: https://adamcaudill.com/readme.html
- 
- Searching for common directories...
- [I] 	Found: 'https://adamcaudill.com/2005/'
- [I] 	Found: 'https://adamcaudill.com/2006/'
- [I] 	Found: 'https://adamcaudill.com/2004/'
- [I] 	Found: 'https://adamcaudill.com/2003/'
- [I] 	Found: 'https://adamcaudill.com/2008/'
- [I] 	Found: 'https://adamcaudill.com/2007/'
- [I] 	Found: 'https://adamcaudill.com/2010/'
- [I] 	Found: 'https://adamcaudill.com/2011/'
- [I] 	Found: 'https://adamcaudill.com/2013/'
- [I] 	Found: 'https://adamcaudill.com/2014/'
- [I] 	Found: 'https://adamcaudill.com/2009/'
- [I] 	Found: 'https://adamcaudill.com/2016/'
- [I] 	Found: 'https://adamcaudill.com/2015/'
- [I] 	Found: 'https://adamcaudill.com/About/'
- [I] 	Found: 'https://adamcaudill.com/Blog/'
- [I] 	Found: 'https://adamcaudill.com/about/'
- [I] 	Found: 'https://adamcaudill.com/archives/'
- [I] 	Found: 'https://adamcaudill.com/blog/'
- [I] 	Found: 'https://adamcaudill.com/feed/'
- [I] 	Found: 'https://adamcaudill.com/files/'
- [I] 	Found: 'https://adamcaudill.com/pgp/'
- [I] 	Found: 'https://adamcaudill.com/photo/'
- [I] 	Found: 'https://adamcaudill.com/resume/'
- [I] 	Found: 'https://adamcaudill.com/tools/'
- [I] 	Found: 'https://adamcaudill.com/wp-content/'
- [I] 	Found: 'https://adamcaudill.com/wp-includes/'
- 
- [I] Meta Generator: WordPress 4.7
- Scan complete.
+$ yawast scan https://adamcaudill.com --tdessessioncount --dir --files --srv --subdomains
+  __   _____  _    _  ___   _____ _____ 
+  \ \ / / _ \| |  | |/ _ \ /  ___|_   _|
+   \ V / /_\ \ |  | / /_\ \\ `--.  | |  
+    \ /|  _  | |/\| |  _  | `--. \ | |  
+    | || | | \  /\  / | | |/\__/ / | |  
+    \_/\_| |_/\/  \/\_| |_/\____/  \_/  
+  
+  YAWAST v0.5.0.beta3 - The YAWAST Antecedent Web Application Security Toolkit
+   Copyright (c) 2013-2017 Adam Caudill <adam@adamcaudill.com>
+   Support & Documentation: https://github.com/adamcaudill/yawast
+   Ruby 2.2.4-p230; OpenSSL 1.0.2j  26 Sep 2016 (x86_64-darwin16)
+  
+  Scanning: https://adamcaudill.com/
+  
+  DNS Information:
+  [I] 		104.28.27.55 (N/A)
+  [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
+  [I] 			San Francisco, California, US
+  			https://www.shodan.io/host/104.28.27.55
+  			https://censys.io/ipv4/104.28.27.55
+  [I] 		104.28.26.55 (N/A)
+  [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
+  [I] 			San Francisco, California, US
+  			https://www.shodan.io/host/104.28.26.55
+  			https://censys.io/ipv4/104.28.26.55
+  [I] 		2400:CB00:2048:1::681C:1B37 (N/A)
+  [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
+  [I] 			US
+  			https://www.shodan.io/host/2400:cb00:2048:1::681c:1b37
+  [I] 		2400:CB00:2048:1::681C:1A37 (N/A)
+  [I] 			US - CLOUDFLARENET - CloudFlare, Inc.
+  [I] 			US
+  			https://www.shodan.io/host/2400:cb00:2048:1::681c:1a37
+  [I] 		TXT: google-site-verification=QTO_7Q7UXmrUIwieJliLTXV3XuQdqNvTPVcug_TwH0w
+  [I] 		TXT: v=spf1 mx a ptr include:_spf.google.com ~all
+  [I] 		TXT: brave-ledger-verification=1
+  [I] 		MX: aspmx5.googlemail.com (30) - 64.233.161.27 (US - GOOGLE - Google Inc.)
+  [I] 		MX: aspmx4.googlemail.com (30) - 74.125.143.26 (US - GOOGLE - Google Inc.)
+  [I] 		MX: aspmx3.googlemail.com (30) - 64.233.186.27 (US - GOOGLE - Google Inc.)
+  [I] 		MX: alt2.aspmx.l.google.com (20) - 74.125.133.26 (US - GOOGLE - Google Inc.)
+  [I] 		MX: aspmx2.googlemail.com (30) - 209.85.202.26 (US - GOOGLE - Google Inc.)
+  [I] 		MX: alt1.aspmx.l.google.com (20) - 209.85.202.27 (US - GOOGLE - Google Inc.)
+  [I] 		MX: aspmx.l.google.com (10) - 108.177.12.27 (US - GOOGLE - Google Inc.)
+  [I] 		NS: hal.ns.cloudflare.com - 173.245.59.174 (US - CLOUDFLARENET - CloudFlare, Inc.)
+  [I] 		NS: vera.ns.cloudflare.com - 173.245.58.147 (US - CLOUDFLARENET - CloudFlare, Inc.)
+  [I] 		SRV: _bittorrent._tcp.adamcaudill.com: example.com:1 - 93.184.216.34 (US - EDGECAST - MCI Communications Services, Inc. d/b/a Verizon Business)
+  [I] 		A: www.adamcaudill.com: 104.28.27.55 (US - CLOUDFLARENET - CloudFlare, Inc.)
+  [I] 		A: www.adamcaudill.com: 104.28.26.55 (US - CLOUDFLARENET - CloudFlare, Inc.)
+  
+  [I] HEAD:
+  [I] 		date: Sat, 11 Mar 2017 20:25:53 GMT
+  [I] 		content-type: text/html; charset=UTF-8
+  [I] 		connection: close
+  [I] 		set-cookie: __cfduid=1; expires=Sun, 11-Mar-18 20:25:53 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+  [I] 		vary: Accept-Encoding,Cookie
+  [I] 		last-modified: Sun, 05 Mar 2017 16:55:57 GMT
+  [I] 		x-content-type-options: nosniff
+  [I] 		x-frame-options: sameorigin
+  [I] 		pragma: public
+  [I] 		cache-control: public, max-age=86400
+  [I] 		cf-cache-status: HIT
+  [I] 		expires: Sun, 12 Mar 2017 20:25:53 GMT
+  [I] 		strict-transport-security: max-age=15552000; preload
+  [I] 		server: cloudflare-nginx
+  [I] 		cf-ray: 1-MIA
+  
+  [I] NOTE: Server appears to be Cloudflare; WAF may be in place.
+  
+  [I] X-Frame-Options Header: sameorigin
+  [I] X-Content-Type-Options Header: nosniff
+  [W] Content-Security-Policy Header Not Present
+  [W] Public-Key-Pins Header Not Present
+  
+  [I] Cookies:
+  [I] 		__cfduid=1; expires=Sun, 11-Mar-18 20:25:53 GMT; path=/; domain=.adamcaudill.com; HttpOnly
+  [W] 			Cookie missing Secure flag
+  [W] 			Cookie missing SameSite flag
+  
+  
+  Beginning SSL Labs scan (this could take a minute or two)
+  [SSL Labs] This assessment service is provided free of charge by Qualys SSL Labs, subject to our terms and conditions: https://www.ssllabs.com/about/terms.html
+  ............................
+  
+  	SSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=adamcaudill.com&hideResults=on
+  
+  [I] IP: 104.28.27.55 - Grade: A+
+  
+  	Certificate Information:
+  [I] 		Subject: CN=sni67677.cloudflaressl.com,OU=PositiveSSL Multi-Domain,OU=Domain Control Validated
+  [I] 		Common Names: ["sni67677.cloudflaressl.com"]
+  [I] 		Alternative names:
+  [I] 			sni67677.cloudflaressl.com
+  [I] 			*.adamcaudill.com
+  [I] 			adamcaudill.com
+  [I] 		Not Before: 2017-02-23T00:00:00+00:00
+  [I] 		Not After: 2017-08-06T23:59:59+00:00
+  [I] 		Key: EC 256 (RSA equivalent: 3072)
+  [I] 		Public Key Hash: c19ebb18e1bb524f684f89cd90f8c6365277f678
+  [I] 		Version: 2
+  [I] 		Serial: 220844199202016449134238880152306048120
+  [I] 		Issuer: COMODO ECC Domain Validation Secure Server CA 2
+  [I] 		Signature algorithm: SHA256withECDSA
+  [I] 		Extended Validation: No (Domain Control)
+  [I] 		Certificate Transparency: No
+  [I] 		OCSP Must Staple: No
+  [I] 		Revocation information: CRL information available
+  [I] 		Revocation information: OCSP information available
+  [I] 		Revocation status: certificate not revoked
+  [I] 		Extensions:
+  [I] 			authorityKeyIdentifier = keyid:40:09:61:67:F0:BC:83:71:4F:DE:12:08:2C:6F:D4:D4:2B:76:3D:96, 
+  [I] 			subjectKeyIdentifier = D0:F8:D6:82:36:B5:5C:AC:2D:9A:8E:7B:D9:D5:E6:99:38:B6:8C:FE
+  [I] 			keyUsage = critical, Digital Signature
+  [I] 			basicConstraints = critical, CA:FALSE
+  [I] 			extendedKeyUsage = TLS Web Server Authentication, TLS Web Client Authentication
+  [I] 			certificatePolicies = Policy: 1.3.6.1.4.1.6449.1.2.2.7,   CPS: https://secure.comodo.com/CPS, Policy: 2.23.140.1.2.1, 
+  [I] 			crlDistributionPoints = , Full Name:,   URI:http://crl.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crl, 
+  [I] 			authorityInfoAccess = CA Issuers - URI:http://crt.comodoca4.com/COMODOECCDomainValidationSecureServerCA2.crt, OCSP - URI:http://ocsp.comodoca4.com, 
+  [I] 		Hash: 9f911f4c6f6b58bb239c526ad8eb8cc5ef641947
+  			https://censys.io/certificates?q=9f911f4c6f6b58bb239c526ad8eb8cc5ef641947
+  			https://crt.sh/?q=9f911f4c6f6b58bb239c526ad8eb8cc5ef641947
+  
+  	Configuration Information:
+  		Protocol Support:
+  [I] 			TLS 1.0
+  [I] 			TLS 1.1
+  [I] 			TLS 1.2
+  
+  		Cipher Suite Support:
+  [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256            - 128-bits - ECDHE-256-bits
+  [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256            - 128-bits - ECDHE-256-bits
+  [I] 			TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA               - 128-bits - ECDHE-256-bits
+  [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384            - 256-bits - ECDHE-256-bits
+  [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384            - 256-bits - ECDHE-256-bits
+  [I] 			TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA               - 256-bits - ECDHE-256-bits
+  [I] 			TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256      - 256-bits - ECDHE-256-bits
+  [I] 			OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256  - 256-bits - ECDHE-256-bits
+  [W] 			TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA              - 112-bits - ECDHE-256-bits
+  
+  		Handshake Simulation:
+  [E] 			Android 2.3.7                - Simulation Failed
+  [I] 			Android 4.0.4                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			Android 4.1.1                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			Android 4.2.2                - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			Android 4.3                  - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			Android 4.4.2                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Android 5.0.0                - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+  [I] 			Android 6.0                  - TLS 1.2 - OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+  [I] 			Android 7.0                  - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+  [I] 			Baidu Jan 2015               - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			BingPreview Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [E] 			Chrome 49 / XP SP3           - Simulation Failed
+  [I] 			Chrome 51 / Win 7            - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Firefox 31.3.0 ESR / Win 7   - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Firefox 47 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Firefox 49 / XP SP3          - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Firefox 49 / Win 7           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Googlebot Feb 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [E] 			IE 6 / XP                    - Simulation Failed
+  [I] 			IE 7 / Vista                 - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [E] 			IE 8 / XP                    - Simulation Failed
+  [I] 			IE 8-10 / Win 7              - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			IE 11 / Win 7                - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			IE 11 / Win 8.1              - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			IE 10 / Win Phone 8.0        - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			IE 11 / Win Phone 8.1        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			IE 11 / Win Phone 8.1 Update - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			IE 11 / Win 10               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Edge 13 / Win 10             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Edge 13 / Win Phone 10       - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [E] 			Java 6u45                    - Simulation Failed
+  [I] 			Java 7u25                    - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			Java 8u31                    - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [E] 			OpenSSL 0.9.8y               - Simulation Failed
+  [I] 			OpenSSL 1.0.1l               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			OpenSSL 1.0.2e               - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Safari 5.1.9 / OS X 10.6.8   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			Safari 6 / iOS 6.0.1         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  [I] 			Safari 6.0.4 / OS X 10.8.4   - TLS 1.0 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+  [I] 			Safari 7 / iOS 7.1           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  [I] 			Safari 7 / OS X 10.9         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  [I] 			Safari 8 / iOS 8.4           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  [I] 			Safari 8 / OS X 10.10        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+  [I] 			Safari 9 / iOS 9             - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Safari 9 / OS X 10.11        - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Safari 10 / iOS 10           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Safari 10 / OS X 10.12       - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Apple ATS 9 / iOS 9          - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			Yahoo Slurp Jan 2015         - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  [I] 			YandexBot Jan 2015           - TLS 1.2 - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  
+  		Protocol & Vulnerability Information:
+  [I] 			DROWN: No
+  [I] 			Secure Renegotiation: secure renegotiation supported
+  [I] 			POODLE (SSL): No
+  [I] 			POODLE (TLS): No
+  [I] 			Downgrade Prevention: Yes
+  [I] 			Compression: No
+  [I] 			Heartbleed: No
+  [I] 			OpenSSL CCS (CVE-2014-0224): No
+  [I] 			OpenSSL Padding Oracle (CVE-2016-2107): No
+  [I] 			Forward Secrecy: Yes (all simulated clients)
+  [I] 			OCSP Stapling: Yes
+  [I] 			FREAK: No
+  [I] 			Logjam: No
+  [I] 			DH public server param (Ys) reuse: No
+  [I] 			Protocol Intolerance: No
+  
+  TLS Session Request Limit: Checking number of requests accepted using 3DES suites...
+  Cloudflare server found: SWEET32 mitigated: https://support.cloudflare.com/hc/en-us/articles/231510928
+  
+  [I] HSTS: Enabled (strict-transport-security: max-age=15552000; preload)
+  [I] HSTS Preload: Chrome - false; Firefox - false; Tor - false
+  [W] '/readme.html' found: https://adamcaudill.com/readme.html
+  
+  
+  Checking for common files (this will take a few minutes)...
+  [I] '/favicon.ico' found: https://adamcaudill.com/favicon.ico
+  [I] '/license.txt' found: https://adamcaudill.com/license.txt
+  [I] '/robots.txt' found: https://adamcaudill.com/robots.txt
+  [I] '/sitemap_index.xml' found: https://adamcaudill.com/sitemap_index.xml
+  [I] '/tools' found: https://adamcaudill.com/tools
+  [I] '/wp-config.php' found: https://adamcaudill.com/wp-config.php
+  [I] '/wp-cron.php' found: https://adamcaudill.com/wp-cron.php
+  [I] '/wp-links-opml.php' found: https://adamcaudill.com/wp-links-opml.php
+  [I] '/wp-load.php' found: https://adamcaudill.com/wp-load.php
+  [I] '/wp-login.php' found: https://adamcaudill.com/wp-login.php
+  [I] '/keybase.txt' found: https://adamcaudill.com/keybase.txt
+  
+  Searching for common directories...
+  [I] 	Found: 'https://adamcaudill.com//'
+  [I] 	Found: 'https://adamcaudill.com/0000/'
+  [I] 	Found: 'https://adamcaudill.com/2004/'
+  [I] 	Found: 'https://adamcaudill.com/2003/'
+  [I] 	Found: 'https://adamcaudill.com/2005/'
+  [I] 	Found: 'https://adamcaudill.com/2006/'
+  [I] 	Found: 'https://adamcaudill.com/2007/'
+  [I] 	Found: 'https://adamcaudill.com/2008/'
+  [I] 	Found: 'https://adamcaudill.com/2011/'
+  [I] 	Found: 'https://adamcaudill.com/2009/'
+  [I] 	Found: 'https://adamcaudill.com/2010/'
+  [I] 	Found: 'https://adamcaudill.com/2012/'
+  [I] 	Found: 'https://adamcaudill.com/2013/'
+  [I] 	Found: 'https://adamcaudill.com/2015/'
+  [I] 	Found: 'https://adamcaudill.com/2014/'
+  [I] 	Found: 'https://adamcaudill.com/2016/'
+  [I] 	Found: 'https://adamcaudill.com/ABOUT/'
+  [I] 	Found: 'https://adamcaudill.com/ARCHIVES/'
+  [I] 	Found: 'https://adamcaudill.com/About/'
+  [I] 	Found: 'https://adamcaudill.com/Archives/'
+  [I] 	Found: 'https://adamcaudill.com/BLOG/'
+  [I] 	Found: 'https://adamcaudill.com/Blog/'
+  [I] 	Found: 'https://adamcaudill.com/Photo/'
+  [I] 	Found: 'https://adamcaudill.com/Resume/'
+  [I] 	Found: 'https://adamcaudill.com/TOOLS/'
+  [I] 	Found: 'https://adamcaudill.com/Tools/'
+  [I] 	Found: 'https://adamcaudill.com/about/'
+  [I] 	Found: 'https://adamcaudill.com/archives/'
+  [I] 	Found: 'https://adamcaudill.com/blog/'
+  [I] 	Found: 'https://adamcaudill.com/feed/'
+  [I] 	Found: 'https://adamcaudill.com/pgp/'
+  [I] 	Found: 'https://adamcaudill.com/photo/'
+  [I] 	Found: 'https://adamcaudill.com/reading/'
+  [I] 	Found: 'https://adamcaudill.com/resume/'
+  [I] 	Found: 'https://adamcaudill.com/speaking/'
+  [I] 	Found: 'https://adamcaudill.com/tools/'
+  [I] 	Found: 'https://adamcaudill.com/wp-content/'
+  
+  [I] Meta Generator: WordPress 4.7.2
+  Scan complete.
 ```
 
 ### About The Output

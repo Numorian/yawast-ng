@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'colorize', '~> 0.8'
   s.add_runtime_dependency 'ipaddr_extensions', '~> 1.0'
   s.add_runtime_dependency 'ipaddress', '~> 0.8'
+  s.add_runtime_dependency 'public_suffix', '~> 2.0'
 
   s.bindir            = 'bin'
   s.files             = `git ls-files`.split("\n")

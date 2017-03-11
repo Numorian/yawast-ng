@@ -1,5 +1,6 @@
 require 'ipaddr_extensions'
 require 'json'
+require 'public_suffix'
 
 module Yawast
   module Scanner
@@ -7,6 +8,7 @@ module Yawast
       def self.server_info(uri, options)
         begin
           puts 'DNS Information:'
+          root_domain = PublicSuffix.parse(uri.host).domain
 
           dns = Resolv::DNS.new
           Resolv::DNS.open do |resv|
@@ -66,6 +68,16 @@ module Yawast
               end
             end
 
+            #check for higher-level TXT records, if we aren't already at the top
+            if root_domain != uri.host
+              txt = resv.getresources(root_domain, Resolv::DNS::Resource::IN::TXT)
+              unless txt.empty?
+                txt.each do |rec|
+                  Yawast::Utilities.puts_info "\t\tTXT (#{root_domain}): #{rec.data}"
+                end
+              end
+            end
+
             mx = resv.getresources(uri.host, Resolv::DNS::Resource::IN::MX)
             unless mx.empty?
               mx.each do |rec|
@@ -75,7 +87,19 @@ module Yawast
               end
             end
 
-            ns = resv.getresources(uri.host, Resolv::DNS::Resource::IN::NS)
+            #check for higher-level MX records, if we aren't already at the top
+            if root_domain != uri.host
+              mx = resv.getresources(root_domain, Resolv::DNS::Resource::IN::MX)
+              unless mx.empty?
+                mx.each do |rec|
+                  ip = resv.getaddress rec.exchange
+
+                  Yawast::Utilities.puts_info "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
+                end
+              end
+            end
+
+            ns = resv.getresources(root_domain, Resolv::DNS::Resource::IN::NS)
             unless ns.empty?
               ns.each do |rec|
                 ip = resv.getaddress rec.name
@@ -87,13 +111,13 @@ module Yawast
             if options.srv
               File.open(File.dirname(__FILE__) + '/../resources/srv_list.txt', 'r') do |f|
                 f.each_line do |line|
-                  host = line.strip + '.' + uri.host
+                  host = line.strip + '.' + root_domain
                   srv = resv.getresources(host, Resolv::DNS::Resource::IN::SRV)
                   unless srv.empty?
                     srv.each do |rec|
                       ip = resv.getaddress rec.target
 
-                      Yawast::Utilities.puts_info "\t\tSRV: #{line.strip}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
+                      Yawast::Utilities.puts_info "\t\tSRV: #{host}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
                     end
                   end
                 end

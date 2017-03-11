@@ -54,7 +54,7 @@ module Yawast
               Yawast::Utilities.puts_error "Error getting information for IP: #{ep.ip_address}: #{e.message}"
             end
 
-            Yawast::Scanner::Ssl.get_tdes_session_msg_count(uri) if tdes_session_count
+            Yawast::Scanner::Plugins::SSL::Sweet32.get_tdes_session_msg_count(uri) if tdes_session_count
 
             puts
           end

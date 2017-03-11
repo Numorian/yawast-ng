@@ -13,7 +13,8 @@
 * [#96](https://github.com/adamcaudill/yawast/issues/96) - Scan for known SRV DNS Records
 * [#97](https://github.com/adamcaudill/yawast/issues/97) - Search for Common Subdomains
 * [#76](https://github.com/adamcaudill/yawast/issues/76) - Bug: Handle error for OpenSSL version support error
-* [#98](https://github.com/adamcaudill/yawast/issues/98) - SWEET32 Test Fails if 3DES Not Support By Latest Server Supported TLS Version
+* [#98](https://github.com/adamcaudill/yawast/issues/98) - Bug: SWEET32 Test Fails if 3DES Not Support By Latest Server Supported TLS Version
+* [#99](https://github.com/adamcaudill/yawast/issues/99) - Bug: Cloudflare SWEET32 False Positive
 * Various code and other improvements.
 
 ## 0.4.0 - 2016-11-03

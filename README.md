@@ -121,7 +121,7 @@ In addition to these tests, certain basic information is also displayed, such as
 
 ### Usage
 
-* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--dirrecursive] [--dirlistredir] [--files] [--srv] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--dirrecursive] [--dirlistredir] [--files] [--srv [--subdomains] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 * HEAD-only scan: `./yawast head <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 * SSL information: `./yawast ssl <url> [--internalssl] [--tdessessioncount] [--nociphers]`
 * CMS detection: `./yawast cms <url> [--proxy localhost:8080] [--cookie SESSIONID=12345]`
@@ -157,6 +157,9 @@ For detailed information, just call `./yawast -h` to see the help page. To see i
         
     --srv 
         Scan for known SRV DNS Records
+        
+    --subdomains 
+        Search for Common Subdomains
         
     --proxy STRING 
         HTTP Proxy Server (such as Burp Suite)

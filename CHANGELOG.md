@@ -11,6 +11,7 @@
 * [#90](https://github.com/adamcaudill/yawast/issues/90) - Add HSTS Preload check via [HSTSPreload.com](https://hstspreload.com/)
 * [#91](https://github.com/adamcaudill/yawast/issues/91) - Enhanced file search
 * [#96](https://github.com/adamcaudill/yawast/issues/96) - Scan for known SRV DNS Records
+* [#97](https://github.com/adamcaudill/yawast/issues/97) - Search for Common Subdomains
 * [#76](https://github.com/adamcaudill/yawast/issues/76) - Bug: Handle error for OpenSSL version support error
 * Various code and other improvements.
 

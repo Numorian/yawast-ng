@@ -111,11 +111,31 @@ module Yawast
                     f.each_line do |line|
                       host = line.strip + '.' + root_domain
                       srv = resv.getresources(host, Resolv::DNS::Resource::IN::SRV)
+
                       unless srv.empty?
                         srv.each do |rec|
                           ip = resv.getaddress rec.target
 
                           Yawast::Utilities.puts_info "\t\tSRV: #{host}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
+                        end
+                      end
+                    end
+                  end
+                end
+
+                if options.subdomains
+                  File.open(File.dirname(__FILE__) + '/../../../resources/subdomain_list.txt', 'r') do |f|
+                    f.each_line do |line|
+                      host = line.strip + '.' + root_domain
+                      a = resv.getresources(host, Resolv::DNS::Resource::IN::A)
+
+                      unless a.empty?
+                        a.each do |ip|
+                          if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
+                            Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address}"
+                          else
+                            Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
+                          end
                         end
                       end
                     end

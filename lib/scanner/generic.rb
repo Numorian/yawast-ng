@@ -83,6 +83,22 @@ module Yawast
                 Yawast::Utilities.puts_info "\t\tNS: #{rec.name} - #{ip} (#{get_network_info(ip.to_s)})"
               end
             end
+
+            if options.srv
+              File.open(File.dirname(__FILE__) + '/../resources/srv_list.txt', 'r') do |f|
+                f.each_line do |line|
+                  host = line.strip + '.' + uri.host
+                  srv = resv.getresources(host, Resolv::DNS::Resource::IN::SRV)
+                  unless srv.empty?
+                    srv.each do |rec|
+                      ip = resv.getaddress rec.target
+
+                      Yawast::Utilities.puts_info "\t\tSRV: #{line.strip}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
+                    end
+                  end
+                end
+              end
+            end
           end
 
           puts

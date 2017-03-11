@@ -121,12 +121,49 @@ In addition to these tests, certain basic information is also displayed, such as
 
 ### Usage
 
-* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--files] [--dirrecursive] [--dirlistredir] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--dirrecursive] [--dirlistredir] [--files] [--srv] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 * HEAD-only scan: `./yawast head <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 * SSL information: `./yawast ssl <url> [--internalssl] [--tdessessioncount] [--nociphers]`
 * CMS detection: `./yawast cms <url> [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 
-For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details.
+For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details. Here is an example, the details for the options to the `scan` command:
+
+```
+  OPTIONS:
+        
+    --nossl 
+        Disables SSL checks
+        
+    --nociphers 
+        Disables check for supported ciphers (only with --internalssl)
+        
+    --internalssl 
+        Disable SSL Labs integration
+        
+    --tdessessioncount 
+        Counts the number of messages that can be sent in a single session
+        
+    --dir 
+        Enables directory search
+        
+    --dirrecursive 
+        Recursive directory search (only with --dir)
+        
+    --dirlistredir 
+        Show 301 redirects (only with --dir)
+        
+    --files 
+        Performs a search for a large list of common files
+        
+    --srv 
+        Scan for known SRV DNS Records
+        
+    --proxy STRING 
+        HTTP Proxy Server (such as Burp Suite)
+        
+    --cookie STRING 
+        Session cookie
+```
 
 ### Using with Burp Suite
 

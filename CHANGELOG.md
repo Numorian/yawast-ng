@@ -7,7 +7,6 @@
 * [#86](https://github.com/adamcaudill/yawast/issues/86) - Add check for Tomcat Manager & common passwords
 * [#87](https://github.com/adamcaudill/yawast/issues/87) - Tomcat version detection via invalid HTTP verb
 * [#88](https://github.com/adamcaudill/yawast/issues/88) - Add IP Network Info via [api.iptoasn.com](https://api.iptoasn.com/)
-* [#89](https://github.com/adamcaudill/yawast/issues/89) - Add IP Location Info
 * [#90](https://github.com/adamcaudill/yawast/issues/90) - Add HSTS Preload check via [HSTSPreload.com](https://hstspreload.com/)
 * [#91](https://github.com/adamcaudill/yawast/issues/91) - Enhanced file search
 * [#96](https://github.com/adamcaudill/yawast/issues/96) - Scan for known SRV DNS Records

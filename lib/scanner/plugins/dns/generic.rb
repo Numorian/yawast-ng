@@ -162,6 +162,11 @@ module Yawast
             @netinfo = Hash.new if @netinfo == nil
             return @netinfo[ip] if @netinfo[ip] != nil
 
+            #check to see if this has failed, if so, skip it. We do this to avoid repeated timeouts if outbound
+            #connections are blocked.
+            @netinfo_failed = false if @netinfo_failed == nil
+            return 'Network Information disabled due to prior failure' if @netinfo_failed
+
             begin
               network_info = JSON.parse(Net::HTTP.get(URI("https://api.iptoasn.com/v1/as/ip/#{ip}")))
 
@@ -170,6 +175,7 @@ module Yawast
 
               return ret
             rescue => e
+              @netinfo_failed = true
               return "Error: getting network information failed (#{e.message})"
             end
           end

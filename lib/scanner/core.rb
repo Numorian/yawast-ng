@@ -120,7 +120,7 @@ module Yawast
         begin
           Yawast::Shared::Http.head(@uri)
         rescue => e
-          Yawast::Utilities.puts_error "Fatal Connection Error (#{e.class}: #{e.message})"
+          Yawast::Utilities.puts_error "Fatal Connection Error: Unable to complete HEAD request from '#{@uri}' (#{e.class}: #{e.message})"
           exit 1
         end
       end

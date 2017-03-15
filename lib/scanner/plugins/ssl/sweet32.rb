@@ -48,11 +48,13 @@ module Yawast
               end
 
               req.start do |http|
+                #cache the number of hits
+                hits = http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits]
                 10000.times do |i|
                   http.head(uri.path, headers)
 
                   # hack to detect transparent disconnects
-                  if http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits] != 0
+                  if http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits] != hits
                     raise 'TLS Reconnected'
                   end
 

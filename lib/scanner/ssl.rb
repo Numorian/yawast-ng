@@ -1,6 +1,7 @@
 require 'openssl'
 require 'openssl-extensions/all'
 require 'digest/sha1'
+require 'sslshake'
 
 module Yawast
   module Scanner
@@ -119,7 +120,7 @@ module Yawast
       end
 
       def self.get_ciphers(uri)
-        puts 'Supported Ciphers (based on your OpenSSL version):'
+        puts 'Supported Ciphers:'
 
         dns = Resolv::DNS.new
 
@@ -129,27 +130,29 @@ module Yawast
           ip = dns.getaddresses(uri.host)[0]
         end
 
-        #find all versions that don't include '_server' or '_client'
-        versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
+        protocols = %w(ssl2 ssl3 tls1.0 tls1.1 tls1.2)
 
-        versions.each do |version|
-          #ignore SSLv23, as it's an auto-negotiate, which just adds noise
-          if version.to_s != 'SSLv23'
-            #try to get the list of ciphers supported for each version
-            ciphers = nil
+        protocols.each do |protocol|
+          case protocol
+            when 'ssl2'
+              ciphers = SSLShake::SSLv2::CIPHERS
+            when 'ssl3'
+              ciphers = SSLShake::TLS::SSL3_CIPHERS
+            else
+              ciphers = SSLShake::TLS::TLS_CIPHERS
+          end
 
-            get_ciphers_failed = false
+          puts "\tChecking for #{protocol} suites (#{ciphers.count} possible suites)"
+
+          ciphers.each_key do |cipher|
             begin
-              ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
-            rescue => e
-              Yawast::Utilities.puts_error "\tError getting cipher suites for #{version}, skipping. (#{e.message})"
-              get_ciphers_failed = true
-            end
+              res = SSLShake.hello(ip.to_s, port: uri.port, protocol: protocol, ciphers: cipher, servername: uri.host)
 
-            if ciphers != nil
-              check_version_suites uri, ip, ciphers, version
-            elsif !get_ciphers_failed
-              Yawast::Utilities.puts_info "\t#{version}: No cipher suites available."
+              if res['error'] == nil
+                Yawast::Utilities.puts_info "\t\tCipher: #{res['cipher_suite']}"
+              end
+            rescue => e
+              Yawast::Utilities.puts_error "SSL: Error Reading Cipher Details: #{e.message}"
             end
           end
         end

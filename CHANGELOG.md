@@ -11,6 +11,7 @@
 * [#91](https://github.com/adamcaudill/yawast/issues/91) - Enhanced file search
 * [#96](https://github.com/adamcaudill/yawast/issues/96) - Scan for known SRV DNS Records
 * [#97](https://github.com/adamcaudill/yawast/issues/97) - Search for Common Subdomains
+* [#100](https://github.com/adamcaudill/yawast/issues/100) - Check for missing cipher suite support
 * [#102](https://github.com/adamcaudill/yawast/issues/102) - Use SSLShake to power cipher suite enumeration
 * [#76](https://github.com/adamcaudill/yawast/issues/76) - Bug: Handle error for OpenSSL version support error
 * [#98](https://github.com/adamcaudill/yawast/issues/98) - Bug: SWEET32 Test Fails if 3DES Not Support By Latest Server Supported TLS Version

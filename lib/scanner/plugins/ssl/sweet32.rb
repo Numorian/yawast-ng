@@ -21,6 +21,9 @@ module Yawast
               req.keep_alive_timeout = 600
               headers = Yawast::Shared::Http.get_headers
 
+              #we will use HEAD by default, but allow GET if we have issues with HEAD
+              use_head = true
+
               #force 3DES - this is to ensure that 3DES specific limits are caught
               req.ciphers = ['3DES']
 
@@ -32,7 +35,23 @@ module Yawast
 
                   begin
                     req.start do |http|
-                      head = http.head(uri.path, headers)
+
+                      head = nil
+                      begin
+                        if use_head
+                          head = http.head(uri.path, headers)
+                        else
+                          head = http.request_get(uri.path, headers)
+                        end
+                      rescue
+                        #check if we are using HEAD or GET. If we've already switched to GET, no need to do this again.
+                        if use_head
+                          head = http.request_get(uri.path, headers)
+
+                          #if we are here, that means that HEAD failed, but GET didn't, so we'll use GET from now on.
+                          use_head = false
+                        end
+                      end
 
                       #check to see if this is on Cloudflare - they break Keep-Alive limits, creating a false positive
                       head.each do |k, v|
@@ -57,7 +76,11 @@ module Yawast
                 #cache the number of hits
                 hits = http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits]
                 10000.times do |i|
-                  http.head(uri.path, headers)
+                  if use_head
+                    http.head(uri.path, headers)
+                  else
+                    http.request_get(uri.path, headers)
+                  end
 
                   # hack to detect transparent disconnects
                   if http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits] != hits

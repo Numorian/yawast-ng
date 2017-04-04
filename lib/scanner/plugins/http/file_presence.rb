@@ -168,7 +168,7 @@ module Yawast
                 @results.push "'#{uri.path}' found: #{uri}"
               end
             rescue => e
-              unless e.message.include?('end of file')
+              unless e.message.include?('end of file') || e.message.include?('getaddrinfo')
                 Yawast::Utilities.puts_error "Error searching for file '#{uri.path}' (#{e.message})"
               end
             end

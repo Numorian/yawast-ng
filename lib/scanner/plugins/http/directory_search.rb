@@ -96,7 +96,7 @@ module Yawast
                 @results.push "\tFound Redirect: '#{uri} -> '#{res['Location']}'"
               end
             rescue => e
-              unless e.message.include?('end of file')
+              unless e.message.include?('end of file') || e.message.include?('getaddrinfo')
                 Yawast::Utilities.puts_error "Error searching for directory '#{uri.path}' (#{e.message})"
               end
             end

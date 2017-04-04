@@ -16,9 +16,18 @@ module Yawast
       end
 
       def self.head(uri)
-        req = get_http(uri)
-        req.use_ssl = uri.scheme == 'https'
-        req.head(uri.path, get_headers)
+        begin
+          req = get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          req.head(uri.path, get_headers)
+        rescue
+          #if we get here, the HEAD failed - but GET may work
+          #so we silently fail back to using GET instead
+          req = get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          res = req.request_get(uri.path, get_headers)
+          res
+        end
       end
 
       def self.get(uri, headers = nil)

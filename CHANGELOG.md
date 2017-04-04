@@ -17,6 +17,7 @@
 * [#98](https://github.com/adamcaudill/yawast/issues/98) - Bug: SWEET32 Test Fails if 3DES Not Support By Latest Server Supported TLS Version
 * [#99](https://github.com/adamcaudill/yawast/issues/99) - Bug: Cloudflare SWEET32 False Positive
 * [#101](https://github.com/adamcaudill/yawast/issues/101) - Bug: SWEET32 False Negative
+* [#103](https://github.com/adamcaudill/yawast/issues/103) - Bug: Scan fails if HEAD isn't supported
 * Various code and other improvements.
 
 ## 0.4.0 - 2016-11-03

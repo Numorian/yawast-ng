@@ -1,4 +1,4 @@
-## 0.5.0 - In Development
+## 0.5.0 - 2017-04-05
 
 * [#35](https://github.com/adamcaudill/yawast/issues/35) - Add check for SameSite cookie attribute
 * [#53](https://github.com/adamcaudill/yawast/issues/53) - Added checks for .well-known URLs

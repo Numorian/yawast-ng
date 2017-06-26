@@ -1,3 +1,3 @@
 module Yawast
-  VERSION = '0.6.0.beta1'
+  VERSION = '0.5.1.beta1'
 end

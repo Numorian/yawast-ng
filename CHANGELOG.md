@@ -1,6 +1,6 @@
-## 0.6.0 - In Development
+## 0.5.1 - In Development
 
-...nothing here yet!
+* [#106](https://github.com/adamcaudill/yawast/issues/106) - Bug: SWEET32: Incorrect Request Count
 
 ## 0.5.0 - 2017-04-05
 

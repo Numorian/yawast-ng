@@ -50,6 +50,7 @@ module Yawast
 
                           #if we are here, that means that HEAD failed, but GET didn't, so we'll use GET from now on.
                           use_head = false
+                          Yawast::Utilities.puts_error 'Error: HEAD request failed; using GET requests for SWEET32 check...'
                         end
                       end
 
@@ -72,9 +73,13 @@ module Yawast
                 end
               end
 
+              #reset the req object
+              req = Yawast::Shared::Http.get_http(uri)
+              req.use_ssl = uri.scheme == 'https'
+              req.keep_alive_timeout = 600
+
               req.start do |http|
                 #cache the number of hits
-                hits = http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits]
                 10000.times do |i|
                   if use_head
                     http.head(uri.path, headers)
@@ -83,7 +88,7 @@ module Yawast
                   end
 
                   # hack to detect transparent disconnects
-                  if http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits] != hits
+                  if http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits] != 0
                     raise 'TLS Reconnected'
                   end
 

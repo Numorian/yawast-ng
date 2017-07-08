@@ -92,7 +92,7 @@ module Yawast
       def self.get_cert_chain_info(cert_chain, cert)
         if cert_chain.count == 1
           #HACK: This is an ugly way to guess if it's a missing intermediate, or self-signed
-          #tIt looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
+          #It looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
 
           if cert.issuer == cert.subject
             Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Singed"

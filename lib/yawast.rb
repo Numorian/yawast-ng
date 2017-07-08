@@ -12,6 +12,7 @@ require 'uri'
 require 'resolv'
 require 'net/http'
 require 'socket'
+require 'colorize'
 
 require File.dirname(__FILE__) + '/string_ext'
 require File.dirname(__FILE__) + '/uri_ext'
@@ -38,6 +39,17 @@ module Yawast
     puts ' Copyright (c) 2013-2017 Adam Caudill <adam@adamcaudill.com>'
     puts ' Support & Documentation: https://github.com/adamcaudill/yawast'
     puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION} (#{RUBY_PLATFORM})"
+
+    begin
+      version = JSON.parse(Net::HTTP.get(URI('https://rubygems.org/api/v1/versions/yawast/latest.json')))['version']
+
+      if version != VERSION
+        puts " Latest Version: YAWAST v#{version} is the officially supported version, please update.".blue
+      end
+    rescue
+      #we don't care, this is a best effort check
+    end
+
     puts ''
   end
 

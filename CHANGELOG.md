@@ -1,6 +1,8 @@
-## 0.6.0 - In Development
+## 0.5.2 - In Development
 
-...nothing here yet!
+* [#107](https://github.com/adamcaudill/yawast/issues/107) - Current version check
+* [#111](https://github.com/adamcaudill/yawast/issues/111) - Display cipher suite used when running the SWEET32 test
+* [#110](https://github.com/adamcaudill/yawast/issues/110) - Bug: SWEET32 test doesn't properly force 3DES suites
 
 ## 0.5.1 - 2017-06-26
 

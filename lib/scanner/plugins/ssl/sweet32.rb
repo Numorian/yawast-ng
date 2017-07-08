@@ -26,6 +26,7 @@ module Yawast
 
               #force 3DES - this is to ensure that 3DES specific limits are caught
               req.ciphers = ['3DES']
+              cipher = nil
 
               #attempt to find a version that supports 3DES
               versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
@@ -43,6 +44,8 @@ module Yawast
                         else
                           head = http.request_get(uri.path, headers)
                         end
+
+                        cipher = http.instance_variable_get(:@socket).io.cipher[0]
                       rescue
                         #check if we are using HEAD or GET. If we've already switched to GET, no need to do this again.
                         if use_head
@@ -59,13 +62,12 @@ module Yawast
                         if k.downcase == 'server'
                           if v == 'cloudflare-nginx'
                             puts 'Cloudflare server found: SWEET32 mitigated: https://support.cloudflare.com/hc/en-us/articles/231510928'
-                            return
                           end
                         end
                       end
                     end
 
-                    print "Using #{version}"
+                    print "Using #{version} (#{cipher})"
                     break
                   rescue
                     #we don't care
@@ -77,6 +79,8 @@ module Yawast
               req = Yawast::Shared::Http.get_http(uri)
               req.use_ssl = uri.scheme == 'https'
               req.keep_alive_timeout = 600
+
+              req.ciphers = [*cipher]
 
               req.start do |http|
                 #cache the number of hits
@@ -102,7 +106,7 @@ module Yawast
             rescue => e
               puts
 
-              if e.message.include? 'alert handshake failure'
+              if e.message.include?('alert handshake failure') || e.message.include?('no cipher match')
                 Yawast::Utilities.puts_info 'TLS Session Request Limit: Server does not support 3DES cipher suites'
               else
                 Yawast::Utilities.puts_info "TLS Session Request Limit: Connection terminated after #{count} requests (#{e.message})"

@@ -1,4 +1,4 @@
-## 0.5.2 - In Development
+## 0.5.2 - 2017-07-13
 
 * [#107](https://github.com/adamcaudill/yawast/issues/107) - Current version check
 * [#111](https://github.com/adamcaudill/yawast/issues/111) - Display cipher suite used when running the SWEET32 test

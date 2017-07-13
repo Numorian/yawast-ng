@@ -1,3 +1,7 @@
+## 0.6.0 - In Development
+
+...nothing here yet!
+
 ## 0.5.2 - 2017-07-13
 
 * [#107](https://github.com/adamcaudill/yawast/issues/107) - Current version check

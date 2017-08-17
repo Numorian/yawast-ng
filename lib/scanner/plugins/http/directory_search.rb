@@ -1,9 +1,21 @@
+require 'securerandom'
+
 module Yawast
   module Scanner
     module Plugins
       module Http
         class DirectorySearch
           def self.search(uri, recursive, list_redirects, search_list = nil)
+            #first, we need to see if the site responds to 404 in a reasonable way
+            fake_uri = uri.copy
+            fake_uri.path = "/#{SecureRandom.hex}/"
+            if Yawast::Shared::Http.get_status_code(fake_uri) != '404'
+              #crazy 404 handling
+              puts 'Site does not respond properly to non-existent directory requests; skipping some checks.'
+
+              return
+            end
+
             @recursive = recursive
             @list_redirects = list_redirects
 

@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module Yawast
   module Shared
     class Http
@@ -60,6 +62,23 @@ module Yawast
         end
 
         req
+      end
+
+      def self.check_not_found(uri, file)
+        fake_uri = uri.copy
+
+        if file
+          fake_uri.path = "/#{SecureRandom.hex}.html"
+        else
+          fake_uri.path = "/#{SecureRandom.hex}/"
+        end
+
+        if Yawast::Shared::Http.get_status_code(fake_uri) != '404'
+          #crazy 404 handling
+          return false
+        end
+
+        return true
       end
 
       # noinspection RubyStringKeysInHashInspection

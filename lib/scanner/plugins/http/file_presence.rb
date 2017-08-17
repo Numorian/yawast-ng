@@ -27,10 +27,7 @@ module Yawast
 
           def self.check_all(uri, common_files)
             #first, we need to see if the site responds to 404 in a reasonable way
-            fake_uri = uri.copy
-            fake_uri.path = "/#{SecureRandom.hex}.html"
-            if Yawast::Shared::Http.get_status_code(fake_uri) != '404'
-              #crazy 404 handling
+            unless Yawast::Shared::Http.check_not_found(uri, true)
               puts 'Site does not respond properly to non-existent file requests; skipping some checks.'
 
               return

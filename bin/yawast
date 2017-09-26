@@ -72,6 +72,15 @@ command :cms do |c|
   end
 end
 
+command :dns do |c|
+  c.syntax = './yawast dns URL'
+  c.description = 'Gets information about the server DNS configuration'
+
+  c.action do |args, options|
+    Yawast::Commands::DNS.process(args, options)
+  end
+end
+
 command :cert do |c|
   c.syntax = './yawast cert --input <file>'
   c.description = 'Gets information about the certificates used'

@@ -150,6 +150,9 @@ module Yawast
                 end
               end
 
+              #get the CAA info
+              Yawast::Scanner::Plugins::DNS::CAA.caa_info uri
+
               puts
             rescue => e
               Yawast::Utilities.puts_error "Error getting basic information: #{e.message}"

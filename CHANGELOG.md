@@ -3,7 +3,8 @@
 * [#109](https://github.com/adamcaudill/yawast/issues/109) - DNS CAA Support
 * [#113](https://github.com/adamcaudill/yawast/issues/113) - Better False Positive Detection For Directory Search
 * [#115](https://github.com/adamcaudill/yawast/issues/115) - Add dns Command
-
+* [#116](https://github.com/adamcaudill/yawast/issues/116) - Add option '--nodns' to skip DNS checks
+ 
 ## 0.5.2 - 2017-07-13
 
 * [#107](https://github.com/adamcaudill/yawast/issues/107) - Current version check

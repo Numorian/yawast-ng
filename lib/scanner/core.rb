@@ -22,7 +22,9 @@ module Yawast
 
           Yawast.set_openssl_options
 
-          Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options
+          unless options.nodns
+            Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options
+          end
         end
 
         @setup = true

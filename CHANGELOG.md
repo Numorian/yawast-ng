@@ -4,6 +4,7 @@
 * [#113](https://github.com/adamcaudill/yawast/issues/113) - Better False Positive Detection For Directory Search
 * [#115](https://github.com/adamcaudill/yawast/issues/115) - Add dns Command
 * [#116](https://github.com/adamcaudill/yawast/issues/116) - Add option '--nodns' to skip DNS checks
+* [#117](https://github.com/adamcaudill/yawast/issues/117) - Show additional information about the TLS connection
  
 ## 0.5.2 - 2017-07-13
 

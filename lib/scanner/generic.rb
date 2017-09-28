@@ -204,6 +204,32 @@ module Yawast
           end
         end
       end
+
+      def self.ssl_connection_info(uri)
+        begin
+          # we only care if this is https
+          if uri.scheme == 'https'
+            # setup the connection
+            socket = TCPSocket.new(uri.host, uri.port)
+
+            ctx = OpenSSL::SSL::SSLContext.new
+            ctx.ciphers = OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers]
+
+            ssl = OpenSSL::SSL::SSLSocket.new(socket, ctx)
+            ssl.hostname = uri.host
+            ssl.connect
+
+            # this provides a bunch of useful info, that's already formatted
+            #  instead of building this manually, we'll let OpenSSL do the work
+            puts ssl.session.to_text
+
+            puts
+          end
+        rescue => e
+          Yawast::Utilities.puts_error "SSL Information: Error Getting Details: #{e.message}"
+
+        end
+      end
     end
 
     #Custom class to allow using the PROPFIND verb

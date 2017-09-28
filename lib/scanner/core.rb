@@ -46,12 +46,16 @@ module Yawast
 
           #process the 'scan' stuff that goes beyond 'head'
           unless options.head
-            #server specific checks
+            # connection details for SSL
+            Yawast::Scanner::Generic.ssl_connection_info @uri
+
+            # server specific checks
             Yawast::Scanner::Apache.check_all(@uri)
             Yawast::Scanner::Iis.check_all(@uri, head)
 
             Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
 
+            # generic header checks
             Yawast::Scanner::Generic.check_propfind(@uri)
             Yawast::Scanner::Generic.check_options(@uri)
             Yawast::Scanner::Generic.check_trace(@uri)

@@ -165,6 +165,11 @@ module Yawast
 
             puts ''
           end
+          if res['Allow'] != nil
+            Yawast::Utilities.puts_info "Allow HTTP Verbs (OPTIONS): #{res['Allow']}"
+
+            puts ''
+          end
         end
       end
 

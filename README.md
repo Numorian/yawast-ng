@@ -24,7 +24,7 @@ YAWAST requires Ruby 2.2+, and is tested on Mac OSX, Linux, and Windows.
 
 **Kali Rolling**
 
-To install on Kali, just run `gem install yawast` - all of the dependentcies are already installed.
+To install on Kali, just run `gem install yawast` - all of the dependencies are already installed.
 
 **Ubuntu 16.04**
 
@@ -105,7 +105,7 @@ SSL Information:
 * Certificate details
 * Certificate chain
 * Supported ciphers
-* Maximum requests in a single connection
+* Maximum requests using 3DES in a single connection
 
 Checks for the following SSL issues are performed:
 
@@ -121,12 +121,12 @@ In addition to these tests, certain basic information is also displayed, such as
 
 ### Usage
 
-* Standard scan: `./yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--dirrecursive] [--dirlistredir] [--files] [--srv [--subdomains] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
-* HEAD-only scan: `./yawast head <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
-* SSL information: `./yawast ssl <url> [--internalssl] [--tdessessioncount] [--nociphers]`
-* CMS detection: `./yawast cms <url> [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* Standard scan: `yawast scan <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--dir] [--dirrecursive] [--dirlistredir] [--files] [--srv] [--subdomains] [--proxy localhost:8080] [--cookie SESSIONID=12345] [--nodns]`
+* HEAD-only scan: `yawast head <url> [--internalssl] [--tdessessioncount] [--nossl] [--nociphers] [--proxy localhost:8080] [--cookie SESSIONID=12345]`
+* SSL information: `yawast ssl <url> [--internalssl] [--tdessessioncount] [--nociphers]`
+* CMS detection: `yawast cms <url> [--proxy localhost:8080] [--cookie SESSIONID=12345]`
 
-For detailed information, just call `./yawast -h` to see the help page. To see information for a specific command, call `./yawast -h <command>` for full details. Here is an example, the details for the options to the `scan` command:
+For detailed information, just call `yawast -h` to see the help page. To see information for a specific command, call `yawast -h <command>` for full details. Here is an example, the details for the options to the `scan` command:
 
 ```
   OPTIONS:

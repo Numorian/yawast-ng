@@ -47,6 +47,18 @@ module Yawast
         body
       end
 
+      def self.put(uri, body, headers = nil)
+        begin
+          req = get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          res = req.request_put(uri.path, body, get_headers(headers))
+        rescue
+          #do nothing for now
+        end
+
+        res.read_body
+      end
+
       def self.get_status_code(uri)
         req = get_http(uri)
         req.use_ssl = uri.scheme == 'https'

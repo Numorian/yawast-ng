@@ -87,6 +87,7 @@ The following tests are performed:
 * *(Apache Tomcat)* Tomcat Manager Weak Password
 * *(Apache Tomcat)* Tomcat Host Manager Weak Password
 * *(Apache Tomcat)* Tomcat version detection via invalid HTTP verb
+* *(Apache Tomcat)* Tomcat PUT RCE (CVE-2017-12617)
 * *(IIS)* Info Disclosure: Server version
 * *(ASP.NET)* Info Disclosure: ASP.NET version
 * *(ASP.NET)* Info Disclosure: ASP.NET MVC version

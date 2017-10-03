@@ -8,7 +8,7 @@ class TestScannerIisHeaders < Minitest::Test
     server = 'Microsoft-IIS/8.5'
 
     override_stdout
-    Yawast::Scanner::Iis.check_banner server
+    Yawast::Scanner::Plugins::Servers::Iis.check_banner server
 
     assert stdout_value.include?("IIS Version: #{server}"), "Unexpected banner: #{stdout_value}"
 
@@ -19,7 +19,7 @@ class TestScannerIisHeaders < Minitest::Test
     headers = parse_headers_from_file File.dirname(__FILE__) + '/data/iis_server_header.txt'
 
     override_stdout
-    Yawast::Scanner::Iis.check_asp_banner headers
+    Yawast::Scanner::Plugins::Servers::Iis.check_asp_banner headers
 
     assert stdout_value.include?('ASP.NET Version'), 'ASP.NET Version warning not found.'
 
@@ -30,7 +30,7 @@ class TestScannerIisHeaders < Minitest::Test
     headers = parse_headers_from_file File.dirname(__FILE__) + '/data/iis_server_header.txt'
 
     override_stdout
-    Yawast::Scanner::Iis.check_mvc_version headers
+    Yawast::Scanner::Plugins::Servers::Iis.check_mvc_version headers
 
     assert stdout_value.include?('ASP.NET MVC Version'), 'ASP.NET MVC Version warning not found.'
 

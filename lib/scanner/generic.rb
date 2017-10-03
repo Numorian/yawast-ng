@@ -46,10 +46,10 @@ module Yawast
           puts ''
 
           if server != ''
-            Yawast::Scanner::Apache.check_banner(server)
+            Yawast::Scanner::Plugins::Servers::Apache.check_banner(server)
             Yawast::Scanner::Php.check_banner(server)
-            Yawast::Scanner::Iis.check_banner(server)
-            Yawast::Scanner::Nginx.check_banner(server)
+            Yawast::Scanner::Plugins::Servers::Iis.check_banner(server)
+            Yawast::Scanner::Plugins::Servers::Nginx.check_banner(server)
 
             if server == 'cloudflare-nginx'
               Yawast::Utilities.puts_info 'NOTE: Server appears to be Cloudflare; WAF may be in place.'
@@ -227,7 +227,6 @@ module Yawast
           end
         rescue => e
           Yawast::Utilities.puts_error "SSL Information: Error Getting Details: #{e.message}"
-
         end
       end
     end

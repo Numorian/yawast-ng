@@ -8,7 +8,7 @@ class TestScannerNginxHeaders < Minitest::Test
     server = 'nginx/1.8.1'
 
     override_stdout
-    Yawast::Scanner::Nginx.check_banner server
+    Yawast::Scanner::Plugins::Servers::Nginx.check_banner server
 
     assert stdout_value.include?("nginx Version: #{server}"), "Unexpected banner: #{stdout_value}"
 

@@ -50,8 +50,8 @@ module Yawast
             Yawast::Scanner::Generic.ssl_connection_info @uri
 
             # server specific checks
-            Yawast::Scanner::Apache.check_all(@uri)
-            Yawast::Scanner::Iis.check_all(@uri, head)
+            Yawast::Scanner::Plugins::Servers::Apache.check_all(@uri)
+            Yawast::Scanner::Plugins::Servers::Iis.check_all(@uri, head)
 
             Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
 

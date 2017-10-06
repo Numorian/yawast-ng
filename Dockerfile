@@ -1,4 +1,4 @@
-FROM ruby:2.4-stretch
+FROM ruby:2.4-jessie
 
 COPY . /data
 WORKDIR /data
@@ -9,4 +9,4 @@ ENV LC_ALL    C.UTF-8
 
 RUN bundle
 
-ENTRYPOINT ["yawast"]
+ENTRYPOINT ["/data/bin/yawast"]

@@ -50,6 +50,7 @@ module Yawast
             Yawast::Scanner::Php.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Iis.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Nginx.check_banner(server)
+            Yawast::Scanner::Plugins::Servers::Python.check_banner(server)
 
             if server == 'cloudflare-nginx'
               Yawast::Utilities.puts_info 'NOTE: Server appears to be Cloudflare; WAF may be in place.'

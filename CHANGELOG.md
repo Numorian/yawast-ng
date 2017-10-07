@@ -1,5 +1,6 @@
 ## 0.6.0 - In Development
 
+* [#54](https://github.com/adamcaudill/yawast/issues/54) - Check for Python version in Server header
 * [#109](https://github.com/adamcaudill/yawast/issues/109) - DNS CAA Support
 * [#113](https://github.com/adamcaudill/yawast/issues/113) - Better False Positive Detection For Directory Search
 * [#115](https://github.com/adamcaudill/yawast/issues/115) - Add dns Command

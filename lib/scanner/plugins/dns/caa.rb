@@ -11,8 +11,7 @@ module Yawast
             res = Resolver.new({:nameserver => ['8.8.8.8']})
 
             domain = uri.host.to_s
-
-            #BUG: this is a basic implementation that ignores CNAMEs/etc
+            
             while domain != '' do
               begin
                 ans = res.query(domain, 'CAA')

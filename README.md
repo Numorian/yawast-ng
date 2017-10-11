@@ -27,7 +27,7 @@ YAWAST requires Ruby 2.2+, and is tested on Mac OSX, Linux, and Windows.
 YAWAST can be run inside a docker container.
 
 ```
-docker run --rm adamcaudill/yawast scan <url> ...
+docker pull adamcaudill/yawast && docker run --rm adamcaudill/yawast scan <url> ...
 ```
 
 This is the recommended option, especially if you need to perform the SWEET32 test (`--tdessessioncount`), due to OpenSSL dropping support for the 3DES cipher suites.

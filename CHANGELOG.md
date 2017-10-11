@@ -7,6 +7,7 @@
 * [#116](https://github.com/adamcaudill/yawast/issues/116) - Add option '--nodns' to skip DNS checks
 * [#117](https://github.com/adamcaudill/yawast/issues/117) - Show additional information about the TLS connection
 * [#118](https://github.com/adamcaudill/yawast/issues/118) - Add check for CVE-2017-12617 - Apache Tomcat PUT RCE
+* [#120](https://github.com/adamcaudill/yawast/issues/120) - Add Docker support
 
 ## 0.5.2 - 2017-07-13
 

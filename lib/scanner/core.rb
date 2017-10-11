@@ -31,6 +31,9 @@ module Yawast
       end
 
       def self.process(uri, options)
+        # get the start time, so we can display elapsed time
+        start_time = Time.now
+
         setup(uri, options)
 
         begin
@@ -68,7 +71,11 @@ module Yawast
             get_cms(@uri, options)
           end
 
-          puts 'Scan complete.'
+          # get the total time to complete the scan. this works as long as the scan take
+          # less than 24 hours. if a scan is that long, we have bigger problems
+          elapsed_time = Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')
+
+          puts "Scan complete (#{elapsed_time} seconds)."
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.class}: #{e.message})"
         end

@@ -52,6 +52,14 @@ gem install yawast
 
 To install on Windows, you need to first install Ruby; this can be done easily with the latest version of [RubyInstaller](https://rubyinstaller.org/downloads/). Once Ruby is installed, YAWAST can be installed via `gem install yawast` as normal.
 
+**Docker**
+
+YAWAST can be run inside a docker container.
+
+```
+docker run --rm adamcaudill/yawast scan <url> ...
+```
+
 ### Tests
 
 The following tests are performed:

@@ -57,7 +57,7 @@ To install on Windows, you need to first install Ruby; this can be done easily w
 YAWAST can be run inside a docker container.
 
 ```
-docker run --rm yawast scan <url> ...
+docker run --rm adamcaudill/yawast scan <url> ...
 ```
 
 ### Tests

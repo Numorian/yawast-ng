@@ -82,14 +82,3 @@ command :dns do |c|
     Yawast::Commands::DNS.process(args, options)
   end
 end
-
-command :cert do |c|
-  c.syntax = './yawast cert --input <file>'
-  c.description = 'Gets information about the certificates used'
-
-  c.option '--input STRING', String, 'List of domains to check'
-
-  c.action do |_, options|
-    Yawast::Commands::Cert.process(options)
-  end
-end

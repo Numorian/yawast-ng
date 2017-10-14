@@ -41,8 +41,8 @@ The following tests are performed:
 * *(Generic)* Presence of WS_FTP.LOG
 * *(Generic)* Presence of RELEASE-NOTES.txt
 * *(Generic)* Presence of readme.html
-* *(Generic)* Missing cookie flags (Secure & HttpOnly)
-* *(Generic)* Search for files & common directories
+* *(Generic)* Missing cookie flags (Secure, HttpOnly, and SameSite)
+* *(Generic)* Search for files (14,011) & common directories (21,332)
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version
@@ -84,6 +84,17 @@ Checks for the following SSL issues are performed:
 * RC4 Cipher Suites
 * Weak (< 128 bit) Cipher Suites
 * SWEET32
+
+Certain DNS information is collected:
+
+* IP Addresses
+* IP Owner/Network (via [api.iptoasn.com](https://api.iptoasn.com/))
+* TXT Records
+* MX Records
+* NS Records
+* CAA Records (with CNAME chasing)
+* Common Subdomains (2,354 subdomains) - optional, via `--subdomains`
+* SRV Records - optional, via `--srv`
 
 In addition to these tests, certain basic information is also displayed, such as IPs (and the PTR record for each IP), HTTP HEAD request, and others.
 

@@ -16,7 +16,15 @@ Please see [the wiki](https://github.com/adamcaudill/yawast/wiki) for full docum
 
 ### Installing
 
-YAWAST is packaged as a Ruby Gem to make installing it as easy as possible. Details are available [on the wiki](https://github.com/adamcaudill/yawast/wiki/Installation).
+YAWAST is packaged as a Ruby Gem & Docker container to make installing it as easy as possible. Details are available [on the wiki](https://github.com/adamcaudill/yawast/wiki/Installation).
+
+The simplest options to install are:
+
+As a Gem: `gem install yawast`
+
+Via Docker: `docker pull adamcaudill/yawast`
+
+It's strongly recommended that you review the [installation](https://github.com/adamcaudill/yawast/wiki/Installation) documentation, to make sure you have the proper dependencies.
 
 ### Tests
 

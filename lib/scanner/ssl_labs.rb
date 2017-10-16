@@ -12,24 +12,24 @@ module Yawast
 
         begin
           api = Ssllabs::Api.new
+          endpoint = new URI 'https://api.ssllabs.com'
 
-          info = api.info
-
-          info.messages.each do |msg|
-            puts "[SSL Labs] #{msg}"
-          end
+          info_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Info.call_info endpoint
+          puts "[SSL Labs] #{Yawast::Scanner::Plugins::SSL::SSLLabs::Info.extract_msg(info_body)}"
 
           api.analyse(host: uri.host, publish: 'off', startNew: 'on', all: 'done', ignoreMismatch: 'on')
 
+          #BUG: Check results
+          Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.start_scan(endpoint, uri.host)
+
           status = ''
-          host = nil
           until status == 'READY' || status == 'ERROR' || status == 'DNS'
             # poll for updates every 5 seconds
             # don't want to poll faster, to avoid excess load / errors
             sleep(5)
 
-            host = api.analyse(host: uri.host, publish: 'off', all: 'done', ignoreMismatch: 'on')
-            status = host.status
+            data_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.start_scan(endpoint, uri.host)
+            status = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.extract_status data_body
 
             print '.'
           end

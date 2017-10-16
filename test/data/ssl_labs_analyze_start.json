@@ -1,0 +1,11 @@
+{
+  "host": "adamcaudill.com",
+  "port": 443,
+  "protocol": "HTTP",
+  "isPublic": false,
+  "status": "DNS",
+  "statusMessage": "Resolving domain names",
+  "startTime": 1508008495633,
+  "engineVersion": "1.29.7",
+  "criteriaVersion": "2009o"
+}

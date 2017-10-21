@@ -21,13 +21,13 @@ module Yawast
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          req.head(uri.path, get_headers)
+          req.head(uri, get_headers)
         rescue
           #if we get here, the HEAD failed - but GET may work
           #so we silently fail back to using GET instead
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          res = req.request_get(uri.path, get_headers)
+          res = req.request_get(uri, get_headers)
           res
         end
       end
@@ -38,7 +38,7 @@ module Yawast
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          res = req.request_get(uri.path, get_headers(headers))
+          res = req.request_get(uri, get_headers(headers))
           body = res.read_body
         rescue
           #do nothing for now
@@ -51,7 +51,7 @@ module Yawast
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          res = req.request_put(uri.path, body, get_headers(headers))
+          res = req.request_put(uri, body, get_headers(headers))
         rescue
           #do nothing for now
         end
@@ -62,7 +62,7 @@ module Yawast
       def self.get_status_code(uri)
         req = get_http(uri)
         req.use_ssl = uri.scheme == 'https'
-        res = req.head(uri.path, get_headers)
+        res = req.head(uri, get_headers)
         res.code
       end
 

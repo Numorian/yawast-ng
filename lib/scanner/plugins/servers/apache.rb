@@ -140,6 +140,7 @@ module Yawast
             Yawast::Shared::Http.put(uri, req_data)
 
             # check to see of we get check_value back
+            uri.path = uri.path.chomp('/')
             res = Yawast::Shared::Http.get(uri)
             if res.include? check_value
               Yawast::Utilities.puts_vuln "Apache Tomcat PUT RCE (CVE-2017-12615): #{uri}"

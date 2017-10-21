@@ -3,7 +3,7 @@ module Yawast
     module Plugins
       module SSL
         class Sweet32
-          def self.get_tdes_session_msg_count(uri)
+          def self.get_tdes_session_msg_count(uri, limit = 10000)
             # this method will send a number of HEAD requests to see
             #  if the connection is eventually killed.
             unless check_tdes
@@ -84,7 +84,7 @@ module Yawast
 
               req.start do |http|
                 #cache the number of hits
-                10000.times do |i|
+                limit.times do |i|
                   if use_head
                     http.head(uri.path, headers)
                   else
@@ -116,7 +116,8 @@ module Yawast
             end
 
             puts
-            Yawast::Utilities.puts_vuln 'TLS Session Request Limit: Connection not terminated after 10,000 requests; possibly vulnerable to SWEET32'
+            limit_formatted = limit.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+            Yawast::Utilities.puts_vuln "TLS Session Request Limit: Connection not terminated after #{limit_formatted} requests; possibly vulnerable to SWEET32"
           end
 
           def self.check_tdes

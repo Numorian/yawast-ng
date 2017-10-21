@@ -9,7 +9,8 @@ class TestYawast < Minitest::Test
 
     Yawast.header
     header = stdout_value
-    assert header.include?('Copyright'), 'Header not found'
+    assert header.include?('Copyright'), "Header not found in #{header}"
+    assert header.include?(Yawast::VERSION), "Version not found in #{header}"
 
     restore_stdout
   end

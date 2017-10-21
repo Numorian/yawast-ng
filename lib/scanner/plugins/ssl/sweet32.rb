@@ -6,7 +6,7 @@ module Yawast
           def self.get_tdes_session_msg_count(uri)
             # this method will send a number of HEAD requests to see
             #  if the connection is eventually killed.
-            unless check_tdes(uri)
+            unless check_tdes
               #if the OpenSSL install doesn't support 3DES, bailout
               Yawast::Utilities.puts_error "Your copy of OpenSSL doesn't support 3DES cipher suites - SWEET32 test aborted."
               return
@@ -119,16 +119,8 @@ module Yawast
             Yawast::Utilities.puts_vuln 'TLS Session Request Limit: Connection not terminated after 10,000 requests; possibly vulnerable to SWEET32'
           end
 
-          def self.check_tdes(uri)
+          def self.check_tdes
             puts 'Confirming your OpenSSL supports 3DES cipher suites...'
-
-            dns = Resolv::DNS.new
-
-            if IPAddress.valid? uri.host
-              ip = IPAddress.parse uri.host
-            else
-              ip = dns.getaddresses(uri.host)[0]
-            end
 
             #find all versions that don't include '_server' or '_client'
             versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}

@@ -16,10 +16,14 @@ module Yawast
             end
 
             def self.extract_msg(body)
+              ret = Array.new
               json = JSON.parse body
 
-              #BUG: Should return each item, in case some day there's more than one.
-              return json['messages'][0]
+              json['messages'].each do |msg|
+                ret.push msg
+              end
+
+              return ret
             end
           end
         end

@@ -15,7 +15,10 @@ module Yawast
           endpoint = Yawast::Commands::Utils.extract_uri(['https://api.ssllabs.com'])
 
           info_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Info.call_info endpoint
-          puts "[SSL Labs] #{Yawast::Scanner::Plugins::SSL::SSLLabs::Info.extract_msg(info_body)}"
+
+          Yawast::Scanner::Plugins::SSL::SSLLabs::Info.extract_msg(info_body).each do |msg|
+            puts "[SSL Labs] #{msg}"
+          end
 
           Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan endpoint, uri.host, true
 

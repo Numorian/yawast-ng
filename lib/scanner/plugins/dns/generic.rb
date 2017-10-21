@@ -105,48 +105,11 @@ module Yawast
                 end
 
                 if options.srv
-                  File.open(File.dirname(__FILE__) + '/../../../resources/srv_list.txt', 'r') do |f|
-                    f.each_line do |line|
-                      host = line.strip + '.' + root_domain
-                      begin
-                        srv = resv.getresources(host, Resolv::DNS::Resource::IN::SRV)
-
-                        unless srv.empty?
-                          srv.each do |rec|
-                            ip = resv.getaddress rec.target
-
-                            Yawast::Utilities.puts_info "\t\tSRV: #{host}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
-                          end
-                        end
-                      rescue
-                        #if this fails, don't really care
-                      end
-                    end
-                  end
+                  find_srv root_domain, resv
                 end
 
                 if options.subdomains
-                  File.open(File.dirname(__FILE__) + '/../../../resources/subdomain_list.txt', 'r') do |f|
-                    f.each_line do |line|
-                      host = line.strip + '.' + root_domain
-
-                      begin
-                        a = resv.getresources(host, Resolv::DNS::Resource::IN::A)
-
-                        unless a.empty?
-                          a.each do |ip|
-                            if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
-                              Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address}"
-                            else
-                              Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
-                            end
-                          end
-                        end
-                      rescue
-                        #if this fails, don't really care
-                      end
-                    end
-                  end
+                  find_subdomains root_domain, resv
                 end
               end
 
@@ -157,6 +120,51 @@ module Yawast
             rescue => e
               Yawast::Utilities.puts_error "Error getting basic information: #{e.message}"
               raise
+            end
+          end
+
+          def self.find_srv(root_domain, resv)
+            File.open(File.dirname(__FILE__) + '/../../../resources/srv_list.txt', 'r') do |f|
+              f.each_line do |line|
+                host = line.strip + '.' + root_domain
+                begin
+                  srv = resv.getresources(host, Resolv::DNS::Resource::IN::SRV)
+
+                  unless srv.empty?
+                    srv.each do |rec|
+                      ip = resv.getaddress rec.target
+
+                      Yawast::Utilities.puts_info "\t\tSRV: #{host}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
+                    end
+                  end
+                rescue
+                  #if this fails, don't really care
+                end
+              end
+            end
+          end
+
+          def self.find_subdomains(root_domain, resv)
+            File.open(File.dirname(__FILE__) + '/../../../resources/subdomain_list.txt', 'r') do |f|
+              f.each_line do |line|
+                host = line.strip + '.' + root_domain
+
+                begin
+                  a = resv.getresources(host, Resolv::DNS::Resource::IN::A)
+
+                  unless a.empty?
+                    a.each do |ip|
+                      if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
+                        Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address}"
+                      else
+                        Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
+                      end
+                    end
+                  end
+                rescue
+                  #if this fails, don't really care
+                end
+              end
             end
           end
 

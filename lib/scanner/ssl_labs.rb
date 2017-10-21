@@ -245,14 +245,7 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t\t#{protos[proto_suites['protocol']]}"
 
             proto_suites['list'].each do |suite|
-              ke = nil
-              if suite['kxType'] != nil
-                if suite['namedGroupBits'] != nil
-                  ke = "#{suite['kxType']}-#{suite['namedGroupBits']} / #{suite['namedGroupName']} (#{suite['kxStrength']} equivalent)"
-                else
-                  ke = "#{suite['kxType']}-#{suite['kxStrength']}"
-                end
-              end
+              ke = get_key_exchange suite
 
               strength = suite['cipherStrength']
               if suite['name'].include? '3DES'
@@ -296,14 +289,7 @@ module Yawast
             if sim['errorCode'] == 0
               protocol = protos[sim['protocolId']]
 
-              ke = nil
-              if sim['kxType'] != nil
-                if sim['namedGroupBits'] != nil
-                  ke = "#{sim['kxType']}-#{sim['namedGroupBits']} / #{sim['namedGroupName']} (#{sim['kxStrength']} equivalent)"
-                else
-                  ke = "#{sim['kxType']}-#{sim['kxStrength']}"
-                end
-              end
+              ke = get_key_exchange sim
 
               suite_name = "#{sim['suiteName']} - #{ke}"
 
@@ -510,6 +496,19 @@ module Yawast
         end
 
         secure
+      end
+
+      def self.get_key_exchange(suite)
+        ke = nil
+        if suite['kxType'] != nil
+          if suite['namedGroupBits'] != nil
+            ke = "#{suite['kxType']}-#{suite['namedGroupBits']} / #{suite['namedGroupName']} (#{suite['kxStrength']} equivalent)"
+          else
+            ke = "#{suite['kxType']}-#{suite['kxStrength']}"
+          end
+        end
+
+        return ke
       end
     end
   end

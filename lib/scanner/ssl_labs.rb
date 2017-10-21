@@ -242,6 +242,12 @@ module Yawast
         end
         puts
 
+        puts "\t\tNamed Group Support:"
+        ep['details']['namedGroups']['list'].each do |group|
+          Yawast::Utilities.puts_info "\t\t\t#{group['name']} #{group['bits']}"
+        end
+        puts
+
         puts "\t\tCipher Suite Support:"
         if ep['details']['suites'] != nil
           ep['details']['suites'].each do |proto_suites|
@@ -298,7 +304,7 @@ module Yawast
 
               Yawast::Utilities.puts_info "\t\t\t#{name} - #{protocol} - #{suite_name}"
             else
-              Yawast::Utilities.puts_error "\t\t\t#{name} - Simulation Failed"
+              Yawast::Utilities.puts_warn"\t\t\t#{name} - Simulation Failed"
             end
           end
         else

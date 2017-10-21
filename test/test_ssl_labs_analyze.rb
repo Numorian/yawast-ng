@@ -41,6 +41,7 @@ class TestSSLLabsAnalyze < Minitest::Test
     Yawast::Scanner::SslLabs.process_results uri, body, false
 
     assert stdout_value.include?('*.adamcaudill.com'), "wildcard domain name not found in #{stdout_value}"
+    assert !stdout_value.include?('[E]'), "Error message found in #{stdout_value}"
 
     restore_stdout
   end

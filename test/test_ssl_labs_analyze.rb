@@ -11,7 +11,7 @@ class TestSSLLabsAnalyze < Minitest::Test
 
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
 
-    body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.start_scan uri, 'adamcaudill.com'
+    body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan uri, 'adamcaudill.com', true
 
     assert body.include?('Resolving domain names'), 'SSL Labs: Start Status Not Found'
 
@@ -24,7 +24,7 @@ class TestSSLLabsAnalyze < Minitest::Test
 
     uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
 
-    body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.start_scan uri, 'adamcaudill.com'
+    body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan uri, 'adamcaudill.com', false
     status = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.extract_status body
 
     assert status == 'READY', 'SSL Labs: Start Status Not Found'

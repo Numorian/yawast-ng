@@ -17,7 +17,7 @@ module Yawast
           info_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Info.call_info endpoint
           puts "[SSL Labs] #{Yawast::Scanner::Plugins::SSL::SSLLabs::Info.extract_msg(info_body)}"
 
-          Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.start_scan endpoint, uri.host
+          Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan endpoint, uri.host, true
 
           status = ''
           until status == 'READY' || status == 'ERROR' || status == 'DNS'
@@ -25,7 +25,7 @@ module Yawast
             # don't want to poll faster, to avoid excess load / errors
             sleep(5)
 
-            data_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.get_results endpoint, uri.host
+            data_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan endpoint, uri.host, false
             status = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.extract_status data_body
 
             print '.'

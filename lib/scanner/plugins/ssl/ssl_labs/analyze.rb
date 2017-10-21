@@ -6,20 +6,15 @@ module Yawast
       module SSL
         module SSLLabs
           class Analyze
-            def self.start_scan(endpoint, target)
+            def self.scan(endpoint, target, startNew)
               uri = endpoint.copy
               uri.path = '/api/v3/analyze'
-              uri.query = "host=#{target}&publish=off&startNew=on&all=done&ignoreMismatch=on"
 
-              body = Yawast::Shared::Http.get uri
-
-              return body
-            end
-
-            def self.get_results(endpoint, target)
-              uri = endpoint.copy
-              uri.path = '/api/v3/analyze'
-              uri.query = "host=#{target}&publish=off&all=done&ignoreMismatch=on"
+              if startNew
+                uri.query = "host=#{target}&publish=off&startNew=on&all=done&ignoreMismatch=on"
+              else
+                uri.query = "host=#{target}&publish=off&all=done&ignoreMismatch=on"
+              end
 
               body = Yawast::Shared::Http.get uri
 

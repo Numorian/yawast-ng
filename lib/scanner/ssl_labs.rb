@@ -224,6 +224,27 @@ module Yawast
         puts "\t\t\thttps://crt.sh/?q=#{hash}"
 
         puts
+        Yawast::Utilities.puts_info "\t\tCertificate Chains:"
+        ep['details']['certChains'].each do |chain|
+          path_count = 0
+
+          chain['trustPaths'].each do |path|
+            path_count += 1
+            puts "\t\t  Path #{path_count}:"
+
+            path['certIds'].each do |path_cert|
+              body['certs'].each do |c|
+                if c['id'] == path_cert
+                  Yawast::Utilities.puts_info "\t\t\t#{c['subject']}"
+                  Yawast::Utilities.puts_info "\t\t\t  Signature: #{c['sigAlg']}  Key: #{c['keyAlg']}-#{c['keySize']}"
+                  Yawast::Utilities.puts_info "\t\t\t  https://crt.sh/?q=#{c['sha1Hash']}"
+                end
+              end
+            end
+          end
+        end
+
+        puts
       end
 
       def self.get_config_info(ep)

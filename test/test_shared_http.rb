@@ -5,7 +5,7 @@ class TestSharedHttp < Minitest::Test
   include TestBase
 
   def setup
-    @uri = URI::Parser.new.parse 'http://www.apple.com/library/test/success.html'
+    @uri = URI::Parser.new.parse 'https://www.apple.com/library/test/success.html'
   end
 
   def test_get_apple_success

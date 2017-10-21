@@ -1,4 +1,3 @@
-require 'ssllabs'
 require 'date'
 require 'openssl'
 require 'digest/sha1'

@@ -121,4 +121,3 @@ Sample output for a [scan](https://github.com/adamcaudill/yawast/wiki/Sample-Out
 ### Special Thanks
 
 * [SecLists](https://github.com/danielmiessler/SecLists) - Various lists are based on the resources collected by this project.
-* [Shopify](https://www.shopify.com/) for [ssllabs.rb](https://github.com/Shopify/ssllabs.rb), which provides the Qualsys SSL Labs integration.

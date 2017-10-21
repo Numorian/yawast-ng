@@ -1,6 +1,7 @@
 ## 0.6.0 - In Development
 
 * [#54](https://github.com/adamcaudill/yawast/issues/54) - Check for Python version in Server header
+* [#59](https://github.com/adamcaudill/yawast/issues/59) - SSL Labs: Display Certificate Chain
 * [#109](https://github.com/adamcaudill/yawast/issues/109) - DNS CAA Support
 * [#113](https://github.com/adamcaudill/yawast/issues/113) - Better False Positive Detection For Directory Search
 * [#115](https://github.com/adamcaudill/yawast/issues/115) - Add dns Command
@@ -8,6 +9,7 @@
 * [#117](https://github.com/adamcaudill/yawast/issues/117) - Show additional information about the TLS connection
 * [#118](https://github.com/adamcaudill/yawast/issues/118) - Add check for CVE-2017-12617 - Apache Tomcat PUT RCE
 * [#120](https://github.com/adamcaudill/yawast/issues/120) - Add Docker support
+* [#122](https://github.com/adamcaudill/yawast/issues/122) - SSL Labs API v3
 
 ## 0.5.2 - 2017-07-13
 

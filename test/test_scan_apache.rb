@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../lib/yawast'
 require File.dirname(__FILE__) + '/base'
 
-class TestScannerApacheBanner < Minitest::Test
+class TestScannerApache < Minitest::Test
   include TestBase
 
   def test_check_tomcat_put_rce

@@ -167,36 +167,6 @@ module Yawast
         end
       end
 
-      def self.check_hsts(head)
-        found = ''
-
-        head.each do |k, v|
-          if k.downcase.include? 'strict-transport-security'
-            found = "#{k}: #{v}"
-          end
-        end
-
-        if found == ''
-          Yawast::Utilities.puts_warn 'HSTS: Not Enabled'
-        else
-          Yawast::Utilities.puts_info "HSTS: Enabled (#{found})"
-        end
-      end
-
-      def self.check_hsts_preload(uri)
-        begin
-          info = JSON.parse(Net::HTTP.get(URI("https://hstspreload.com/api/v1/status/#{uri.host}")))
-
-          chrome = info['chrome'] != nil
-          firefox = info['firefox'] != nil
-          tor = info['tor'] != nil
-
-          Yawast::Utilities.puts_info "HSTS Preload: Chrome - #{chrome}; Firefox - #{firefox}; Tor - #{tor}"
-        rescue => e
-          Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message}"
-        end
-      end
-
       #private methods
       class << self
         private

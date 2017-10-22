@@ -1,0 +1,16 @@
+HTTP/1.1 200 OK
+Date: Sun, 22 Oct 2017 22:44:34 GMT
+Content-Type: text/html; charset=UTF-8
+Connection: keep-alive
+Set-Cookie: __cfduid=d1f8c33f1dccb58e367a4570c63ac5ce41508712274; expires=Mon, 22-Oct-18 22:44:34 GMT; path=/; domain=.adamcaudill.com; HttpOnly; Secure
+Vary: Accept-Encoding,Cookie
+Last-Modified: Fri, 13 Oct 2017 19:39:19 GMT
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+Pragma: public
+Cache-Control: public, max-age=86400
+CF-Cache-Status: HIT
+Expires: Mon, 23 Oct 2017 22:44:34 GMT
+Server: cloudflare-nginx
+CF-RAY: 3b1ffb6499c12ea5-MIA
+

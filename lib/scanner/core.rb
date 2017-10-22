@@ -122,8 +122,8 @@ module Yawast
             Yawast::Scanner::SslLabs.info(@uri, options.tdessessioncount)
           end
 
-          Yawast::Scanner::Ssl.check_hsts(head)
-          Yawast::Scanner::Ssl.check_hsts_preload @uri
+          Yawast::Scanner::Plugins::SSL::SSL.check_hsts(head)
+          Yawast::Scanner::Plugins::SSL::SSL.check_hsts_preload @uri
         elsif @uri.scheme == 'http'
           puts 'Skipping TLS checks; URL is not HTTPS'
         end

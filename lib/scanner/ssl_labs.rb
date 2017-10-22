@@ -215,7 +215,10 @@ module Yawast
         end
 
         Yawast::Utilities.puts_info "\t\tExtensions:"
-        ossl_cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' }
+        ossl_cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' || ext.oid == 'ct_precert_scts' }
+
+        # ct_precert_scts
+        Yawast::Scanner::Plugins::SSL::SSL.print_precert ossl_cert
 
         hash = Digest::SHA1.hexdigest(ossl_cert.to_der)
         Yawast::Utilities.puts_info "\t\tHash: #{hash}"

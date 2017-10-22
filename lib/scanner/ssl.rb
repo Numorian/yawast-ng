@@ -68,12 +68,8 @@ module Yawast
         Yawast::Utilities.puts_info "\t\tExtensions:"
         cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' || ext.oid == 'ct_precert_scts' }
 
-        #ct_precert_scts
-        scts = cert.extensions.find {|e| e.oid == 'ct_precert_scts'}
-        unless scts.nil?
-          Yawast::Utilities.puts_info "\t\tSCTs:"
-          scts.value.split("\n").each { |line| puts "\t\t\t#{line}" }
-        end
+        # ct_precert_scts
+        Yawast::Scanner::Plugins::SSL::SSL.print_precert cert
 
         #alt names
         alt_names = cert.extensions.find {|e| e.oid == 'subjectAltName'}

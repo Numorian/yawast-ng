@@ -45,4 +45,33 @@ class TestSSLLabsAnalyze < Minitest::Test
 
     restore_stdout
   end
+
+  def test_process_data_parivahan
+    override_stdout
+
+    uri = URI.parse 'https://parivahan.gov.in/'
+    body = JSON.parse(File.read(File.dirname(__FILE__) + '/data/ssl_labs_analyze_data_parivahan_gov_in.json'))
+
+    Yawast::Scanner::SslLabs.process_results uri, body, false
+
+    assert stdout_value.include?('parivahan.gov.in'), "domain name not found in #{stdout_value}"
+    assert !stdout_value.include?('[E]'), "Error message found in #{stdout_value}"
+
+    restore_stdout
+  end
+
+  def test_process_data_file_zetlab
+    override_stdout
+
+    uri = URI.parse 'https://file.zetlab.com/'
+    body = JSON.parse(File.read(File.dirname(__FILE__) + '/data/ssl_labs_analyze_data_file_zetlab_com.json'))
+
+    Yawast::Scanner::SslLabs.process_results uri, body, false
+
+    assert stdout_value.include?('file.zetlab.com'), "domain name not found in #{stdout_value}"
+    assert stdout_value.include?('Certificate Issue: hostname mismatch'), "hostname mismatch not found in #{stdout_value}"
+    assert !stdout_value.include?('[E]'), "Error message found in #{stdout_value}"
+
+    restore_stdout
+  end
 end

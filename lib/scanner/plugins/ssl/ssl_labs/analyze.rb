@@ -29,6 +29,13 @@ module Yawast
               body = res.read_body
               code = res.code.to_i
 
+              # check for error in the response - if we don't, we'll wait forever for nothing
+              json = JSON.parse body
+              if json.key?('errors')
+                raise InvocationError, "API returned: #{json['errors']}"
+              end
+
+              # check the response code, make sure it's 200 - otherwise, we should stop now
               if code != 200
                 case code
                   when 400

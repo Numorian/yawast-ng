@@ -9,6 +9,7 @@ module Yawast
             unless check_tdes
               #if the OpenSSL install doesn't support 3DES, bailout
               Yawast::Utilities.puts_error "Your copy of OpenSSL doesn't support 3DES cipher suites - SWEET32 test aborted."
+              puts '  See here for more information: https://github.com/adamcaudill/yawast/wiki/OpenSSL-&-3DES-Compatibility'
               return
             end
 

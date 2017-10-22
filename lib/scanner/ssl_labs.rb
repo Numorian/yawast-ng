@@ -263,10 +263,12 @@ module Yawast
         puts
 
         puts "\t\tNamed Group Support:"
-        ep['details']['namedGroups']['list'].each do |group|
-          Yawast::Utilities.puts_info "\t\t\t#{group['name']} #{group['bits']}"
+        if ep['details']['namedGroups'] != nil
+          ep['details']['namedGroups']['list'].each do |group|
+            Yawast::Utilities.puts_info "\t\t\t#{group['name']} #{group['bits']}"
+          end
+          puts
         end
-        puts
 
         puts "\t\tCipher Suite Support:"
         if ep['details']['suites'] != nil

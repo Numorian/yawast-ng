@@ -50,7 +50,7 @@ The following tests are performed:
 * *(Generic)* Presence of RELEASE-NOTES.txt
 * *(Generic)* Presence of readme.html
 * *(Generic)* Missing cookie flags (Secure, HttpOnly, and SameSite)
-* *(Generic)* Search for files (14,011) & common directories (21,332)
+* *(Generic)* Search for files (14,114) & common directories (21,332)
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version

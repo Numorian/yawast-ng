@@ -381,7 +381,7 @@ module Yawast
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tPOODLE (TLS): Vulnerable"
           else
-            Yawast::Utilities.puts_error "\t\t\tPOODLE (TLS): Unknown Response #{ep['details'].poodle_tls}"
+            Yawast::Utilities.puts_error "\t\t\tPOODLE (TLS): Unknown Response #{ep['details']['poodleTls']}"
         end
 
         if ep['details']['fallbackScsv']
@@ -396,10 +396,29 @@ module Yawast
           Yawast::Utilities.puts_info "\t\t\tCompression: No"
         end
 
+        if ep['details']['heartbeat']
+          Yawast::Utilities.puts_warn "\t\t\tHeartbeat: Enabled"
+        else
+          Yawast::Utilities.puts_info "\t\t\tHeartbeat: Disabled"
+        end
+
         if ep['details']['heartbleed']
           Yawast::Utilities.puts_vuln "\t\t\tHeartbleed: Vulnerable"
         else
           Yawast::Utilities.puts_info "\t\t\tHeartbleed: No"
+        end
+
+        case ep['details']['ticketbleed']
+          when -1
+            Yawast::Utilities.puts_error "\t\t\tTicketbleed (CVE-2016-9244): Test Failed"
+          when 0
+            Yawast::Utilities.puts_error "\t\t\tTicketbleed (CVE-2016-9244): Test Failed (Unknown)"
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tTicketbleed (CVE-2016-9244): No"
+          when 2
+            Yawast::Utilities.puts_vuln "\t\t\tTicketbleed (CVE-2016-9244): Vulnerable"
+          else
+            Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Unknown Response #{ep['details']['ticketbleed']}"
         end
 
         case ep['details']['openSslCcs']
@@ -414,7 +433,7 @@ module Yawast
           when 3
             Yawast::Utilities.puts_vuln "\t\t\tOpenSSL CCS (CVE-2014-0224): Vulnerable"
           else
-            Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Unknown Response #{ep['details'].open_ssl_ccs}"
+            Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Unknown Response #{ep['details']['openSslCcs']}"
         end
 
         case ep['details']['openSSLLuckyMinus20']
@@ -440,41 +459,39 @@ module Yawast
           Yawast::Utilities.puts_vuln "\t\t\tForward Secrecy: No"
         end
 
+        Yawast::Utilities.puts_info "\t\t\tALPN: #{ep['details']['alpnProtocols']}"
+
+        Yawast::Utilities.puts_info "\t\t\tNPN: #{ep['details']['npnProtocols']}"
+
+        case ep['details']['sessionResumption']
+          when 0
+            Yawast::Utilities.puts_info "\t\t\tSession Resumption: Not Enabled / Empty Tickets"
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tSession Resumption: Enabled / No Resumption"
+          when 2
+            Yawast::Utilities.puts_warn "\t\t\tSession Resumption: Enabled"
+          else
+            Yawast::Utilities.puts_error "\t\t\tSession Resumption: Unknown Response #{ep['details']['sessionResumption']}"
+        end
+
         if ep['details']['ocspStapling']
           Yawast::Utilities.puts_info "\t\t\tOCSP Stapling: Yes"
         else
           Yawast::Utilities.puts_warn "\t\t\tOCSP Stapling: No"
         end
 
-        if ep['details']['freak']
-          Yawast::Utilities.puts_vuln "\t\t\tFREAK: Vulnerable"
-        else
-          Yawast::Utilities.puts_info "\t\t\tFREAK: No"
-        end
+        if ep['details']['miscIntolerance'] > 0
+          if ep['details']['miscIntolerance'] & 1 != 0
+            Yawast::Utilities.puts_warn "\t\t\tTLS Extension Intolerance: Yes"
+          end
 
-        if ep['details']['logjam']
-          Yawast::Utilities.puts_vuln "\t\t\tLogjam: Vulnerable"
-        else
-          Yawast::Utilities.puts_info "\t\t\tLogjam: No"
-        end
+          if ep['details']['miscIntolerance'] & (1<<1) != 0
+            Yawast::Utilities.puts_warn "\t\t\tLong Handshake Intolerance: Yes"
+          end
 
-        case ep['details']['dhUsesKnownPrimes']
-          when 0
-            Yawast::Utilities.puts_info "\t\t\tUses common DH primes: No"
-          when 1
-            Yawast::Utilities.puts_warn "\t\t\tUses common DH primes: Yes (not weak)"
-          when 2
-            Yawast::Utilities.puts_vuln "\t\t\tUses common DH primes: Yes (weak)"
-          else
-            unless ep['details']['dhUsesKnownPrimes'] == nil
-              Yawast::Utilities.puts_error "\t\t\tUses common DH primes: Unknown Response #{ep['details']['dhUsesKnownPrimes']}"
-            end
-        end
-
-        if ep['details']['dhYsReuse']
-          Yawast::Utilities.puts_vuln "\t\t\tDH public server param (Ys) reuse: Yes"
-        else
-          Yawast::Utilities.puts_info "\t\t\tDH public server param (Ys) reuse: No"
+          if ep['details']['miscIntolerance'] & (1<<2) != 0
+            Yawast::Utilities.puts_warn "\t\t\tLong Handshake Intolerance: Workaround Success"
+          end
         end
 
         if ep['details']['protocolIntolerance'] > 0
@@ -503,6 +520,43 @@ module Yawast
           end
         else
           Yawast::Utilities.puts_info "\t\t\tProtocol Intolerance: No"
+        end
+
+        if ep['details']['freak']
+          Yawast::Utilities.puts_vuln "\t\t\tFREAK: Vulnerable (512-bit key exchange supported)"
+        else
+          Yawast::Utilities.puts_info "\t\t\tFREAK: No"
+        end
+
+        if ep['details']['logjam']
+          Yawast::Utilities.puts_vuln "\t\t\tLogjam: Vulnerable (DH key exchange with keys smaller than 1024 bits)"
+        else
+          Yawast::Utilities.puts_info "\t\t\tLogjam: No"
+        end
+
+        case ep['details']['dhUsesKnownPrimes']
+          when 0
+            Yawast::Utilities.puts_info "\t\t\tUses common DH primes: No"
+          when 1
+            Yawast::Utilities.puts_warn "\t\t\tUses common DH primes: Yes (not weak)"
+          when 2
+            Yawast::Utilities.puts_vuln "\t\t\tUses common DH primes: Yes (weak)"
+          else
+            unless ep['details']['dhUsesKnownPrimes'] == nil
+              Yawast::Utilities.puts_error "\t\t\tUses common DH primes: Unknown Response #{ep['details']['dhUsesKnownPrimes']}"
+            end
+        end
+
+        if ep['details']['dhYsReuse']
+          Yawast::Utilities.puts_vuln "\t\t\tDH public server param (Ys) reuse: Yes"
+        else
+          Yawast::Utilities.puts_info "\t\t\tDH public server param (Ys) reuse: No"
+        end
+
+        if ep['details']['ecdhParameterReuse']
+          Yawast::Utilities.puts_vuln "\t\t\tECDH Public Server Param Reuse: Yes"
+        else
+          Yawast::Utilities.puts_info "\t\t\tECDH Public Server Param Reuse: No"
         end
 
         puts

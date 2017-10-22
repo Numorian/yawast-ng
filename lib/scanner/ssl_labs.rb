@@ -220,10 +220,7 @@ module Yawast
         # ct_precert_scts
         Yawast::Scanner::Plugins::SSL::SSL.print_precert ossl_cert
 
-        hash = Digest::SHA1.hexdigest(ossl_cert.to_der)
-        Yawast::Utilities.puts_info "\t\tHash: #{hash}"
-        puts "\t\t\thttps://censys.io/certificates?q=#{hash}"
-        puts "\t\t\thttps://crt.sh/?q=#{hash}"
+        Yawast::Scanner::Plugins::SSL::SSL.print_cert_hash ossl_cert
 
         puts
         Yawast::Utilities.puts_info "\t\tCertificate Chains:"

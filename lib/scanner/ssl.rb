@@ -78,11 +78,9 @@ module Yawast
           alt_names.value.split(',').each { |name| Yawast::Utilities.puts_info "\t\t\t#{name.strip.delete('DNS:')}" }
         end
 
-        hash = Digest::SHA1.hexdigest(cert.to_der)
-        Yawast::Utilities.puts_info "\t\tHash: #{hash}"
-        puts "\t\t\thttps://censys.io/certificates?q=#{hash}"
-        puts "\t\t\thttps://crt.sh/?q=#{hash}"
-        puts ''
+        Yawast::Scanner::Plugins::SSL::SSL.print_cert_hash cert
+
+        puts
       end
 
       def self.get_cert_chain_info(cert_chain, cert)

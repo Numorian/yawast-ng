@@ -11,6 +11,13 @@ module Yawast
               scts.value.split("\n").each { |line| puts "\t\t\t#{line}" }
             end
           end
+
+          def self.print_cert_hash(cert)
+            hash = Digest::SHA1.hexdigest(cert.to_der)
+            Yawast::Utilities.puts_info "\t\tHash: #{hash}"
+            puts "\t\t\thttps://censys.io/certificates?q=#{hash}"
+            puts "\t\t\thttps://crt.sh/?q=#{hash}"
+          end
         end
       end
     end

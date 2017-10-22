@@ -10,6 +10,7 @@
 * [#118](https://github.com/adamcaudill/yawast/issues/118) - Add check for CVE-2017-12617 - Apache Tomcat PUT RCE
 * [#120](https://github.com/adamcaudill/yawast/issues/120) - Add Docker support
 * [#122](https://github.com/adamcaudill/yawast/issues/122) - SSL Labs API v3
+* [#125](https://github.com/adamcaudill/yawast/issues/125) - Add new search paths for Struts Sample Files
 
 ## 0.5.2 - 2017-07-13
 

@@ -25,4 +25,26 @@ class TestScannerApache < Minitest::Test
 
     server.exit
   end
+
+  def test_check_struts2_samples
+    override_stdout
+
+    port = rand(60000) + 1024 # pick a random port number
+    server = start_web_server File.dirname(__FILE__) + '/data/apache_server_info.txt', '', port
+    uri = Yawast::Commands::Utils.extract_uri(["http://localhost:#{port}"])
+
+    error = nil
+    begin
+      Yawast::Scanner::Plugins::Servers::Apache.check_struts2_samples uri
+    rescue => e
+      error = e.message
+    end
+
+    assert !stdout_value.include?('[W]'), "Unexpected finding: #{stdout_value}"
+    assert error == nil, "Unexpected error: #{error}"
+
+    restore_stdout
+
+    server.exit
+  end
 end

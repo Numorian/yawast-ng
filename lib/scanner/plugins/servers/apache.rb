@@ -47,6 +47,7 @@ module Yawast
             check_tomcat_manager(uri.copy)
             check_tomcat_version(uri.copy)
             check_tomcat_put_rce(uri.copy)
+            check_struts2_samples(uri.copy)
           end
 
           def self.check_server_status(uri)
@@ -144,6 +145,26 @@ module Yawast
             res = Yawast::Shared::Http.get(uri)
             if res.include? check_value
               Yawast::Utilities.puts_vuln "Apache Tomcat PUT RCE (CVE-2017-12615): #{uri}"
+            end
+          end
+
+          def self.check_struts2_samples(uri)
+            search = Array.new
+            search.push '/Struts2XMLHelloWorld/User/home.action'
+            search.push '/struts2-showcase/showcase.action'
+            search.push '/struts2-showcase/titles/index.action'
+            search.push '/struts2-bootstrap-showcase/'
+            search.push '/struts2-showcase/index.action'
+            search.push '/struts2-bootstrap-showcase/index.action'
+            search.push '/struts2-rest-showcase/'
+
+            search.each do |path|
+              uri.path = path
+
+              ret = Yawast::Shared::Http.get_status_code uri
+              if ret == 200
+                Yawast::Utilities.puts_warn "Apache Struts2 Sample Files: #{uri}"
+              end
             end
           end
 

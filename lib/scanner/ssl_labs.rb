@@ -11,7 +11,7 @@ module Yawast
         puts 'Beginning SSL Labs scan (this could take a minute or two)'
 
         begin
-          endpoint = Yawast::Commands::Utils.extract_uri(['https://api.ssllabs.com'])
+          endpoint = URI::Parser.new.parse 'https://api.ssllabs.com'
 
           info_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Info.call_info endpoint
 

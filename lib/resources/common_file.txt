@@ -13987,6 +13987,7 @@ wp-email.php
 wp-fbuser.php
 wp-feed.php
 wp-forum.phps
+wp-includes/js/swfupload/swfupload.swf
 wp-includes/js/tinymce/plugins/wpview/diff.php
 wp-json
 wp-json/wp/v2/posts

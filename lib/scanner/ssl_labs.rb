@@ -5,7 +5,6 @@ require 'json'
 
 module Yawast
   module Scanner
-    # noinspection RubyResolve
     class SslLabs
       def self.info(uri, tdes_session_count)
         puts 'Beginning SSL Labs scan (this could take a minute or two)'

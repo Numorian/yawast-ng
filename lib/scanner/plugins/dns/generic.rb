@@ -179,7 +179,7 @@ module Yawast
             return 'Network Information disabled due to prior failure' if @netinfo_failed
 
             begin
-              network_info = JSON.parse(Net::HTTP.get(URI("https://api.iptoasn.com/v1/as/ip/#{ip}")))
+              network_info = Yawast::Shared::Http.get_json URI("https://api.iptoasn.com/v1/as/ip/#{ip}")
 
               ret = "#{network_info['as_country_code']} - #{network_info['as_description']}"
               @netinfo[ip] = ret

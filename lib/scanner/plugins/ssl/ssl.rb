@@ -37,7 +37,7 @@ module Yawast
 
           def self.check_hsts_preload(uri)
             begin
-              info = JSON.parse(Net::HTTP.get(URI("https://hstspreload.com/api/v1/status/#{uri.host}")))
+              info = Yawast::Shared::Http.get_json URI("https://hstspreload.com/api/v1/status/#{uri.host}")
 
               chrome = info['chrome'] != nil
               firefox = info['firefox'] != nil

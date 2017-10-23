@@ -75,7 +75,7 @@ module Yawast
           # less than 24 hours. if a scan is that long, we have bigger problems
           elapsed_time = Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')
 
-          puts "Scan complete (#{elapsed_time} seconds)."
+          puts "Scan complete (#{elapsed_time})."
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.class}: #{e.message})"
         end

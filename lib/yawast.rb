@@ -41,7 +41,7 @@ module Yawast
     puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION} (#{RUBY_PLATFORM})"
 
     begin
-      version = JSON.parse(Net::HTTP.get(URI('https://rubygems.org/api/v1/versions/yawast/latest.json')))['version']
+      version = Yawast::Shared::Http.get_json(URI('https://rubygems.org/api/v1/versions/yawast/latest.json'))['version']
 
       if version != VERSION
         puts " Latest Version: YAWAST v#{version} is the officially supported version, please update.".blue

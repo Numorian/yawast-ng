@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'json'
 
 module Yawast
   module Shared
@@ -45,6 +46,21 @@ module Yawast
         end
 
         body
+      end
+
+      def self.get_json(uri)
+        body = ''
+
+        begin
+          req = get_http(uri)
+          req.use_ssl = uri.scheme == 'https'
+          res = req.request_get(uri, { 'User-Agent' => "YAWAST/#{Yawast::VERSION}" })
+          body = res.read_body
+        rescue
+          #do nothing for now
+        end
+
+        JSON.parse body
       end
 
       def self.put(uri, body, headers = nil)

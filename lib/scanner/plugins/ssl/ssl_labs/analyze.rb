@@ -25,7 +25,7 @@ module Yawast
 
               req = Yawast::Shared::Http.get_http(uri)
               req.use_ssl = uri.scheme == 'https'
-              res = req.request_get(uri)
+              res = req.request_get(uri, { 'User-Agent' => "YAWAST/#{Yawast::VERSION}" })
               body = res.read_body
               code = res.code.to_i
 

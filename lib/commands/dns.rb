@@ -6,7 +6,7 @@ module Yawast
 
         Yawast.header
 
-        puts "Scanning: #{@uri}"
+        puts "Scanning: #{uri}"
         puts
 
         Yawast::Scanner::Plugins::DNS::Generic.dns_info uri, options

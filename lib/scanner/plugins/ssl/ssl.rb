@@ -48,6 +48,61 @@ module Yawast
               Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message}"
             end
           end
+
+          def self.set_openssl_options
+            #change certain defaults, to make things work better
+            #we prefer RSA, to avoid issues with small DH keys
+            OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers] = 'RSA:ALL:COMPLEMENTOFALL'
+            OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
+            OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:options] = OpenSSL::SSL::OP_ALL
+          end
+
+          def self.check_for_ssl_redirect(uri)
+            #check to see if the site redirects to SSL by default
+            if uri.scheme != 'https'
+              head = Yawast::Shared::Http.head(uri)
+
+              if head['Location'] != nil
+                begin
+                  location = URI.parse(head['Location'])
+
+                  if location.scheme == 'https'
+                    #we run this through extract_uri as it performs a few checks we need
+                    return Yawast::Shared::Uri.extract_uri location.to_s
+                  end
+                rescue
+                  #we don't care if this fails
+                end
+              end
+            end
+
+            return nil
+          end
+
+          def self.ssl_connection_info(uri)
+            begin
+              # we only care if this is https
+              if uri.scheme == 'https'
+                # setup the connection
+                socket = TCPSocket.new(uri.host, uri.port)
+
+                ctx = OpenSSL::SSL::SSLContext.new
+                ctx.ciphers = OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers]
+
+                ssl = OpenSSL::SSL::SSLSocket.new(socket, ctx)
+                ssl.hostname = uri.host
+                ssl.connect
+
+                # this provides a bunch of useful info, that's already formatted
+                #  instead of building this manually, we'll let OpenSSL do the work
+                puts ssl.session.to_text
+
+                puts
+              end
+            rescue => e
+              Yawast::Utilities.puts_error "SSL Information: Error Getting Details: #{e.message}"
+            end
+          end
         end
       end
     end

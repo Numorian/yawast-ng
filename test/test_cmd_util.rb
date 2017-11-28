@@ -16,6 +16,12 @@ class TestCommandUtils < Minitest::Test
     assert_equal uri.to_s, 'http://www.apple.com/'
   end
 
+  def test_partial_path_url
+    args = ['www.apple.com/ipad']
+    uri = Yawast::Commands::Utils.extract_uri args
+    assert_equal uri.to_s, 'http://www.apple.com/ipad/'
+  end
+
   def test_invalid_url
     args = ['xxx:\invalid']
 

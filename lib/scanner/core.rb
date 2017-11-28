@@ -14,13 +14,13 @@ module Yawast
 
           print_header
 
-          ssl_redirect = check_for_ssl_redirect
+          ssl_redirect = Yawast::Scanner::Plugins::SSL::SSL.check_for_ssl_redirect @uri
           if ssl_redirect
             @uri = ssl_redirect
             puts "Server redirects to TLS: Scanning: #{@uri}"
           end
 
-          Yawast.set_openssl_options
+          Yawast::Scanner::Plugins::SSL::SSL.set_openssl_options
 
           unless options.nodns
             Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options
@@ -50,7 +50,7 @@ module Yawast
           #process the 'scan' stuff that goes beyond 'head'
           unless options.head
             # connection details for SSL
-            Yawast::Scanner::Generic.ssl_connection_info @uri
+            Yawast::Scanner::Plugins::SSL::SSL.ssl_connection_info @uri
 
             # server specific checks
             Yawast::Scanner::Plugins::Servers::Apache.check_all(@uri)
@@ -86,28 +86,6 @@ module Yawast
 
         body = Yawast::Shared::Http.get(uri)
         Yawast::Scanner::Cms.get_generator(body)
-      end
-
-      def self.check_for_ssl_redirect
-        #check to see if the site redirects to SSL by default
-        if @uri.scheme != 'https'
-          head = Yawast::Shared::Http.head(@uri)
-
-          if head['Location'] != nil
-            begin
-              location = URI.parse(head['Location'])
-
-              if location.scheme == 'https'
-                #we run this through extract_uri as it performs a few checks we need
-                return Yawast::Shared::Uri.extract_uri location.to_s
-              end
-            rescue
-              #we don't care if this fails
-            end
-          end
-        end
-
-        return nil
       end
 
       def self.check_ssl(uri, options, head)

@@ -56,6 +56,7 @@ command :ssl do |c|
   c.option '--nociphers', 'Disables check for supported ciphers (only with --internalssl)'
   c.option '--internalssl', 'Disable SSL Labs integration'
   c.option '--tdessessioncount', 'Counts the number of messages that can be sent in a single session'
+  c.option '--nodns', 'Disable DNS checks'
 
   c.action do |args, options|
     Yawast::Commands::Ssl.process(args, options)

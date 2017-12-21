@@ -77,9 +77,13 @@ module Yawast
                 mx = resv.getresources(uri.host, Resolv::DNS::Resource::IN::MX)
                 unless mx.empty?
                   mx.each do |rec|
-                    ip = resv.getaddress rec.exchange
+                    begin
+                      ip = resv.getaddress rec.exchange
 
-                    Yawast::Utilities.puts_info "\t\tMX: #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
+                      Yawast::Utilities.puts_info "\t\tMX: #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
+                    rescue => e
+                      Yawast::Utilities.puts_error "\t\tMX: #{rec.exchange} (#{rec.preference}) - Error: #{e.message})"
+                    end
                   end
                 end
 
@@ -88,9 +92,13 @@ module Yawast
                   mx = resv.getresources(root_domain, Resolv::DNS::Resource::IN::MX)
                   unless mx.empty?
                     mx.each do |rec|
-                      ip = resv.getaddress rec.exchange
+                      begin
+                        ip = resv.getaddress rec.exchange
 
-                      Yawast::Utilities.puts_info "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
+                        Yawast::Utilities.puts_info "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
+                      rescue => e
+                        Yawast::Utilities.puts_info "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - Error: #{e.message})"
+                      end
                     end
                   end
                 end

@@ -11,6 +11,7 @@
 * [#120](https://github.com/adamcaudill/yawast/issues/120) - Add Docker support
 * [#122](https://github.com/adamcaudill/yawast/issues/122) - SSL Labs API v3
 * [#125](https://github.com/adamcaudill/yawast/issues/125) - Add new search paths for Struts Sample Files
+* [#129](https://github.com/adamcaudill/yawast/issues/129) - Bug: DNS Info fails if MX record points to a domain without records
 
 ## 0.5.2 - 2017-07-13
 

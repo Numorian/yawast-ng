@@ -97,7 +97,7 @@ module Yawast
 
                         Yawast::Utilities.puts_info "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
                       rescue => e
-                        Yawast::Utilities.puts_info "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - Error: #{e.message})"
+                        Yawast::Utilities.puts_error "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - Error: #{e.message})"
                       end
                     end
                   end

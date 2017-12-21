@@ -121,8 +121,10 @@ module Yawast
                 end
               end
 
-              #get the CAA info
-              Yawast::Scanner::Plugins::DNS::CAA.caa_info uri
+              #get the CAA info - unless it's an IP
+              unless IPAddress.valid? uri.host
+                Yawast::Scanner::Plugins::DNS::CAA.caa_info uri
+              end
 
               puts
             rescue => e

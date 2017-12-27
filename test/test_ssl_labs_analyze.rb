@@ -74,4 +74,34 @@ class TestSSLLabsAnalyze < Minitest::Test
 
     restore_stdout
   end
+
+  def test_process_data_act_is
+    override_stdout
+
+    uri = URI.parse 'https://activationservice1.installshield.com/'
+    body = JSON.parse(File.read(File.dirname(__FILE__) + '/data/ssl_labs_analyze_data_activationservice1_installshield_com.json'))
+
+    Yawast::Scanner::SslLabs.process_results uri, body, false
+
+    assert stdout_value.include?('installshield.com'), "domain name not found in #{stdout_value}"
+    assert stdout_value.include?('Root Stores: Mozilla (trusted)'), "root store name not found in #{stdout_value}"
+    assert !stdout_value.include?('[E]'), "Error message found in #{stdout_value}"
+
+    restore_stdout
+  end
+
+  def test_process_data_forest_gov
+    override_stdout
+
+    uri = URI.parse 'https://www.forest.gov.tw/'
+    body = JSON.parse(File.read(File.dirname(__FILE__) + '/data/ssl_labs_analyze_data_forest_gov_tw.json'))
+
+    Yawast::Scanner::SslLabs.process_results uri, body, false
+
+    assert stdout_value.include?('www.forest.gov.tw'), "domain name not found in #{stdout_value}"
+    assert stdout_value.include?('Root Stores: Apple (trusted) Windows (trusted)'), "root store name not found in #{stdout_value}"
+    assert !stdout_value.include?('[E]'), "Error message found in #{stdout_value}"
+
+    restore_stdout
+  end
 end

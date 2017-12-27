@@ -226,16 +226,51 @@ module Yawast
         ep['details']['certChains'].each do |chain|
           path_count = 0
 
+          # build list of trust paths
+          trust_paths = Hash.new
           chain['trustPaths'].each do |path|
+            trusts = nil
+            # in practice, it seems there is only only per path, but just in case
+            path['trust'].each do |trust|
+              if trust['isTrusted']
+                trust_line = "#{trust['rootStore']} (trusted)"
+              else
+                trust_line = "#{trust['rootStore']} (#{trust['trustErrorMessage']})"
+              end
+
+              if trusts == nil
+                trusts = trust_line
+              else
+                trusts += " #{trust_line}"
+              end
+            end
+
+            # build the hash and add the list of roots
+            if trust_paths.has_key? path['certIds']
+              trust_paths[path['certIds']] += " #{trusts}"
+            else
+              trust_paths[path['certIds']] = trusts
+            end
+          end
+
+          # process each of the trust paths
+          trust_paths.each_key do |key|
             path_count += 1
             puts "\t\t  Path #{path_count}:"
+            puts "\t\t   Root Stores: #{trust_paths[key]}"
 
-            path['certIds'].each do |path_cert|
+            key.each do |path_cert|
               body['certs'].each do |c|
                 if c['id'] == path_cert
                   Yawast::Utilities.puts_info "\t\t\t#{c['subject']}"
                   Yawast::Utilities.puts_info "\t\t\t  Signature: #{c['sigAlg']}  Key: #{c['keyAlg']}-#{c['keySize']}"
                   Yawast::Utilities.puts_info "\t\t\t  https://crt.sh/?q=#{c['sha1Hash']}"
+
+                  if chain['certIds'].find_index(c['sha256Hash']) != nil
+                    Yawast::Utilities.puts_info "\t\t\t  (provided by server)"
+                  end
+
+                  puts
                 end
               end
             end
@@ -422,6 +457,7 @@ module Yawast
             Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Unknown Response #{ep['details']['ticketbleed']}"
         end
 
+
         case ep['details']['openSslCcs']
           when -1
             Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Test Failed"
@@ -448,6 +484,17 @@ module Yawast
             Yawast::Utilities.puts_vuln "\t\t\tOpenSSL Padding Oracle (CVE-2016-2107): Vulnerable"
           else
             Yawast::Utilities.puts_error "\t\t\tOpenSSL Padding Oracle (CVE-2016-2107): Unknown Response #{ep['details']['openSSLLuckyMinus20']}"
+        end
+
+        case ep['details']['bleichenbacher']
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tROBOT: No"
+          when 3
+            Yawast::Utilities.puts_vuln "\t\t\tROBOT: Exploitable"
+          when nil
+            # if it's null, we don't care
+          else
+            Yawast::Utilities.puts_error "\t\t\tROBOT: Unknown Response #{ep['details']['bleichenbacher']}"
         end
 
         if ep['details']['forwardSecrecy'] & (1<<2) != 0

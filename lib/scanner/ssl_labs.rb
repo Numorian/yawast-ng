@@ -450,6 +450,17 @@ module Yawast
             Yawast::Utilities.puts_error "\t\t\tOpenSSL Padding Oracle (CVE-2016-2107): Unknown Response #{ep['details']['openSSLLuckyMinus20']}"
         end
 
+        case ep['details']['bleichenbacher']
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tROBOT: No"
+          when 3
+            Yawast::Utilities.puts_vuln "\t\t\tROBOT: Exploitable"
+          when nil
+            # if it's null, we don't care
+          else
+            Yawast::Utilities.puts_error "\t\t\tROBOT: Unknown Response #{ep['details']['bleichenbacher']}"
+        end
+
         if ep['details']['forwardSecrecy'] & (1<<2) != 0
           Yawast::Utilities.puts_info "\t\t\tForward Secrecy: Yes (all simulated clients)"
         elsif ep['details']['forwardSecrecy'] & (1<<1) != 0

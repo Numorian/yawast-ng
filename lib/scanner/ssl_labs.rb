@@ -487,8 +487,14 @@ module Yawast
         end
 
         case ep['details']['bleichenbacher']
+          when -1
+            Yawast::Utilities.puts_error "\t\t\tROBOT: Test Failed"
+          when 0
+            Yawast::Utilities.puts_error "\t\t\tROBOT: Test Failed (Unknown)"
           when 1
             Yawast::Utilities.puts_info "\t\t\tROBOT: No"
+          when 2
+            Yawast::Utilities.puts_warn "\t\t\tROBOT: Not Exploitable"
           when 3
             Yawast::Utilities.puts_vuln "\t\t\tROBOT: Exploitable"
           when nil

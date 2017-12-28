@@ -5,7 +5,7 @@ module Yawast
   module Shared
     class Http
       def self.setup(proxy, cookie)
-        if proxy != nil && proxy.include?(':')
+        if !proxy.nil? && proxy.include?(':')
           @proxy_host, @proxy_port = proxy.split(':')
           @proxy = true
 
@@ -15,7 +15,7 @@ module Yawast
         end
 
         @cookie = cookie
-        puts "Using Cookie: #{@cookie}" if @cookie != nil
+        puts "Using Cookie: #{@cookie}" unless @cookie.nil?
       end
 
       def self.head(uri)
@@ -24,8 +24,8 @@ module Yawast
           req.use_ssl = uri.scheme == 'https'
           req.head(uri, get_headers)
         rescue
-          #if we get here, the HEAD failed - but GET may work
-          #so we silently fail back to using GET instead
+          # if we get here, the HEAD failed - but GET may work
+          # so we silently fail back to using GET instead
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
           res = req.request_get(uri, get_headers)
@@ -42,7 +42,7 @@ module Yawast
           res = req.request_get(uri, get_headers(headers))
           body = res.read_body
         rescue
-          #do nothing for now
+          # do nothing for now
         end
 
         body
@@ -54,10 +54,10 @@ module Yawast
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          res = req.request_get(uri, { 'User-Agent' => "YAWAST/#{Yawast::VERSION}" })
+          res = req.request_get(uri, 'User-Agent' => "YAWAST/#{Yawast::VERSION}")
           body = res.read_body
         rescue
-          #do nothing for now
+          # do nothing for now
         end
 
         JSON.parse body
@@ -69,7 +69,7 @@ module Yawast
           req.use_ssl = uri.scheme == 'https'
           res = req.request_put(uri, body, get_headers(headers))
         rescue
-          #do nothing for now
+          # do nothing for now
         end
 
         res.read_body
@@ -102,7 +102,7 @@ module Yawast
         end
 
         if Yawast::Shared::Http.get_status_code(fake_uri) != '404'
-          #crazy 404 handling
+          # crazy 404 handling
           return false
         end
 
@@ -117,9 +117,7 @@ module Yawast
           headers = { 'User-Agent' => HTTP_UA, 'Cookie' => @cookie }
         end
 
-        if extra_headers != nil
-          headers.merge! extra_headers
-        end
+        headers.merge! extra_headers unless extra_headers.nil?
 
         headers
       end

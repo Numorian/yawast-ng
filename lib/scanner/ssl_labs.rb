@@ -454,7 +454,7 @@ module Yawast
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tTicketbleed (CVE-2016-9244): Vulnerable"
           else
-            Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Unknown Response #{ep['details']['ticketbleed']}"
+            Yawast::Utilities.puts_error "\t\t\tTicketbleed (CVE-2016-9244): Unknown Response #{ep['details']['ticketbleed']}"
         end
 
 

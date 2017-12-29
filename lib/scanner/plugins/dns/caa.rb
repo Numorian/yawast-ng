@@ -10,10 +10,10 @@ module Yawast
             # force DNS resolver to something that works
             # this is done to ensure that ISP resolvers don't get in the way
             # at some point, should probably do something else, but works for now
-            @res = Resolver.new(nameserver: ['8.8.8.8'])
+            @res = Resolver.new({:nameserver => ['8.8.8.8']})
 
             # setup a list of domains already checked, so we can skip them
-            @checked = []
+            @checked = Array.new
 
             domain = uri.host.to_s
 
@@ -33,7 +33,7 @@ module Yawast
                 # some resolvers flatten in an odd way that prevents just checking
                 # for the CAA record directly
                 cname = get_cname_record(domain)
-                if !cname.nil?
+                if cname != nil
                   Yawast::Utilities.puts_info "\t\tCAA (#{domain}): CNAME Found: -> #{cname}"
                   chase_domain cname.to_s
                 else
@@ -51,7 +51,7 @@ module Yawast
           def self.get_cname_record(domain)
             ans = @res.query(domain, 'CNAME')
 
-            if !ans.answer[0].nil?
+            if ans.answer[0] != nil
               return ans.answer[0].rdata
             else
               return nil
@@ -64,7 +64,7 @@ module Yawast
             if ans.answer.count > 0
               ans.answer.each do |rec|
                 # check for RDATA
-                if !rec.rdata.nil?
+                if rec.rdata != nil
                   Yawast::Utilities.puts_info "\t\tCAA (#{domain}): #{rec.rdata}"
                 else
                   Yawast::Utilities.puts_error "\t\tCAA (#{domain}): Invalid Response: #{ans.answer}"

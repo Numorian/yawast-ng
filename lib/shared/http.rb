@@ -83,11 +83,11 @@ module Yawast
       end
 
       def self.get_http(uri)
-        req = if @proxy
-                Net::HTTP.new(uri.host, uri.port, @proxy_host, @proxy_port)
-              else
-                Net::HTTP.new(uri.host, uri.port)
-              end
+        if @proxy
+          req = Net::HTTP.new(uri.host, uri.port, @proxy_host, @proxy_port)
+        else
+          req = Net::HTTP.new(uri.host, uri.port)
+        end
 
         req
       end
@@ -95,27 +95,27 @@ module Yawast
       def self.check_not_found(uri, file)
         fake_uri = uri.copy
 
-        fake_uri.path = if file
-                          "/#{SecureRandom.hex}.html"
-                        else
-                          "/#{SecureRandom.hex}/"
-                        end
+        if file
+          fake_uri.path = "/#{SecureRandom.hex}.html"
+        else
+          fake_uri.path = "/#{SecureRandom.hex}/"
+        end
 
         if Yawast::Shared::Http.get_status_code(fake_uri) != '404'
           # crazy 404 handling
           return false
         end
 
-        true
+        return true
       end
 
       # noinspection RubyStringKeysInHashInspection
       def self.get_headers(extra_headers = nil)
-        headers = if @cookie.nil?
-                    { 'User-Agent' => HTTP_UA }
-                  else
-                    { 'User-Agent' => HTTP_UA, 'Cookie' => @cookie }
-                  end
+        if @cookie == nil
+          headers = { 'User-Agent' => HTTP_UA }
+        else
+          headers = { 'User-Agent' => HTTP_UA, 'Cookie' => @cookie }
+        end
 
         headers.merge! extra_headers unless extra_headers.nil?
 

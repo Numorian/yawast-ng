@@ -1,5 +1,5 @@
 module URI
   def copy
-    URI.parse(to_s)
+    URI.parse(self.to_s)
   end
 end

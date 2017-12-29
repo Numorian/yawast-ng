@@ -17,21 +17,23 @@ module Yawast
               uri = endpoint.copy
               uri.path = '/api/v3/analyze'
 
-              uri.query = if start_new
-                            "host=#{target}&publish=off&startNew=on&all=done&ignoreMismatch=on"
-                          else
-                            "host=#{target}&publish=off&all=done&ignoreMismatch=on"
-                          end
+              if start_new
+                uri.query = "host=#{target}&publish=off&startNew=on&all=done&ignoreMismatch=on"
+              else
+                uri.query = "host=#{target}&publish=off&all=done&ignoreMismatch=on"
+              end
 
               req = Yawast::Shared::Http.get_http(uri)
               req.use_ssl = uri.scheme == 'https'
-              res = req.request_get(uri, 'User-Agent' => "YAWAST/#{Yawast::VERSION}")
+              res = req.request_get(uri, { 'User-Agent' => "YAWAST/#{Yawast::VERSION}" })
               body = res.read_body
               code = res.code.to_i
 
               # check for error in the response - if we don't, we'll wait forever for nothing
               json = JSON.parse body
-              raise InvocationError, "API returned: #{json['errors']}" if json.key?('errors')
+              if json.key?('errors')
+                raise InvocationError, "API returned: #{json['errors']}"
+              end
 
               # check the response code, make sure it's 200 - otherwise, we should stop now
               if code != 200
@@ -51,13 +53,13 @@ module Yawast
                 end
               end
 
-              body
+              return body
             end
 
             def self.extract_status(body)
               json = JSON.parse body
 
-              json['status']
+              return json['status']
             end
           end
         end

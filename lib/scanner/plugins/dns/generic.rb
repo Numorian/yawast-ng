@@ -25,7 +25,7 @@ module Yawast
                     if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
                       options.internalssl = true
                     else
-                      #show network info
+                      # show network info
                       Yawast::Utilities.puts_info "\t\t\t#{get_network_info(ip.address)}"
 
                       puts "\t\t\thttps://www.shodan.io/host/#{ip.address}"
@@ -49,7 +49,7 @@ module Yawast
                     if IPAddr.new(ip.address.to_s, Socket::AF_INET6).private?
                       options.internalssl = true
                     else
-                      #show network info
+                      # show network info
                       Yawast::Utilities.puts_info "\t\t\t#{get_network_info(ip.address)}"
 
                       puts "\t\t\thttps://www.shodan.io/host/#{ip.address.to_s.downcase}"
@@ -64,7 +64,7 @@ module Yawast
                   end
                 end
 
-                #check for higher-level TXT records, if we aren't already at the top
+                # check for higher-level TXT records, if we aren't already at the top
                 if root_domain != uri.host
                   txt = resv.getresources(root_domain, Resolv::DNS::Resource::IN::TXT)
                   unless txt.empty?
@@ -87,7 +87,7 @@ module Yawast
                   end
                 end
 
-                #check for higher-level MX records, if we aren't already at the top
+                # check for higher-level MX records, if we aren't already at the top
                 if root_domain != uri.host
                   mx = resv.getresources(root_domain, Resolv::DNS::Resource::IN::MX)
                   unless mx.empty?
@@ -121,7 +121,7 @@ module Yawast
                 end
               end
 
-              #get the CAA info - unless it's an IP
+              # get the CAA info - unless it's an IP
               unless IPAddress.valid? uri.host
                 Yawast::Scanner::Plugins::DNS::CAA.caa_info uri
               end
@@ -148,7 +148,7 @@ module Yawast
                     end
                   end
                 rescue
-                  #if this fails, don't really care
+                  # if this fails, don't really care
                 end
               end
             end
@@ -172,19 +172,19 @@ module Yawast
                     end
                   end
                 rescue
-                  #if this fails, don't really care
+                  # if this fails, don't really care
                 end
               end
             end
           end
 
           def self.get_network_info(ip)
-            #check to see if we have this one cached
+            # check to see if we have this one cached
             @netinfo = Hash.new if @netinfo == nil
             return @netinfo[ip] if @netinfo[ip] != nil
 
-            #check to see if this has failed, if so, skip it. We do this to avoid repeated timeouts if outbound
-            #connections are blocked.
+            # check to see if this has failed, if so, skip it. We do this to avoid repeated timeouts if outbound
+            # connections are blocked.
             @netinfo_failed = false if @netinfo_failed == nil
             return 'Network Information disabled due to prior failure' if @netinfo_failed
 

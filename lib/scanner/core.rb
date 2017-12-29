@@ -22,9 +22,7 @@ module Yawast
 
           Yawast::Scanner::Plugins::SSL::SSL.set_openssl_options
 
-          unless options.nodns
-            Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options
-          end
+          Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options unless options.nodns
         end
 
         @setup = true
@@ -37,17 +35,17 @@ module Yawast
         setup(uri, options)
 
         begin
-          #setup the proxy
+          # setup the proxy
           Yawast::Shared::Http.setup(options.proxy, options.cookie)
 
-          #cache the HEAD result, so that we can minimize hits
+          # cache the HEAD result, so that we can minimize hits
           head = get_head
           Yawast::Scanner::Generic.head_info(head, @uri)
 
-          #perfom SSL checks
+          # perform SSL checks
           check_ssl(@uri, options, head)
 
-          #process the 'scan' stuff that goes beyond 'head'
+          # process the 'scan' stuff that goes beyond 'head'
           unless options.head
             # connection details for SSL
             Yawast::Scanner::Plugins::SSL::SSL.ssl_connection_info @uri
@@ -63,7 +61,7 @@ module Yawast
             Yawast::Scanner::Generic.check_options(@uri)
             Yawast::Scanner::Generic.check_trace(@uri)
 
-            #check for common directories
+            # check for common directories
             if options.dir
               Yawast::Scanner::Plugins::Http::DirectorySearch.search @uri, options.dirrecursive, options.dirlistredir
             end
@@ -92,7 +90,7 @@ module Yawast
         setup(uri, options)
 
         if @uri.scheme == 'https' && !options.nossl
-          head = get_head if head == nil
+          head = get_head if head.nil?
 
           if options.internalssl || IPAddress.valid?(@uri.host) || @uri.port != 443
             Yawast::Scanner::Ssl.info(@uri, !options.nociphers, options.tdessessioncount)

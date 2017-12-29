@@ -5,9 +5,7 @@ module Yawast
         regex = /<meta name="generator[^>]+content\s*=\s*['"]([^'"]+)['"][^>]*>/
         match = body.match regex
 
-        if match
-          Yawast::Utilities.puts_info "Meta Generator: #{match[1]}"
-        end
+        Yawast::Utilities.puts_info "Meta Generator: #{match[1]}" if match
       end
     end
   end

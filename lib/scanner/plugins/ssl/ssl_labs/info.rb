@@ -12,18 +12,18 @@ module Yawast
 
               body = Yawast::Shared::Http.get uri
 
-              return body
+              body
             end
 
             def self.extract_msg(body)
-              ret = Array.new
+              ret = []
               json = JSON.parse body
 
               json['messages'].each do |msg|
                 ret.push msg
               end
 
-              return ret
+              ret
             end
           end
         end

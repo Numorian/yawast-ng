@@ -6,7 +6,7 @@ module Yawast
       module Http
         class DirectorySearch
           def self.search(uri, recursive, list_redirects, search_list = nil)
-            #first, we need to see if the site responds to 404 in a reasonable way
+            # first, we need to see if the site responds to 404 in a reasonable way
             unless Yawast::Shared::Http.check_not_found(uri, false)
               puts 'Site does not respond properly to non-existent directory requests; skipping some checks.'
 
@@ -22,7 +22,7 @@ module Yawast
               puts 'Searching for common directories...'
             end
 
-            if search_list == nil
+            if search_list.nil?
               @search_list = []
 
               File.open(File.dirname(__FILE__) + '/../../../resources/common_dir.txt', 'r') do |f|
@@ -39,7 +39,7 @@ module Yawast
               @jobs = Queue.new
               @results = Queue.new
 
-              #load the queue, starting at /
+              # load the queue, starting at /
               base = uri.copy
               base.path = '/'
               load_queue base
@@ -65,7 +65,7 @@ module Yawast
                     end
                   end
                 rescue ThreadError
-                  #do nothing
+                  # do nothing
                 end
               end
 
@@ -85,10 +85,10 @@ module Yawast
               begin
                 check.path = check.path + "#{line}/"
 
-                #add the job to the queue
+                # add the job to the queue
                 @jobs.push check
               rescue
-                #who cares
+                # who cares
               end
             end
           end

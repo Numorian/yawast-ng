@@ -1,13 +1,17 @@
 class String
-  #see if string is numeric
+  # see if string is numeric
   def is_number?
-    true if Float(self) rescue false
+    begin
+      true if Float(self)
+    rescue
+      false
+    end
   end
 
   def trim
-    trimmed = self.strip
+    trimmed = strip
 
-    if trimmed == nil
+    if trimmed.nil?
       self
     else
       trimmed

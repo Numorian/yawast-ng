@@ -7,7 +7,7 @@ module Yawast
             # this method will send a number of HEAD requests to see
             #  if the connection is eventually killed.
             unless check_tdes
-              #if the OpenSSL install doesn't support 3DES, bailout
+              # if the OpenSSL install doesn't support 3DES, bailout
               Yawast::Utilities.puts_error "Your copy of OpenSSL doesn't support 3DES cipher suites - SWEET32 test aborted."
               puts '  See here for more information: https://github.com/adamcaudill/yawast/wiki/OpenSSL-&-3DES-Compatibility'
               return
@@ -22,14 +22,14 @@ module Yawast
               req.keep_alive_timeout = 600
               headers = Yawast::Shared::Http.get_headers
 
-              #we will use HEAD by default, but allow GET if we have issues with HEAD
+              # we will use HEAD by default, but allow GET if we have issues with HEAD
               use_head = true
 
-              #force 3DES - this is to ensure that 3DES specific limits are caught
+              # force 3DES - this is to ensure that 3DES specific limits are caught
               req.ciphers = ['3DES']
               cipher = nil
 
-              #attempt to find a version that supports 3DES
+              # attempt to find a version that supports 3DES
               versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
               versions.each do |version|
                 if version.to_s != 'SSLv23'
@@ -40,25 +40,25 @@ module Yawast
 
                       head = nil
                       begin
-                        if use_head
-                          head = http.head(uri.path, headers)
-                        else
-                          head = http.request_get(uri.path, headers)
-                        end
+                        head = if use_head
+                                 http.head(uri.path, headers)
+                               else
+                                 http.request_get(uri.path, headers)
+                               end
 
                         cipher = http.instance_variable_get(:@socket).io.cipher[0]
                       rescue
-                        #check if we are using HEAD or GET. If we've already switched to GET, no need to do this again.
+                        # check if we are using HEAD or GET. If we've already switched to GET, no need to do this again.
                         if use_head
                           head = http.request_get(uri.path, headers)
 
-                          #if we are here, that means that HEAD failed, but GET didn't, so we'll use GET from now on.
+                          # if we are here, that means that HEAD failed, but GET didn't, so we'll use GET from now on.
                           use_head = false
                           Yawast::Utilities.puts_error 'Error: HEAD request failed; using GET requests for SWEET32 check...'
                         end
                       end
 
-                      #check to see if this is on Cloudflare - they break Keep-Alive limits, creating a false positive
+                      # check to see if this is on Cloudflare - they break Keep-Alive limits, creating a false positive
                       head.each do |k, v|
                         if k.downcase == 'server'
                           if v == 'cloudflare-nginx'
@@ -71,12 +71,12 @@ module Yawast
                     print "Using #{version} (#{cipher})"
                     break
                   rescue
-                    #we don't care
+                    # we don't care
                   end
                 end
               end
 
-              #reset the req object
+              # reset the req object
               req = Yawast::Shared::Http.get_http(uri)
               req.use_ssl = uri.scheme == 'https'
               req.keep_alive_timeout = 600
@@ -84,7 +84,7 @@ module Yawast
               req.ciphers = [*cipher]
 
               req.start do |http|
-                #cache the number of hits
+                # cache the number of hits
                 limit.times do |i|
                   if use_head
                     http.head(uri.path, headers)
@@ -92,16 +92,14 @@ module Yawast
                     http.request_get(uri.path, headers)
                   end
 
-                  # hack to detect transparent disconnects
+                  # HACK: to detect transparent disconnects
                   if http.instance_variable_get(:@ssl_context).session_cache_stats[:cache_hits] != 0
                     raise 'TLS Reconnected'
                   end
 
                   count += 1
 
-                  if i % 20 == 0
-                    print '.'
-                  end
+                  print '.' if (i % 20).zero?
                 end
               end
             rescue => e
@@ -124,13 +122,13 @@ module Yawast
           def self.check_tdes
             puts 'Confirming your OpenSSL supports 3DES cipher suites...'
 
-            #find all versions that don't include '_server' or '_client'
+            # find all versions that don't include '_server' or '_client'
             versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
 
             versions.each do |version|
-              #ignore SSLv23, as it's an auto-negotiate, which just adds noise
+              # ignore SSLv23, as it's an auto-negotiate, which just adds noise
               if version.to_s != 'SSLv23' && version.to_s != 'SSLv2'
-                #try to get the list of ciphers supported for each version
+                # try to get the list of ciphers supported for each version
                 ciphers = nil
 
                 get_ciphers_failed = false
@@ -143,9 +141,7 @@ module Yawast
 
                 if ciphers != nil
                   ciphers.each do |cipher|
-                    if cipher[0].include?('3DES') || cipher[0].include?('CBC3')
-                      return true
-                    end
+                    return true if cipher[0].include?('3DES') || cipher[0].include?('CBC3')
                   end
                 elsif !get_ciphers_failed
                   Yawast::Utilities.puts_info "\t#{version}: No cipher suites available."
@@ -154,7 +150,7 @@ module Yawast
             end
 
             puts ''
-            return false
+            false
           end
         end
       end

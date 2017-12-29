@@ -9,7 +9,7 @@ module Yawast
         begin
           server = ''
           powered_by = ''
-          cookies = Array.new
+          cookies = []
           pingback = ''
           frame_options = ''
           content_options = ''
@@ -39,7 +39,7 @@ module Yawast
             acao = v if k.downcase == 'access-control-allow-origin'
 
             if k.downcase == 'set-cookie'
-              #this chunk of magic manages to properly split cookies, when multiple are sent together
+              # this chunk of magic manages to properly split cookies, when multiple are sent together
               v.gsub(/(,([^;,]*=)|,$)/) { "\r\n#{$2}" }.split(/\r\n/).each { |c| cookies.push(c) }
             end
           end
@@ -58,17 +58,11 @@ module Yawast
             end
           end
 
-          if powered_by != ''
-            Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}"
-          end
+          Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}" if powered_by != ''
 
-          if xss_protection == '0'
-            Yawast::Utilities.puts_warn 'X-XSS-Protection Disabled Header Present'
-          end
+          Yawast::Utilities.puts_warn 'X-XSS-Protection Disabled Header Present' if xss_protection == '0'
 
-          unless pingback == ''
-            Yawast::Utilities.puts_info "X-Pingback Header Present: #{pingback}"
-          end
+          Yawast::Utilities.puts_info "X-Pingback Header Present: #{pingback}" unless pingback == ''
 
           unless runtime == ''
             if runtime.is_number?
@@ -78,13 +72,9 @@ module Yawast
             end
           end
 
-          unless backend_server == ''
-            Yawast::Utilities.puts_warn "X-Backend-Server Header Present: #{backend_server}"
-          end
+          Yawast::Utilities.puts_warn "X-Backend-Server Header Present: #{backend_server}" unless backend_server == ''
 
-          unless via == ''
-            Yawast::Utilities.puts_warn "Via Header Present: #{via}"
-          end
+          Yawast::Utilities.puts_warn "Via Header Present: #{via}" unless via == ''
 
           if frame_options == ''
             Yawast::Utilities.puts_warn 'X-Frame-Options Header Not Present'
@@ -102,17 +92,11 @@ module Yawast
             Yawast::Utilities.puts_info "X-Content-Type-Options Header: #{content_options}"
           end
 
-          if csp == ''
-            Yawast::Utilities.puts_warn 'Content-Security-Policy Header Not Present'
-          end
+          Yawast::Utilities.puts_warn 'Content-Security-Policy Header Not Present' if csp == ''
 
-          if hpkp == ''
-            Yawast::Utilities.puts_warn 'Public-Key-Pins Header Not Present'
-          end
+          Yawast::Utilities.puts_warn 'Public-Key-Pins Header Not Present' if hpkp == ''
 
-          if acao == '*'
-            Yawast::Utilities.puts_warn 'Access-Control-Allow-Origin: Unrestricted'
-          end
+          Yawast::Utilities.puts_warn 'Access-Control-Allow-Origin: Unrestricted' if acao == '*'
 
           puts ''
 
@@ -124,7 +108,7 @@ module Yawast
 
               elements = val.strip.split(';')
 
-              #check for secure cookies
+              # check for secure cookies
               if elements.include?(' Secure') || elements.include?(' secure')
                 if uri.scheme != 'https'
                   Yawast::Utilities.puts_warn "\t\t\tCookie with Secure flag sent over non-HTTPS connection"
@@ -133,21 +117,21 @@ module Yawast
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing Secure flag"
               end
 
-              #check for HttpOnly cookies
+              # check for HttpOnly cookies
               unless elements.include?(' HttpOnly') || elements.include?(' httponly')
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing HttpOnly flag"
               end
 
-              #check for SameSite cookies
+              # check for SameSite cookies
               unless elements.include?(' SameSite') || elements.include?(' samesite')
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing SameSite flag"
               end
             end
 
-            puts ''
+            puts
           end
 
-          puts ''
+          puts
         rescue => e
           Yawast::Utilities.puts_error "Error getting head information: #{e.message}"
           raise
@@ -161,15 +145,15 @@ module Yawast
           headers = Yawast::Shared::Http.get_headers
           res = req.request(Options.new('/', headers))
 
-          if res['Public'] != nil
+          unless res['Public'].nil?
             Yawast::Utilities.puts_info "Public HTTP Verbs (OPTIONS): #{res['Public']}"
 
-            puts ''
+            puts
           end
-          if res['Allow'] != nil
+          unless res['Allow'].nil?
             Yawast::Utilities.puts_info "Allow HTTP Verbs (OPTIONS): #{res['Allow']}"
 
-            puts ''
+            puts
           end
         end
       end
@@ -197,7 +181,7 @@ module Yawast
           headers = Yawast::Shared::Http.get_headers
           res = req.request(Propfind.new('/', headers))
 
-          if res.code.to_i <= 400 && res.body.length > 0 && res['Content-Type'] == 'text/xml'
+          if res.code.to_i <= 400 && !res.body.empty? && res['Content-Type'] == 'text/xml'
             Yawast::Utilities.puts_warn 'Possible Info Disclosure: PROPFIND Enabled'
             puts "\t\t\"curl -X PROPFIND #{uri}\""
 
@@ -207,23 +191,23 @@ module Yawast
       end
     end
 
-    #Custom class to allow using the PROPFIND verb
+    # Custom class to allow using the PROPFIND verb
     class Propfind < Net::HTTPRequest
-      METHOD = 'PROPFIND'
+      METHOD = 'PROPFIND'.freeze
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end
 
-    #Custom class to allow using the OPTIONS verb
+    # Custom class to allow using the OPTIONS verb
     class Options < Net::HTTPRequest
-      METHOD = 'OPTIONS'
+      METHOD = 'OPTIONS'.freeze
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end
 
-    #Custom class to allow using the TRACE verb
+    # Custom class to allow using the TRACE verb
     class Trace < Net::HTTPRequest
-      METHOD = 'TRACE'
+      METHOD = 'TRACE'.freeze
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
     end

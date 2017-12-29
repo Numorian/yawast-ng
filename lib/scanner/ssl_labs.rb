@@ -10,7 +10,7 @@ module Yawast
         puts 'Beginning SSL Labs scan (this could take a minute or two)'
 
         begin
-          endpoint = URI::Parser.new.parse 'https://api.ssllabs.com'
+          endpoint = URI::DEFAULT_PARSER.parse 'https://api.ssllabs.com'
 
           info_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Info.call_info endpoint
 
@@ -21,6 +21,7 @@ module Yawast
           Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan endpoint, uri.host, true
 
           status = ''
+          data_body = ''
           until status == 'READY' || status == 'ERROR' || status == 'DNS'
             # poll for updates every 5 seconds
             # don't want to poll faster, to avoid excess load / errors
@@ -159,7 +160,7 @@ module Yawast
           Yawast::Utilities.puts_info "\t\tSignature algorithm: #{cert['sigAlg']}"
         end
 
-        #todo - figure out what the options for this value are
+        # TODO: figure out what the options for this value are
         if cert['validationType'] == 'E'
           Yawast::Utilities.puts_info "\t\tExtended Validation: Yes"
         elsif cert['validationType'] == 'D'
@@ -214,7 +215,9 @@ module Yawast
         end
 
         Yawast::Utilities.puts_info "\t\tExtensions:"
-        ossl_cert.extensions.each { |ext| Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' || ext.oid == 'ct_precert_scts' }
+        ossl_cert.extensions.each do |ext|
+          Yawast::Utilities.puts_info "\t\t\t#{ext}" unless ext.oid == 'subjectAltName' || ext.oid == 'ct_precert_scts'
+        end
 
         # ct_precert_scts
         Yawast::Scanner::Plugins::SSL::SSL.print_precert ossl_cert
@@ -227,18 +230,18 @@ module Yawast
           path_count = 0
 
           # build list of trust paths
-          trust_paths = Hash.new
+          trust_paths = {}
           chain['trustPaths'].each do |path|
             trusts = nil
             # in practice, it seems there is only only per path, but just in case
             path['trust'].each do |trust|
-              if trust['isTrusted']
-                trust_line = "#{trust['rootStore']} (trusted)"
-              else
-                trust_line = "#{trust['rootStore']} (#{trust['trustErrorMessage']})"
-              end
+              trust_line = if trust['isTrusted']
+                             "#{trust['rootStore']} (trusted)"
+                           else
+                             "#{trust['rootStore']} (#{trust['trustErrorMessage']})"
+                           end
 
-              if trusts == nil
+              if trusts.nil?
                 trusts = trust_line
               else
                 trusts += " #{trust_line}"
@@ -261,17 +264,17 @@ module Yawast
 
             key.each do |path_cert|
               body['certs'].each do |c|
-                if c['id'] == path_cert
-                  Yawast::Utilities.puts_info "\t\t\t#{c['subject']}"
-                  Yawast::Utilities.puts_info "\t\t\t  Signature: #{c['sigAlg']}  Key: #{c['keyAlg']}-#{c['keySize']}"
-                  Yawast::Utilities.puts_info "\t\t\t  https://crt.sh/?q=#{c['sha1Hash']}"
+                next unless c['id'] == path_cert
 
-                  if chain['certIds'].find_index(c['sha256Hash']) != nil
-                    Yawast::Utilities.puts_info "\t\t\t  (provided by server)"
-                  end
+                Yawast::Utilities.puts_info "\t\t\t#{c['subject']}"
+                Yawast::Utilities.puts_info "\t\t\t  Signature: #{c['sigAlg']}  Key: #{c['keyAlg']}-#{c['keySize']}"
+                Yawast::Utilities.puts_info "\t\t\t  https://crt.sh/?q=#{c['sha1Hash']}"
 
-                  puts
+                unless chain['certIds'].find_index(c['sha256Hash']).nil?
+                  Yawast::Utilities.puts_info "\t\t\t  (provided by server)"
                 end
+
+                puts
               end
             end
           end
@@ -284,7 +287,7 @@ module Yawast
         puts "\tConfiguration Information:"
 
         puts "\t\tProtocol Support:"
-        protos = Hash.new
+        protos = {}
         ep['details']['protocols'].each do |proto|
           if proto['name'] == 'SSL'
             Yawast::Utilities.puts_vuln "\t\t\t#{proto['name']} #{proto['version']}"
@@ -297,7 +300,7 @@ module Yawast
         puts
 
         puts "\t\tNamed Group Support:"
-        if ep['details']['namedGroups'] != nil
+        unless ep['details']['namedGroups'].nil?
           ep['details']['namedGroups']['list'].each do |group|
             Yawast::Utilities.puts_info "\t\t\t#{group['name']} #{group['bits']}"
           end
@@ -305,7 +308,7 @@ module Yawast
         end
 
         puts "\t\tCipher Suite Support:"
-        if ep['details']['suites'] != nil
+        if !ep['details']['suites'].nil?
           ep['details']['suites'].each do |proto_suites|
             Yawast::Utilities.puts_info "\t\t\t#{protos[proto_suites['protocol']]}"
 
@@ -319,11 +322,11 @@ module Yawast
                 strength = 112
               end
 
-              if ke != nil
-                suite_info = "#{suite['name'].ljust(50)} - #{strength}-bits - #{ke}"
-              else
-                suite_info = "#{suite['name'].ljust(50)} - #{strength}-bits"
-              end
+              suite_info = if !ke.nil?
+                             "#{suite['name'].ljust(50)} - #{strength}-bits - #{ke}"
+                           else
+                             "#{suite['name'].ljust(50)} - #{strength}-bits"
+                           end
 
               if cipher_suite_secure? suite
                 if strength >= 128
@@ -343,10 +346,10 @@ module Yawast
         puts
 
         puts "\t\tHandshake Simulation:"
-        if ep['details']['sims']['results'] != nil
+        if !ep['details']['sims']['results'].nil?
           ep['details']['sims']['results'].each do |sim|
             name = "#{sim['client']['name']} #{sim['client']['version']}"
-            if sim['client']['platform'] != nil
+            unless sim['client']['platform'].nil?
               name += " / #{sim['client']['platform']}"
             end
             name = name.ljust(28)
@@ -596,7 +599,7 @@ module Yawast
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tUses common DH primes: Yes (weak)"
           else
-            unless ep['details']['dhUsesKnownPrimes'] == nil
+            unless ep['details']['dhUsesKnownPrimes'].nil?
               Yawast::Utilities.puts_error "\t\t\tUses common DH primes: Unknown Response #{ep['details']['dhUsesKnownPrimes']}"
             end
         end
@@ -620,7 +623,7 @@ module Yawast
         secure = true
 
         # check for weak DH
-        if suite['kxStrength'] != nil && suite['kxStrength'] < 2048
+        if !suite['kxStrength'].nil? && suite['kxStrength'] < 2048
           secure = false
         end
         # check for RC4
@@ -637,15 +640,17 @@ module Yawast
 
       def self.get_key_exchange(suite)
         ke = nil
-        if suite['kxType'] != nil
-          if suite['namedGroupBits'] != nil
-            ke = "#{suite['kxType']}-#{suite['namedGroupBits']} / #{suite['namedGroupName']} (#{suite['kxStrength']} equivalent)"
-          else
-            ke = "#{suite['kxType']}-#{suite['kxStrength']}"
-          end
+
+        unless suite['kxType'].nil?
+          ke = if !suite['namedGroupBits'].nil?
+                 "#{suite['kxType']}-#{suite['namedGroupBits']} /" /
+                   " #{suite['namedGroupName']} (#{suite['kxStrength']} equivalent)"
+               else
+                 "#{suite['kxType']}-#{suite['kxStrength']}"
+               end
         end
 
-        return ke
+        ke
       end
     end
   end

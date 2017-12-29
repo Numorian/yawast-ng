@@ -4,7 +4,7 @@ module Yawast
       module Servers
         class Iis
           def self.check_banner(banner)
-            #don't bother if this doesn't include IIS
+            # don't bother if this doesn't include IIS
             return unless banner.include? 'Microsoft-IIS/'
             @iis = true
 
@@ -13,7 +13,7 @@ module Yawast
           end
 
           def self.check_all(uri, head)
-            #run all the defined checks
+            # run all the defined checks
             check_asp_banner(head)
             check_mvc_version(head)
             check_asp_net_debug(uri)
@@ -45,14 +45,12 @@ module Yawast
               headers['Accept'] = '*/*'
               res = req.request(Debug.new('/', headers))
 
-              if res.code == 200
-                Yawast::Utilities.puts_vuln 'ASP.NET Debugging Enabled'
-              end
+              Yawast::Utilities.puts_vuln 'ASP.NET Debugging Enabled' if res.code == 200
             end
           end
         end
 
-        #Custom class to allow using the DEBUG verb
+        # Custom class to allow using the DEBUG verb
         class Debug < Net::HTTPRequest
           METHOD = 'DEBUG'
           REQUEST_HAS_BODY = false

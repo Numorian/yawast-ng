@@ -1,3 +1,5 @@
+## 0.7.0 - In Development
+
 ## 0.6.0 - 2018-01-16
 
 * [#54](https://github.com/adamcaudill/yawast/issues/54) - Check for Python version in Server header

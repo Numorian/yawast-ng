@@ -14,10 +14,15 @@ module Yawast
 
           print_header
 
+          if options.output != nil
+            Yawast::Shared::Output.setup @uri, options
+          end
+
           ssl_redirect = Yawast::Scanner::Plugins::SSL::SSL.check_for_ssl_redirect @uri
           if ssl_redirect
             @uri = ssl_redirect
             puts "Server redirects to TLS: Scanning: #{@uri}"
+            Yawast::Shared::Output.log_value 'server_tls_redirect', @uri
           end
 
           Yawast::Scanner::Plugins::SSL::SSL.set_openssl_options
@@ -75,6 +80,7 @@ module Yawast
           # less than 24 hours. if a scan is that long, we have bigger problems
           elapsed_time = Time.at(Time.now - start_time).utc.strftime('%H:%M:%S')
 
+          Yawast::Shared::Output.write_file
           puts "Scan complete (#{elapsed_time})."
         rescue => e
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.class}: #{e.message})"

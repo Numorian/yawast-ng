@@ -47,6 +47,7 @@ module Yawast
 
           #cache the HEAD result, so that we can minimize hits
           head = get_head
+          Yawast::Shared::Output.log_hash 'http', 'head', 'raw', head.to_hash
           Yawast::Scanner::Generic.head_info(head, @uri)
 
           #perfom SSL checks

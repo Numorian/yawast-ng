@@ -71,6 +71,8 @@ module Yawast
 
                 if version != nil && version[0] != nil
                   Yawast::Utilities.puts_warn "Apache Tomcat Version Found: #{version[0]}"
+                  Yawast::Shared::Output.log_value 'apache', 'tomcat_version', version[0]
+                  
                   puts "\t\t\"curl -X XYZ #{uri}\""
 
                   puts ''
@@ -80,8 +82,8 @@ module Yawast
           end
 
           def self.check_tomcat_manager(uri)
-            check_tomcat_manager_paths uri, 'manager', 'Manager'
-            check_tomcat_manager_paths uri, 'host-manager', 'Host Manager'
+            check_tomcat_manager_paths uri.copy, 'manager', 'Manager'
+            check_tomcat_manager_paths uri.copy, 'host-manager', 'Host Manager'
           end
 
           def self.check_tomcat_manager_paths(uri, base_path, manager)
@@ -93,16 +95,19 @@ module Yawast
             if ret.include? '<tt>conf/tomcat-users.xml</tt>'
               #this will get Tomcat 7+
               Yawast::Utilities.puts_warn "Apache Tomcat #{manager} page found: #{uri}"
+              Yawast::Shared::Output.log_value 'apache', 'tomcat_mgr', manager, uri
               check_tomcat_manager_passwords uri, manager
 
               puts ''
             else
               #check for Tomcat 6 and below
+              uri = uri.copy
               uri.path = "/#{base_path}"
               ret = Yawast::Shared::Http.get(uri)
 
               if ret.include? '<tt>conf/tomcat-users.xml</tt>'
                 Yawast::Utilities.puts_warn "Apache Tomcat #{manager} page found: #{uri}"
+                Yawast::Shared::Output.log_value 'apache', 'tomcat_mgr', manager, uri
                 check_tomcat_manager_passwords uri, manager
 
                 puts ''
@@ -125,6 +130,8 @@ module Yawast
             if ret.include?('<font size="+2">Tomcat Web Application Manager</font>') ||
                 ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
               Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: #{credentials}"
+
+              Yawast::Shared::Output.log_value 'apache', 'tomcat_mgr_pwd', uri, credentials
             end
           end
 
@@ -133,8 +140,12 @@ module Yawast
             uri.path = "/#{SecureRandom.hex}.jsp/"
             uri.query = '' if uri.query != nil
 
+            Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'path', uri
+
             # we'll use this to verify that it actually worked
             check_value = SecureRandom.hex
+
+            Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'check_value', check_value
 
             # upload the JSP file
             req_data = "<% out.println(\"#{check_value}\");%>"
@@ -143,8 +154,14 @@ module Yawast
             # check to see of we get check_value back
             uri.path = uri.path.chomp('/')
             res = Yawast::Shared::Http.get(uri)
+
+            Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'body', res
+
             if res.include? check_value
               Yawast::Utilities.puts_vuln "Apache Tomcat PUT RCE (CVE-2017-12615): #{uri}"
+              Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'vulnerable', true
+            else
+              Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'vulnerable', false
             end
           end
 
@@ -159,9 +176,12 @@ module Yawast
             search.push '/struts2-rest-showcase/'
 
             search.each do |path|
+              uri = uri.copy
               uri.path = path
 
               ret = Yawast::Shared::Http.get_status_code uri
+              Yawast::Shared::Output.log_value 'apache', 'struts2_sample_files', uri, ret
+
               if ret == 200
                 Yawast::Utilities.puts_warn "Apache Struts2 Sample Files: #{uri}"
               end
@@ -176,6 +196,7 @@ module Yawast
 
             if ret.include? search
               Yawast::Utilities.puts_vuln "#{search} page found: #{uri}"
+              Yawast::Shared::Output.log_value 'apache', 'page_search', search, uri
               puts ''
             end
           end

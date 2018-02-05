@@ -35,6 +35,8 @@ module Yawast
                 raise InvocationError, "API returned: #{json['errors']}"
               end
 
+              Yawast::Shared::Output.log_json 'ssl', 'ssl_labs', body
+
               # check the response code, make sure it's 200 - otherwise, we should stop now
               if code != 200
                 case code

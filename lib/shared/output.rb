@@ -41,45 +41,68 @@ module Yawast
         end
       end
 
-      def self.log_value(parent = nil, key, value)
+      def self.log_value(super_parent = nil, parent = nil, key, value)
         if @setup
-          if parent != nil
-            if @data[parent] == nil
-              @data[parent] = Hash.new
-            end
+          target = get_target super_parent, parent
 
-            @data[parent][key] = value
-          else
-            @data[key] = value
-          end
+          target[key] = value.to_s
         end
       end
 
-      def self.log_append_value(parent = nil, key, value)
+      def self.log_append_value(super_parent = nil, parent = nil, key, value)
         if @setup
-          if parent != nil
-            if @data[parent] == nil
-              @data[parent] = Hash.new
-            end
-            if @data[parent][key] == nil
-              @data[parent][key] = Array.new
-            end
+          target = get_target super_parent, parent
 
-            @data[parent][key].push value
-          else
-            if @data[key] == nil
-              @data[key] = Array.new
-            end
-
-            @data[key].push value
+          if target[key] == nil
+            target[key] = Array.new
           end
+
+          target[key].push value.to_s
         end
       end
 
-      def self.log_json(key, json_block)
+      def self.log_json(super_parent = nil, parent = nil, key, json_block)
         if @setup
-          @data[key] = JSON.parse(json_block)
+          target = get_target super_parent, parent
+
+          target[key] = JSON.parse(json_block)
         end
+      end
+
+      def self.log_hash(super_parent = nil, parent = nil, key, hash)
+        if @setup
+          target = get_target super_parent, parent
+
+          target[key] = hash
+        end
+      end
+
+      def self.get_target(super_parent = nil, parent = nil)
+        target = @data
+
+        # fix parent vs super confusion
+        if parent == nil && super_parent != nil
+          parent = super_parent
+          super_parent = nil
+        end
+
+        if super_parent != nil
+          if target[super_parent] == nil
+            target[super_parent] = Hash.new
+          end
+
+          target = target[super_parent]
+        end
+
+        if parent != nil
+          if target[parent] == nil
+            target[parent] = Hash.new
+          end
+
+          target = target[parent]
+        end
+
+        return target
       end
 
       def self.write_file

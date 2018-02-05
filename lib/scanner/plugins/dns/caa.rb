@@ -35,7 +35,7 @@ module Yawast
                 cname = get_cname_record(domain)
                 if cname != nil
                   Yawast::Utilities.puts_info "\t\tCAA (#{domain}): CNAME Found: -> #{cname}"
-                  Yawast::Shared::Output.log_value 'dns_caa', domain, "CNAME: #{cname}"
+                  Yawast::Shared::Output.log_value 'dns', 'caa', domain, "CNAME: #{cname}"
 
                   chase_domain cname.to_s
                 else
@@ -69,7 +69,7 @@ module Yawast
                 if rec.rdata != nil
                   Yawast::Utilities.puts_info "\t\tCAA (#{domain}): #{rec.rdata}"
 
-                  Yawast::Shared::Output.log_append_value 'dns_caa', domain, rec.rdata
+                  Yawast::Shared::Output.log_append_value 'dns', 'caa', domain, rec.rdata
                 else
                   Yawast::Utilities.puts_error "\t\tCAA (#{domain}): Invalid Response: #{ans.answer}"
                 end
@@ -78,7 +78,7 @@ module Yawast
               # no answer, so no records
               Yawast::Utilities.puts_info "\t\tCAA (#{domain}): No Records Found"
 
-              Yawast::Shared::Output.log_value 'dns_caa', domain, 'nil'
+              Yawast::Shared::Output.log_value 'dns', 'caa', domain, 'nil'
             end
           end
         end

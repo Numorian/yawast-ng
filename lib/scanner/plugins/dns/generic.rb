@@ -21,7 +21,7 @@ module Yawast
 
                     Yawast::Utilities.puts_info "\t\t#{ip.address} (#{host_name})"
 
-                    Yawast::Shared::Output.log_value 'dns_a', ip.address, host_name
+                    Yawast::Shared::Output.log_value 'dns', 'a', ip.address, host_name
 
                     # if address is private, force internal SSL mode, don't show links
                     if IPAddr.new(ip.address.to_s, Socket::AF_INET).private?
@@ -49,7 +49,7 @@ module Yawast
 
                     Yawast::Utilities.puts_info "\t\t#{ip.address} (#{host_name})"
 
-                    Yawast::Shared::Output.log_value 'dns_aaaa', ip.address, host_name
+                    Yawast::Shared::Output.log_value 'dns', 'aaaa', ip.address, host_name
 
                     # if address is private, force internal SSL mode, don't show links
                     if IPAddr.new(ip.address.to_s, Socket::AF_INET6).private?
@@ -68,7 +68,7 @@ module Yawast
                   txt.each do |rec|
                     Yawast::Utilities.puts_info "\t\tTXT: #{rec.data}"
 
-                    Yawast::Shared::Output.log_append_value 'dns_txt', uri.host, rec.data
+                    Yawast::Shared::Output.log_append_value 'dns', 'txt', uri.host, rec.data
                   end
                 end
 
@@ -79,7 +79,7 @@ module Yawast
                     txt.each do |rec|
                       Yawast::Utilities.puts_info "\t\tTXT (#{root_domain}): #{rec.data}"
 
-                      Yawast::Shared::Output.log_append_value 'dns_txt', root_domain, rec.data
+                      Yawast::Shared::Output.log_append_value 'dns', 'txt', root_domain, rec.data
                     end
                   end
                 end
@@ -92,7 +92,7 @@ module Yawast
 
                       Yawast::Utilities.puts_info "\t\tMX: #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
 
-                      Yawast::Shared::Output.log_value 'dns_mx', rec.exchange, ip
+                      Yawast::Shared::Output.log_value 'dns', 'mx', rec.exchange, ip
                     rescue => e
                       Yawast::Utilities.puts_error "\t\tMX: #{rec.exchange} (#{rec.preference}) - Error: #{e.message})"
                     end
@@ -109,7 +109,7 @@ module Yawast
 
                         Yawast::Utilities.puts_info "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - #{ip} (#{get_network_info(ip.to_s)})"
 
-                        Yawast::Shared::Output.log_value 'dns_mx', rec.exchange, ip
+                        Yawast::Shared::Output.log_value 'dns', 'mx', rec.exchange, ip
                       rescue => e
                         Yawast::Utilities.puts_error "\t\tMX (#{root_domain}): #{rec.exchange} (#{rec.preference}) - Error: #{e.message})"
                       end
@@ -124,7 +124,7 @@ module Yawast
 
                     Yawast::Utilities.puts_info "\t\tNS: #{rec.name} - #{ip} (#{get_network_info(ip.to_s)})"
 
-                    Yawast::Shared::Output.log_value 'dns_ns', rec.name, ip
+                    Yawast::Shared::Output.log_value 'dns', 'ns', rec.name, ip
                   end
                 end
 
@@ -162,7 +162,7 @@ module Yawast
 
                       Yawast::Utilities.puts_info "\t\tSRV: #{host}: #{rec.target}:#{rec.port} - #{ip} (#{get_network_info(ip.to_s)})"
 
-                      Yawast::Shared::Output.log_value 'dns_srv', host, "#{rec.target}:#{rec.port}"
+                      Yawast::Shared::Output.log_value 'dns', 'srv', host, "#{rec.target}:#{rec.port}"
                     end
                   end
                 rescue
@@ -188,7 +188,7 @@ module Yawast
                         Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
                       end
 
-                      Yawast::Shared::Output.log_value 'dns_subdomain', host, ip.address
+                      Yawast::Shared::Output.log_value 'dns', 'subdomain', host, ip.address
                     end
                   end
                 rescue
@@ -214,7 +214,7 @@ module Yawast
               ret = "#{network_info['as_country_code']} - #{network_info['as_description']}"
               @netinfo[ip] = ret
 
-              Yawast::Shared::Output.log_value 'asn_info', ip, ret
+              Yawast::Shared::Output.log_value 'dns', 'asn_info', ip, ret
 
               return ret
             rescue => e

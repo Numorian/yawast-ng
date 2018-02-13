@@ -38,6 +38,7 @@ module Yawast
           log_value 'platform', RUBY_PLATFORM
           log_value 'target_uri', uri
           log_value 'options', options.__hash__
+          log_value 'encoding', __ENCODING__
         end
       end
 
@@ -45,7 +46,7 @@ module Yawast
         if @setup
           target = get_target super_parent, parent
 
-          target[key] = value.to_s
+          target[key] = encode_utf8(value.to_s)
         end
       end
 
@@ -57,7 +58,7 @@ module Yawast
             target[key] = Array.new
           end
 
-          target[key].push value.to_s
+          target[key].push encode_utf8(value.to_s)
         end
       end
 
@@ -75,6 +76,16 @@ module Yawast
 
           target[key] = hash
         end
+      end
+
+      def self.encode_utf8(str)
+        str = str.dup
+
+        if [Encoding::ASCII_8BIT, Encoding::US_ASCII].include?(str.encoding)
+          str = str.force_encoding('UTF-8')
+        end
+
+        return str
       end
 
       def self.get_target(super_parent = nil, parent = nil)

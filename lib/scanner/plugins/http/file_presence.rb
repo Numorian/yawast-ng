@@ -163,7 +163,7 @@ module Yawast
 
               if res.code == '200'
                 @results.push "'#{uri.path}' found: #{uri}"
-                Yawast::Shared::Output.log_append_value 'http_file', uri
+                Yawast::Shared::Output.log_append_value 'http', 'http_file', uri
               end
             rescue => e
               unless e.message.include?('end of file') || e.message.include?('getaddrinfo')

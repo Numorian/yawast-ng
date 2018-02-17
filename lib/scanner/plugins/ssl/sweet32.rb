@@ -149,7 +149,7 @@ module Yawast
               # ignore SSLv23, as it's an auto-negotiate, which just adds noise
               if version.to_s != 'SSLv23' && version.to_s != 'SSLv2'
                 # try to get the list of ciphers supported for each version
-                Yawast::Shared::Output.log_append_value 'ssl', 'tls_versions', version.to_s
+                Yawast::Shared::Output.log_append_value 'openssl', 'tls_versions', version.to_s
 
                 ciphers = nil
 
@@ -167,7 +167,7 @@ module Yawast
                       ret = true
                     end
 
-                    Yawast::Shared::Output.log_append_value 'ssl', 'tls_ciphers', version.to_s, cipher[0]
+                    Yawast::Shared::Output.log_append_value 'openssl', 'tls_ciphers', version.to_s, cipher[0]
                   end
                 elsif !get_ciphers_failed
                   Yawast::Utilities.puts_info "\t#{version}: No cipher suites available."

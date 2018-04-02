@@ -82,6 +82,8 @@ command :dns do |c|
   c.syntax = './yawast dns URL'
   c.description = 'Gets information about the server DNS configuration'
 
+  c.option '--srv', 'Scan for known SRV DNS Records'
+  c.option '--subdomains', 'Search for Common Subdomains'
   c.option '--output STRING', String, 'Output JSON file'
 
   c.action do |args, options|

@@ -52,24 +52,34 @@ module Yawast
 
       def self.process_results(uri, body, tdes_session_count)
         begin
-          body['endpoints'].each do |ep|
-            Yawast::Utilities.puts_info "IP: #{ep['ipAddress']} - Grade: #{ep['grade']}"
-            puts
+          if !body['endpoints'].nil?
+            body['endpoints'].each do |ep|
+              Yawast::Utilities.puts_info "IP: #{ep['ipAddress']} - Grade: #{ep['grade']}"
+              puts
 
-            begin
-              if ep['statusMessage'] == 'Ready'
-                get_cert_info ep, body
-                get_config_info ep
-                get_proto_info ep
-              else
-                Yawast::Utilities.puts_error "Error getting information for IP: #{ep['ipAddress']}: #{ep['statusMessage']}"
+              begin
+                if ep['statusMessage'] == 'Ready'
+                  get_cert_info ep, body
+                  get_config_info ep
+                  get_proto_info ep
+                else
+                  Yawast::Utilities.puts_error "Error getting information for IP: #{ep['ipAddress']}: #{ep['statusMessage']}"
+                end
+              rescue => e
+                Yawast::Utilities.puts_error "Error getting information for IP: #{ep['ipAddress']}: #{e.message}"
               end
-            rescue => e
-              Yawast::Utilities.puts_error "Error getting information for IP: #{ep['ipAddress']}: #{e.message}"
+
+              Yawast::Scanner::Plugins::SSL::Sweet32.get_tdes_session_msg_count(uri) if tdes_session_count
+
+              puts
             end
+          else
+            Yawast::Utilities.puts_error 'SSL Labs Error: No Endpoint Data Received.'
 
-            Yawast::Scanner::Plugins::SSL::Sweet32.get_tdes_session_msg_count(uri) if tdes_session_count
-
+            #TODO - Remove this before release
+            puts
+            puts "DEBUG DATA (send to adam@adamcaudill.com): #{body}"
+            puts
             puts
           end
         rescue => e

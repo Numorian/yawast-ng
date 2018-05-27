@@ -10,7 +10,7 @@ class TestInternalSSL < Minitest::Test
     uri = URI.parse 'https://self-signed.badssl.com/'
     Yawast::Scanner::Ssl.info uri, false, false
 
-    assert stdout_value.include?('Certificate Is Self-Singed'), 'self-signed certificate warning not found'
+    assert stdout_value.include?('Certificate Is Self-Signed'), 'self-signed certificate warning not found'
 
     restore_stdout
   end

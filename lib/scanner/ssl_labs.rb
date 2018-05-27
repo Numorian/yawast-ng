@@ -36,7 +36,14 @@ module Yawast
           puts "\tSSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=#{uri.host}&hideResults=on"
           puts
 
-          process_results uri, JSON.parse(data_body), tdes_session_count
+          json = nil
+          begin
+            json = JSON.parse data_body
+          rescue => e
+            raise Exception, "Invalid response from SSL Labs: '#{e.message}'"
+          end
+
+          process_results uri, json, tdes_session_count
         rescue => e
           puts
           Yawast::Utilities.puts_error "SSL Labs Error: #{e.message}"

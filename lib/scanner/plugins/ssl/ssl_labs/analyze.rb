@@ -30,7 +30,11 @@ module Yawast
               code = res.code.to_i
 
               # check for error in the response - if we don't, we'll wait forever for nothing
-              json = JSON.parse body
+              begin
+                json = JSON.parse body
+              rescue => e
+                raise StandardError, "Invalid response from SSL Labs: '#{e.message}'"
+              end
               if json.key?('errors')
                 raise InvocationError, "API returned: #{json['errors']}"
               end
@@ -59,7 +63,11 @@ module Yawast
             end
 
             def self.extract_status(body)
-              json = JSON.parse body
+              begin
+                json = JSON.parse body
+              rescue => e
+                raise StandardError, "Invalid response from SSL Labs: '#{e.message}'"
+              end
 
               return json['status']
             end

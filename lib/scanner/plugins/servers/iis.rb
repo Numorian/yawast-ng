@@ -48,6 +48,9 @@ module Yawast
               if res.code == 200
                 Yawast::Utilities.puts_vuln 'ASP.NET Debugging Enabled'
               end
+
+              Yawast::Shared::Output.log_value 'http', 'asp_net_debug', 'raw', res.body
+              Yawast::Shared::Output.log_value 'http', 'asp_net_debug', 'code', res.code
             end
           end
         end

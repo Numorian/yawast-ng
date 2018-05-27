@@ -99,10 +99,12 @@ module Yawast
 
               if res.code == '200'
                 @results.push "\tFound: '#{uri}'"
+                Yawast::Shared::Output.log_append_value 'http', 'http_dir', uri
 
                 load_queue uri if @recursive
               elsif res.code == '301' && @list_redirects
                 @results.push "\tFound Redirect: '#{uri} -> '#{res['Location']}'"
+                Yawast::Shared::Output.log_value 'http', 'http_dir_redirect', uri, res['Location']
               end
             rescue => e
               unless e.message.include?('end of file') || e.message.include?('getaddrinfo')

@@ -41,6 +41,8 @@ module Yawast
           req.use_ssl = uri.scheme == 'https'
           res = req.request_get(uri, get_headers(headers))
           body = res.read_body
+
+          Yawast::Shared::Output.log_value 'debug', 'http_get', uri, res.code
         rescue
           # do nothing for now
         end
@@ -79,6 +81,9 @@ module Yawast
         req = get_http(uri)
         req.use_ssl = uri.scheme == 'https'
         res = req.head(uri, get_headers)
+
+        Yawast::Shared::Output.log_value 'debug', 'http_get_status_code', uri, res.code
+
         res.code
       end
 

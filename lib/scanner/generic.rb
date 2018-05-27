@@ -24,6 +24,7 @@ module Yawast
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
             Yawast::Utilities.puts_info "\t\t#{k}: #{v}"
+            Yawast::Shared::Output.log_value 'http', 'head', k, v
 
             server = v if k.downcase == 'server'
             powered_by = v if k.downcase == 'x-powered-by'
@@ -40,7 +41,11 @@ module Yawast
 
             if k.downcase == 'set-cookie'
               #this chunk of magic manages to properly split cookies, when multiple are sent together
-              v.gsub(/(,([^;,]*=)|,$)/) { "\r\n#{$2}" }.split(/\r\n/).each { |c| cookies.push(c) }
+              v.gsub(/(,([^;,]*=)|,$)/) { "\r\n#{$2}" }.split(/\r\n/).each do |c|
+                cookies.push(c)
+
+                Yawast::Shared::Output.log_append_value 'http', 'head', 'cookies', c
+              end
             end
           end
           puts ''
@@ -163,11 +168,13 @@ module Yawast
 
           if res['Public'] != nil
             Yawast::Utilities.puts_info "Public HTTP Verbs (OPTIONS): #{res['Public']}"
+            Yawast::Shared::Output.log_value 'http', 'options', 'public', res['Public']
 
             puts ''
           end
           if res['Allow'] != nil
             Yawast::Utilities.puts_info "Allow HTTP Verbs (OPTIONS): #{res['Allow']}"
+            Yawast::Shared::Output.log_value 'http', 'options', 'allow', res['Allow']
 
             puts ''
           end
@@ -187,6 +194,9 @@ module Yawast
 
             puts ''
           end
+
+          Yawast::Shared::Output.log_value 'http', 'trace', 'raw', res.body
+          Yawast::Shared::Output.log_value 'http', 'trace', 'code', res.code
         end
       end
 
@@ -203,6 +213,11 @@ module Yawast
 
             puts ''
           end
+
+          Yawast::Shared::Output.log_value 'http', 'propfind', 'raw', res.body
+          Yawast::Shared::Output.log_value 'http', 'propfind', 'code', res.code
+          Yawast::Shared::Output.log_value 'http', 'propfind', 'content-type', res['Content-Type']
+          Yawast::Shared::Output.log_value 'http', 'propfind', 'length', res.body.length
         end
       end
     end

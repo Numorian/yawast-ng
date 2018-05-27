@@ -50,15 +50,15 @@ module Yawast
           end
 
           def self.set_openssl_options
-            #change certain defaults, to make things work better
-            #we prefer RSA, to avoid issues with small DH keys
+            # change certain defaults, to make things work better
+            # we prefer RSA, to avoid issues with small DH keys
             OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:ciphers] = 'RSA:ALL:COMPLEMENTOFALL'
             OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
             OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:options] = OpenSSL::SSL::OP_ALL
           end
 
           def self.check_for_ssl_redirect(uri)
-            #check to see if the site redirects to SSL by default
+            # check to see if the site redirects to SSL by default
             if uri.scheme != 'https'
               head = Yawast::Shared::Http.head(uri)
 
@@ -67,11 +67,11 @@ module Yawast
                   location = URI.parse(head['Location'])
 
                   if location.scheme == 'https'
-                    #we run this through extract_uri as it performs a few checks we need
+                    # we run this through extract_uri as it performs a few checks we need
                     return Yawast::Shared::Uri.extract_uri location.to_s
                   end
                 rescue
-                  #we don't care if this fails
+                  # we don't care if this fails
                 end
               end
             end
@@ -94,8 +94,11 @@ module Yawast
                 ssl.connect
 
                 # this provides a bunch of useful info, that's already formatted
-                #  instead of building this manually, we'll let OpenSSL do the work
-                puts ssl.session.to_text
+                #  instead of building this manually, we'll let OpenSSL do the
+                session_info = ssl.session.to_text
+                puts session_info
+
+                Yawast::Shared::Output.log_value 'ssl', 'session', 'info', session_info
 
                 puts
               end

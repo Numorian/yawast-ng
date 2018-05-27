@@ -45,7 +45,12 @@ module Yawast
 
               Yawast::Utilities.puts_info "HSTS Preload: Chrome - #{chrome}; Firefox - #{firefox}; Tor - #{tor}"
             rescue => e
-              Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message}"
+              if e.message.include? 'unexpected token'
+                #this means we have a parsing error - don't need to include the entire message
+                Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message.truncate(30)}"
+              else
+                Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message}"
+              end
             end
           end
 

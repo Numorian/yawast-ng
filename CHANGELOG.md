@@ -3,6 +3,7 @@
 * [#38](https://github.com/adamcaudill/yawast/issues/38) - Report Generation Mode (work in progress)
 * [#134](https://github.com/adamcaudill/yawast/issues/134) - Add options to DNS command
 * [#137](https://github.com/adamcaudill/yawast/issues/137) - Warn on TLS 1.0
+* [#138](https://github.com/adamcaudill/yawast/issues/138) - Warn on Symantec Roots
 * [#130](https://github.com/adamcaudill/yawast/issues/130) - Bug: HSTS Error leads to printing HTML
 * [#132](https://github.com/adamcaudill/yawast/issues/132) - Bug: Typo in SSL Output
 

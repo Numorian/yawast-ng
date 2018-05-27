@@ -281,6 +281,11 @@ module Yawast
                 if c['id'] == path_cert
                   Yawast::Utilities.puts_info "\t\t\t#{c['subject']}"
                   Yawast::Utilities.puts_info "\t\t\t  Signature: #{c['sigAlg']}  Key: #{c['keyAlg']}-#{c['keySize']}"
+
+                  if Yawast::Scanner::Plugins::SSL::SSL.check_symantec_root(c['sha256Hash'])
+                    Yawast::Utilities.puts_vuln "\t\t\t  Untrusted Symantec Root"
+                  end
+
                   Yawast::Utilities.puts_info "\t\t\t  https://crt.sh/?q=#{c['sha1Hash']}"
 
                   if chain['certIds'].find_index(c['sha256Hash']) != nil

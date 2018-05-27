@@ -276,6 +276,27 @@ module Yawast
             puts "\t\t  Path #{path_count}:"
             puts "\t\t   Root Stores: #{trust_paths[key]}"
 
+            # cert chain issues
+            if chain['issues'] & (1<<1) != 0
+              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: incomplete chain"
+            end
+
+            if chain['issues'] & (1<<2) != 0
+              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: chain contains unrelated/duplicate certificates"
+            end
+
+            if chain['issues'] & (1<<3) != 0
+              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: incorrect order"
+            end
+
+            if chain['issues'] & (1<<4) != 0
+              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: contains self-signed root certificate"
+            end
+
+            if cert['issues'] & (1<<5) != 0
+              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: untrusted"
+            end
+
             key.each do |path_cert|
               body['certs'].each do |c|
                 if c['id'] == path_cert

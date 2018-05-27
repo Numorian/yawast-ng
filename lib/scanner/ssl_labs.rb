@@ -304,7 +304,11 @@ module Yawast
         protos = Hash.new
         ep['details']['protocols'].each do |proto|
           if proto['name'] == 'SSL'
+            # show a vuln for SSLvX
             Yawast::Utilities.puts_vuln "\t\t\t#{proto['name']} #{proto['version']}"
+          elsif proto['name'].include? '1.0'
+            # show a warn for TLSv1.0
+            Yawast::Utilities.puts_warn "\t\t\t#{proto['name']} #{proto['version']}"
           else
             Yawast::Utilities.puts_info "\t\t\t#{proto['name']} #{proto['version']}"
           end

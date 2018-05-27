@@ -1,6 +1,8 @@
 ## 0.7.0 - In Development
 
+* [#38](https://github.com/adamcaudill/yawast/issues/38) - Report Generation Mode (work in progress)
 * [#134](https://github.com/adamcaudill/yawast/issues/134) - Add options to DNS command
+* [#132](https://github.com/adamcaudill/yawast/issues/132) - Bug: Typo in SSL Output
 
 ## 0.6.0 - 2018-01-16
 

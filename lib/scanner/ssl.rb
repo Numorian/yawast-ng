@@ -89,7 +89,7 @@ module Yawast
           #It looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
 
           if cert.issuer == cert.subject
-            Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Singed"
+            Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Signed"
           else
             Yawast::Utilities.puts_warn "\t\tCertificate Chain Is Incomplete"
           end

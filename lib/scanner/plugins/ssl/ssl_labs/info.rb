@@ -17,10 +17,17 @@ module Yawast
 
             def self.extract_msg(body)
               ret = Array.new
-              json = JSON.parse body
 
-              json['messages'].each do |msg|
-                ret.push msg
+              begin
+                json = JSON.parse body
+              rescue => e
+                raise Exception, "Invalid response from SSL Labs: '#{e.message}'"
+              end
+
+              unless json['messages'].nil?
+                json['messages'].each do |msg|
+                  ret.push msg
+                end
               end
 
               return ret

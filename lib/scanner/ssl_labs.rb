@@ -290,7 +290,7 @@ module Yawast
             end
 
             if chain['issues'] & (1<<4) != 0
-              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: contains self-signed root certificate"
+              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: contains anchor"
             end
 
             if cert['issues'] & (1<<5) != 0

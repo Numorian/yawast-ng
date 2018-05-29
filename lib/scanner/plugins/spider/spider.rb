@@ -22,6 +22,7 @@ module Yawast
                   if @results.length > 0
                     out = @results.pop(true)
                     Yawast::Utilities.puts_info out
+                    Yawast::Shared::Output.log_append_value 'spider', 'get', out
                   end
                 end
               rescue ThreadError

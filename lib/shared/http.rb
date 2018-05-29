@@ -1,5 +1,6 @@
 require 'securerandom'
 require 'json'
+require 'oj'
 
 module Yawast
   module Shared
@@ -43,7 +44,7 @@ module Yawast
           body = res.read_body
           code = res.code
 
-          Yawast::Shared::Output.log_value 'debug', 'http_get', uri, res.code
+          Yawast::Shared::Output.log_json 'debug', 'http_get', uri, Oj.dump(res)
         rescue
           # do nothing for now
         end
@@ -88,7 +89,7 @@ module Yawast
         req.use_ssl = uri.scheme == 'https'
         res = req.head(uri, get_headers)
 
-        Yawast::Shared::Output.log_value 'debug', 'http_get_status_code', uri, res.code
+        Yawast::Shared::Output.log_json 'debug', 'http_get_status_code', uri, Oj.dump(res)
 
         res.code
       end

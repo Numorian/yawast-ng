@@ -1,4 +1,5 @@
 require 'json'
+require 'base64'
 
 module Yawast
   module Shared
@@ -115,13 +116,34 @@ module Yawast
         target
       end
 
+      def self.escape_hash(hash)
+        hash.each_pair do |k,v|
+          if v.is_a?(Hash)
+            escape_hash(v)
+          else
+            if v.is_a?(String)
+              unless v.valid_encoding?
+                hash[k] = Base64.encode64 v
+              end
+            end
+          end
+        end
+      end
+
       def self.write_file
         return unless @setup
 
         # note the ending time
         log_value 'end_time', Time.new.to_i.to_s
 
-        json = JSON.pretty_generate @data
+        begin
+          json = JSON.pretty_generate @data
+        rescue JSON::GeneratorError
+          # this means that we don't have valid data to encode - need to perform some cleanup
+          @data = escape_hash @data
+          json = JSON.pretty_generate @data
+        end
+
         File.open(@file, 'w') { |file| file.write(json) }
       end
     end

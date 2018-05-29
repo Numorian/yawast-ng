@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sslshake', '~> 1.1'
   s.add_runtime_dependency 'dnsruby', '~> 1.60'
   s.add_runtime_dependency 'nokogiri', '~> 1.8'
+  s.add_runtime_dependency 'oj', '~> 3.6'
 
   s.bindir            = 'bin'
   s.files             = `git ls-files`.split("\n")

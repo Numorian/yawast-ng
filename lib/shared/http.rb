@@ -33,7 +33,7 @@ module Yawast
         end
       end
 
-      def self.get(uri, headers = nil)
+      def self.get_with_code(uri, headers = nil)
         body = ''
 
         begin
@@ -41,6 +41,7 @@ module Yawast
           req.use_ssl = uri.scheme == 'https'
           res = req.request_get(uri, get_headers(headers))
           body = res.read_body
+          code = res.code
 
           Yawast::Shared::Output.log_value 'debug', 'http_get', uri, res.code
         rescue
@@ -48,6 +49,11 @@ module Yawast
         end
 
         body
+        return {:body => body, :code => code}
+      end
+
+      def self.get(uri, headers = nil)
+        return get_with_code(uri, headers)[:body]
       end
 
       def self.get_json(uri)

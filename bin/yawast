@@ -27,6 +27,7 @@ command :scan do |c|
   c.option '--proxy STRING', String, 'HTTP Proxy Server (such as Burp Suite)'
   c.option '--cookie STRING', String, 'Session cookie'
   c.option '--nodns', 'Disable DNS checks'
+  c.option '--spider', 'Spider the site'
   c.option '--output STRING', String, 'Output JSON file'
 
   c.action do |args, options|

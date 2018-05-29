@@ -69,6 +69,10 @@ module Yawast
             Yawast::Scanner::Generic.check_options(@uri)
             Yawast::Scanner::Generic.check_trace(@uri)
 
+            if options.spider
+              Yawast::Scanner::Plugins::Spider::Spider.spider(@uri)
+            end
+
             #check for common directories
             if options.dir
               Yawast::Scanner::Plugins::Http::DirectorySearch.search @uri, options.dirrecursive, options.dirlistredir

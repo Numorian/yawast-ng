@@ -59,6 +59,10 @@ module Yawast
   trap 'SIGINT' do
     puts
     puts 'Scan cancelled by user.'
+
+    # attempt to save the output
+    Yawast::Shared::Output.write_file
+
     exit 0
   end
 end

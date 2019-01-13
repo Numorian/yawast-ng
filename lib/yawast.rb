@@ -36,7 +36,7 @@ module Yawast
     puts '  \_/\_| |_/\/  \/\_| |_/\____/  \_/  '
     puts ''
     puts "YAWAST v#{VERSION} - #{DESCRIPTION}"
-    puts ' Copyright (c) 2013-2018 Adam Caudill <adam@adamcaudill.com>'
+    puts ' Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com>'
     puts ' Support & Documentation: https://github.com/adamcaudill/yawast'
     puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION} (#{RUBY_PLATFORM})"
     puts " Started at #{Time.now.strftime("%Y-%m-%d %H:%M:%S %Z")}"

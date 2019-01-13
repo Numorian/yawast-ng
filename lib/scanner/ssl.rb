@@ -8,6 +8,11 @@ module Yawast
     class Ssl
       def self.info(uri, check_ciphers, tdes_session_count)
         begin
+          puts
+          puts 'DEPRECATED: The Internal SSL Scanner (--internalssl) is deprecated and will not be updated.'
+          puts 'DEPRECATED: Use a tool such as testssl.sh or sslyze instead.'
+          puts
+
           socket = TCPSocket.new(uri.host, uri.port)
 
           ctx = OpenSSL::SSL::SSLContext.new

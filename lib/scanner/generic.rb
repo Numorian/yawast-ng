@@ -52,7 +52,7 @@ module Yawast
 
           if server != ''
             Yawast::Scanner::Plugins::Servers::Apache.check_banner(server)
-            Yawast::Scanner::Php.check_banner(server)
+            Yawast::Scanner::Plugins::Servers::Generic.check_banner_php(server)
             Yawast::Scanner::Plugins::Servers::Iis.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Nginx.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Python.check_banner(server)

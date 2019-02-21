@@ -65,9 +65,9 @@ module Yawast
             Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
 
             # generic header checks
-            Yawast::Scanner::Generic.check_propfind(@uri)
-            Yawast::Scanner::Generic.check_options(@uri)
-            Yawast::Scanner::Generic.check_trace(@uri)
+            Yawast::Scanner::Plugins::Http::Generic.check_propfind(@uri)
+            Yawast::Scanner::Plugins::Http::Generic.check_options(@uri)
+            Yawast::Scanner::Plugins::Http::Generic.check_trace(@uri)
 
             if options.spider
               Yawast::Scanner::Plugins::Spider::Spider.spider(@uri)

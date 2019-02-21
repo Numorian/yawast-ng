@@ -11,6 +11,7 @@
 * [#141](https://github.com/adamcaudill/yawast/issues/141) - Flag --internalssl as Deprecated
 * [#130](https://github.com/adamcaudill/yawast/issues/130) - Bug: HSTS Error leads to printing HTML
 * [#132](https://github.com/adamcaudill/yawast/issues/132) - Bug: Typo in SSL Output
+* [#142](https://github.com/adamcaudill/yawast/issues/142) - Bug: Error In Collecting DNS Information
 
 ## 0.6.0 - 2018-01-16
 

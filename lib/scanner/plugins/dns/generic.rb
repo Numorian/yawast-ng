@@ -74,13 +74,17 @@ module Yawast
 
                 #check for higher-level TXT records, if we aren't already at the top
                 if root_domain != uri.host
-                  txt = resv.getresources(root_domain, Resolv::DNS::Resource::IN::TXT)
-                  unless txt.empty?
-                    txt.each do |rec|
-                      Yawast::Utilities.puts_info "\t\tTXT (#{root_domain}): #{rec.data}"
+                  begin
+                    txt = resv.getresources(root_domain, Resolv::DNS::Resource::IN::TXT)
+                    unless txt.empty?
+                      txt.each do |rec|
+                        Yawast::Utilities.puts_info "\t\tTXT (#{root_domain}): #{rec.data}"
 
-                      Yawast::Shared::Output.log_append_value 'dns', 'txt', root_domain, rec.data
+                        Yawast::Shared::Output.log_append_value 'dns', 'txt', root_domain, rec.data
+                      end
                     end
+                  rescue => e
+                    Yawast::Utilities.puts_error "\t\tTXT: #{root_domain} (Error: #{e.message})"
                   end
                 end
 

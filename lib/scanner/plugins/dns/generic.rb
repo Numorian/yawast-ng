@@ -1,3 +1,6 @@
+require 'dnsruby'
+include Dnsruby
+
 module Yawast
   module Scanner
     module Plugins
@@ -177,11 +180,23 @@ module Yawast
           end
 
           def self.find_subdomains(root_domain, resv)
+            res = Resolver.new()
+
             File.open(File.dirname(__FILE__) + '/../../../resources/subdomain_list.txt', 'r') do |f|
               f.each_line do |line|
                 host = line.strip + '.' + root_domain
 
                 begin
+                  ## get CNAME records
+                  cname = res.query(host, 'CNAME')
+                  if cname.answer[0] != nil
+                    Yawast::Utilities.puts_info "\t\tCNAME: #{host}: #{cname.answer[0].rdata}"
+
+                    Yawast::Shared::Output.log_value 'dns', 'subdomain', host, cname.answer[0].rdata
+                    next
+                  end
+
+                  ## get A records
                   a = resv.getresources(host, Resolv::DNS::Resource::IN::A)
 
                   unless a.empty?
@@ -190,6 +205,21 @@ module Yawast
                         Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address}"
                       else
                         Yawast::Utilities.puts_info "\t\tA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
+                      end
+
+                      Yawast::Shared::Output.log_value 'dns', 'subdomain', host, ip.address
+                    end
+                  end
+
+                  ## get AAAA records
+                  aaaa = resv.getresources(host, Resolv::DNS::Resource::IN::AAAA)
+
+                  unless aaaa.empty?
+                    aaaa.each do |ip|
+                      if IPAddr.new(ip.address.to_s, Socket::AF_INET6).private?
+                        Yawast::Utilities.puts_info "\t\tAAAA: #{host}: #{ip.address}"
+                      else
+                        Yawast::Utilities.puts_info "\t\tAAAA: #{host}: #{ip.address} (#{get_network_info(ip.address)})"
                       end
 
                       Yawast::Shared::Output.log_value 'dns', 'subdomain', host, ip.address

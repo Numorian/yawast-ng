@@ -96,7 +96,7 @@ module Yawast
         setup(uri, options)
 
         body = Yawast::Shared::Http.get(uri)
-        Yawast::Scanner::Cms.get_generator(body)
+        Yawast::Scanner::Plugins::Applications::CMS::Generic.get_generator(body)
       end
 
       def self.check_ssl(uri, options, head)

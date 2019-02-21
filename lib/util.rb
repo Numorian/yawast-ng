@@ -25,5 +25,20 @@ module Yawast
       puts_msg('[I]'.green, msg)
       Yawast::Shared::Output.log_append_value 'messages', 'info', msg
     end
+
+    def self.prompt(msg)
+      puts
+      puts msg
+      print '> '
+      val = $stdin.gets.chomp
+
+      Yawast::Shared::Output.log_append_value 'prompt', msg, val
+
+      return val
+    end
+
+    def self.indent_text(msg)
+      return msg.gsub!(/^/, "\t")
+    end
   end
 end

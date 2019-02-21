@@ -223,7 +223,13 @@ module Yawast
               return ret
             rescue => e
               @netinfo_failed = true
-              return "Error: getting network information failed (#{e.message})"
+
+              if e.message.include? 'unexpected token'
+                # this means that the service returned something invalid, like HTML
+                return "Error: getting network information failed (the service returned an unexpected message)"
+              else
+                return "Error: getting network information failed (#{e.message})"
+              end
             end
           end
         end

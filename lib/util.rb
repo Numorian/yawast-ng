@@ -27,7 +27,7 @@ module Yawast
       Yawast::Shared::Output.log_append_value 'messages', 'info', msg
     end
 
-    def self.puts(msg = '')
+    def self.puts_raw(msg = '')
       puts msg
 
       if msg != ''

@@ -13,22 +13,25 @@ module Yawast
             end
 
             def self.check_resp_user_enum
-              # checks for user enum via differences in response
+              begin
+                # checks for user enum via differences in response
+                good_user_res = fill_form_get_body @reset_page, @valid_user, true
+                bad_user_res = fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false
 
-              good_user_res = fill_form_get_body @reset_page, @valid_user, true
-              bad_user_res = fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false
-
-              puts
-              if good_user_res != bad_user_res
-                Yawast::Utilities.puts
-                Yawast::Utilities.puts_warn 'Password Reset: Possible User Enumeration - Difference In Response (see below for details)'
-                Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', true
-                Yawast::Utilities.puts
-                Yawast::Utilities.puts Yawast::Utilities.diff_text(good_user_res, bad_user_res)
-                Yawast::Utilities.puts
-                Yawast::Utilities.puts
-              else
-                Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', false
+                puts
+                if good_user_res != bad_user_res
+                  Yawast::Utilities.puts_raw
+                  Yawast::Utilities.puts_vuln 'Password Reset: Possible User Enumeration - Difference In Response (see below for details)'
+                  Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', true
+                  Yawast::Utilities.puts_raw
+                  Yawast::Utilities.puts_raw Yawast::Utilities.diff_text(good_user_res, bad_user_res)
+                  Yawast::Utilities.puts_raw
+                  Yawast::Utilities.puts_raw
+                else
+                  Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', false
+                end
+              rescue NoSuchElementError => e
+                Yawast::Utilities.puts "Unable to find a matching element to perform the User Enumeration via Password Reset Response test (#{e.message})"
               end
             end
 
@@ -38,9 +41,9 @@ module Yawast
               driver.get uri
 
               # find the page form element - this is going to be a best effort thing, and may not always be right
-              element = driver.find_element(name: 'user_login')
+              element = find_user_field driver
 
-              element.send_keys(user)
+              element.send_keys user
               element.submit
 
               res = driver.page_source
@@ -61,6 +64,29 @@ module Yawast
 
             def self.check_timing_user_enum
               # checks for user enum via timing differences
+            end
+
+            def self.find_user_field(driver)
+              # find the page form element - this is going to be a best effort thing, and may not always be right
+              element = find_element driver, 'user_login'
+              return element if element != nil
+
+              # if we got here, it means that we don't have an element we know about, so we have to prompt
+              Yawast::Utilities.puts_raw 'Unable to find a known element to enter the user name. Please identify the proper element.'
+              Yawast::Utilities.puts_raw 'If this element name seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues'
+              element_name = Yawast::Utilities.prompt 'What is the user/email entry element name?'
+              element = find_element driver, element_name
+              return element if element != nil
+
+              raise NoSuchElementError, 'No matching element found.'
+            end
+
+            def self.find_element(driver, name)
+              begin
+                return driver.find_element(name: name)
+              rescue NoSuchElementError
+                return nil
+              end
             end
           end
         end

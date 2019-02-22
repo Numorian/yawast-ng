@@ -7,7 +7,7 @@ class TestScannerCms < Minitest::Test
   def test_generator_tag_valid
     body = File.read(File.dirname(__FILE__) + '/data/cms_wordpress_body.txt')
     override_stdout
-    Yawast::Scanner::Cms.get_generator body
+    Yawast::Scanner::Plugins::Applications::CMS::Generic.get_generator body
 
     assert stdout_value.include?('WordPress'), "Unexpected generator tag: #{stdout_value}"
 
@@ -17,7 +17,7 @@ class TestScannerCms < Minitest::Test
   def test_generator_tag_invalid
     body = File.read(File.dirname(__FILE__) + '/data/cms_none_body.txt')
     override_stdout
-    Yawast::Scanner::Cms.get_generator body
+    Yawast::Scanner::Plugins::Applications::CMS::Generic.get_generator body
 
     assert stdout_value == '', "Unexpected generator tag: #{stdout_value}"
 

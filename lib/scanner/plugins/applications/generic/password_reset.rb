@@ -9,7 +9,12 @@ module Yawast
           class PasswordReset
             def self.setup
               @reset_page = Yawast::Utilities.prompt 'What is the application password reset page?'
-              @valid_user = Yawast::Utilities.prompt 'What is a valid user?'
+
+              if Yawast.options.user == nil
+                @valid_user = Yawast::Utilities.prompt 'What is a valid user?'
+              else
+                @valid_user = Yawast.options.user
+              end
             end
 
             def self.check_resp_user_enum

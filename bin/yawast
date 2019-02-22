@@ -29,6 +29,7 @@ command :scan do |c|
   c.option '--nodns', 'Disable DNS checks'
   c.option '--spider', 'Spider the site'
   c.option '--output STRING', String, 'Output JSON file'
+  c.option '--user STRING', String, 'Valid username for the application'
 
   c.action do |args, options|
     Yawast.options = options

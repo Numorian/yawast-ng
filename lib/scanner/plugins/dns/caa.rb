@@ -15,9 +15,25 @@ module Yawast
             # setup a list of domains already checked, so we can skip them
             @checked = Array.new
 
+            # setup a counter, so we can see if we actually got anything
+            @records = 0
+
             domain = uri.host.to_s
 
             chase_domain domain
+
+            if @records == 0
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'missing_caa_records',
+                                              {:vulnerable => true}
+
+              puts
+              Yawast::Utilities.puts_vuln 'DNS CAA: No records found.'
+            else
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'missing_caa_records',
+                                              {:vulnerable => false, :record_count => @records}
+            end
           end
 
           def self.chase_domain(domain)
@@ -70,6 +86,7 @@ module Yawast
                   Yawast::Utilities.puts_info "\t\tCAA (#{domain}): #{rec.rdata}"
 
                   Yawast::Shared::Output.log_append_value 'dns', 'caa', domain, rec.rdata
+                  @records += 1
                 else
                   Yawast::Utilities.puts_error "\t\tCAA (#{domain}): Invalid Response: #{ans.answer}"
                 end

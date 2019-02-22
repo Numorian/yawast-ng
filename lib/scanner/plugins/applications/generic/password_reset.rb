@@ -15,8 +15,8 @@ module Yawast
             def self.check_resp_user_enum
               # checks for user enum via differences in response
 
-              good_user_res = fill_form_get_body @reset_page, @valid_user
-              bad_user_res = fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com'
+              good_user_res = fill_form_get_body @reset_page, @valid_user, true
+              bad_user_res = fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false
 
               puts
               if good_user_res != bad_user_res
@@ -32,7 +32,7 @@ module Yawast
               end
             end
 
-            def self.fill_form_get_body(uri, user)
+            def self.fill_form_get_body(uri, user, valid)
               options = Selenium::WebDriver::Chrome::Options.new(args: ['headless'])
               driver = Selenium::WebDriver.for(:chrome, options: options)
               driver.get uri
@@ -46,9 +46,13 @@ module Yawast
               res = driver.page_source
               img = driver.screenshot_as(:base64)
 
+              valid_text = 'valid'
+              valid_text = 'invalid' unless valid
+
               # log response
-              Yawast::Shared::Output.log_value "password_reset_body_#{user}", 'body', res
-              Yawast::Shared::Output.log_value "password_reset_body_#{user}", 'img', img
+              Yawast::Shared::Output.log_value 'application', "password_reset_body_#{valid_text}_body", res
+              Yawast::Shared::Output.log_value 'application', "password_reset_body_#{valid_text}_img", img
+              Yawast::Shared::Output.log_value 'application', "password_reset_body_#{valid_text}_user", user
 
               driver.close
 

@@ -121,4 +121,5 @@ Sample output for a [scan](https://github.com/adamcaudill/yawast/wiki/Sample-Out
 
 ### Special Thanks
 
+* [AppSec Consulting](https://www.appsecconsulting.com/) - Generously providing time to improve this tool.
 * [SecLists](https://github.com/danielmiessler/SecLists) - Various lists are based on the resources collected by this project.

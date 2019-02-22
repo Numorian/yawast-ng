@@ -8,7 +8,11 @@ module Yawast
         module Generic
           class PasswordReset
             def self.setup
-              @reset_page = Yawast::Utilities.prompt 'What is the application password reset page?'
+              if Yawast.options.pass_reset_page == nil
+                @reset_page = Yawast::Utilities.prompt 'What is the application password reset page?'
+              else
+                @reset_page = Yawast.options.pass_reset_page
+              end
 
               if Yawast.options.user == nil
                 @valid_user = Yawast::Utilities.prompt 'What is a valid user?'

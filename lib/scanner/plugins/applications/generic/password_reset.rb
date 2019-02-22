@@ -71,10 +71,10 @@ module Yawast
               valid_text = 'invalid' unless valid
 
               # log response
-              Yawast::Shared::Output.log_value 'application', "password_reset_body_#{valid_text}_body", res
-              Yawast::Shared::Output.log_value 'application', "password_reset_body_#{valid_text}_img", img
-              Yawast::Shared::Output.log_value 'application', "password_reset_body_#{valid_text}_user", user
-
+              Yawast::Shared::Output.log_hash 'applications',
+                                              'password_reset_form',
+                                              "pwd_reset_resp_#{valid_text}",
+                                              {:body => res, :img => img, :user => user}
               driver.close
 
               return res

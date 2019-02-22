@@ -29,6 +29,7 @@ command :scan do |c|
   c.option '--nodns', 'Disable DNS checks'
   c.option '--spider', 'Spider the site'
   c.option '--output STRING', String, 'Output JSON file'
+  c.option '--vuln_scan', 'Use new vulnerability scanner (BETA)'
   c.option '--user STRING', String, 'Valid username for the application (will prompt if not provided)'
   c.option '--pass_reset_page STRING', String, 'Password reset page (will prompt if not provided)'
 

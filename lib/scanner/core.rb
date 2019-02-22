@@ -69,8 +69,9 @@ module Yawast
             Yawast::Scanner::Plugins::Http::Generic.check_options(@uri)
             Yawast::Scanner::Plugins::Http::Generic.check_trace(@uri)
 
-            #TODO: Add check for option
-            Yawast::Scanner::VulnScan.scan(@uri, options)
+            if Yawast.options.vuln_scan
+              Yawast::Scanner::VulnScan.scan(@uri, options)
+            end
 
             if options.spider
               Yawast::Scanner::Plugins::Spider::Spider.spider(@uri)

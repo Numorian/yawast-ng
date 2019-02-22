@@ -39,7 +39,7 @@ module Yawast
       puts
       puts msg
       print '> '
-      val = $stdin.gets.chomp
+      val = $stdin.gets.chomp.strip
 
       Yawast::Shared::Output.log_append_value 'prompt', msg, val
 

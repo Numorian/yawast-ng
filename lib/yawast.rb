@@ -54,6 +54,14 @@ module Yawast
     puts ''
   end
 
+  def self.options
+    @options
+  end
+
+  def self.options=(opts)
+    @options = opts
+  end
+
   STDOUT.sync = true
 
   trap 'SIGINT' do

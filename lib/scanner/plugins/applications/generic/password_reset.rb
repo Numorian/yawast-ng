@@ -1,6 +1,5 @@
 require 'selenium-webdriver'
 require 'securerandom'
-require 'diffy'
 
 module Yawast
   module Scanner
@@ -21,13 +20,13 @@ module Yawast
 
               puts
               if good_user_res != bad_user_res
-                puts
+                Yawast::Utilities.puts
                 Yawast::Utilities.puts_warn 'Password Reset: Possible User Enumeration - Difference In Response (see below for details)'
                 Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', true
-                puts
-                puts Yawast::Utilities.indent_text(Diffy::Diff.new(good_user_res, bad_user_res, :context => 1).to_s(:color))
-                puts
-                puts
+                Yawast::Utilities.puts
+                Yawast::Utilities.puts Yawast::Utilities.diff_text(good_user_res, bad_user_res)
+                Yawast::Utilities.puts
+                Yawast::Utilities.puts
               else
                 Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', false
               end

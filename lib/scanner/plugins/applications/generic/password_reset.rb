@@ -29,15 +29,20 @@ module Yawast
 
                 puts
                 if good_user_res != bad_user_res
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                   'password_reset_resp_user_enum',
+                                                   {:vulnerable => true, :url => @reset_page}
+
                   Yawast::Utilities.puts_raw
                   Yawast::Utilities.puts_vuln 'Password Reset: Possible User Enumeration - Difference In Response (see below for details)'
-                  Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', true
                   Yawast::Utilities.puts_raw
                   Yawast::Utilities.puts_raw Yawast::Utilities.diff_text(good_user_res, bad_user_res)
                   Yawast::Utilities.puts_raw
                   Yawast::Utilities.puts_raw
                 else
-                  Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', false
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'password_reset_resp_user_enum',
+                                                  {:vulnerable => false, :url => @reset_page}
                 end
               rescue ArgumentError => e
                 Yawast::Utilities.puts "Unable to find a matching element to perform the User Enumeration via Password Reset Response test (#{e.message})"

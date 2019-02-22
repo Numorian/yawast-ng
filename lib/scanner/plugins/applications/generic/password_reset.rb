@@ -71,6 +71,15 @@ module Yawast
               element = find_element driver, 'user_login'
               return element if element != nil
 
+              element = find_element driver, 'email'
+              return element if element != nil
+
+              element = find_element driver, 'email_address'
+              return element if element != nil
+
+              element = find_element driver, 'forgetPasswordEmailOrUsername'
+              return element if element != nil
+
               # if we got here, it means that we don't have an element we know about, so we have to prompt
               Yawast::Utilities.puts_raw 'Unable to find a known element to enter the user name. Please identify the proper element.'
               Yawast::Utilities.puts_raw 'If this element name seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues'

@@ -30,14 +30,23 @@ module Yawast
                 else
                   Yawast::Shared::Output.log_value 'vulnerabilities', 'password_reset_resp_user_enum', false
                 end
-              rescue NoSuchElementError => e
+              rescue ArgumentError => e
                 Yawast::Utilities.puts "Unable to find a matching element to perform the User Enumeration via Password Reset Response test (#{e.message})"
               end
             end
 
             def self.fill_form_get_body(uri, user, valid)
               options = Selenium::WebDriver::Chrome::Options.new(args: ['headless'])
-              driver = Selenium::WebDriver.for(:chrome, options: options)
+
+              # if we have a proxy set, use that
+              if Yawast.options.proxy != nil
+                proxy = Selenium::WebDriver::Proxy.new(:http => "http://#{Yawast.options.proxy}", :ssl => "http://#{Yawast.options.proxy}")
+                caps = Selenium::WebDriver::Remote::Capabilities.chrome(acceptInsecureCerts: true, proxy: proxy)
+              else
+                caps = Selenium::WebDriver::Remote::Capabilities.chrome(acceptInsecureCerts: true)
+              end
+
+              driver = Selenium::WebDriver.for(:chrome, options: options, desired_capabilities: caps)
               driver.get uri
 
               # find the page form element - this is going to be a best effort thing, and may not always be right
@@ -87,13 +96,13 @@ module Yawast
               element = find_element driver, element_name
               return element if element != nil
 
-              raise NoSuchElementError, 'No matching element found.'
+              raise ArgumentError, 'No matching element found.'
             end
 
             def self.find_element(driver, name)
               begin
                 return driver.find_element(name: name)
-              rescue NoSuchElementError
+              rescue ArgumentError
                 return nil
               end
             end

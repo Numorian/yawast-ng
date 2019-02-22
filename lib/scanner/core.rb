@@ -58,19 +58,27 @@ module Yawast
             # connection details for SSL
             Yawast::Scanner::Plugins::SSL::SSL.ssl_connection_info @uri
 
-            # server specific checks
-            Yawast::Scanner::Plugins::Servers::Apache.check_all(@uri)
-            Yawast::Scanner::Plugins::Servers::Iis.check_all(@uri, head)
-
-            Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
-
-            # generic header checks
-            Yawast::Scanner::Plugins::Http::Generic.check_propfind(@uri)
-            Yawast::Scanner::Plugins::Http::Generic.check_options(@uri)
-            Yawast::Scanner::Plugins::Http::Generic.check_trace(@uri)
-
             if Yawast.options.vuln_scan
-              Yawast::Scanner::VulnScan.scan(@uri, options)
+              # new scanner-----------------------------------------------------
+              # this is the new model, that will eventually become the default--
+              # ----------------------------------------------------------------
+
+              Yawast::Scanner::VulnScan.scan(@uri, options, head)
+            else
+              # legacy checks --------------------------------------------------
+              # try not to break these, until the old scanner model is removed--
+              # ----------------------------------------------------------------
+
+              # server specific checks
+              Yawast::Scanner::Plugins::Servers::Apache.check_all(@uri)
+              Yawast::Scanner::Plugins::Servers::Iis.check_all(@uri, head)
+
+              Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
+
+              # generic header checks
+              Yawast::Scanner::Plugins::Http::Generic.check_propfind(@uri)
+              Yawast::Scanner::Plugins::Http::Generic.check_options(@uri)
+              Yawast::Scanner::Plugins::Http::Generic.check_trace(@uri)
             end
 
             if options.spider

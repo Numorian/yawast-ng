@@ -30,7 +30,7 @@ It's strongly recommended that you review the [installation](https://github.com/
 
 The following tests are performed:
 
-* *(Generic)* User Enumeration via Password Reset Form
+* *(Generic)* User Enumeration via Password Reset Form Response Differences
 * *(Generic)* Info Disclosure: X-Powered-By header present
 * *(Generic)* Info Disclosure: X-Pingback header present
 * *(Generic)* Info Disclosure: X-Backend-Server header present

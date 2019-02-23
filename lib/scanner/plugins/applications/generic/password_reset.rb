@@ -19,15 +19,28 @@ module Yawast
               else
                 @valid_user = Yawast.options.user
               end
+
+              @timing = {true => Array.new, false => Array.new}
             end
 
             def self.check_resp_user_enum
               begin
                 # checks for user enum via differences in response
-                good_user_res = fill_form_get_body @reset_page, @valid_user, true
-                bad_user_res = fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false
+                # run each test 5 times to collect timing info
+                good_user_res = fill_form_get_body @reset_page, @valid_user, true, true
+                fill_form_get_body @reset_page, @valid_user, true, false
+                fill_form_get_body @reset_page, @valid_user, true, false
+                fill_form_get_body @reset_page, @valid_user, true, false
+                fill_form_get_body @reset_page, @valid_user, true, false
+
+                bad_user_res = fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false, true
+                fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false, false
+                fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false, false
+                fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false, false
+                fill_form_get_body @reset_page, SecureRandom.hex + '@invalid.example.com', false, false
 
                 puts
+                # check for difference in response
                 if good_user_res != bad_user_res
                   Yawast::Shared::Output.log_hash 'vulnerabilities',
                                                    'password_reset_resp_user_enum',
@@ -44,12 +57,46 @@ module Yawast
                                                   'password_reset_resp_user_enum',
                                                   {:vulnerable => false, :url => @reset_page}
                 end
+
+                # check for timing issues
+                valid_average = (@timing[true].inject(0, :+) / 5)
+                invalid_average = (@timing[false].inject(0, :+) / 5)
+                timing_diff = valid_average - invalid_average
+                if timing_diff.abs > 10
+                  # in this case, we have a difference in the averages of greater than 10ms.
+                  # this is an arbitrary number, but 10ms is likely good enough
+                  Yawast::Utilities.puts_vuln 'Password Reset: Possible User Enumeration - Response Timing (see below for details)'
+                  Yawast::Utilities.puts_raw "\tDifference in average: #{timing_diff.abs.round(2)}ms  Valid user: #{valid_average.round(2)}ms  Invalid user: #{invalid_average.round(2)}ms"
+                  Yawast::Utilities.puts_raw "\tValid Users     Invalid Users"
+                  Yawast::Utilities.puts_raw "\t-----------------------------"
+                  (0..4).each do |i|
+                    Yawast::Utilities.puts_raw "\t#{sprintf('%.2f', @timing[true][i].round(2)).rjust(11)}"\
+                                                "     #{sprintf('%.2f', @timing[false][i].round(2)).rjust(13)}"
+                  end
+                  puts
+
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'password_reset_time_user_enum',
+                                                  {:vulnerable => true, :difference => timing_diff,
+                                                   :valid_1 => @timing[true][0], :valid_2 => @timing[true][1], :valid_3 => @timing[true][2],
+                                                   :valid_4 => @timing[true][3], :valid_5 => @timing[true][4],
+                                                   :invalid_1 => @timing[false][0], :invalid_2 => @timing[false][1], :invalid_3 => @timing[false][2],
+                                                   :invalid_4 => @timing[false][3], :invalid_5 => @timing[false][4]}
+                else
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'password_reset_time_user_enum',
+                                                  {:vulnerable => false, :difference => timing_diff,
+                                                  :valid_1 => @timing[true][0], :valid_2 => @timing[true][1], :valid_3 => @timing[true][2],
+                                                  :valid_4 => @timing[true][3], :valid_5 => @timing[true][4],
+                                                  :invalid_1 => @timing[false][0], :invalid_2 => @timing[false][1], :invalid_3 => @timing[false][2],
+                                                  :invalid_4 => @timing[false][3], :invalid_5 => @timing[false][4]}
+                end
               rescue ArgumentError => e
                 Yawast::Utilities.puts "Unable to find a matching element to perform the User Enumeration via Password Reset Response test (#{e.message})"
               end
             end
 
-            def self.fill_form_get_body(uri, user, valid)
+            def self.fill_form_get_body(uri, user, valid, log_output)
               options = Selenium::WebDriver::Chrome::Options.new(args: ['headless'])
 
               # if we have a proxy set, use that
@@ -67,7 +114,12 @@ module Yawast
               element = find_user_field driver
 
               element.send_keys user
+
+              beginning_time = Time.now
               element.submit
+              end_time = Time.now
+              @timing[valid].push (end_time - beginning_time)*1000
+
 
               res = driver.page_source
               img = driver.screenshot_as(:base64)
@@ -75,18 +127,17 @@ module Yawast
               valid_text = 'valid'
               valid_text = 'invalid' unless valid
 
-              # log response
-              Yawast::Shared::Output.log_hash 'applications',
-                                              'password_reset_form',
-                                              "pwd_reset_resp_#{valid_text}",
-                                              {:body => res, :img => img, :user => user}
+              if log_output
+                # log response
+                Yawast::Shared::Output.log_hash 'applications',
+                                                'password_reset_form',
+                                                "pwd_reset_resp_#{valid_text}",
+                                                {:body => res, :img => img, :user => user}
+              end
+
               driver.close
 
               return res
-            end
-
-            def self.check_timing_user_enum
-              # checks for user enum via timing differences
             end
 
             def self.find_user_field(driver)

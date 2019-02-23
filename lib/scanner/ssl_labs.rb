@@ -523,17 +523,19 @@ module Yawast
                                           {:vulnerable => false}
         end
 
-        if ep['details']['renegSupport'] & 1 != 0
-          Yawast::Utilities.puts_vuln "\t\t\tSecure Renegotiation: insecure client-initiated renegotiation supported"
-        end
-        if ep['details']['renegSupport'] & (1<<1) != 0
-          Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure renegotiation supported"
-        end
-        if ep['details']['renegSupport'] & (1<<2) != 0
-          Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure client-initiated renegotiation supported"
-        end
-        if ep['details']['renegSupport'] & (1<<3) != 0
-          Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: server requires secure renegotiation support"
+        if ep['details']['renegSupport'] != nil
+          if ep['details']['renegSupport'] & 1 != 0
+            Yawast::Utilities.puts_vuln "\t\t\tSecure Renegotiation: insecure client-initiated renegotiation supported"
+          end
+          if ep['details']['renegSupport'] & (1<<1) != 0
+            Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure renegotiation supported"
+          end
+          if ep['details']['renegSupport'] & (1<<2) != 0
+            Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure client-initiated renegotiation supported"
+          end
+          if ep['details']['renegSupport'] & (1<<3) != 0
+            Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: server requires secure renegotiation support"
+          end
         end
 
         if ep['details']['poodle']

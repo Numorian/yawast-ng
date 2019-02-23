@@ -746,6 +746,20 @@ module Yawast
                                           {:vulnerable => true}
         end
 
+        if ep['details']['supportsAead']
+          Yawast::Utilities.puts_info "\t\t\tAEAD Cipher Suites Supported: Yes"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_aead_support_missing',
+                                          {:vulnerable => false}
+        else
+          Yawast::Utilities.puts_warn "\t\t\tAEAD Cipher Suites Supported: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_aead_support_missing',
+                                          {:vulnerable => true}
+        end
+
         Yawast::Utilities.puts_info "\t\t\tALPN: #{ep['details']['alpnProtocols']}"
 
         Yawast::Utilities.puts_info "\t\t\tNPN: #{ep['details']['npnProtocols']}"

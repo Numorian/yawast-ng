@@ -172,8 +172,14 @@ module Yawast
 
         if cert['sigAlg'].include?('SHA1') || cert['sigAlg'].include?('MD5')
           Yawast::Utilities.puts_vuln "\t\tSignature algorithm: #{cert['sigAlg']}"
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_weak_sig_alg',
+                                          {:vulnerable => true, :algorithm => cert['sigAlg']}
         else
           Yawast::Utilities.puts_info "\t\tSignature algorithm: #{cert['sigAlg']}"
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_weak_sig_alg',
+                                          {:vulnerable => false, :algorithm => cert['sigAlg']}
         end
 
         #todo - figure out what the options for this value are
@@ -279,6 +285,13 @@ module Yawast
             # cert chain issues
             if chain['issues'] & (1<<1) != 0
               Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: incomplete chain"
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'tls_chain_incomplete',
+                                              {:vulnerable => true}
+            else
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'tls_chain_incomplete',
+                                              {:vulnerable => false}
             end
 
             if chain['issues'] & (1<<2) != 0
@@ -297,6 +310,11 @@ module Yawast
               Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: untrusted"
             end
 
+            # setup the log entry for a symantec root - this will overwrite if one is found
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_symantec_root',
+                                            {:vulnerable => false, :root_hash => ''}
+
             key.each do |path_cert|
               body['certs'].each do |c|
                 if c['id'] == path_cert
@@ -305,6 +323,9 @@ module Yawast
 
                   if Yawast::Scanner::Plugins::SSL::SSL.check_symantec_root(c['sha256Hash'])
                     Yawast::Utilities.puts_vuln "\t\t\t  Untrusted Symantec Root"
+                    Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                    'tls_symantec_root',
+                                                    {:vulnerable => true, :root_hash => c['sha256Hash']}
                   end
 
                   Yawast::Utilities.puts_info "\t\t\t  https://crt.sh/?q=#{c['sha1Hash']}"
@@ -327,19 +348,50 @@ module Yawast
         puts "\tConfiguration Information:"
 
         puts "\t\tProtocol Support:"
+        # setup JSON output
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_legacy_ssl',
+                                        {:vulnerable => false}
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_tls10_enabled',
+                                        {:vulnerable => false}
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_tls13_not_enabled',
+                                        {:vulnerable => true}
+
+        # check protocols
         protos = Hash.new
+        tls13_enabled = false
         ep['details']['protocols'].each do |proto|
           if proto['name'] == 'SSL'
             # show a vuln for SSLvX
             Yawast::Utilities.puts_vuln "\t\t\t#{proto['name']} #{proto['version']}"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_legacy_ssl',
+                                            {:vulnerable => true}
           elsif proto['name'] == 'TLS' &&  proto['version'] == '1.0'
             # show a warn for TLSv1.0
             Yawast::Utilities.puts_warn "\t\t\t#{proto['name']} #{proto['version']}"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_tls10_enabled',
+                                            {:vulnerable => true}
+          elsif proto['name'] == 'TLS' &&  proto['version'] == '1.3'
+            # capture TLS 1.3 status
+            tls13_enabled = true
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_tls13_not_enabled',
+                                            {:vulnerable => false}
           else
             Yawast::Utilities.puts_info "\t\t\t#{proto['name']} #{proto['version']}"
           end
 
           protos[proto['id']] = "#{proto['name']} #{proto['version']}"
+
+          unless tls13_enabled
+            Yawast::Utilities.puts_warn "\t\t\tTLS 1.3 Is Not Enabled"
+          end
         end
         puts
 
@@ -352,6 +404,20 @@ module Yawast
         end
 
         puts "\t\tCipher Suite Support:"
+        # setup JSON output
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_insecure_cipher_suites',
+                                        {:vulnerable => false}
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_weak_cipher_suites',
+                                        {:vulnerable => false}
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_3des_enabled',
+                                        {:vulnerable => false, :suite => ''}
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_rc4_enabled',
+                                        {:vulnerable => false, :suite => ''}
+
         if ep['details']['suites'] != nil
           ep['details']['suites'].each do |proto_suites|
             Yawast::Utilities.puts_info "\t\t\t#{protos[proto_suites['protocol']]}"
@@ -364,6 +430,16 @@ module Yawast
                 # in this case, the effective strength is only 112 bits,
                 #  which is what we want to report. So override SSL Labs
                 strength = 112
+
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'tls_3des_enabled',
+                                                {:vulnerable => true, :suite => suite['name']}
+              end
+
+              if suite['name'].include? 'RC4'
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'tls_rc4_enabled',
+                                                {:vulnerable => true, :suite => suite['name']}
               end
 
               if ke != nil
@@ -377,9 +453,17 @@ module Yawast
                   Yawast::Utilities.puts_info "\t\t\t  #{suite_info}"
                 else
                   Yawast::Utilities.puts_warn "\t\t\t  #{suite_info}"
+
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'tls_weak_cipher_suites',
+                                                  {:vulnerable => true}
                 end
               else
                 Yawast::Utilities.puts_vuln "\t\t\t  #{suite_info}"
+
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'tls_insecure_cipher_suites',
+                                                {:vulnerable => true}
               end
             end
           end
@@ -427,8 +511,16 @@ module Yawast
             Yawast::Utilities.puts_vuln "\t\t\t\t#{dh['ip']}:#{dh['port']} - #{dh['status']}"
             puts "\t\t\t\thttps://test.drownattack.com/?site=#{dh['ip']}"
           end
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_drown',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tDROWN: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_drown',
+                                          {:vulnerable => false}
         end
 
         if ep['details']['renegSupport'] & 1 != 0
@@ -446,10 +538,21 @@ module Yawast
 
         if ep['details']['poodle']
           Yawast::Utilities.puts_vuln "\t\t\tPOODLE (SSL): Vulnerable"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_poodle_ssl',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tPOODLE (SSL): No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_poodle_ssl',
+                                          {:vulnerable => false}
         end
 
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_poodle',
+                                        {:vulnerable => false}
         case ep['details']['poodleTls']
           when -3
             Yawast::Utilities.puts_info "\t\t\tPOODLE (TLS): Inconclusive (Timeout)"
@@ -463,34 +566,72 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t\tPOODLE (TLS): No"
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tPOODLE (TLS): Vulnerable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_poodle',
+                                            {:vulnerable => true}
           else
             Yawast::Utilities.puts_error "\t\t\tPOODLE (TLS): Unknown Response #{ep['details']['poodleTls']}"
         end
 
         if ep['details']['fallbackScsv']
           Yawast::Utilities.puts_info "\t\t\tDowngrade Prevention: Yes"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_missing_fallback_scsv',
+                                          {:vulnerable => false}
         else
           Yawast::Utilities.puts_warn "\t\t\tDowngrade Prevention: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_missing_fallback_scsv',
+                                          {:vulnerable => true}
         end
 
         if ep['details']['compressionMethods'] & 1 != 0
           Yawast::Utilities.puts_warn "\t\t\tCompression: DEFLATE"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_compression_enabled',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tCompression: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_compression_enabled',
+                                          {:vulnerable => false}
         end
 
         if ep['details']['heartbeat']
           Yawast::Utilities.puts_warn "\t\t\tHeartbeat: Enabled"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_heartbeat_enabled',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tHeartbeat: Disabled"
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_heartbeat_enabled',
+                                          {:vulnerable => false}
         end
 
         if ep['details']['heartbleed']
           Yawast::Utilities.puts_vuln "\t\t\tHeartbleed: Vulnerable"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_heartblead',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tHeartbleed: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_heartblead',
+                                          {:vulnerable => false}
         end
 
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_ticketbleed',
+                                        {:vulnerable => false}
         case ep['details']['ticketbleed']
           when -1
             Yawast::Utilities.puts_error "\t\t\tTicketbleed (CVE-2016-9244): Test Failed"
@@ -500,11 +641,17 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t\tTicketbleed (CVE-2016-9244): No"
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tTicketbleed (CVE-2016-9244): Vulnerable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_ticketbleed',
+                                            {:vulnerable => true}
           else
             Yawast::Utilities.puts_error "\t\t\tTicketbleed (CVE-2016-9244): Unknown Response #{ep['details']['ticketbleed']}"
         end
 
-
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_openssl_ccs_cve20140224',
+                                        {:vulnerable => false, :exploitable => false}
         case ep['details']['openSslCcs']
           when -1
             Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Test Failed"
@@ -514,12 +661,23 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t\tOpenSSL CCS (CVE-2014-0224): No"
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tOpenSSL CCS (CVE-2014-0224): Vulnerable - Not Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_openssl_ccs_cve20140224',
+                                            {:vulnerable => true, :exploitable => false}
           when 3
             Yawast::Utilities.puts_vuln "\t\t\tOpenSSL CCS (CVE-2014-0224): Vulnerable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_openssl_ccs_cve20140224',
+                                            {:vulnerable => true, :exploitable => true}
           else
             Yawast::Utilities.puts_error "\t\t\tOpenSSL CCS (CVE-2014-0224): Unknown Response #{ep['details']['openSslCcs']}"
         end
 
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_openssl_lunckyminus20',
+                                        {:vulnerable => false}
         case ep['details']['openSSLLuckyMinus20']
           when -1
             Yawast::Utilities.puts_error "\t\t\tOpenSSL Padding Oracle (CVE-2016-2107): Test Failed"
@@ -529,10 +687,17 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t\tOpenSSL Padding Oracle (CVE-2016-2107): No"
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tOpenSSL Padding Oracle (CVE-2016-2107): Vulnerable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_openssl_lunckyminus20',
+                                            {:vulnerable => true}
           else
             Yawast::Utilities.puts_error "\t\t\tOpenSSL Padding Oracle (CVE-2016-2107): Unknown Response #{ep['details']['openSSLLuckyMinus20']}"
         end
 
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_robot',
+                                        {:vulnerable => false, :exploitable => false}
         case ep['details']['bleichenbacher']
           when -1
             Yawast::Utilities.puts_error "\t\t\tROBOT: Test Failed"
@@ -542,28 +707,50 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t\tROBOT: No"
           when 2
             Yawast::Utilities.puts_warn "\t\t\tROBOT: Not Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_robot',
+                                            {:vulnerable => true, :exploitable => false}
           when 3
             Yawast::Utilities.puts_vuln "\t\t\tROBOT: Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_robot',
+                                            {:vulnerable => true, :exploitable => true}
           when nil
             # if it's null, we don't care
           else
             Yawast::Utilities.puts_error "\t\t\tROBOT: Unknown Response #{ep['details']['bleichenbacher']}"
         end
 
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_missing_forward_secrecy',
+                                        {:vulnerable => false}
         if ep['details']['forwardSecrecy'] & (1<<2) != 0
           Yawast::Utilities.puts_info "\t\t\tForward Secrecy: Yes (all simulated clients)"
         elsif ep['details']['forwardSecrecy'] & (1<<1) != 0
           Yawast::Utilities.puts_info "\t\t\tForward Secrecy: Yes (modern clients)"
         elsif ep['details']['forwardSecrecy'] & 1 != 0
           Yawast::Utilities.puts_warn "\t\t\tForward Secrecy: Yes (limited support)"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_missing_forward_secrecy',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_vuln "\t\t\tForward Secrecy: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_missing_forward_secrecy',
+                                          {:vulnerable => true}
         end
 
         Yawast::Utilities.puts_info "\t\t\tALPN: #{ep['details']['alpnProtocols']}"
 
         Yawast::Utilities.puts_info "\t\t\tNPN: #{ep['details']['npnProtocols']}"
 
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_session_resumption',
+                                        {:vulnerable => false}
         case ep['details']['sessionResumption']
           when 0
             Yawast::Utilities.puts_info "\t\t\tSession Resumption: Not Enabled / Empty Tickets"
@@ -571,14 +758,26 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t\tSession Resumption: Enabled / No Resumption"
           when 2
             Yawast::Utilities.puts_warn "\t\t\tSession Resumption: Enabled"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_session_resumption',
+                                            {:vulnerable => true}
           else
             Yawast::Utilities.puts_error "\t\t\tSession Resumption: Unknown Response #{ep['details']['sessionResumption']}"
         end
 
         if ep['details']['ocspStapling']
           Yawast::Utilities.puts_info "\t\t\tOCSP Stapling: Yes"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_ocsp_stapling_missing',
+                                          {:vulnerable => false}
         else
           Yawast::Utilities.puts_warn "\t\t\tOCSP Stapling: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_ocsp_stapling_missing',
+                                          {:vulnerable => true}
         end
 
         if ep['details']['miscIntolerance'] > 0
@@ -625,23 +824,50 @@ module Yawast
 
         if ep['details']['freak']
           Yawast::Utilities.puts_vuln "\t\t\tFREAK: Vulnerable (512-bit key exchange supported)"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_freak',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tFREAK: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_freak',
+                                          {:vulnerable => false}
         end
 
         if ep['details']['logjam']
           Yawast::Utilities.puts_vuln "\t\t\tLogjam: Vulnerable (DH key exchange with keys smaller than 1024 bits)"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_logjam',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tLogjam: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_logjam',
+                                          {:vulnerable => false}
         end
 
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_dh_known_primes',
+                                        {:vulnerable => false, :weak => false}
         case ep['details']['dhUsesKnownPrimes']
           when 0
             Yawast::Utilities.puts_info "\t\t\tUses common DH primes: No"
           when 1
             Yawast::Utilities.puts_warn "\t\t\tUses common DH primes: Yes (not weak)"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_dh_known_primes',
+                                            {:vulnerable => true, :weak => false}
           when 2
             Yawast::Utilities.puts_vuln "\t\t\tUses common DH primes: Yes (weak)"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_dh_known_primes',
+                                            {:vulnerable => true, :weak => true}
           else
             unless ep['details']['dhUsesKnownPrimes'] == nil
               Yawast::Utilities.puts_error "\t\t\tUses common DH primes: Unknown Response #{ep['details']['dhUsesKnownPrimes']}"
@@ -650,14 +876,30 @@ module Yawast
 
         if ep['details']['dhYsReuse']
           Yawast::Utilities.puts_vuln "\t\t\tDH public server param (Ys) reuse: Yes"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_dh_public_server_param_reuse',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tDH public server param (Ys) reuse: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_dh_public_server_param_reuse',
+                                          {:vulnerable => false}
         end
 
         if ep['details']['ecdhParameterReuse']
           Yawast::Utilities.puts_vuln "\t\t\tECDH Public Server Param Reuse: Yes"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_ecdh_public_server_param_reuse',
+                                          {:vulnerable => true}
         else
           Yawast::Utilities.puts_info "\t\t\tECDH Public Server Param Reuse: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_ecdh_public_server_param_reuse',
+                                          {:vulnerable => false}
         end
 
         puts

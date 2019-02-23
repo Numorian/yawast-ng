@@ -127,6 +127,10 @@ module Yawast
               Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'requests', count
               Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'exception', e.message
 
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'tls_sweet32',
+                                              {:vulnerable => false}
+
               return
             end
 
@@ -136,6 +140,10 @@ module Yawast
 
             Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'vulnerable', true
             Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'requests', count
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_sweet32',
+                                            {:vulnerable => true}
           end
 
           def self.check_tdes

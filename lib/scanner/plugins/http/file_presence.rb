@@ -41,6 +41,7 @@ module Yawast
             check_elmah_axd uri
             check_readme_html uri
             check_release_notes_txt uri
+            check_change_log_txt uri
 
             if common_files
               puts ''
@@ -89,6 +90,11 @@ module Yawast
           def self.check_release_notes_txt(uri)
             check_path(uri, '/RELEASE-NOTES.txt', false)
             check_path(uri, '/docs/RELEASE-NOTES.txt', false)
+          end
+
+          def self.check_change_log_txt(uri)
+            check_path(uri, '/CHANGELOG.txt', false)
+            check_path(uri, '/core/CHANGELOG.txt', false)
           end
 
           def self.check_common(uri)

@@ -50,8 +50,9 @@ The following tests are performed:
 * *(Generic)* Presence of WS_FTP.LOG
 * *(Generic)* Presence of RELEASE-NOTES.txt
 * *(Generic)* Presence of readme.html
+* *(Generic)* Presence of CHANGELOG.txt
 * *(Generic)* Missing cookie flags (Secure, HttpOnly, and SameSite)
-* *(Generic)* Search for files (14,169) & common directories (21,332)
+* *(Generic)* Search for 14,169 common files (via `--files`) & 21,332 common directories (via `--dir`)
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version

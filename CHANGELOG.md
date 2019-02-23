@@ -1,6 +1,6 @@
 ## 0.7.0 - In Development
 
-* [#38](https://github.com/adamcaudill/yawast/issues/38) - Report Generation Mode (work in progress)
+* [#38](https://github.com/adamcaudill/yawast/issues/38) - JSON Output Option via `--output=` (work in progress)
 * [#133](https://github.com/adamcaudill/yawast/issues/133) - Include a Timestamp In Output
 * [#134](https://github.com/adamcaudill/yawast/issues/134) - Add options to DNS command
 * [#135](https://github.com/adamcaudill/yawast/issues/135) - Incomplete Certificate Chain Warning

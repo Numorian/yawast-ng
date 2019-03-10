@@ -388,10 +388,10 @@ module Yawast
           end
 
           protos[proto['id']] = "#{proto['name']} #{proto['version']}"
+        end
 
-          unless tls13_enabled
-            Yawast::Utilities.puts_warn "\t\t\tTLS 1.3 Is Not Enabled"
-          end
+        unless tls13_enabled
+          Yawast::Utilities.puts_warn "\t\t\tTLS 1.3 Is Not Enabled"
         end
         puts
 

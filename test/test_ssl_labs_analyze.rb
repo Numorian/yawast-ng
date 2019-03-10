@@ -104,4 +104,19 @@ class TestSSLLabsAnalyze < Minitest::Test
 
     restore_stdout
   end
+
+  def test_process_data_hmhres
+    override_stdout
+
+    uri = URI.parse 'https://cam.hmhreservations.com/'
+    body = JSON.parse(File.read(File.dirname(__FILE__) + '/data/ssl_labs_analyze_data_cam_hmhreservations_com.json'))
+
+    Yawast::Scanner::SslLabs.process_results uri, body, false
+
+    assert stdout_value.include?('hmhreservations.com'), "domain name not found in #{stdout_value}"
+    assert stdout_value.include?('Serial may not comply with CA/B Forum requirements'), "serial length warning not found in #{stdout_value}"
+    assert !stdout_value.include?('[E]'), "Error message found in #{stdout_value}"
+
+    restore_stdout
+  end
 end

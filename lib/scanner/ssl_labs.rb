@@ -166,7 +166,40 @@ module Yawast
 
         Yawast::Utilities.puts_info "\t\tVersion: #{ossl_cert.version}"
 
-        Yawast::Utilities.puts_info "\t\tSerial: #{ossl_cert.serial}"
+        serial = sprintf('%02x', ossl_cert.serial.to_i)
+        serial = "0#{serial}" unless serial.length.even?
+        Yawast::Utilities.puts_info "\t\tSerial: #{serial}"
+
+        ## if the serial is exactly 16 hex digits, it may have an entropy issue.
+        if serial.length == 16
+          puts
+
+          Yawast::Utilities.puts_warn "\t\tSerial number is exactly 64 bits. Serial may not comply with CA/B Forum requirements."
+          Yawast::Utilities.puts_raw "\t\t\t See https://adamcaudill.com/2019/03/09/tls-64bit-ish-serial-numbers-mass-revocation/ for details."
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_serial_exactly_64_bits',
+                                          {:vulnerable => true, :length => (serial.length / 2) * 8}
+
+          puts
+        elsif serial.length < 16
+          puts
+
+          Yawast::Utilities.puts_vuln "\t\tSerial number is less than 64 bits. Serial does not comply with CA/B Forum requirements."
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_serial_less_than_64_bits',
+                                          {:vulnerable => true, :length => (serial.length / 2) * 8}
+
+          puts
+        else
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_serial_exactly_64_bits',
+                                          {:vulnerable => false, :length => (serial.length / 2) * 8}
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_serial_less_than_64_bits',
+                                          {:vulnerable => false, :length => (serial.length / 2) * 8}
+        end
 
         Yawast::Utilities.puts_info "\t\tIssuer: #{cert['issuerSubject']}"
 

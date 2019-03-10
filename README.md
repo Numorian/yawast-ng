@@ -89,6 +89,8 @@ SSL Information:
 
 Checks for the following SSL issues are performed:
 
+*Note: By default, YAWAST uses SSL Labs, meaning this is a small subset of issues detected.*
+
 * Expired Certificate
 * Self-Signed Certificate
 * MD5 Signature
@@ -96,6 +98,7 @@ Checks for the following SSL issues are performed:
 * RC4 Cipher Suites
 * Weak (< 128 bit) Cipher Suites
 * SWEET32
+* 64-bit Serial Numbers ([details](https://adamcaudill.com/2019/03/09/tls-64bit-ish-serial-numbers-mass-revocation/))
 
 Certain DNS information is collected:
 

@@ -4,7 +4,7 @@ module Yawast
       module Servers
         class Python
           def self.check_banner(banner)
-            #don't bother if this doesn't include Python
+            # don't bother if this doesn't include Python
             return unless banner.include? 'Python/'
 
             Yawast::Utilities.puts_warn "Python Version: #{banner}"

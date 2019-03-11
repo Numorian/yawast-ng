@@ -24,8 +24,8 @@ require_all '/scanner'
 require_all '/shared'
 
 module Yawast
-  DESCRIPTION = 'The YAWAST Antecedent Web Application Security Toolkit'
-  HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) YAWAST/#{VERSION} Chrome/61.0.3163.100 Safari/537.36"
+  DESCRIPTION = 'The YAWAST Antecedent Web Application Security Toolkit'.freeze
+  HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) YAWAST/#{VERSION} Chrome/61.0.3163.100 Safari/537.36".freeze
 
   def self.header
     puts '__   _____  _    _  ___   _____ _____ '
@@ -39,7 +39,7 @@ module Yawast
     puts ' Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com>'
     puts ' Support & Documentation: https://github.com/adamcaudill/yawast'
     puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION} (#{RUBY_PLATFORM})"
-    puts " Started at #{Time.now.strftime("%Y-%m-%d %H:%M:%S %Z")}"
+    puts " Started at #{Time.now.strftime('%Y-%m-%d %H:%M:%S %Z')}"
 
     begin
       version = Yawast::Shared::Http.get_json(URI('https://rubygems.org/api/v1/versions/yawast/latest.json'))['version']
@@ -48,10 +48,18 @@ module Yawast
         puts " Latest Version: YAWAST v#{version} is the officially supported version, please update.".blue
       end
     rescue
-      #we don't care, this is a best effort check
+      # we don't care, this is a best effort check
     end
 
     puts ''
+  end
+
+  def self.options
+    @options
+  end
+
+  def self.options=(opts)
+    @options = opts
   end
 
   STDOUT.sync = true

@@ -1,6 +1,6 @@
 ## 0.7.0 - In Development
 
-* [#38](https://github.com/adamcaudill/yawast/issues/38) - Report Generation Mode (work in progress)
+* [#38](https://github.com/adamcaudill/yawast/issues/38) - JSON Output Option via `--output=` (work in progress)
 * [#133](https://github.com/adamcaudill/yawast/issues/133) - Include a Timestamp In Output
 * [#134](https://github.com/adamcaudill/yawast/issues/134) - Add options to DNS command
 * [#135](https://github.com/adamcaudill/yawast/issues/135) - Incomplete Certificate Chain Warning
@@ -9,6 +9,10 @@
 * [#139](https://github.com/adamcaudill/yawast/issues/139) - Add Spider Option
 * [#140](https://github.com/adamcaudill/yawast/issues/140) - Save output on cancel
 * [#141](https://github.com/adamcaudill/yawast/issues/141) - Flag --internalssl as Deprecated
+* [#147](https://github.com/adamcaudill/yawast/issues/147) - User Enumeration via Password Reset Form
+* [#148](https://github.com/adamcaudill/yawast/issues/148) - Added `--vuln_scan` option to enable new vulnerability scanner
+* [#151](https://github.com/adamcaudill/yawast/issues/151) - User Enumeration via Password Reset Form Timing Differences
+* [#152](https://github.com/adamcaudill/yawast/issues/152) - Add check for 64bit TLS Cert Serial Numbers
 * [#130](https://github.com/adamcaudill/yawast/issues/130) - Bug: HSTS Error leads to printing HTML
 * [#132](https://github.com/adamcaudill/yawast/issues/132) - Bug: Typo in SSL Output
 * [#142](https://github.com/adamcaudill/yawast/issues/142) - Bug: Error In Collecting DNS Information

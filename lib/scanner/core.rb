@@ -14,9 +14,7 @@ module Yawast
 
           print_header
 
-          if options.output != nil
-            Yawast::Shared::Output.setup @uri, options
-          end
+          Yawast::Shared::Output.setup @uri, options if options.output != nil
 
           ssl_redirect = Yawast::Scanner::Plugins::SSL::SSL.check_for_ssl_redirect @uri
           if ssl_redirect
@@ -27,9 +25,7 @@ module Yawast
 
           Yawast::Scanner::Plugins::SSL::SSL.set_openssl_options
 
-          unless options.nodns
-            Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options
-          end
+          Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options unless options.nodns
         end
 
         @setup = true
@@ -42,38 +38,48 @@ module Yawast
         setup(uri, options)
 
         begin
-          #setup the proxy
+          # setup the proxy
           Yawast::Shared::Http.setup(options.proxy, options.cookie)
 
-          #cache the HEAD result, so that we can minimize hits
+          # cache the HEAD result, so that we can minimize hits
           head = get_head
           Yawast::Shared::Output.log_hash 'http', 'head', 'raw', head.to_hash
           Yawast::Scanner::Generic.head_info(head, @uri)
 
-          #perfom SSL checks
+          # perform SSL checks
           check_ssl(@uri, options, head)
 
-          #process the 'scan' stuff that goes beyond 'head'
+          # process the 'scan' stuff that goes beyond 'head'
           unless options.head
             # connection details for SSL
             Yawast::Scanner::Plugins::SSL::SSL.ssl_connection_info @uri
 
-            # server specific checks
-            Yawast::Scanner::Plugins::Servers::Apache.check_all(@uri)
-            Yawast::Scanner::Plugins::Servers::Iis.check_all(@uri, head)
+            if Yawast.options.vuln_scan
+              # new scanner-----------------------------------------------------
+              # this is the new model, that will eventually become the default--
+              # ----------------------------------------------------------------
 
-            Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
+              Yawast::Scanner::VulnScan.scan(@uri, options, head)
+            else
+              # legacy checks --------------------------------------------------
+              # try not to break these, until the old scanner model is removed--
+              # ----------------------------------------------------------------
 
-            # generic header checks
-            Yawast::Scanner::Generic.check_propfind(@uri)
-            Yawast::Scanner::Generic.check_options(@uri)
-            Yawast::Scanner::Generic.check_trace(@uri)
+              # server specific checks
+              Yawast::Scanner::Plugins::Servers::Apache.check_all(@uri)
+              Yawast::Scanner::Plugins::Servers::Iis.check_all(@uri, head)
 
-            if options.spider
-              Yawast::Scanner::Plugins::Spider::Spider.spider(@uri)
+              Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files
+
+              # generic header checks
+              Yawast::Scanner::Plugins::Http::Generic.check_propfind(@uri)
+              Yawast::Scanner::Plugins::Http::Generic.check_options(@uri)
+              Yawast::Scanner::Plugins::Http::Generic.check_trace(@uri)
             end
 
-            #check for common directories
+            Yawast::Scanner::Plugins::Spider::Spider.spider(@uri) if options.spider
+
+            # check for common directories
             if options.dir
               Yawast::Scanner::Plugins::Http::DirectorySearch.search @uri, options.dirrecursive, options.dirlistredir
             end
@@ -96,7 +102,7 @@ module Yawast
         setup(uri, options)
 
         body = Yawast::Shared::Http.get(uri)
-        Yawast::Scanner::Cms.get_generator(body)
+        Yawast::Scanner::Plugins::Applications::CMS::Generic.get_generator(body)
       end
 
       def self.check_ssl(uri, options, head)
@@ -118,7 +124,7 @@ module Yawast
         end
       end
 
-      def self.get_head()
+      def self.get_head
         begin
           Yawast::Shared::Http.head(@uri)
         rescue => e

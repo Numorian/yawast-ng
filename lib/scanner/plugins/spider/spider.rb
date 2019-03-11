@@ -19,14 +19,14 @@ module Yawast
             results = Thread.new do
               begin
                 while true
-                  if @results.length > 0
+                  if @results.length.positive?
                     out = @results.pop(true)
                     Yawast::Utilities.puts_info out
                     Yawast::Shared::Output.log_append_value 'spider', 'get', out
                   end
                 end
               rescue ThreadError
-                #do nothing
+                # do nothing
               end
             end
 
@@ -49,7 +49,7 @@ module Yawast
                 # check to see if we've already seen this one
                 unless @links.include? link.to_s
                   @links.push link.to_s
-                  @results.push "#{link.to_s}"
+                  @results.push link.to_s
 
                   @workers.push Thread.new {
                     get_links URI.parse(link)

@@ -12,11 +12,11 @@ module Yawast
 
               body = Yawast::Shared::Http.get uri
 
-              return body
+              body
             end
 
             def self.extract_msg(body)
-              ret = Array.new
+              ret = []
 
               begin
                 json = JSON.parse body
@@ -30,7 +30,7 @@ module Yawast
                 end
               end
 
-              return ret
+              ret
             end
           end
         end

@@ -44,17 +44,16 @@ module Yawast
           body = res.read_body
           code = res.code
 
-          Yawast::Shared::Output.log_json 'debug', 'http_get', uri, Oj.dump(res)
+          Yawast::Shared::Output.log_json 'debug', 'http_get', uri, Oj.dump(res, Oj.default_options)
         rescue
           # do nothing for now
         end
 
-        body
-        return {:body => body, :code => code}
+        {body: body, code: code}
       end
 
       def self.get(uri, headers = nil)
-        return get_with_code(uri, headers)[:body]
+        get_with_code(uri, headers)[:body]
       end
 
       def self.get_json(uri)
@@ -63,7 +62,7 @@ module Yawast
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          res = req.request_get(uri, 'User-Agent' => "YAWAST/#{Yawast::VERSION}")
+          res = req.request_get(uri, {'User-Agent' => "YAWAST/#{Yawast::VERSION}"})
           body = res.read_body
         rescue
           # do nothing for now
@@ -89,17 +88,17 @@ module Yawast
         req.use_ssl = uri.scheme == 'https'
         res = req.head(uri, get_headers)
 
-        Yawast::Shared::Output.log_json 'debug', 'http_get_status_code', uri, Oj.dump(res)
+        Yawast::Shared::Output.log_json 'debug', 'http_get_status_code', uri, Oj.dump(res, Oj.default_options)
 
         res.code
       end
 
       def self.get_http(uri)
-        if @proxy
-          req = Net::HTTP.new(uri.host, uri.port, @proxy_host, @proxy_port)
-        else
-          req = Net::HTTP.new(uri.host, uri.port)
-        end
+        req = if @proxy
+                Net::HTTP.new(uri.host, uri.port, @proxy_host, @proxy_port)
+              else
+                Net::HTTP.new(uri.host, uri.port)
+              end
 
         req
       end
@@ -107,27 +106,27 @@ module Yawast
       def self.check_not_found(uri, file)
         fake_uri = uri.copy
 
-        if file
-          fake_uri.path = "/#{SecureRandom.hex}.html"
-        else
-          fake_uri.path = "/#{SecureRandom.hex}/"
-        end
+        fake_uri.path = if file
+                          "/#{SecureRandom.hex}.html"
+                        else
+                          "/#{SecureRandom.hex}/"
+                        end
 
         if Yawast::Shared::Http.get_status_code(fake_uri) != '404'
           # crazy 404 handling
           return false
         end
 
-        return true
+        true
       end
 
       # noinspection RubyStringKeysInHashInspection
       def self.get_headers(extra_headers = nil)
-        if @cookie == nil
-          headers = { 'User-Agent' => HTTP_UA }
-        else
-          headers = { 'User-Agent' => HTTP_UA, 'Cookie' => @cookie }
-        end
+        headers = if @cookie == nil
+                    {'User-Agent' => HTTP_UA}
+                  else
+                    {'User-Agent' => HTTP_UA, 'Cookie' => @cookie}
+                  end
 
         headers.merge! extra_headers unless extra_headers.nil?
 

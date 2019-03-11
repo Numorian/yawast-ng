@@ -30,6 +30,8 @@ It's strongly recommended that you review the [installation](https://github.com/
 
 The following tests are performed:
 
+* *(Generic)* User Enumeration via Password Reset Form Response Differences
+* *(Generic)* User Enumeration via Password Reset Form Timing Differences
 * *(Generic)* Info Disclosure: X-Powered-By header present
 * *(Generic)* Info Disclosure: X-Pingback header present
 * *(Generic)* Info Disclosure: X-Backend-Server header present
@@ -49,8 +51,9 @@ The following tests are performed:
 * *(Generic)* Presence of WS_FTP.LOG
 * *(Generic)* Presence of RELEASE-NOTES.txt
 * *(Generic)* Presence of readme.html
+* *(Generic)* Presence of CHANGELOG.txt
 * *(Generic)* Missing cookie flags (Secure, HttpOnly, and SameSite)
-* *(Generic)* Search for files (14,169) & common directories (21,332)
+* *(Generic)* Search for 14,169 common files (via `--files`) & 21,332 common directories (via `--dir`)
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version
@@ -86,6 +89,8 @@ SSL Information:
 
 Checks for the following SSL issues are performed:
 
+*Note: By default, YAWAST uses SSL Labs, meaning this is a small subset of issues detected.*
+
 * Expired Certificate
 * Self-Signed Certificate
 * MD5 Signature
@@ -93,6 +98,7 @@ Checks for the following SSL issues are performed:
 * RC4 Cipher Suites
 * Weak (< 128 bit) Cipher Suites
 * SWEET32
+* 64-bit Serial Numbers ([details](https://adamcaudill.com/2019/03/09/tls-64bit-ish-serial-numbers-mass-revocation/))
 
 Certain DNS information is collected:
 
@@ -121,4 +127,5 @@ Sample output for a [scan](https://github.com/adamcaudill/yawast/wiki/Sample-Out
 
 ### Special Thanks
 
+* [AppSec Consulting](https://www.appsecconsulting.com/) - Generously providing time to improve this tool.
 * [SecLists](https://github.com/danielmiessler/SecLists) - Various lists are based on the resources collected by this project.

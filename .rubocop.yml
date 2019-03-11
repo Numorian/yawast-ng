@@ -15,3 +15,9 @@ Metrics/MethodLength:
 
 Layout/CaseIndentation:
   IndentOneStep: true
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
+Style/BracesAroundHashParameters:
+  EnforcedStyle: braces

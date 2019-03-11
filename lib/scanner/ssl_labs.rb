@@ -76,7 +76,7 @@ module Yawast
           else
             Yawast::Utilities.puts_error 'SSL Labs Error: No Endpoint Data Received.'
 
-            #TODO - Remove this before release
+            # TODO: Remove this before release
             puts
             puts "DEBUG DATA (send to adam@adamcaudill.com): #{body}"
             puts
@@ -103,41 +103,23 @@ module Yawast
         unless cert['issues'] == 0
           Yawast::Utilities.puts_vuln "\t\tCertificate Has Issues - Not Valid"
 
-          if cert['issues'] & 1 != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: no chain of trust"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: no chain of trust" if cert['issues'] & 1 != 0
 
-          if cert['issues'] & (1<<1) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: certificate not yet valid"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: certificate not yet valid" if cert['issues'] & (1 << 1) != 0
 
-          if cert['issues'] & (1<<2) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: certificate expired"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: certificate expired" if cert['issues'] & (1 << 2) != 0
 
-          if cert['issues'] & (1<<3) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: hostname mismatch"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: hostname mismatch" if cert['issues'] & (1 << 3) != 0
 
-          if cert['issues'] & (1<<4) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: revoked"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: revoked" if cert['issues'] & (1 << 4) != 0
 
-          if cert['issues'] & (1<<5) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: bad common name"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: bad common name" if cert['issues'] & (1 << 5) != 0
 
-          if cert['issues'] & (1<<6) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: self-signed"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: self-signed" if cert['issues'] & (1 << 6) != 0
 
-          if cert['issues'] & (1<<7) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: blacklisted"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: blacklisted" if cert['issues'] & (1 << 7) != 0
 
-          if cert['issues'] & (1<<8) != 0
-            Yawast::Utilities.puts_vuln "\t\tCertificate Issue: insecure signature"
-          end
+          Yawast::Utilities.puts_vuln "\t\tCertificate Issue: insecure signature" if cert['issues'] & (1 << 8) != 0
         end
 
         Yawast::Utilities.puts_info "\t\tSubject: #{cert['subject']}"
@@ -215,7 +197,7 @@ module Yawast
                                           {vulnerable: false, algorithm: cert['sigAlg']}
         end
 
-        #todo - figure out what the options for this value are
+        # TODO: figure out what the options for this value are
         if cert['validationType'] == 'E'
           Yawast::Utilities.puts_info "\t\tExtended Validation: Yes"
         elsif cert['validationType'] == 'D'
@@ -231,12 +213,12 @@ module Yawast
           end
 
           # check second bit, SCT in stapled OSCP response
-          if ep['details']['hasSct'] & (1<<1) != 0
+          if ep['details']['hasSct'] & (1 << 1) != 0
             Yawast::Utilities.puts_info "\t\tCertificate Transparency: SCT in the stapled OCSP response"
           end
 
           # check third bit, SCT in the TLS extension
-          if ep['details']['hasSct'] & (1<<2) != 0
+          if ep['details']['hasSct'] & (1 << 2) != 0
             Yawast::Utilities.puts_info "\t\tCertificate Transparency: SCT in the TLS extension (ServerHello)"
           end
         else
@@ -248,7 +230,7 @@ module Yawast
         if cert['revocationInfo'] & 1 != 0
           Yawast::Utilities.puts_info "\t\tRevocation information: CRL information available"
         end
-        if cert['revocationInfo'] & (1<<1) != 0
+        if cert['revocationInfo'] & (1 << 1) != 0
           Yawast::Utilities.puts_info "\t\tRevocation information: OCSP information available"
         end
 
@@ -283,18 +265,18 @@ module Yawast
           path_count = 0
 
           # build list of trust paths
-          trust_paths = Hash.new
+          trust_paths = {}
           chain['trustPaths'].each do |path|
             trusts = nil
             # in practice, it seems there is only only per path, but just in case
             path['trust'].each do |trust|
-              if trust['isTrusted']
-                trust_line = "#{trust['rootStore']} (trusted)"
-              else
-                trust_line = "#{trust['rootStore']} (#{trust['trustErrorMessage']})"
-              end
+              trust_line = if trust['isTrusted']
+                             "#{trust['rootStore']} (trusted)"
+                           else
+                             "#{trust['rootStore']} (#{trust['trustErrorMessage']})"
+                           end
 
-              if trusts == nil
+              if trusts.nil?
                 trusts = trust_line
               else
                 trusts += " #{trust_line}"
@@ -316,7 +298,7 @@ module Yawast
             puts "\t\t   Root Stores: #{trust_paths[key]}"
 
             # cert chain issues
-            if chain['issues'] & (1<<1) != 0
+            if chain['issues'] & (1 << 1) != 0
               Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: incomplete chain"
               Yawast::Shared::Output.log_hash 'vulnerabilities',
                                               'tls_chain_incomplete',
@@ -327,21 +309,15 @@ module Yawast
                                               {vulnerable: false}
             end
 
-            if chain['issues'] & (1<<2) != 0
+            if chain['issues'] & (1 << 2) != 0
               Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: chain contains unrelated/duplicate certificates"
             end
 
-            if chain['issues'] & (1<<3) != 0
-              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: incorrect order"
-            end
+            Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: incorrect order" if chain['issues'] & (1 << 3) != 0
 
-            if chain['issues'] & (1<<4) != 0
-              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: contains anchor"
-            end
+            Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: contains anchor" if chain['issues'] & (1 << 4) != 0
 
-            if cert['issues'] & (1<<5) != 0
-              Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: untrusted"
-            end
+            Yawast::Utilities.puts_warn "\t\tCertificate Chain Issue: untrusted" if cert['issues'] & (1 << 5) != 0
 
             # setup the log entry for a symantec root - this will overwrite if one is found
             Yawast::Shared::Output.log_hash 'vulnerabilities',
@@ -363,7 +339,7 @@ module Yawast
 
                   Yawast::Utilities.puts_info "\t\t\t  https://crt.sh/?q=#{c['sha1Hash']}"
 
-                  if chain['certIds'].find_index(c['sha256Hash']) != nil
+                  unless chain['certIds'].find_index(c['sha256Hash']).nil?
                     Yawast::Utilities.puts_info "\t\t\t  (provided by server)"
                   end
 
@@ -393,7 +369,7 @@ module Yawast
                                         {vulnerable: true}
 
         # check protocols
-        protos = Hash.new
+        protos = {}
         tls13_enabled = false
         ep['details']['protocols'].each do |proto|
           if proto['name'] == 'SSL'
@@ -427,7 +403,7 @@ module Yawast
         puts
 
         puts "\t\tNamed Group Support:"
-        if ep['details']['namedGroups'] != nil
+        unless ep['details']['namedGroups'].nil?
           ep['details']['namedGroups']['list'].each do |group|
             Yawast::Utilities.puts_info "\t\t\t#{group['name']} #{group['bits']}"
           end
@@ -449,7 +425,7 @@ module Yawast
                                         'tls_rc4_enabled',
                                         {vulnerable: false, suite: ''}
 
-        if ep['details']['suites'] != nil
+        if !ep['details']['suites'].nil?
           ep['details']['suites'].each do |proto_suites|
             Yawast::Utilities.puts_info "\t\t\t#{protos[proto_suites['protocol']]}"
 
@@ -473,11 +449,11 @@ module Yawast
                                                 {vulnerable: true, suite: suite['name']}
               end
 
-              if ke != nil
-                suite_info = "#{suite['name'].ljust(50)} - #{strength}-bits - #{ke}"
-              else
-                suite_info = "#{suite['name'].ljust(50)} - #{strength}-bits"
-              end
+              suite_info = if !ke.nil?
+                             "#{suite['name'].ljust(50)} - #{strength}-bits - #{ke}"
+                           else
+                             "#{suite['name'].ljust(50)} - #{strength}-bits"
+                           end
 
               if cipher_suite_secure? suite
                 if strength >= 128
@@ -505,12 +481,10 @@ module Yawast
         puts
 
         puts "\t\tHandshake Simulation:"
-        if ep['details']['sims']['results'] != nil
+        if !ep['details']['sims']['results'].nil?
           ep['details']['sims']['results'].each do |sim|
             name = "#{sim['client']['name']} #{sim['client']['version']}"
-            if sim['client']['platform'] != nil
-              name += " / #{sim['client']['platform']}"
-            end
+            name += " / #{sim['client']['platform']}" unless sim['client']['platform'].nil?
             name = name.ljust(28)
 
             if sim['errorCode'] == 0
@@ -554,17 +528,17 @@ module Yawast
                                           {vulnerable: false}
         end
 
-        if ep['details']['renegSupport'] != nil
+        unless ep['details']['renegSupport'].nil?
           if ep['details']['renegSupport'] & 1 != 0
             Yawast::Utilities.puts_vuln "\t\t\tSecure Renegotiation: insecure client-initiated renegotiation supported"
           end
-          if ep['details']['renegSupport'] & (1<<1) != 0
+          if ep['details']['renegSupport'] & (1 << 1) != 0
             Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure renegotiation supported"
           end
-          if ep['details']['renegSupport'] & (1<<2) != 0
+          if ep['details']['renegSupport'] & (1 << 2) != 0
             Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: secure client-initiated renegotiation supported"
           end
-          if ep['details']['renegSupport'] & (1<<3) != 0
+          if ep['details']['renegSupport'] & (1 << 3) != 0
             Yawast::Utilities.puts_info "\t\t\tSecure Renegotiation: server requires secure renegotiation support"
           end
         end
@@ -761,9 +735,9 @@ module Yawast
                                         'tls_missing_forward_secrecy',
                                         {vulnerable: false}
 
-        if ep['details']['forwardSecrecy'] & (1<<2) != 0
+        if ep['details']['forwardSecrecy'] & (1 << 2) != 0
           Yawast::Utilities.puts_info "\t\t\tForward Secrecy: Yes (all simulated clients)"
-        elsif ep['details']['forwardSecrecy'] & (1<<1) != 0
+        elsif ep['details']['forwardSecrecy'] & (1 << 1) != 0
           Yawast::Utilities.puts_info "\t\t\tForward Secrecy: Yes (modern clients)"
         elsif ep['details']['forwardSecrecy'] & 1 != 0
           Yawast::Utilities.puts_warn "\t\t\tForward Secrecy: Yes (limited support)"
@@ -835,11 +809,11 @@ module Yawast
             Yawast::Utilities.puts_warn "\t\t\tTLS Extension Intolerance: Yes"
           end
 
-          if ep['details']['miscIntolerance'] & (1<<1) != 0
+          if ep['details']['miscIntolerance'] & (1 << 1) != 0
             Yawast::Utilities.puts_warn "\t\t\tLong Handshake Intolerance: Yes"
           end
 
-          if ep['details']['miscIntolerance'] & (1<<2) != 0
+          if ep['details']['miscIntolerance'] & (1 << 2) != 0
             Yawast::Utilities.puts_warn "\t\t\tLong Handshake Intolerance: Workaround Success"
           end
         end
@@ -849,23 +823,23 @@ module Yawast
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.0"
           end
 
-          if ep['details']['protocolIntolerance'] & (1<<1) != 0
+          if ep['details']['protocolIntolerance'] & (1 << 1) != 0
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.1"
           end
 
-          if ep['details']['protocolIntolerance'] & (1<<2) != 0
+          if ep['details']['protocolIntolerance'] & (1 << 2) != 0
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.2"
           end
 
-          if ep['details']['protocolIntolerance'] & (1<<3) != 0
+          if ep['details']['protocolIntolerance'] & (1 << 3) != 0
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.3"
           end
 
-          if ep['details']['protocolIntolerance'] & (1<<4) != 0
+          if ep['details']['protocolIntolerance'] & (1 << 4) != 0
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.152"
           end
 
-          if ep['details']['protocolIntolerance'] & (1<<5) != 0
+          if ep['details']['protocolIntolerance'] & (1 << 5) != 0
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 2.152"
           end
         else
@@ -920,7 +894,7 @@ module Yawast
                                             'tls_dh_known_primes',
                                             {vulnerable: true, weak: true}
           else
-            unless ep['details']['dhUsesKnownPrimes'] == nil
+            unless ep['details']['dhUsesKnownPrimes'].nil?
               Yawast::Utilities.puts_error "\t\t\tUses common DH primes: Unknown Response #{ep['details']['dhUsesKnownPrimes']}"
             end
         end
@@ -960,32 +934,26 @@ module Yawast
         secure = true
 
         # check for weak DH
-        if suite['kxStrength'] != nil && suite['kxStrength'] < 2048
-          secure = false
-        end
+        secure = false if !suite['kxStrength'].nil? && suite['kxStrength'] < 2048
         # check for RC4
-        if suite['name'].include? 'RC4'
-          secure = false
-        end
+        secure = false if suite['name'].include? 'RC4'
         # check for weak suites
-        if suite['cipherStrength'] < 112
-          secure = false
-        end
+        secure = false if suite['cipherStrength'] < 112
 
         secure
       end
 
       def self.get_key_exchange(suite)
         ke = nil
-        if suite['kxType'] != nil
-          if suite['namedGroupBits'] != nil
-            ke = "#{suite['kxType']}-#{suite['namedGroupBits']} / #{suite['namedGroupName']} (#{suite['kxStrength']} equivalent)"
-          else
-            ke = "#{suite['kxType']}-#{suite['kxStrength']}"
-          end
+        unless suite['kxType'].nil?
+          ke = if !suite['namedGroupBits'].nil?
+                 "#{suite['kxType']}-#{suite['namedGroupBits']} / #{suite['namedGroupName']} (#{suite['kxStrength']} equivalent)"
+               else
+                 "#{suite['kxType']}-#{suite['kxStrength']}"
+               end
         end
 
-        return ke
+        ke
       end
     end
   end

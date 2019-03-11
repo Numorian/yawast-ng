@@ -17,11 +17,11 @@ module Yawast
               uri = endpoint.copy
               uri.path = '/api/v3/analyze'
 
-              if start_new
-                uri.query = "host=#{target}&publish=off&startNew=on&all=done&ignoreMismatch=on"
-              else
-                uri.query = "host=#{target}&publish=off&all=done&ignoreMismatch=on"
-              end
+              uri.query = if start_new
+                            "host=#{target}&publish=off&startNew=on&all=done&ignoreMismatch=on"
+                          else
+                            "host=#{target}&publish=off&all=done&ignoreMismatch=on"
+                          end
 
               req = Yawast::Shared::Http.get_http(uri)
               req.use_ssl = uri.scheme == 'https'
@@ -35,9 +35,8 @@ module Yawast
               rescue => e
                 raise StandardError, "Invalid response from SSL Labs: '#{e.message}'"
               end
-              if json.key?('errors')
-                raise InvocationError, "API returned: #{json['errors']}"
-              end
+
+              raise InvocationError, "API returned: #{json['errors']}" if json.key?('errors')
 
               Yawast::Shared::Output.log_json 'ssl', 'ssl_labs', body
 
@@ -59,7 +58,7 @@ module Yawast
                 end
               end
 
-              return body
+              body
             end
 
             def self.extract_status(body)
@@ -69,7 +68,7 @@ module Yawast
                 raise StandardError, "Invalid response from SSL Labs: '#{e.message}'"
               end
 
-              return json['status']
+              json['status']
             end
           end
         end

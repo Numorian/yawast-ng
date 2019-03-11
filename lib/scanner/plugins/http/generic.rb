@@ -10,7 +10,7 @@ module Yawast
               headers = Yawast::Shared::Http.get_headers
               res = req.request(Propfind.new('/', headers))
 
-              if res.code.to_i <= 400 && res.body.length > 0 && res['Content-Type'] == 'text/xml'
+              if res.code.to_i <= 400 && res.body.length.positive? && res['Content-Type'] == 'text/xml'
                 Yawast::Utilities.puts_warn 'Possible Info Disclosure: PROPFIND Enabled'
                 puts "\t\t\"curl -X PROPFIND #{uri}\""
 
@@ -50,13 +50,14 @@ module Yawast
               headers = Yawast::Shared::Http.get_headers
               res = req.request(Options.new('/', headers))
 
-              if res['Public'] != nil
+              unless res['Public'].nil?
                 Yawast::Utilities.puts_info "Public HTTP Verbs (OPTIONS): #{res['Public']}"
                 Yawast::Shared::Output.log_value 'http', 'options', 'public', res['Public']
 
                 puts ''
               end
-              if res['Allow'] != nil
+
+              unless res['Allow'].nil?
                 Yawast::Utilities.puts_info "Allow HTTP Verbs (OPTIONS): #{res['Allow']}"
                 Yawast::Shared::Output.log_value 'http', 'options', 'allow', res['Allow']
 
@@ -66,23 +67,23 @@ module Yawast
           end
         end
 
-        #Custom class to allow using the PROPFIND verb
+        # Custom class to allow using the PROPFIND verb
         class Propfind < Net::HTTPRequest
-          METHOD = 'PROPFIND'
+          METHOD = 'PROPFIND'.freeze
           REQUEST_HAS_BODY = false
           RESPONSE_HAS_BODY = true
         end
 
-        #Custom class to allow using the TRACE verb
+        # Custom class to allow using the TRACE verb
         class Trace < Net::HTTPRequest
-          METHOD = 'TRACE'
+          METHOD = 'TRACE'.freeze
           REQUEST_HAS_BODY = false
           RESPONSE_HAS_BODY = true
         end
 
-        #Custom class to allow using the OPTIONS verb
+        # Custom class to allow using the OPTIONS verb
         class Options < Net::HTTPRequest
-          METHOD = 'OPTIONS'
+          METHOD = 'OPTIONS'.freeze
           REQUEST_HAS_BODY = false
           RESPONSE_HAS_BODY = true
         end

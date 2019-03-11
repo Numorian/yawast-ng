@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 module Yawast
   module Scanner
     module Plugins
       module SSL
         class Sweet32
-          def self.get_tdes_session_msg_count(uri, limit = 10000)
+          def self.get_tdes_session_msg_count(uri, limit = 10_000)
             Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'limit', limit
 
             # this method will send a number of HEAD requests to see
@@ -38,52 +39,50 @@ module Yawast
               # attempt to find a version that supports 3DES
               versions = OpenSSL::SSL::SSLContext::METHODS.find_all { |v| !v.to_s.include?('_client') && !v.to_s.include?('_server')}
               versions.each do |version|
-                if version.to_s != 'SSLv23'
-                  req.ssl_version = version
+                next unless version.to_s != 'SSLv23'
+                req.ssl_version = version
 
-                  begin
-                    req.start do |http|
+                begin
+                  req.start do |http|
 
-                      head = nil
-                      begin
-                        if use_head
-                          head = http.head(uri.path, headers)
-                        else
-                          head = http.request_get(uri.path, headers)
-                        end
+                    head = nil
+                    begin
+                      head = if use_head
+                               http.head(uri.path, headers)
+                             else
+                               http.request_get(uri.path, headers)
+                             end
 
-                        cipher = http.instance_variable_get(:@socket).io.cipher[0]
-                      rescue
-                        # check if we are using HEAD or GET. If we've already switched to GET, no need to do this again.
-                        if use_head
-                          head = http.request_get(uri.path, headers)
+                      cipher = http.instance_variable_get(:@socket).io.cipher[0]
+                    rescue StandardError
+                      # check if we are using HEAD or GET. If we've already switched to GET, no need to do this again.
+                      if use_head
+                        head = http.request_get(uri.path, headers)
 
-                          #if we are here, that means that HEAD failed, but GET didn't, so we'll use GET from now on.
-                          use_head = false
-                          Yawast::Utilities.puts_error 'Error: HEAD request failed; using GET requests for SWEET32 check...'
-                        end
-                      end
-
-                      # check to see if this is on Cloudflare - they break Keep-Alive limits, creating a false positive
-                      head.each do |k, v|
-                        if k.downcase == 'server'
-                          if v == 'cloudflare'
-                            puts 'Cloudflare server found: SWEET32 mitigated: https://support.cloudflare.com/hc/en-us/articles/231510928'
-                          end
-                        end
+                        # if we are here, that means that HEAD failed, but GET didn't, so we'll use GET from now on.
+                        use_head = false
+                        Yawast::Utilities.puts_error 'Error: HEAD request failed; using GET requests for SWEET32 check...'
                       end
                     end
 
-                    print "Using #{version} (#{cipher})"
-
-                    Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'tls_version', version
-                    Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'tls_cipher', cipher
-                    Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'use_head_req', use_head
-
-                    break
-                  rescue
-                    # we don't care
+                    # check to see if this is on Cloudflare - they break Keep-Alive limits, creating a false positive
+                    head.each do |k, v|
+                      next unless k.casecmp('server').zero?
+                      if v == 'cloudflare'
+                        puts 'Cloudflare server found: SWEET32 mitigated: https://support.cloudflare.com/hc/en-us/articles/231510928'
+                      end
+                    end
                   end
+
+                  print "Using #{version} (#{cipher})"
+
+                  Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'tls_version', version
+                  Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'tls_cipher', cipher
+                  Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'use_head_req', use_head
+
+                  break
+                rescue StandardError
+                  # we don't care
                 end
               end
 
@@ -109,12 +108,10 @@ module Yawast
 
                   count += 1
 
-                  if i % 20 == 0
-                    print '.'
-                  end
+                  print '.' if i % 20 == 0
                 end
               end
-            rescue => e
+            rescue StandardError => e
               puts
 
               if e.message.include?('alert handshake failure') || e.message.include?('no cipher match')
@@ -129,7 +126,7 @@ module Yawast
 
               Yawast::Shared::Output.log_hash 'vulnerabilities',
                                               'tls_sweet32',
-                                              {:vulnerable => false}
+                                              {vulnerable: false}
 
               return
             end
@@ -143,7 +140,7 @@ module Yawast
 
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'tls_sweet32',
-                                            {:vulnerable => true}
+                                            {vulnerable: true}
           end
 
           def self.check_tdes
@@ -155,31 +152,28 @@ module Yawast
 
             versions.each do |version|
               # ignore SSLv23, as it's an auto-negotiate, which just adds noise
-              if version.to_s != 'SSLv23' && version.to_s != 'SSLv2'
-                # try to get the list of ciphers supported for each version
-                Yawast::Shared::Output.log_append_value 'openssl', 'tls_versions', version.to_s
+              next unless version.to_s != 'SSLv23' && version.to_s != 'SSLv2'
+              # try to get the list of ciphers supported for each version
+              Yawast::Shared::Output.log_append_value 'openssl', 'tls_versions', version.to_s
 
-                ciphers = nil
+              ciphers = nil
 
-                get_ciphers_failed = false
-                begin
-                  ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
-                rescue => e
-                  Yawast::Utilities.puts_error "\tError getting cipher suites for #{version}, skipping. (#{e.message})"
-                  get_ciphers_failed = true
+              get_ciphers_failed = false
+              begin
+                ciphers = OpenSSL::SSL::SSLContext.new(version).ciphers
+              rescue StandardError => e
+                Yawast::Utilities.puts_error "\tError getting cipher suites for #{version}, skipping. (#{e.message})"
+                get_ciphers_failed = true
+              end
+
+              if !ciphers.nil?
+                ciphers.each do |cipher|
+                  ret = true if cipher[0].include?('3DES') || cipher[0].include?('CBC3')
+
+                  Yawast::Shared::Output.log_append_value 'openssl', 'tls_ciphers', version.to_s, cipher[0]
                 end
-
-                if ciphers != nil
-                  ciphers.each do |cipher|
-                    if cipher[0].include?('3DES') || cipher[0].include?('CBC3')
-                      ret = true
-                    end
-
-                    Yawast::Shared::Output.log_append_value 'openssl', 'tls_ciphers', version.to_s, cipher[0]
-                  end
-                elsif !get_ciphers_failed
-                  Yawast::Utilities.puts_info "\t#{version}: No cipher suites available."
-                end
+              elsif !get_ciphers_failed
+                Yawast::Utilities.puts_info "\t#{version}: No cipher suites available."
               end
             end
 

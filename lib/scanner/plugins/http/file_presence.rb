@@ -6,10 +6,10 @@ module Yawast
       module Http
         class FilePresence
           def self.check_path(uri, path, vuln)
-            #note: this only checks directly at the root, I'm not sure if this is what we want
+            # note: this only checks directly at the root, I'm not sure if this is what we want
             # should probably be relative to what's passed in, instead of overriding the path.
             check = uri.copy
-            check.path = "#{path}"
+            check.path = path.to_s
             code = Yawast::Shared::Http.get_status_code(check)
 
             if code == '200'
@@ -26,7 +26,7 @@ module Yawast
           end
 
           def self.check_all(uri, common_files)
-            #first, we need to see if the site responds to 404 in a reasonable way
+            # first, we need to see if the site responds to 404 in a reasonable way
             unless Yawast::Shared::Http.check_not_found(uri, true)
               puts 'Site does not respond properly to non-existent file requests; skipping some checks.'
 
@@ -70,7 +70,7 @@ module Yawast
           end
 
           def self.check_wsftp_log(uri)
-            #check both upper and lower, as they are both seen in the wild
+            # check both upper and lower, as they are both seen in the wild
             check_path(uri, '/WS_FTP.LOG', false)
             check_path(uri, '/ws_ftp.log', false)
           end
@@ -111,7 +111,7 @@ module Yawast
               @jobs = Queue.new
               @results = Queue.new
 
-              #load the queue, starting at /
+              # load the queue, starting at /
               base = uri.copy
               base.path = '/'
               load_queue base
@@ -131,13 +131,13 @@ module Yawast
               results = Thread.new do
                 begin
                   while true
-                    if @results.length > 0
+                    if @results.length.positive?
                       out = @results.pop(true)
                       Yawast::Utilities.puts_info out
                     end
                   end
                 rescue ThreadError
-                  #do nothing
+                  # do nothing
                 end
               end
 
@@ -155,10 +155,10 @@ module Yawast
               begin
                 check.path = "/#{line}"
 
-                #add the job to the queue
+                # add the job to the queue
                 @jobs.push check
               rescue
-                #who cares
+                # who cares
               end
             end
           end

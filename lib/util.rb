@@ -30,9 +30,7 @@ module Yawast
     def self.puts_raw(msg = '')
       puts msg
 
-      if msg != ''
-        Yawast::Shared::Output.log_append_value 'messages', 'raw', msg
-      end
+      Yawast::Shared::Output.log_append_value 'messages', 'raw', msg if msg != ''
     end
 
     def self.prompt(msg)
@@ -43,16 +41,16 @@ module Yawast
 
       Yawast::Shared::Output.log_append_value 'prompt', msg, val
 
-      return val
+      val
     end
 
     def self.indent_text(msg)
-      return msg.gsub!(/^/, "\t")
+      msg.gsub!(/^/, "\t")
     end
 
     def self.diff_text(txt1, txt2)
 
-      return indent_text(Diffy::Diff.new(txt1, txt2, :context => 1).to_s(:color))
+      indent_text(Diffy::Diff.new(txt1, txt2, {context: 1}).to_s(:color))
     end
   end
 end

@@ -24,9 +24,7 @@ module Yawast
 
           cert = ssl.peer_cert
 
-          unless cert.nil?
-            get_cert_info cert
-          end
+          get_cert_info cert unless cert.nil?
 
           cert_chain = ssl.peer_cert_chain
           get_cert_chain_info cert_chain, cert
@@ -34,9 +32,7 @@ module Yawast
           puts "\t\tQualys SSL Labs: https://www.ssllabs.com/ssltest/analyze.html?d=#{uri.host}&hideResults=on"
           puts ''
 
-          if check_ciphers
-            get_ciphers(uri)
-          end
+          get_ciphers(uri) if check_ciphers
 
           ssl.sysclose
 
@@ -54,14 +50,14 @@ module Yawast
         Yawast::Utilities.puts_info "\t\tSerial: #{cert.serial}"
         Yawast::Utilities.puts_info "\t\tSubject: #{cert.subject}"
 
-        #check to see if cert is expired
+        # check to see if cert is expired
         if cert.not_after > Time.now
           Yawast::Utilities.puts_info "\t\tExpires: #{cert.not_after}"
         else
           Yawast::Utilities.puts_vuln "\t\tExpires: #{cert.not_after} (Expired)"
         end
 
-        #check for SHA1 & MD5 certs
+        # check for SHA1 & MD5 certs
         if cert.signature_algorithm.include?('md5') || cert.signature_algorithm.include?('sha1')
           Yawast::Utilities.puts_vuln "\t\tSignature Algorithm: #{cert.signature_algorithm}"
         else
@@ -76,7 +72,7 @@ module Yawast
         # ct_precert_scts
         Yawast::Scanner::Plugins::SSL::SSL.print_precert cert
 
-        #alt names
+        # alt names
         alt_names = cert.extensions.find {|e| e.oid == 'subjectAltName'}
         unless alt_names.nil?
           Yawast::Utilities.puts_info "\t\tAlternate Names:"
@@ -90,8 +86,8 @@ module Yawast
 
       def self.get_cert_chain_info(cert_chain, cert)
         if cert_chain.count == 1
-          #HACK: This is an ugly way to guess if it's a missing intermediate, or self-signed
-          #It looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
+          # HACK: This is an ugly way to guess if it's a missing intermediate, or self-signed
+          # It looks like a change to Ruby's OpenSSL wrapper is needed to actually fix this right.
 
           if cert.issuer == cert.subject
             Yawast::Utilities.puts_vuln "\t\tCertificate Is Self-Signed"
@@ -123,33 +119,31 @@ module Yawast
 
         dns = Resolv::DNS.new
 
-        if IPAddress.valid? uri.host
-          ip = IPAddress.parse uri.host
-        else
-          ip = dns.getaddresses(uri.host)[0]
-        end
+        ip = if IPAddress.valid? uri.host
+               IPAddress.parse uri.host
+             else
+               dns.getaddresses(uri.host)[0]
+             end
 
-        protocols = %w(ssl2 ssl3 tls1.0 tls1.1 tls1.2)
+        protocols = %w[ssl2 ssl3 tls1.0 tls1.1 tls1.2]
 
         protocols.each do |protocol|
-          case protocol
-            when 'ssl2'
-              ciphers = SSLShake::SSLv2::CIPHERS
-            when 'ssl3'
-              ciphers = SSLShake::TLS::SSL3_CIPHERS
-            else
-              ciphers = SSLShake::TLS::TLS_CIPHERS
-          end
+          ciphers = case protocol
+                      when 'ssl2'
+                        SSLShake::SSLv2::CIPHERS
+                      when 'ssl3'
+                        SSLShake::TLS::SSL3_CIPHERS
+                      else
+                        SSLShake::TLS::TLS_CIPHERS
+                    end
 
           puts "\tChecking for #{protocol} suites (#{ciphers.count} possible suites)"
 
           ciphers.each_key do |cipher|
             begin
-              res = SSLShake.hello(ip.to_s, port: uri.port, protocol: protocol, ciphers: cipher, servername: uri.host)
+              res = SSLShake.hello(ip.to_s, {port: uri.port, protocol: protocol, ciphers: cipher, servername: uri.host})
 
-              if res['error'] == nil
-                Yawast::Utilities.puts_info "\t\tCipher: #{res['cipher_suite']}"
-              end
+              Yawast::Utilities.puts_info "\t\tCipher: #{res['cipher_suite']}" if res['error'] == nil
             rescue => e
               Yawast::Utilities.puts_error "SSL: Error Reading Cipher Details: #{e.message}"
             end
@@ -161,13 +155,13 @@ module Yawast
 
       def self.check_cipher_strength(cipher, ssl)
         if cipher[2] < 112 || cipher[0].include?('RC4')
-          #less than 112 bits or RC4, flag as a vuln
+          # less than 112 bits or RC4, flag as a vuln
           Yawast::Utilities.puts_vuln "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
         elsif cipher[2] >= 128
-          #secure, probably safe
+          # secure, probably safe
           Yawast::Utilities.puts_info "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
         else
-          #weak, but not "omg!" weak.
+          # weak, but not "omg!" weak.
           Yawast::Utilities.puts_warn "\t\tVersion: #{ssl.ssl_version.ljust(7)}\tBits: #{cipher[2]}\tCipher: #{cipher[0]}"
         end
       end

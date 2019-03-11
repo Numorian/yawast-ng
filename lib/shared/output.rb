@@ -22,9 +22,7 @@ module Yawast
         else
           # this means that it's a file, or doesn't exist
           # so, let's see if it exists, if so, warn
-          if File.exist? @file
-            puts 'WARNING: Output file already exists; it will be replaced.'
-          end
+          puts 'WARNING: Output file already exists; it will be replaced.' if File.exist? @file
         end
 
         puts "Saving output to '#{@file}'"
@@ -56,9 +54,7 @@ module Yawast
 
         target = get_target super_parent, parent
 
-        if target[key].nil?
-          target[key] = []
-        end
+        target[key] = [] if target[key].nil?
 
         # add value, after checking if it's already included
         target[key].push encode_utf8(value.to_s) unless target[key].include? encode_utf8(value.to_s)
@@ -98,17 +94,13 @@ module Yawast
         end
 
         unless super_parent.nil?
-          if target[super_parent].nil?
-            target[super_parent] = {}
-          end
+          target[super_parent] = {} if target[super_parent].nil?
 
           target = target[super_parent]
         end
 
         unless parent.nil?
-          if target[parent].nil?
-            target[parent] = {}
-          end
+          target[parent] = {} if target[parent].nil?
 
           target = target[parent]
         end
@@ -122,9 +114,7 @@ module Yawast
             escape_hash(v)
           else
             if v.is_a?(String)
-              unless v.valid_encoding?
-                hash[k] = Base64.encode64 v
-              end
+              hash[k] = Base64.encode64 v unless v.valid_encoding?
             end
           end
         end

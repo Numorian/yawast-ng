@@ -23,9 +23,7 @@ module Yawast
             found = ''
 
             head.each do |k, v|
-              if k.downcase.include? 'strict-transport-security'
-                found = "#{k}: #{v}"
-              end
+              found = "#{k}: #{v}" if k.downcase.include? 'strict-transport-security'
             end
 
             if found == ''
@@ -39,14 +37,14 @@ module Yawast
             begin
               info = Yawast::Shared::Http.get_json URI("https://hstspreload.com/api/v1/status/#{uri.host}")
 
-              chrome = info['chrome'] != nil
-              firefox = info['firefox'] != nil
-              tor = info['tor'] != nil
+              chrome = !info['chrome'].nil?
+              firefox = !info['firefox'].nil?
+              tor = !info['tor'].nil?
 
               Yawast::Utilities.puts_info "HSTS Preload: Chrome - #{chrome}; Firefox - #{firefox}; Tor - #{tor}"
             rescue => e
               if e.message.include? 'unexpected token'
-                #this means we have a parsing error - don't need to include the entire message
+                # this means we have a parsing error - don't need to include the entire message
                 Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message.truncate(30)}"
               else
                 Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message}"
@@ -67,7 +65,7 @@ module Yawast
             if uri.scheme != 'https'
               head = Yawast::Shared::Http.head(uri)
 
-              if head['Location'] != nil
+              unless head['Location'].nil?
                 begin
                   location = URI.parse(head['Location'])
 
@@ -81,7 +79,7 @@ module Yawast
               end
             end
 
-            return nil
+            nil
           end
 
           def self.ssl_connection_info(uri)
@@ -171,7 +169,7 @@ module Yawast
                      'f59db3f45d57fcec94ccd516e6c8ccb20dd4363feb2c44d8656e95f50fdd8df8',
                      'fe863d0822fe7a2353fa484d5924e875656d3dc9fb58771f6f616f9d571bc592',
                      'ff856a2d251dcd88d36656f450126798cfabaade40799c722de4d2b5db36a73a']
-            return roots.include? hash
+            roots.include? hash
           end
         end
       end

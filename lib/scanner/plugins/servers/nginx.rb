@@ -4,7 +4,7 @@ module Yawast
       module Servers
         class Nginx
           def self.check_banner(banner)
-            #don't bother if this doesn't include nginx
+            # don't bother if this doesn't include nginx
             return unless banner.include? 'nginx/'
 
             Yawast::Utilities.puts_warn "nginx Version: #{banner}"

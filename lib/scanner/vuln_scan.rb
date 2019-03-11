@@ -8,7 +8,7 @@ module Yawast
         Yawast::Scanner::Plugins::Servers::Apache.check_all(uri)
         Yawast::Scanner::Plugins::Servers::Iis.check_all(uri, head)
 
-        #checks for interesting files
+        # checks for interesting files
         Yawast::Scanner::Plugins::Http::FilePresence.check_all uri, options.files
 
         # generic header checks

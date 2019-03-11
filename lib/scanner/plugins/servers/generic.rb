@@ -4,7 +4,7 @@ module Yawast
       module Servers
         class Generic
           def self.check_banner_php(banner)
-            #don't bother if this doesn't include PHP
+            # don't bother if this doesn't include PHP
             return unless banner.include? 'PHP/'
 
             modules = banner.split(' ')

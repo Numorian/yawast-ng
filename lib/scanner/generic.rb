@@ -9,7 +9,7 @@ module Yawast
         begin
           server = ''
           powered_by = ''
-          cookies = Array.new
+          cookies = []
           pingback = ''
           frame_options = ''
           content_options = ''
@@ -26,21 +26,21 @@ module Yawast
             Yawast::Utilities.puts_info "\t\t#{k}: #{v}"
             Yawast::Shared::Output.log_value 'http', 'head', k, v
 
-            server = v if k.downcase == 'server'
-            powered_by = v if k.downcase == 'x-powered-by'
-            pingback = v if k.downcase == 'x-pingback'
-            frame_options = v if k.downcase == 'x-frame-options'
-            content_options = v if k.downcase == 'x-content-type-options'
-            csp = v if k.downcase == 'content-security-policy'
-            backend_server = v if k.downcase == 'x-backend-server'
-            runtime = v if k.downcase == 'x-runtime'
-            xss_protection = v if k.downcase == 'x-xss-protection'
-            via = v if k.downcase == 'via'
-            hpkp = v if k.downcase == 'public-key-pins'
-            acao = v if k.downcase == 'access-control-allow-origin'
+            server = v if k.casecmp('server').zero?
+            powered_by = v if k.casecmp('x-powered-by').zero?
+            pingback = v if k.casecmp('x-pingback').zero?
+            frame_options = v if k.casecmp('x-frame-options').zero?
+            content_options = v if k.casecmp('x-content-type-options').zero?
+            csp = v if k.casecmp('content-security-policy').zero?
+            backend_server = v if k.casecmp('x-backend-server').zero?
+            runtime = v if k.casecmp('x-runtime').zero?
+            xss_protection = v if k.casecmp('x-xss-protection').zero?
+            via = v if k.casecmp('via').zero?
+            hpkp = v if k.casecmp('public-key-pins').zero?
+            acao = v if k.casecmp('access-control-allow-origin').zero?
 
-            if k.downcase == 'set-cookie'
-              #this chunk of magic manages to properly split cookies, when multiple are sent together
+            if k.casecmp('set-cookie').zero?
+              # this chunk of magic manages to properly split cookies, when multiple are sent together
               v.gsub(/(,([^;,]*=)|,$)/) { "\r\n#{$2}" }.split(/\r\n/).each do |c|
                 cookies.push(c)
 
@@ -63,17 +63,11 @@ module Yawast
             end
           end
 
-          if powered_by != ''
-            Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}"
-          end
+          Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}" if powered_by != ''
 
-          if xss_protection == '0'
-            Yawast::Utilities.puts_warn 'X-XSS-Protection Disabled Header Present'
-          end
+          Yawast::Utilities.puts_warn 'X-XSS-Protection Disabled Header Present' if xss_protection == '0'
 
-          unless pingback == ''
-            Yawast::Utilities.puts_info "X-Pingback Header Present: #{pingback}"
-          end
+          Yawast::Utilities.puts_info "X-Pingback Header Present: #{pingback}" unless pingback == ''
 
           unless runtime == ''
             if runtime.is_number?
@@ -83,18 +77,14 @@ module Yawast
             end
           end
 
-          unless backend_server == ''
-            Yawast::Utilities.puts_warn "X-Backend-Server Header Present: #{backend_server}"
-          end
+          Yawast::Utilities.puts_warn "X-Backend-Server Header Present: #{backend_server}" unless backend_server == ''
 
-          unless via == ''
-            Yawast::Utilities.puts_warn "Via Header Present: #{via}"
-          end
+          Yawast::Utilities.puts_warn "Via Header Present: #{via}" unless via == ''
 
           if frame_options == ''
             Yawast::Utilities.puts_warn 'X-Frame-Options Header Not Present'
           else
-            if frame_options.downcase == 'allow'
+            if frame_options.casecmp('allow').zero?
               Yawast::Utilities.puts_vuln "X-Frame-Options Header: #{frame_options}"
             else
               Yawast::Utilities.puts_info "X-Frame-Options Header: #{frame_options}"
@@ -107,17 +97,11 @@ module Yawast
             Yawast::Utilities.puts_info "X-Content-Type-Options Header: #{content_options}"
           end
 
-          if csp == ''
-            Yawast::Utilities.puts_warn 'Content-Security-Policy Header Not Present'
-          end
+          Yawast::Utilities.puts_warn 'Content-Security-Policy Header Not Present' if csp == ''
 
-          if hpkp == ''
-            Yawast::Utilities.puts_warn 'Public-Key-Pins Header Not Present'
-          end
+          Yawast::Utilities.puts_warn 'Public-Key-Pins Header Not Present' if hpkp == ''
 
-          if acao == '*'
-            Yawast::Utilities.puts_warn 'Access-Control-Allow-Origin: Unrestricted'
-          end
+          Yawast::Utilities.puts_warn 'Access-Control-Allow-Origin: Unrestricted' if acao == '*'
 
           puts ''
 
@@ -129,7 +113,7 @@ module Yawast
 
               elements = val.strip.split(';')
 
-              #check for secure cookies
+              # check for secure cookies
               if elements.include?(' Secure') || elements.include?(' secure')
                 if uri.scheme != 'https'
                   Yawast::Utilities.puts_warn "\t\t\tCookie with Secure flag sent over non-HTTPS connection"
@@ -138,12 +122,12 @@ module Yawast
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing Secure flag"
               end
 
-              #check for HttpOnly cookies
+              # check for HttpOnly cookies
               unless elements.include?(' HttpOnly') || elements.include?(' httponly')
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing HttpOnly flag"
               end
 
-              #check for SameSite cookies
+              # check for SameSite cookies
               unless elements.include?(' SameSite') || elements.include?(' samesite')
                 Yawast::Utilities.puts_warn "\t\t\tCookie missing SameSite flag"
               end

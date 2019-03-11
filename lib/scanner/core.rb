@@ -14,9 +14,7 @@ module Yawast
 
           print_header
 
-          if options.output != nil
-            Yawast::Shared::Output.setup @uri, options
-          end
+          Yawast::Shared::Output.setup @uri, options if options.output != nil
 
           ssl_redirect = Yawast::Scanner::Plugins::SSL::SSL.check_for_ssl_redirect @uri
           if ssl_redirect
@@ -27,9 +25,7 @@ module Yawast
 
           Yawast::Scanner::Plugins::SSL::SSL.set_openssl_options
 
-          unless options.nodns
-            Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options
-          end
+          Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options unless options.nodns
         end
 
         @setup = true
@@ -42,18 +38,18 @@ module Yawast
         setup(uri, options)
 
         begin
-          #setup the proxy
+          # setup the proxy
           Yawast::Shared::Http.setup(options.proxy, options.cookie)
 
-          #cache the HEAD result, so that we can minimize hits
+          # cache the HEAD result, so that we can minimize hits
           head = get_head
           Yawast::Shared::Output.log_hash 'http', 'head', 'raw', head.to_hash
           Yawast::Scanner::Generic.head_info(head, @uri)
 
-          #perfom SSL checks
+          # perform SSL checks
           check_ssl(@uri, options, head)
 
-          #process the 'scan' stuff that goes beyond 'head'
+          # process the 'scan' stuff that goes beyond 'head'
           unless options.head
             # connection details for SSL
             Yawast::Scanner::Plugins::SSL::SSL.ssl_connection_info @uri
@@ -81,11 +77,9 @@ module Yawast
               Yawast::Scanner::Plugins::Http::Generic.check_trace(@uri)
             end
 
-            if options.spider
-              Yawast::Scanner::Plugins::Spider::Spider.spider(@uri)
-            end
+            Yawast::Scanner::Plugins::Spider::Spider.spider(@uri) if options.spider
 
-            #check for common directories
+            # check for common directories
             if options.dir
               Yawast::Scanner::Plugins::Http::DirectorySearch.search @uri, options.dirrecursive, options.dirlistredir
             end
@@ -130,7 +124,7 @@ module Yawast
         end
       end
 
-      def self.get_head()
+      def self.get_head
         begin
           Yawast::Shared::Http.head(@uri)
         rescue => e

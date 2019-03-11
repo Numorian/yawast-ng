@@ -3,7 +3,7 @@ require 'rake/testtask'
 task :default => [:codeclimate]
 
 task :test do
-  #set this, so that we can modify behavior based on where's it's ran from
+  # set this, so that we can modify behavior based on where's it's ran from
   ENV['FROM_RAKE'] = 'true'
 
   require File.join(File.dirname(__FILE__), 'test/test_helper')

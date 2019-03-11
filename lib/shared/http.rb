@@ -44,11 +44,11 @@ module Yawast
           body = res.read_body
           code = res.code
 
-          Yawast::Shared::Output.log_json 'debug', 'http_get', uri, Oj.dump(res)
+          Yawast::Shared::Output.log_json 'debug', 'http_get', uri, Oj.dump(res, Oj.default_options)
         rescue
           # do nothing for now
         end
-        
+
         {body: body, code: code}
       end
 
@@ -62,7 +62,7 @@ module Yawast
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
-          res = req.request_get(uri, 'User-Agent' => "YAWAST/#{Yawast::VERSION}")
+          res = req.request_get(uri, {'User-Agent' => "YAWAST/#{Yawast::VERSION}"})
           body = res.read_body
         rescue
           # do nothing for now
@@ -88,7 +88,7 @@ module Yawast
         req.use_ssl = uri.scheme == 'https'
         res = req.head(uri, get_headers)
 
-        Yawast::Shared::Output.log_json 'debug', 'http_get_status_code', uri, Oj.dump(res)
+        Yawast::Shared::Output.log_json 'debug', 'http_get_status_code', uri, Oj.dump(res, Oj.default_options)
 
         res.code
       end

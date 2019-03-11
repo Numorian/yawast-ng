@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'selenium-webdriver'
 require 'securerandom'
 
@@ -118,8 +120,7 @@ module Yawast
               beginning_time = Time.now
               element.submit
               end_time = Time.now
-              @timing[valid].push(end_time - beginning_time)*1000
-
+              @timing[valid].push((end_time - beginning_time) * 1000)
 
               res = driver.page_source
               img = driver.screenshot_as(:base64)

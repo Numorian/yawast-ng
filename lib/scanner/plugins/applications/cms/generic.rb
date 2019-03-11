@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yawast
   module Scanner
     module Plugins
@@ -16,4 +18,3 @@ module Yawast
     end
   end
 end
-

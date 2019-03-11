@@ -49,7 +49,6 @@ module Yawast
     end
 
     def self.diff_text(txt1, txt2)
-
       indent_text(Diffy::Diff.new(txt1, txt2, {context: 1}).to_s(:color))
     end
   end

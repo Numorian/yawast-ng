@@ -23,6 +23,7 @@ module Yawast
                             end
 
               @timing = {true => [], false => []}
+              @element_name = nil
             end
 
             def self.check_resp_user_enum
@@ -94,12 +95,12 @@ module Yawast
                                                    invalid_4: @timing[false][3], invalid_5: @timing[false][4]}
                 end
               rescue ArgumentError => e
-                Yawast::Utilities.puts "Unable to find a matching element to perform the User Enumeration via Password Reset Response test (#{e.message})"
+                Yawast::Utilities.puts_error "Unable to find a matching element to perform the User Enumeration via Password Reset Response test (#{e.message})"
               end
             end
 
             def self.fill_form_get_body(uri, user, valid, log_output)
-              options = Selenium::WebDriver::Chrome::Options.new({args: ['headless']})
+              options = Selenium::WebDriver::Chrome::Options.new({args: ['headless', 'incognito']})
 
               # if we have a proxy set, use that
               if !Yawast.options.proxy.nil?
@@ -114,6 +115,18 @@ module Yawast
 
               # find the page form element - this is going to be a best effort thing, and may not always be right
               element = find_user_field driver
+
+              # the element may not actually be visable yet (heavy JS pages)
+              # so, we'll go into a loop for a few seconds to see if it'll show up
+              counter = 0
+              unless element.displayed?
+                until element.displayed?
+                  sleep 0.5
+                  counter += 1
+
+                  break if counter > 20
+                end
+              end
 
               element.send_keys user
 
@@ -155,22 +168,39 @@ module Yawast
               element = find_element driver, 'forgetPasswordEmailOrUsername'
               return element unless element.nil?
 
+              element = find_element driver, 'username'
+              return element unless element.nil?
+
               # if we got here, it means that we don't have an element we know about, so we have to prompt
-              Yawast::Utilities.puts_raw 'Unable to find a known element to enter the user name. Please identify the proper element.'
-              Yawast::Utilities.puts_raw 'If this element name seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues'
-              element_name = Yawast::Utilities.prompt 'What is the user/email entry element name?'
-              element = find_element driver, element_name
+              if @element_name.nil?
+                Yawast::Utilities.puts_raw 'Unable to find a known element to enter the user name. Please identify the proper element.'
+                Yawast::Utilities.puts_raw 'If this element name seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues'
+                @element_name = Yawast::Utilities.prompt 'What is the user/email entry element name?'
+              end
+              element = find_element driver, @element_name
               return element unless element.nil?
 
               raise ArgumentError, 'No matching element found.'
             end
 
             def self.find_element(driver, name)
+              ret = nil
+
+              # first, check by name
               begin
-                return driver.find_element({name: name})
-              rescue ArgumentError
-                return nil
+                ret =  driver.find_element({name: name})
+              rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
+                # do nothing
               end
+
+              # next, maybe it's id instead of name
+              begin
+                ret =  driver.find_element({id: name})
+              rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
+                # do nothing
+              end
+
+              ret
             end
           end
         end

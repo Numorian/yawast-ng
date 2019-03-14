@@ -27,3 +27,6 @@ Style/RedundantBegin:
 
 Style/SafeNavigation:
   Enabled: false
+
+Style/WordArray:
+  Enabled: false

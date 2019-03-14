@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'openssl'
 require 'openssl-extensions/all'
 require 'digest/sha1'
@@ -37,7 +39,7 @@ module Yawast
           ssl.sysclose
 
           Yawast::Scanner::Plugins::SSL::Sweet32.get_tdes_session_msg_count(uri) if tdes_session_count
-        rescue => e
+        rescue => e # rubocop:disable Style/RescueStandardError
           Yawast::Utilities.puts_error "SSL: Error Reading X509 Details: #{e.message}"
         end
       end
@@ -143,8 +145,8 @@ module Yawast
             begin
               res = SSLShake.hello(ip.to_s, {port: uri.port, protocol: protocol, ciphers: cipher, servername: uri.host})
 
-              Yawast::Utilities.puts_info "\t\tCipher: #{res['cipher_suite']}" if res['error'] == nil
-            rescue => e
+              Yawast::Utilities.puts_info "\t\tCipher: #{res['cipher_suite']}" if res['error'].nil?
+            rescue => e # rubocop:disable Style/RescueStandardError
               Yawast::Utilities.puts_error "SSL: Error Reading Cipher Details: #{e.message}"
             end
           end
@@ -166,9 +168,10 @@ module Yawast
         end
       end
 
-      #private methods
+      # private methods
       class << self
         private
+
         def get_x509_pub_key_strength(cert)
           begin
             if cert.public_key.class == OpenSSL::PKey::EC
@@ -176,7 +179,7 @@ module Yawast
             else
               cert.public_key.strength
             end
-          rescue => e
+          rescue => e # rubocop:disable Style/RescueStandardError
             "(Strength Unknown: #{e.message})"
           end
         end

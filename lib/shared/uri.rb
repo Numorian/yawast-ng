@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ipaddress'
 
 module Yawast
@@ -20,7 +22,7 @@ module Yawast
         begin
           dns = Resolv::DNS.new
           dns.getaddress(uri.host)
-        rescue => e
+        rescue => e # rubocop:disable Style/RescueStandardError
           if uri.host == 'localhost'
             # do nothing, in this case, we just don't care.
           elsif IPAddress.valid? uri.host

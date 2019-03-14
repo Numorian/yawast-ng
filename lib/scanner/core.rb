@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yawast
   module Scanner
     class Core
@@ -93,7 +95,7 @@ module Yawast
 
           Yawast::Shared::Output.write_file
           puts "Scan complete (#{elapsed_time})."
-        rescue => e
+        rescue => e # rubocop:disable Style/RescueStandardError
           Yawast::Utilities.puts_error "Fatal Error: Can not continue. (#{e.class}: #{e.message})"
         end
       end
@@ -109,7 +111,7 @@ module Yawast
         setup(uri, options)
 
         if @uri.scheme == 'https' && !options.nossl
-          head = get_head if head == nil
+          head = get_head if head.nil?
 
           if options.internalssl || IPAddress.valid?(@uri.host) || @uri.port != 443
             Yawast::Scanner::Ssl.info(@uri, !options.nociphers, options.tdessessioncount)
@@ -127,7 +129,7 @@ module Yawast
       def self.get_head
         begin
           Yawast::Shared::Http.head(@uri)
-        rescue => e
+        rescue => e # rubocop:disable Style/RescueStandardError
           Yawast::Utilities.puts_error "Fatal Connection Error: Unable to complete HEAD request from '#{@uri}' (#{e.class}: #{e.message})"
           exit 1
         end

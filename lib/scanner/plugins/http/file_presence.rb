@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'securerandom'
 
 module Yawast
@@ -136,14 +138,14 @@ module Yawast
                       Yawast::Utilities.puts_info out
                     end
                   end
-                rescue ThreadError
+                rescue ThreadError # rubocop:disable Lint/HandleExceptions
                   # do nothing
                 end
               end
 
               workers.map(&:join)
               results.terminate
-            rescue => e
+            rescue => e # rubocop:disable Style/RescueStandardError
               Yawast::Utilities.puts_error "Error searching for files (#{e.message})"
             end
           end
@@ -157,7 +159,7 @@ module Yawast
 
                 # add the job to the queue
                 @jobs.push check
-              rescue
+              rescue # rubocop:disable Lint/HandleExceptions
                 # who cares
               end
             end
@@ -171,7 +173,7 @@ module Yawast
                 @results.push "'#{uri.path}' found: #{uri}"
                 Yawast::Shared::Output.log_append_value 'http', 'http_file', uri
               end
-            rescue => e
+            rescue => e # rubocop:disable Style/RescueStandardError
               unless e.message.include?('end of file') || e.message.include?('getaddrinfo')
                 Yawast::Utilities.puts_error "Error searching for file '#{uri.path}' (#{e.message})"
               end

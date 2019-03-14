@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yawast
   module Scanner
     module Plugins
@@ -42,7 +44,7 @@ module Yawast
               tor = !info['tor'].nil?
 
               Yawast::Utilities.puts_info "HSTS Preload: Chrome - #{chrome}; Firefox - #{firefox}; Tor - #{tor}"
-            rescue => e
+            rescue => e # rubocop:disable Style/RescueStandardError
               if e.message.include? 'unexpected token'
                 # this means we have a parsing error - don't need to include the entire message
                 Yawast::Utilities.puts_error "Error getting HSTS preload information: #{e.message.truncate(30)}"
@@ -73,7 +75,7 @@ module Yawast
                     # we run this through extract_uri as it performs a few checks we need
                     return Yawast::Shared::Uri.extract_uri location.to_s
                   end
-                rescue
+                rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
                   # we don't care if this fails
                 end
               end
@@ -105,13 +107,13 @@ module Yawast
 
                 puts
               end
-            rescue => e
+            rescue => e # rubocop:disable Style/RescueStandardError
               Yawast::Utilities.puts_error "SSL Information: Error Getting Details: #{e.message}"
             end
           end
 
           def self.check_symantec_root(hash)
-            roots = ['08297a4047dba23680c731db6e317653ca7848e1bebd3a0b0179a707f92cf178',
+            roots = ['08297a4047dba23680c731db6e317653ca7848e1bebd3a0b0179a707f92cf178', # rubocop:disable Style/WordArray
                      '2399561127a57125de8cefea610ddf2fa078b5c8067f4e828290bfb860e84b3c',
                      '2834991cf677466d22baac3b0055e5b911d9a9e55f5b85ba02dc566782c30e8a',
                      '2930bd09a07126bdc17288d4f2ad84645ec948607907a97b5ed0b0b05879ef69',

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'securerandom'
 
 module Yawast
@@ -50,7 +52,7 @@ module Yawast
                     while (check = @jobs.pop(true))
                       process check
                     end
-                  rescue ThreadError
+                  rescue ThreadError # rubocop:disable Lint/HandleExceptions
                     #do nothing
                   end
                 end
@@ -64,14 +66,14 @@ module Yawast
                       Yawast::Utilities.puts_info out
                     end
                   end
-                rescue ThreadError
+                rescue ThreadError # rubocop:disable Lint/HandleExceptions
                   # do nothing
                 end
               end
 
               workers.map(&:join)
               results.terminate
-            rescue => e
+            rescue => e # rubocop:disable Style/RescueStandardError
               Yawast::Utilities.puts_error "Error searching for directories (#{e.message})"
             end
 
@@ -87,7 +89,7 @@ module Yawast
 
                 # add the job to the queue
                 @jobs.push check
-              rescue
+              rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
                 # who cares
               end
             end
@@ -106,7 +108,7 @@ module Yawast
                 @results.push "\tFound Redirect: '#{uri} -> '#{res['Location']}'"
                 Yawast::Shared::Output.log_value 'http', 'http_dir_redirect', uri, res['Location']
               end
-            rescue => e
+            rescue => e # rubocop:disable Style/RescueStandardError
               unless e.message.include?('end of file') || e.message.include?('getaddrinfo')
                 Yawast::Utilities.puts_error "Error searching for directory '#{uri.path}' (#{e.message})"
               end

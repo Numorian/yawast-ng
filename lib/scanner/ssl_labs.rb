@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'date'
 require 'openssl'
 require 'digest/sha1'
@@ -10,7 +12,7 @@ module Yawast
         puts 'Beginning SSL Labs scan (this could take a minute or two)'
 
         begin
-          endpoint = URI::Parser.new.parse 'https://api.ssllabs.com'
+          endpoint = URI::DEFAULT_PARSER.parse 'https://api.ssllabs.com'
 
           info_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Info.call_info endpoint
 
@@ -39,12 +41,12 @@ module Yawast
           json = nil
           begin
             json = JSON.parse data_body
-          rescue => e
+          rescue => e # rubocop:disable Style/RescueStandardError
             raise Exception, "Invalid response from SSL Labs: '#{e.message}'"
           end
 
           process_results uri, json, tdes_session_count
-        rescue => e
+        rescue => e # rubocop:disable Style/RescueStandardError
           puts
           Yawast::Utilities.puts_error "SSL Labs Error: #{e.message}"
         end
@@ -65,7 +67,7 @@ module Yawast
                 else
                   Yawast::Utilities.puts_error "Error getting information for IP: #{ep['ipAddress']}: #{ep['statusMessage']}"
                 end
-              rescue => e
+              rescue => e # rubocop:disable Style/RescueStandardError
                 Yawast::Utilities.puts_error "Error getting information for IP: #{ep['ipAddress']}: #{e.message}"
               end
 
@@ -82,7 +84,7 @@ module Yawast
             puts
             puts
           end
-        rescue => e
+        rescue => e # rubocop:disable Style/RescueStandardError
           puts
           Yawast::Utilities.puts_error "SSL Labs Error: #{e.message}"
         end
@@ -100,7 +102,7 @@ module Yawast
         end
 
         puts "\tCertificate Information:"
-        unless cert['issues'] == 0
+        unless cert['issues'].zero?
           Yawast::Utilities.puts_vuln "\t\tCertificate Has Issues - Not Valid"
 
           Yawast::Utilities.puts_vuln "\t\tCertificate Issue: no chain of trust" if cert['issues'] & 1 != 0
@@ -487,7 +489,7 @@ module Yawast
             name += " / #{sim['client']['platform']}" unless sim['client']['platform'].nil?
             name = name.ljust(28)
 
-            if sim['errorCode'] == 0
+            if sim['errorCode'].zero?
               protocol = protos[sim['protocolId']]
 
               ke = get_key_exchange sim
@@ -804,7 +806,7 @@ module Yawast
                                           {vulnerable: true}
         end
 
-        if ep['details']['miscIntolerance'] > 0
+        if ep['details']['miscIntolerance'].positive?
           if ep['details']['miscIntolerance'] & 1 != 0
             Yawast::Utilities.puts_warn "\t\t\tTLS Extension Intolerance: Yes"
           end
@@ -818,7 +820,7 @@ module Yawast
           end
         end
 
-        if ep['details']['protocolIntolerance'] > 0
+        if ep['details']['protocolIntolerance'].positive?
           if ep['details']['protocolIntolerance'] & 1 != 0
             Yawast::Utilities.puts_warn "\t\t\tProtocol Intolerance: TLS 1.0"
           end

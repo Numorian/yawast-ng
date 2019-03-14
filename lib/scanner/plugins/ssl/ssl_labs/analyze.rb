@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 module Yawast
@@ -32,7 +34,7 @@ module Yawast
               # check for error in the response - if we don't, we'll wait forever for nothing
               begin
                 json = JSON.parse body
-              rescue => e
+              rescue => e # rubocop:disable Style/RescueStandardError
                 raise StandardError, "Invalid response from SSL Labs: '#{e.message}'"
               end
 
@@ -64,7 +66,7 @@ module Yawast
             def self.extract_status(body)
               begin
                 json = JSON.parse body
-              rescue => e
+              rescue => e # rubocop:disable Style/RescueStandardError
                 raise StandardError, "Invalid response from SSL Labs: '#{e.message}'"
               end
 

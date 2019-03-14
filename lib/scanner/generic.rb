@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'ipaddr_extensions'
 require 'json'
 require 'public_suffix'
@@ -57,7 +59,7 @@ module Yawast
             Yawast::Scanner::Plugins::Servers::Nginx.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Python.check_banner(server)
 
-            if server == 'cloudflare-nginx'
+            if server == 'cloudflare'
               Yawast::Utilities.puts_info 'NOTE: Server appears to be Cloudflare; WAF may be in place.'
               puts
             end
@@ -137,7 +139,7 @@ module Yawast
           end
 
           puts ''
-        rescue => e
+        rescue => e # rubocop:disable Style/RescueStandardError
           Yawast::Utilities.puts_error "Error getting head information: #{e.message}"
           raise
         end

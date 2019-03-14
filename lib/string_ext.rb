@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
 class String
   # see if string is numeric
   def is_number?
-    true if Float(self) rescue false
+    begin
+      true if Float(self)
+    rescue # rubocop:disable Style/RescueStandardError
+      false
+    end
   end
 
   def trim

@@ -67,10 +67,12 @@ module Yawast
                     end
 
                     # check to see if this is on Cloudflare - they break Keep-Alive limits, creating a false positive
-                    head.each do |k, v|
-                      next unless k.casecmp('server').zero?
-                      if v == 'cloudflare'
-                        puts 'Cloudflare server found: SWEET32 mitigated: https://support.cloudflare.com/hc/en-us/articles/231510928'
+                    unless head.nil?
+                      head.each do |k, v|
+                        next unless k.casecmp('server').zero?
+                        if v == 'cloudflare'
+                          puts 'Cloudflare server found: SWEET32 mitigated: https://support.cloudflare.com/hc/en-us/articles/231510928'
+                        end
                       end
                     end
                   end
@@ -82,7 +84,7 @@ module Yawast
                   Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'use_head_req', use_head
 
                   break
-                rescue StandardError
+                rescue StandardError # rubocop:disable Lint/HandleExceptions
                   # we don't care
                 end
               end
@@ -109,7 +111,7 @@ module Yawast
 
                   count += 1
 
-                  print '.' if i % 20 == 0
+                  print '.' if (i % 20).zero?
                 end
               end
             rescue StandardError => e

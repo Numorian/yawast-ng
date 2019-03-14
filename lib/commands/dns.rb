@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yawast
   module Commands
     class DNS
@@ -6,9 +8,7 @@ module Yawast
 
         Yawast.header
 
-        if options.output != nil
-          Yawast::Shared::Output.setup uri, options
-        end
+        Yawast::Shared::Output.setup uri, options unless options.output.nil?
 
         puts "Scanning: #{uri}"
         puts

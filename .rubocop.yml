@@ -21,3 +21,9 @@ Layout/SpaceInsideHashLiteralBraces:
 
 Style/BracesAroundHashParameters:
   EnforcedStyle: braces
+
+Style/RedundantBegin:
+  Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'securerandom'
 require 'json'
 require 'oj'
@@ -24,7 +26,7 @@ module Yawast
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
           req.head(uri, get_headers)
-        rescue
+        rescue # rubocop:disable Style/RescueStandardError
           # if we get here, the HEAD failed - but GET may work
           # so we silently fail back to using GET instead
           req = get_http(uri)
@@ -45,7 +47,7 @@ module Yawast
           code = res.code
 
           Yawast::Shared::Output.log_json 'debug', 'http_get', uri, Oj.dump(res, Oj.default_options)
-        rescue
+        rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
           # do nothing for now
         end
 
@@ -64,7 +66,7 @@ module Yawast
           req.use_ssl = uri.scheme == 'https'
           res = req.request_get(uri, {'User-Agent' => "YAWAST/#{Yawast::VERSION}"})
           body = res.read_body
-        rescue
+        rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
           # do nothing for now
         end
 
@@ -72,15 +74,18 @@ module Yawast
       end
 
       def self.put(uri, body, headers = nil)
+        ret = nil
+
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
           res = req.request_put(uri, body, get_headers(headers))
-        rescue
+          ret = res.read_body
+        rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
           # do nothing for now
         end
 
-        res.read_body
+        ret
       end
 
       def self.get_status_code(uri)
@@ -122,7 +127,7 @@ module Yawast
 
       # noinspection RubyStringKeysInHashInspection
       def self.get_headers(extra_headers = nil)
-        headers = if @cookie == nil
+        headers = if @cookie.nil?
                     {'User-Agent' => HTTP_UA}
                   else
                     {'User-Agent' => HTTP_UA, 'Cookie' => @cookie}

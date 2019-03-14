@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'base64'
 require 'securerandom'
 
@@ -16,7 +18,7 @@ module Yawast
 
             # fix '(distro)' issue, such as with 'Apache/2.2.22 (Ubuntu)'
             # if we don't do this, it triggers a false positive on the module check
-            if /\(\w*\)/.match modules[1]
+            if /\(\w*\)/.match? modules[1]
               server += " #{modules[1]}"
               modules.delete_at 1
             end
@@ -202,7 +204,7 @@ module Yawast
 
         # Custom class to allow using the XYZ verb
         class Xyz < Net::HTTPRequest
-          METHOD = 'XYZ'.freeze
+          METHOD = 'XYZ'
           REQUEST_HAS_BODY = false
           RESPONSE_HAS_BODY = true
         end

@@ -1,10 +1,11 @@
 require 'dnsruby'
-include Dnsruby
 
 module Yawast
   module Scanner
     module Plugins
       module DNS
+        include Dnsruby
+
         class Generic
           def self.dns_info(uri, options)
             begin

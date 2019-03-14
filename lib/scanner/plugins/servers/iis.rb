@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Yawast
   module Scanner
     module Plugins
@@ -55,7 +57,7 @@ module Yawast
 
         # Custom class to allow using the DEBUG verb
         class Debug < Net::HTTPRequest
-          METHOD = 'DEBUG'.freeze
+          METHOD = 'DEBUG'
           REQUEST_HAS_BODY = false
           RESPONSE_HAS_BODY = true
         end

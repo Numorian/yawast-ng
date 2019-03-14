@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nokogiri'
 
 module Yawast
@@ -25,7 +27,7 @@ module Yawast
                     Yawast::Shared::Output.log_append_value 'spider', 'get', out
                   end
                 end
-              rescue ThreadError
+              rescue ThreadError # rubocop:disable Lint/HandleExceptions
                 # do nothing
               end
             end
@@ -51,9 +53,7 @@ module Yawast
                   @links.push link.to_s
                   @results.push link.to_s
 
-                  @workers.push Thread.new {
-                    get_links URI.parse(link)
-                  }
+                  @workers.push(Thread.new {get_links URI.parse(link)})
                 end
               end
             end

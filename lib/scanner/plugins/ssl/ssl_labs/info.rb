@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 
 module Yawast
@@ -20,7 +22,7 @@ module Yawast
 
               begin
                 json = JSON.parse body
-              rescue => e
+              rescue => e # rubocop:disable Style/RescueStandardError
                 raise Exception, "Invalid response from SSL Labs: '#{e.message}'"
               end
 

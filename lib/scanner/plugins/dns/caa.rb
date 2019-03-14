@@ -1,11 +1,14 @@
+# frozen_string_literal: true
+
 require 'dnsruby'
-include Dnsruby
 
 module Yawast
   module Scanner
     module Plugins
       module DNS
         class CAA
+          include Dnsruby
+
           def self.caa_info(uri)
             # force DNS resolver to something that works
             # this is done to ensure that ISP resolvers don't get in the way
@@ -37,7 +40,7 @@ module Yawast
           end
 
           def self.chase_domain(domain)
-            while domain != '' do
+            while domain != ''
               begin
                 # check to see if we've already ran into this one
                 return if @checked.include? domain
@@ -55,7 +58,7 @@ module Yawast
                 else
                   print_caa_record domain
                 end
-              rescue => e
+              rescue => e # rubocop:disable Style/RescueStandardError
                 Yawast::Utilities.puts_error "\t\tCAA (#{domain}): #{e.message}"
               end
 

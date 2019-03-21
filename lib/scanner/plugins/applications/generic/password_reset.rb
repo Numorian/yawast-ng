@@ -10,11 +10,7 @@ module Yawast
         module Generic
           class PasswordReset
             def self.setup
-              @reset_page = if Yawast.options.pass_reset_page.nil?
-                              Yawast::Utilities.prompt 'What is the application password reset page?'
-                            else
-                              Yawast.options.pass_reset_page
-                            end
+              @reset_page = Yawast.options.pass_reset_page
 
               @valid_user = if Yawast.options.user.nil?
                               Yawast::Utilities.prompt 'What is a valid user?'
@@ -116,7 +112,7 @@ module Yawast
               # find the page form element - this is going to be a best effort thing, and may not always be right
               element = find_user_field driver
 
-              # the element may not actually be visable yet (heavy JS pages)
+              # the element may not actually be visible yet (heavy JS pages)
               # so, we'll go into a loop for a few seconds to see if it'll show up
               counter = 0
               unless element.displayed?

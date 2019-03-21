@@ -19,8 +19,10 @@ module Yawast
         Yawast::Scanner::Plugins::Http::Generic.check_trace(uri)
 
         # check for issues with the password reset form
-        Yawast::Scanner::Plugins::Applications::Generic::PasswordReset.setup
-        Yawast::Scanner::Plugins::Applications::Generic::PasswordReset.check_resp_user_enum
+        unless Yawast.options.pass_reset_page.nil?
+          Yawast::Scanner::Plugins::Applications::Generic::PasswordReset.setup
+          Yawast::Scanner::Plugins::Applications::Generic::PasswordReset.check_resp_user_enum
+        end
       end
     end
   end

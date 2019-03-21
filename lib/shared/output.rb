@@ -67,7 +67,7 @@ module Yawast
 
         target = get_target super_parent, parent
 
-        target[key] = JSON.parse(json_block)
+        target[key] = escape_hash(JSON.parse(json_block))
       end
 
       def self.log_hash(super_parent = nil, parent = nil, key, hash)
@@ -75,7 +75,7 @@ module Yawast
 
         target = get_target super_parent, parent
 
-        target[key] = hash
+        target[key] = escape_hash hash
       end
 
       def self.encode_utf8(str)
@@ -111,13 +111,16 @@ module Yawast
       end
 
       def self.escape_hash(hash)
-        hash.each_pair do |k,v|
+        hash.each_pair do |k, v|
           if v.is_a?(Hash)
             escape_hash(v)
-          else
-            if v.is_a?(String)
-              hash[k] = Base64.encode64 v unless v.valid_encoding?
-            end
+          elsif v.is_a?(String)
+            # first, attempt to force utf-8
+            v = encode_utf8 v
+            hash[k] = v
+
+            # if needed, Base64 encode to ensure that we can produce the JSON output
+            hash[k] = Base64.encode64 v unless v.valid_encoding?
           end
         end
       end

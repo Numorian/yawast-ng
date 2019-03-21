@@ -13,7 +13,7 @@ class TestScannerApache < Minitest::Test
 
     error = nil
     begin
-      Yawast::Scanner::Plugins::Applications::Framework::Rails.check_cve_2019_5418 [uri]
+      Yawast::Scanner::Plugins::Applications::Framework::Rails.check_cve_2019_5418 [uri.to_s]
     rescue => e
       error = e.message
     end

@@ -13,6 +13,7 @@
 * [#148](https://github.com/adamcaudill/yawast/issues/148) - Added `--vuln_scan` option to enable new vulnerability scanner
 * [#151](https://github.com/adamcaudill/yawast/issues/151) - User Enumeration via Password Reset Form Timing Differences
 * [#152](https://github.com/adamcaudill/yawast/issues/152) - Add check for 64bit TLS Cert Serial Numbers
+* [#156](https://github.com/adamcaudill/yawast/issues/156) - Check for Rails CVE-2019-5418
 * [#130](https://github.com/adamcaudill/yawast/issues/130) - Bug: HSTS Error leads to printing HTML
 * [#132](https://github.com/adamcaudill/yawast/issues/132) - Bug: Typo in SSL Output
 * [#142](https://github.com/adamcaudill/yawast/issues/142) - Bug: Error In Collecting DNS Information

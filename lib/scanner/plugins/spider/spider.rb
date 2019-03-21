@@ -7,7 +7,7 @@ module Yawast
     module Plugins
       module Spider
         class Spider
-          def self.spider(uri)
+          def self.spider(uri, silent = false)
             @uri = uri.copy
 
             @workers = []
@@ -15,7 +15,7 @@ module Yawast
 
             @links = []
             @links.push @uri.to_s
-            puts 'Spidering site...'
+            puts 'Spidering site...' unless silent
             get_links @uri
 
             results = Thread.new do
@@ -23,7 +23,9 @@ module Yawast
                 while true
                   if @results.length.positive?
                     out = @results.pop(true)
-                    Yawast::Utilities.puts_info out
+
+                    Yawast::Utilities.puts_info out unless silent
+
                     Yawast::Shared::Output.log_append_value 'spider', 'get', out
                   end
                 end
@@ -36,6 +38,8 @@ module Yawast
             results.terminate
 
             puts
+
+            @links
           end
 
           def self.get_links(uri)

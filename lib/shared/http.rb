@@ -38,6 +38,7 @@ module Yawast
 
       def self.get_with_code(uri, headers = nil)
         body = ''
+        code = nil
 
         begin
           req = get_http(uri)

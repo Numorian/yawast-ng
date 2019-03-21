@@ -74,6 +74,7 @@ The following tests are performed:
 * *(ASP.NET)* Debugging Enabled
 * *(nginx)* Info Disclosure: Server version
 * *(PHP)* Info Disclosure: PHP version
+* *(Rails)* File Content Disclosure: CVE-2019-5418
 
 CMS Detection:
 

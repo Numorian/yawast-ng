@@ -30,3 +30,6 @@ Style/SafeNavigation:
 
 Style/WordArray:
   Enabled: false
+
+Style/Next:
+  Enabled: false

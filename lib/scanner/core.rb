@@ -77,9 +77,9 @@ module Yawast
               Yawast::Scanner::Plugins::Http::Generic.check_propfind(@uri)
               Yawast::Scanner::Plugins::Http::Generic.check_options(@uri)
               Yawast::Scanner::Plugins::Http::Generic.check_trace(@uri)
-            end
 
-            Yawast::Scanner::Plugins::Spider::Spider.spider(@uri) if options.spider
+              Yawast::Scanner::Plugins::Spider::Spider.spider(@uri) if options.spider
+            end
 
             # check for common directories
             if options.dir

@@ -6,6 +6,13 @@ module Yawast
       def self.scan(uri, options, head)
         puts 'Performing vulnerability scan (this will take a while)...'
 
+        if options.spider
+          links = Yawast::Scanner::Plugins::Spider::Spider.spider(uri)
+        else
+          puts 'Builing site map...'
+          links = Yawast::Scanner::Plugins::Spider::Spider.spider(uri, true)
+        end
+
         # server specific checks
         Yawast::Scanner::Plugins::Servers::Apache.check_all(uri)
         Yawast::Scanner::Plugins::Servers::Iis.check_all(uri, head)
@@ -23,6 +30,9 @@ module Yawast
           Yawast::Scanner::Plugins::Applications::Generic::PasswordReset.setup
           Yawast::Scanner::Plugins::Applications::Generic::PasswordReset.check_resp_user_enum
         end
+
+        # check for framework specific issues
+        Yawast::Scanner::Plugins::Applications::Framework::Rails.check_all uri, links
       end
     end
   end

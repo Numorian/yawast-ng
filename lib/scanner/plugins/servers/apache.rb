@@ -9,6 +9,16 @@ module Yawast
       module Servers
         class Apache
           def self.check_banner(banner)
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_openssl_version_exposed',
+                                            {vulnerable: false, version: nil}
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_httpd_version_exposed',
+                                            {vulnerable: false, version: nil}
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_httpd_modules_exposed',
+                                            {vulnerable: false, modules: nil}
+
             # don't bother if this doesn't look like Apache
             return unless banner.include? 'Apache'
             @apache = true
@@ -26,17 +36,27 @@ module Yawast
             # print the server info no matter what we do next
             Yawast::Utilities.puts_info "Apache Server: #{server}"
             modules.delete_at 0
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_httpd_version_exposed',
+                                            {vulnerable: true, version: server}
 
             if modules.count.positive?
               Yawast::Utilities.puts_warn 'Apache Server: Module listing enabled'
               modules.each { |mod| Yawast::Utilities.puts_warn "\t\t#{mod}" }
               puts ''
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'apache_httpd_modules_exposed',
+                                              {vulnerable: true, modules: banner}
 
               # check for special items
               modules.each do |mod|
                 if mod.include? 'OpenSSL'
                   Yawast::Utilities.puts_warn "OpenSSL Version Disclosure: #{mod}"
                   puts ''
+
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'apache_openssl_version_exposed',
+                                                  {vulnerable: true, version: mod}
                 end
               end
             end
@@ -61,6 +81,10 @@ module Yawast
           end
 
           def self.check_tomcat_version(uri)
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_tomcat_version_exposed',
+                                            {vulnerable: false, version: nil, body: nil}
+
             begin
               req = Yawast::Shared::Http.get_http(uri)
               req.use_ssl = uri.scheme == 'https'
@@ -73,11 +97,17 @@ module Yawast
 
                 if !version.nil? && !version[0].nil?
                   Yawast::Utilities.puts_warn "Apache Tomcat Version Found: #{version[0]}"
-                  Yawast::Shared::Output.log_value 'apache', 'tomcat_version', version[0]
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'apache_tomcat_version_exposed',
+                                                  {vulnerable: true, version: version[0], body: res.body}
 
                   puts "\t\t\"curl -X XYZ #{uri}\""
 
                   puts ''
+                else
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'apache_tomcat_version_exposed',
+                                                  {vulnerable: false, version: nil, body: res.body}
                 end
               end
             end
@@ -89,6 +119,13 @@ module Yawast
           end
 
           def self.check_tomcat_manager_paths(uri, base_path, manager)
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_tomcat_manager_exposed',
+                                            {vulnerable: false, uri: nil}
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_tomcat_host_manager_exposed',
+                                            {vulnerable: false, uri: nil}
+
             uri.path = "/#{base_path}/html"
             uri.query = '' unless uri.query.nil?
 
@@ -97,7 +134,9 @@ module Yawast
             if ret.include? '<tt>conf/tomcat-users.xml</tt>'
               # this will get Tomcat 7+
               Yawast::Utilities.puts_warn "Apache Tomcat #{manager} page found: #{uri}"
-              Yawast::Shared::Output.log_value 'apache', 'tomcat_mgr', manager, uri
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'apache_tomcat_manager_exposed',
+                                              {vulnerable: true, uri: uri}
               check_tomcat_manager_passwords uri, manager
 
               puts ''
@@ -109,7 +148,9 @@ module Yawast
 
               if ret.include? '<tt>conf/tomcat-users.xml</tt>'
                 Yawast::Utilities.puts_warn "Apache Tomcat #{manager} page found: #{uri}"
-                Yawast::Shared::Output.log_value 'apache', 'tomcat_mgr', manager, uri
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'apache_tomcat_host_manager_exposed',
+                                                {vulnerable: true, uri: uri}
                 check_tomcat_manager_passwords uri, manager
 
                 puts ''
@@ -118,6 +159,9 @@ module Yawast
           end
 
           def self.check_tomcat_manager_passwords(uri, manager)
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_tomcat_manager_weak_pass',
+                                            {vulnerable: false, uri: nil, credentials: nil}
             # check for known passwords
             check_tomcat_manager_pwd_check uri, manager, 'tomcat:tomcat'
             check_tomcat_manager_pwd_check uri, manager, 'tomcat:password'
@@ -133,7 +177,9 @@ module Yawast
                ret.include?('<font size="+2">Tomcat Virtual Host Manager</font>')
               Yawast::Utilities.puts_vuln "Apache Tomcat #{manager} weak password: #{credentials}"
 
-              Yawast::Shared::Output.log_value 'apache', 'tomcat_mgr_pwd', uri, credentials
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'apache_tomcat_manager_weak_pass',
+                                              {vulnerable: true, uri: uri, credentials: credentials}
             end
           end
 
@@ -142,12 +188,8 @@ module Yawast
             uri.path = "/#{SecureRandom.hex}.jsp/"
             uri.query = '' unless uri.query.nil?
 
-            Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'path', uri
-
             # we'll use this to verify that it actually worked
             check_value = SecureRandom.hex
-
-            Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'check_value', check_value
 
             # upload the JSP file
             req_data = "<% out.println(\"#{check_value}\");%>"
@@ -157,13 +199,15 @@ module Yawast
             uri.path = uri.path.chomp('/')
             res = Yawast::Shared::Http.get(uri)
 
-            Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'body', res
-
             if res.include? check_value
               Yawast::Utilities.puts_vuln "Apache Tomcat PUT RCE (CVE-2017-12615): #{uri}"
-              Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'vulnerable', true
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'apache_tomcat_cve_2017_12615',
+                                              {vulnerable: true, uri: uri, check_value: check_value, body: res}
             else
-              Yawast::Shared::Output.log_value 'apache', 'cve_2017_12615', 'vulnerable', false
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              'apache_tomcat_cve_2017_12615',
+                                              {vulnerable: false, uri: uri, check_value: check_value, body: res}
             end
           end
 
@@ -192,12 +236,21 @@ module Yawast
             uri.path = path
             uri.query = '' unless uri.query.nil?
 
-            ret = Yawast::Shared::Http.get(uri)
+            body = Yawast::Shared::Http.get(uri)
 
-            if ret.include? search
+            if body.include? search
               Yawast::Utilities.puts_vuln "#{search} page found: #{uri}"
               Yawast::Shared::Output.log_value 'apache', 'page_search', search, uri
+
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              "apache_#{path.tr('-', '_').tr('/', '')}_found",
+                                              {vulnerable: true, uri: uri, body: body}
+
               puts ''
+            else
+              Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                              "apache_#{path.tr('-', '_').chomp('/')}_found",
+                                              {vulnerable: false, uri: uri, body: body}
             end
           end
         end

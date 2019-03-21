@@ -17,12 +17,17 @@ module Yawast
                 puts "\t\t\"curl -X PROPFIND #{uri}\""
 
                 puts ''
-              end
 
-              Yawast::Shared::Output.log_value 'http', 'propfind', 'raw', res.body
-              Yawast::Shared::Output.log_value 'http', 'propfind', 'code', res.code
-              Yawast::Shared::Output.log_value 'http', 'propfind', 'content-type', res['Content-Type']
-              Yawast::Shared::Output.log_value 'http', 'propfind', 'length', res.body.length
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'http_propfind_enabled',
+                                                {vulnerable: true, body: res.body, code: res.code,
+                                                 content_type: res['Content-Type'], length: res.body.length}
+              else
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'http_propfind_enabled',
+                                                {vulnerable: false, body: res.body, code: res.code,
+                                                 content_type: res['Content-Type'], length: res.body.length}
+              end
             end
           end
 
@@ -38,10 +43,15 @@ module Yawast
                 puts "\t\t\"curl -X TRACE #{uri}\""
 
                 puts ''
-              end
 
-              Yawast::Shared::Output.log_value 'http', 'trace', 'raw', res.body
-              Yawast::Shared::Output.log_value 'http', 'trace', 'code', res.code
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'http_trace_enabled',
+                                                {vulnerable: true, body: res.body, code: res.code}
+              else
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'http_trace_enabled',
+                                                {vulnerable: false, body: res.body, code: res.code}
+              end
             end
           end
 

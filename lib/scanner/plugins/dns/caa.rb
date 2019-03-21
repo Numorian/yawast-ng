@@ -28,7 +28,7 @@ module Yawast
             if @records.zero?
               Yawast::Shared::Output.log_hash 'vulnerabilities',
                                               'missing_caa_records',
-                                              {vulnerable: true}
+                                              {vulnerable: true, record_count: 0}
 
               puts
               Yawast::Utilities.puts_vuln 'DNS CAA: No records found.'

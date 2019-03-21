@@ -10,7 +10,17 @@ module Yawast
               regex = /<meta name="generator[^>]+content\s*=\s*['"]([^'"]+)['"][^>]*>/
               match = body.match regex
 
-              Yawast::Utilities.puts_info "Meta Generator: #{match[1]}" if match
+              if match
+                Yawast::Utilities.puts_info "Meta Generator: #{match[1]}"
+
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'cms_meta_generator_exposed',
+                                                {vulnerable: true, generator: match[1]}
+              else
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'cms_meta_generator_exposed',
+                                                {vulnerable: false, generator: nil}
+              end
             end
           end
         end

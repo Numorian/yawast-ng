@@ -6,12 +6,20 @@ module Yawast
       module Servers
         class Iis
           def self.check_banner(banner)
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'iis_version_exposed',
+                                            {vulnerable: false, version: nil}
+
             # don't bother if this doesn't include IIS
             return unless banner.include? 'Microsoft-IIS/'
             @iis = true
 
             Yawast::Utilities.puts_warn "IIS Version: #{banner}"
             puts ''
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'iis_version_exposed',
+                                            {vulnerable: true, version: banner}
           end
 
           def self.check_all(uri, head)
@@ -34,6 +42,14 @@ module Yawast
               if k.downcase == search
                 Yawast::Utilities.puts_warn "#{message} Version: #{v}"
                 puts ''
+
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                "asp_net_#{search.tr('-', '_')}_version_exposed",
+                                                {vulnerable: true, version: v}
+              else
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                "asp_net_#{search.tr('-', '_')}_version_exposed",
+                                                {vulnerable: false, version: nil}
               end
             end
           end
@@ -47,10 +63,17 @@ module Yawast
               headers['Accept'] = '*/*'
               res = req.request(Debug.new('/', headers))
 
-              Yawast::Utilities.puts_vuln 'ASP.NET Debugging Enabled' if res.code == 200
+              if res.code == 200
+                Yawast::Utilities.puts_vuln 'ASP.NET Debugging Enabled'
 
-              Yawast::Shared::Output.log_value 'http', 'asp_net_debug', 'raw', res.body
-              Yawast::Shared::Output.log_value 'http', 'asp_net_debug', 'code', res.code
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'asp_net_debug_enabled',
+                                                {vulnerable: true, body: res.body, code: res.code}
+              else
+                Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                'asp_net_debug_enabled',
+                                                {vulnerable: false, body: res.body, code: res.code}
+              end
             end
           end
         end

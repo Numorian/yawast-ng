@@ -9,7 +9,7 @@ module Yawast
         if options.spider
           links = Yawast::Scanner::Plugins::Spider::Spider.spider(uri)
         else
-          puts 'Builing site map...'
+          puts 'Building site map...'
           links = Yawast::Scanner::Plugins::Spider::Spider.spider(uri, true)
         end
 

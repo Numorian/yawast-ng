@@ -3851,6 +3851,7 @@ bottom.php
 bounce.php
 boutique.html
 boutique.php
+bower.json
 box.gif
 box.php
 br.asp
@@ -6844,6 +6845,7 @@ greet.php
 grey.html
 greycenter.html
 grgr-myoffice.html
+gruntfile.js
 group.asp
 group.html
 group.php

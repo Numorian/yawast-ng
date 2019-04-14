@@ -66,6 +66,8 @@ The following tests are performed:
 * *(Apache Tomcat)* Tomcat version detection via invalid HTTP verb
 * *(Apache Tomcat)* Tomcat PUT RCE (CVE-2017-12617)
 * *(Apache Struts)* Sample files which may be vulnerable
+* *(Nginx)* Info Disclosure: Server version
+* *(Nginx)* Info Disclosure: Server status
 * *(IIS)* Info Disclosure: Server version
 * *(ASP.NET)* Info Disclosure: ASP.NET version
 * *(ASP.NET)* Info Disclosure: ASP.NET MVC version

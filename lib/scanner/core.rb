@@ -69,6 +69,7 @@ module Yawast
 
               # server specific checks
               Yawast::Scanner::Plugins::Servers::Apache.check_all(@uri)
+              Yawast::Scanner::Plugins::Servers::Nginx.check_all(@uri)
               Yawast::Scanner::Plugins::Servers::Iis.check_all(@uri, head)
 
               Yawast::Scanner::Plugins::Http::FilePresence.check_all @uri, options.files

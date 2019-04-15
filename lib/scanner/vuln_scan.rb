@@ -13,13 +13,13 @@ module Yawast
           links = Yawast::Scanner::Plugins::Spider::Spider.spider(uri, true)
         end
 
-        # server specific checks
-        Yawast::Scanner::Plugins::Servers::Apache.check_all(uri)
-        Yawast::Scanner::Plugins::Servers::Nginx.check_all(uri)
-        Yawast::Scanner::Plugins::Servers::Iis.check_all(uri, head)
-
         # checks for interesting files
         Yawast::Scanner::Plugins::Http::FilePresence.check_all uri, options.files
+
+        # server specific checks
+        Yawast::Scanner::Plugins::Servers::Apache.check_all(uri, links)
+        Yawast::Scanner::Plugins::Servers::Nginx.check_all(uri)
+        Yawast::Scanner::Plugins::Servers::Iis.check_all(uri, head)
 
         # generic header checks
         Yawast::Scanner::Plugins::Http::Generic.check_propfind(uri)

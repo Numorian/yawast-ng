@@ -62,7 +62,7 @@ module Yawast
             end
           end
 
-          def self.check_all(uri)
+          def self.check_all(uri, links = nil)
             # run all the defined checks
             check_server_status(uri.copy)
             check_server_info(uri.copy)
@@ -70,6 +70,10 @@ module Yawast
             check_tomcat_version(uri.copy)
             check_tomcat_put_rce(uri.copy)
             check_struts2_samples(uri.copy)
+
+            unless links.nil?
+              check_cve_2019_0232(links)
+            end
           end
 
           def self.check_server_status(uri)
@@ -229,6 +233,47 @@ module Yawast
               Yawast::Shared::Output.log_value 'apache', 'struts2_sample_files', uri, ret
 
               Yawast::Utilities.puts_warn "Apache Struts2 Sample Files: #{uri}" if ret == 200
+            end
+          end
+
+          def self.check_cve_2019_0232(links)
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'apache_tomcat_cve_2019_0232',
+                                            {vulnerable: false, uri: nil, body: nil}
+
+            # create a list of possible targets - this would be links that include "cgi-bin"
+            targets = []
+            links.each do |link|
+              targets.push link if link.include? '/cgi-bin/'
+            end
+
+            # check to see if we have any targets
+            unless targets.count.zero?
+              # we have targets
+              targets.each do |target|
+                # now, we need to build the URI we'll use
+                target = if target.include? '?'
+                           target + '&dir'
+                         else
+                           target + '?dir'
+                         end
+
+                # now, send the request and see if it includes "<DIR>"
+                target_uri = URI.parse target
+                body = Yawast::Shared::Http.get(target_uri)
+
+                if body.include? '<DIR>'
+                  # we have a hit
+
+                  Yawast::Utilities.puts_vuln "Apache Tomcat RCE (CVE-2019-0232): #{uri}"
+
+                  Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                                  'apache_tomcat_cve_2019_0232',
+                                                  {vulnerable: true, uri: target_uri, body: body}
+
+                  break
+                end
+              end
             end
           end
 

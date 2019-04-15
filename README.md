@@ -53,7 +53,7 @@ The following tests are performed:
 * *(Generic)* Presence of readme.html
 * *(Generic)* Presence of CHANGELOG.txt
 * *(Generic)* Missing cookie flags (Secure, HttpOnly, and SameSite)
-* *(Generic)* Search for 14,169 common files (via `--files`) & 21,332 common directories (via `--dir`)
+* *(Generic)* Search for 14,405 common files (via `--files`) & 21,332 common directories (via `--dir`)
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version
@@ -65,6 +65,7 @@ The following tests are performed:
 * *(Apache Tomcat)* Tomcat Host Manager Weak Password
 * *(Apache Tomcat)* Tomcat version detection via invalid HTTP verb
 * *(Apache Tomcat)* Tomcat PUT RCE (CVE-2017-12617)
+* *(Apache Tomcat)* Tomcat Windows RCE (CVE-2019-0232)
 * *(Apache Struts)* Sample files which may be vulnerable
 * *(Nginx)* Info Disclosure: Server version
 * *(Nginx)* Info Disclosure: Server status

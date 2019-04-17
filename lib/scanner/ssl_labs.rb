@@ -391,6 +391,7 @@ module Yawast
           elsif proto['name'] == 'TLS' &&  proto['version'] == '1.3'
             # capture TLS 1.3 status
             tls13_enabled = true
+            Yawast::Utilities.puts_info "\t\t\t#{proto['name']} #{proto['version']}"
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'tls_tls13_not_enabled',
                                             {vulnerable: false}

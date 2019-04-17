@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../lib/yawast'
 require File.dirname(__FILE__) + '/base'
 
-class TestScannerApache < Minitest::Test
+class TestAppFWRails < Minitest::Test
   include TestBase
 
   def test_check_cve_2019_5418

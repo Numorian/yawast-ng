@@ -63,6 +63,8 @@ module Yawast
               Yawast::Utilities.puts_info 'NOTE: Server appears to be Cloudflare; WAF may be in place.'
               puts
             end
+
+            Yawast::Shared::Output.log_value 'server', server
           end
 
           Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}" if powered_by != ''

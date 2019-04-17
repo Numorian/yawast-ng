@@ -37,7 +37,7 @@ module Yawast
 
         wordpress_uri = Yawast::Scanner::Plugins::Applications::CMS::WordPress.identify uri
         unless wordpress_uri.nil?
-          Yawast::Scanner::Plugins::Applications::CMS::WordPress.check_json_user_enum uri
+          Yawast::Scanner::Plugins::Applications::CMS::WordPress.check_json_user_enum wordpress_uri
         end
       end
     end

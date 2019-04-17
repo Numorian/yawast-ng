@@ -22,6 +22,10 @@ module Yawast
                 # confirmed hit
                 res = resp[:result]
                 ret = resp[:uri]
+
+                # strip the file name from the path
+                ret.path = ret.path.sub! 'wp-login.php', ''
+
                 css = res[:body].scan /login.min.css\?ver=\d+\.\d+\.?\d*/
 
                 ver = 'Unknown'

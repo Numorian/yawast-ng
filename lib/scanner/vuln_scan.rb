@@ -34,6 +34,11 @@ module Yawast
 
         # check for framework specific issues
         Yawast::Scanner::Plugins::Applications::Framework::Rails.check_all uri, links
+
+        wordpress_uri = Yawast::Scanner::Plugins::Applications::CMS::WordPress.identify uri
+        unless wordpress_uri.nil?
+          Yawast::Scanner::Plugins::Applications::CMS::WordPress.check_json_user_enum uri
+        end
       end
     end
   end

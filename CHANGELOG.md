@@ -16,6 +16,7 @@
 * [#156](https://github.com/adamcaudill/yawast/issues/156) - Check for Rails CVE-2019-5418
 * [#157](https://github.com/adamcaudill/yawast/issues/157) - Add check for Nginx Status Page
 * [#158](https://github.com/adamcaudill/yawast/issues/158) - Add check for Tomcat RCE CVE-2019-0232
+* [#161](https://github.com/adamcaudill/yawast/issues/161) - Add WordPress WP-JSON User Enumeration
 * [#130](https://github.com/adamcaudill/yawast/issues/130) - Bug: HSTS Error leads to printing HTML
 * [#132](https://github.com/adamcaudill/yawast/issues/132) - Bug: Typo in SSL Output
 * [#142](https://github.com/adamcaudill/yawast/issues/142) - Bug: Error In Collecting DNS Information

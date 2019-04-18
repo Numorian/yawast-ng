@@ -92,6 +92,8 @@ module Yawast
                 end
               rescue ArgumentError => e
                 Yawast::Utilities.puts_error "Unable to find a matching element to perform the User Enumeration via Password Reset Response test (#{e.message})"
+              rescue => e # rubocop:disable Style/RescueStandardError
+                Yawast::Utilities.puts_error "Failed to execute Password Reset Page User Enumeration: Error: #{e.message}"
               end
             end
 

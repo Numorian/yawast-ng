@@ -45,8 +45,8 @@ module Yawast
           res = req.request_get(uri, get_headers(headers))
           body = res.read_body
           code = res.code
-        rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
-          # do nothing for now
+        rescue => e # rubocop:disable Style/RescueStandardError
+          Yawast::Utilities.puts_error "Error sending request to #{uri} - '#{e.message}'"
         end
 
         {body: body, code: code}

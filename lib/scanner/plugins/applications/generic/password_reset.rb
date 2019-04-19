@@ -98,7 +98,7 @@ module Yawast
             end
 
             def self.fill_form_get_body(uri, user, valid, log_output)
-              options = Selenium::WebDriver::Chrome::Options.new({args: ['headless', 'incognito']})
+              options = Selenium::WebDriver::Chrome::Options.new({args: ['headless', 'incognito', 'disable-dev-shm-usage', 'no-sandbox']})
 
               # if we have a proxy set, use that
               if !Yawast.options.proxy.nil?

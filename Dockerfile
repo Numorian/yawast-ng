@@ -36,14 +36,8 @@ RUN CHROME_STRING=$(/usr/bin/google-chrome-stable --version) \
   && rm /tmp/chromedriver_linux64.zip \
   && chmod +x /usr/bin/chromedriver
 
-RUN groupadd -r chrome && useradd -r -g chrome -G audio,video chrome \
-    && mkdir -p /home/chrome && chown -R chrome:chrome /home/chrome \
-		&& mkdir -p /opt/google/chrome && chown -R chrome:chrome /opt/google/chrome
-
 COPY . /data
 WORKDIR /data
-
-USER chrome
 
 ENV LANG      C.UTF-8
 ENV LANGUAGE  C.UTF-8

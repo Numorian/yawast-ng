@@ -30,6 +30,9 @@ module Yawast
   HTTP_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) YAWAST/#{VERSION} Chrome/61.0.3163.100 Safari/537.36"
 
   def self.header
+    # prevent multiple runs
+    return if @header
+
     puts '__   _____  _    _  ___   _____ _____ '
     puts '\ \ / / _ \| |  | |/ _ \ /  ___|_   _|'
     puts ' \ V / /_\ \ |  | / /_\ \\\ `--.  | |  '
@@ -54,6 +57,7 @@ module Yawast
     end
 
     puts ''
+    @header = true
   end
 
   def self.options

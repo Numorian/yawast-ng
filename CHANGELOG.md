@@ -1,5 +1,7 @@
 ## 0.8.0 - In Development
 
+* [#37](https://github.com/adamcaudill/yawast/issues/37) - Batch Scanning Mode
+
 ## 0.7.0 - 2019-04-19
 
 * [#38](https://github.com/adamcaudill/yawast/issues/38) - JSON Output Option via `--output=` (work in progress)

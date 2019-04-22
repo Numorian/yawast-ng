@@ -38,9 +38,16 @@ module Yawast
         log_value 'ruby_version', "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
         log_value 'openssl_version', OpenSSL::OPENSSL_VERSION
         log_value 'platform', RUBY_PLATFORM
-        log_value 'target_uri', uri
         log_value 'options', options.__hash__
         log_value 'encoding', __ENCODING__
+
+        # setup the data structure to capture info for individual targets
+        @data['targets'] = {}
+        set_current_uri uri
+      end
+
+      def self.set_current_uri(uri)
+        @current_uri = uri
       end
 
       def self.log_value(super_parent = nil, parent = nil, key, value)
@@ -89,6 +96,12 @@ module Yawast
       def self.get_target(super_parent = nil, parent = nil)
         target = @data
 
+        # make sure we are on the right URI, and that it exists
+        unless @current_uri.nil?
+          target['targets'][@current_uri] = {} if target['targets'][@current_uri].nil?
+          target = target['targets'][@current_uri]
+        end
+
         # fix parent vs super confusion
         if parent.nil? && !super_parent.nil?
           parent = super_parent
@@ -129,6 +142,7 @@ module Yawast
         return unless @setup
 
         # note the ending time
+        set_current_uri nil
         log_value 'end_time', Time.new.to_i.to_s
 
         begin

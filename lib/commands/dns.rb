@@ -10,10 +10,16 @@ module Yawast
 
         Yawast::Shared::Output.setup uri, options unless options.output.nil?
 
-        puts "Scanning: #{uri}"
-        puts
+        args.each do |arg|
+          uri = Yawast::Commands::Utils.extract_uri([arg])
+          Yawast::Shared::Output.set_current_uri uri
 
-        Yawast::Scanner::Plugins::DNS::Generic.dns_info uri, options
+          puts "Scanning: #{uri}"
+          puts
+
+          Yawast::Scanner::Plugins::DNS::Generic.dns_info uri, options
+        end
+
         Yawast::Shared::Output.write_file
       end
     end

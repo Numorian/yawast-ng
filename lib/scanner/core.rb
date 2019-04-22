@@ -17,6 +17,7 @@ module Yawast
           print_header
 
           Yawast::Shared::Output.setup @uri, options if options.output != nil
+          Yawast::Shared::Output.set_current_uri @uri
 
           ssl_redirect = Yawast::Scanner::Plugins::SSL::SSL.check_for_ssl_redirect @uri
           if ssl_redirect

@@ -122,7 +122,7 @@ In addition to these tests, certain basic information is also displayed, such as
 
 The most common usage scenario is as simple as:
 
-`yawast scan <url>`
+`yawast scan <url1> <url2>`
 
 Detailed [usage information](https://github.com/adamcaudill/yawast/wiki/Usage-&-Parameters) is available on the wiki.
 

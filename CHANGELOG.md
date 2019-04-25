@@ -1,6 +1,7 @@
 ## 0.8.0 - In Development
 
 * [#37](https://github.com/adamcaudill/yawast/issues/37) - Batch Scanning Mode
+* [#165](https://github.com/adamcaudill/yawast/issues/165) - Add check for Referrer-Policy & Feature-Policy headers
 
 ## 0.7.0 - 2019-04-19
 

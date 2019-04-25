@@ -22,6 +22,8 @@ module Yawast
           via = ''
           hpkp = ''
           acao = ''
+          referrer_policy = ''
+          feature_policy = ''
 
           Yawast::Utilities.puts_info 'HEAD:'
           head.each do |k, v|
@@ -40,6 +42,8 @@ module Yawast
             via = v if k.casecmp('via').zero?
             hpkp = v if k.casecmp('public-key-pins').zero?
             acao = v if k.casecmp('access-control-allow-origin').zero?
+            referrer_policy = v if k.casecmp('referrer-policy').zero?
+            feature_policy = v if k.casecmp('feature-policy').zero?
 
             if k.casecmp('set-cookie').zero?
               # this chunk of magic manages to properly split cookies, when multiple are sent together
@@ -106,6 +110,10 @@ module Yawast
           Yawast::Utilities.puts_warn 'Public-Key-Pins Header Not Present' if hpkp == ''
 
           Yawast::Utilities.puts_warn 'Access-Control-Allow-Origin: Unrestricted' if acao == '*'
+
+          Yawast::Utilities.puts_warn 'Referrer-Policy Header Not Present' if referrer_policy == ''
+
+          Yawast::Utilities.puts_warn 'Feature-Policy Header Not Present' if feature_policy == ''
 
           puts ''
 

@@ -1,7 +1,8 @@
-## 0.8.0 - In Development
+## 0.7.1 - 2019-05-07
 
 * [#37](https://github.com/adamcaudill/yawast/issues/37) - Batch Scanning Mode
 * [#165](https://github.com/adamcaudill/yawast/issues/165) - Add check for Referrer-Policy & Feature-Policy headers
+* [#167](https://github.com/adamcaudill/yawast/issues/167) - SSL Labs: Add Zombie POODLE & Related Findings
 
 ## 0.7.0 - 2019-04-19
 

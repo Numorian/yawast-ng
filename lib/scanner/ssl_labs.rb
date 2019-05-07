@@ -561,6 +561,118 @@ module Yawast
         end
 
         Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_zombie_poodle',
+                                        {vulnerable: false, exploitable: false}
+        case ep['details']['zombiePoodle']
+          when -1
+            Yawast::Utilities.puts_error "\t\t\tZombie POODLE: Test Failed"
+          when 0
+            Yawast::Utilities.puts_error "\t\t\tZombie POODLE: Test Failed (Unknown)"
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tZombie POODLE: No"
+          when 2
+            Yawast::Utilities.puts_warn "\t\t\tZombie POODLE: Vulnerable - Not Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_zombie_poodle',
+                                            {vulnerable: true, exploitable: false}
+          when 3
+            Yawast::Utilities.puts_vuln "\t\t\tZombie POODLE: Vulnerable - Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_zombie_poodle',
+                                            {vulnerable: true, exploitable: true}
+          when nil
+            # do nothing, this means they aren't sending the result
+          else
+            Yawast::Utilities.puts_error "\t\t\tZombie POODLE: Unknown Response #{ep['details']['zombiePoodle']}"
+        end
+
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_goldendoodle',
+                                        {vulnerable: false, exploitable: false}
+        case ep['details']['goldenDoodle']
+          when -1
+            Yawast::Utilities.puts_error "\t\t\tGOLDENDOODLE: Test Failed"
+          when 0
+            Yawast::Utilities.puts_error "\t\t\tGOLDENDOODLE: Test Failed (Unknown)"
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tGOLDENDOODLE: No"
+          when 4
+            Yawast::Utilities.puts_warn "\t\t\tGOLDENDOODLE: Vulnerable - Not Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_goldendoodle',
+                                            {vulnerable: true, exploitable: false}
+          when 5
+            Yawast::Utilities.puts_vuln "\t\t\tGOLDENDOODLE: Vulnerable - Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_goldendoodle',
+                                            {vulnerable: true, exploitable: true}
+          when nil
+            # do nothing, this means they aren't sending the result
+          else
+            Yawast::Utilities.puts_error "\t\t\tGOLDENDOODLE: Unknown Response #{ep['details']['goldenDoodle']}"
+        end
+
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_openssl_cve_2019_1559',
+                                        {vulnerable: false, exploitable: false}
+        case ep['details']['zeroLengthPaddingOracle']
+          when -1
+            Yawast::Utilities.puts_error "\t\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): Test Failed"
+          when 0
+            Yawast::Utilities.puts_error "\t\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): Test Failed (Unknown)"
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): No"
+          when 6
+            Yawast::Utilities.puts_warn "\t\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): Vulnerable - Not Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_openssl_cve_2019_1559',
+                                            {vulnerable: true, exploitable: false}
+          when 7
+            Yawast::Utilities.puts_vuln "\t\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): Vulnerable - Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_openssl_cve_2019_1559',
+                                            {vulnerable: true, exploitable: true}
+          when nil
+            # do nothing, this means they aren't sending the result
+          else
+            Yawast::Utilities.puts_error "\t\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): Unknown Response #{ep['details']['zeroLengthPaddingOracle']}"
+        end
+
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                        'tls_goldendoodle',
+                                        {vulnerable: false, exploitable: false}
+        case ep['details']['sleepingPoodle']
+          when -1
+            Yawast::Utilities.puts_error "\t\t\tSleeping POODLE: Test Failed"
+          when 0
+            Yawast::Utilities.puts_error "\t\t\tSleeping POODLE: Test Failed (Unknown)"
+          when 1
+            Yawast::Utilities.puts_info "\t\t\tSleeping POODLE: No"
+          when 10
+            Yawast::Utilities.puts_warn "\t\t\tSleeping POODLE: Vulnerable - Not Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_sleeping_poodle',
+                                            {vulnerable: true, exploitable: false}
+          when 11
+            Yawast::Utilities.puts_vuln "\t\t\tSleeping POODLE: Vulnerable - Exploitable"
+
+            Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                            'tls_sleeping_poodle',
+                                            {vulnerable: true, exploitable: true}
+          when nil
+            # do nothing, this means they aren't sending the result
+          else
+            Yawast::Utilities.puts_error "\t\t\tSleeping POODLE: Unknown Response #{ep['details']['sleepingPoodle']}"
+        end
+
+        Yawast::Shared::Output.log_hash 'vulnerabilities',
                                         'tls_poodle',
                                         {vulnerable: false}
         case ep['details']['poodleTls']
@@ -580,6 +692,8 @@ module Yawast
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'tls_poodle',
                                             {vulnerable: true}
+          when nil
+          # do nothing, this means they aren't sending the result
           else
             Yawast::Utilities.puts_error "\t\t\tPOODLE (TLS): Unknown Response #{ep['details']['poodleTls']}"
         end

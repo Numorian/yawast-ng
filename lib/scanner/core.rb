@@ -130,7 +130,14 @@ module Yawast
 
       def self.get_head
         begin
-          Yawast::Shared::Http.head(@uri)
+          head = Yawast::Shared::Http.head(@uri)
+
+          unless head['location'].nil?
+            Yawast::Utilities.puts_info "HEAD received redirect to '#{head['location']}'; following."
+            head = Yawast::Shared::Http.head(URI.parse(head['location']))
+          end
+
+          head
         rescue => e # rubocop:disable Style/RescueStandardError
           Yawast::Utilities.puts_error "Fatal Connection Error: Unable to complete HEAD request from '#{@uri}' (#{e.class}: #{e.message})"
           exit 1

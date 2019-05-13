@@ -25,6 +25,7 @@ module Yawast
             puts "Server redirects to TLS: Scanning: #{@uri}"
             Yawast::Shared::Output.log_value 'server_tls_redirect', @uri
           end
+          @uri = check_www_redirect @uri.copy
 
           Yawast::Scanner::Plugins::SSL::SSL.set_openssl_options
 
@@ -125,6 +126,35 @@ module Yawast
         elsif @uri.scheme == 'http'
           puts 'Skipping TLS checks; URL is not HTTPS'
         end
+      end
+
+      def self.check_www_redirect(uri)
+        # check to see if the server redirects us to the WWW or non-WWW version of the domain
+        head = Yawast::Shared::Http.head(uri)
+
+        unless head['location'].nil?
+          begin
+            location = URI.parse(head['location'])
+
+            if location.host.start_with?('www') && !uri.host.start_with?('www') && location.host == "www.#{uri.host}"
+              uri.host = location.host
+              uri.scheme = location.scheme
+              Yawast::Utilities.puts_raw "WWW Redirect: Scanning #{uri}"
+
+              return uri
+            elsif !location.host.start_with?('www') && uri.host.start_with?('www') && uri.host == "www.#{location.host}"
+              uri.host = location.host
+              uri.scheme = location.scheme
+              Yawast::Utilities.puts_raw "Non-WWW Redirect: Scanning: #{uri}"
+
+              return uri
+            end
+          rescue # rubocop:disable Style/RescueStandardError, Lint/HandleExceptions
+            # we don't care if this fails
+          end
+        end
+
+        uri
       end
 
       def self.get_head

@@ -1,5 +1,6 @@
 ## 0.8.0 - In Development
 
+* [#166](https://github.com/adamcaudill/yawast/issues/166) - Detect WWW/Non-WWW domain redirection
 * [#170](https://github.com/adamcaudill/yawast/issues/170) - When checking HEAD, follow redirects
 * [#172](https://github.com/adamcaudill/yawast/issues/172) - Check for Apache Tomcat version via 404
 * [#173](https://github.com/adamcaudill/yawast/issues/173) - Check X-Powered-By for PHP Version

@@ -46,7 +46,6 @@ module Yawast
 
           # cache the HEAD result, so that we can minimize hits
           head = get_head
-          Yawast::Shared::Output.log_hash 'http', 'head', 'raw', head.to_hash
           Yawast::Scanner::Generic.head_info(head, @uri)
 
           # perform SSL checks
@@ -131,10 +130,12 @@ module Yawast
       def self.get_head
         begin
           head = Yawast::Shared::Http.head(@uri)
+          Yawast::Shared::Output.log_hash 'http', 'head', @uri, head.to_hash
 
           unless head['location'].nil?
             Yawast::Utilities.puts_info "HEAD received redirect to '#{head['location']}'; following."
             head = Yawast::Shared::Http.head(URI.parse(head['location']))
+            Yawast::Shared::Output.log_hash 'http', 'head', head['location'], head.to_hash
           end
 
           head

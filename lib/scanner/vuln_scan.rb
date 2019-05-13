@@ -2,7 +2,7 @@
 
 module Yawast
   module Scanner
-    class VulnScan < Yawast::Scanner::Base
+    class VulnScan
       def self.scan(uri, options, head)
         puts 'Performing vulnerability scan (this will take a while)...'
 

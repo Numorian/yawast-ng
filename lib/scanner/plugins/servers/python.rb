@@ -4,7 +4,7 @@ module Yawast
   module Scanner
     module Plugins
       module Servers
-        class Python < Yawast::Scanner::Base
+        class Python
           def self.check_banner(banner)
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'python_version_exposed',

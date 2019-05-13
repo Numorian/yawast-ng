@@ -7,7 +7,7 @@ module Yawast
     module Plugins
       module SSL
         module SSLLabs
-          class Info < Yawast::Scanner::Base
+          class Info
             def self.call_info(endpoint)
               uri = endpoint.copy
               uri.path = '/api/v3/info'

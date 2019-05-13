@@ -4,7 +4,7 @@ module Yawast
   module Scanner
     module Plugins
       module Servers
-        class Iis < Yawast::Scanner::Base
+        class Iis
           def self.check_banner(banner)
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'iis_version_exposed',

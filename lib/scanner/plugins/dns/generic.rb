@@ -6,7 +6,7 @@ module Yawast
       module DNS
         include Dnsruby
 
-        class Generic < Yawast::Scanner::Base
+        class Generic
           def self.dns_info(uri, options)
             begin
               puts 'DNS Information:'

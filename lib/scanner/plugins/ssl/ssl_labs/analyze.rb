@@ -14,7 +14,7 @@ module Yawast
           class ServiceNotAvailable < StandardError; end
           class ServiceOverloaded < StandardError; end
 
-          class Analyze < Yawast::Scanner::Base
+          class Analyze
             def self.scan(endpoint, target, start_new)
               uri = endpoint.copy
               uri.path = '/api/v3/analyze'

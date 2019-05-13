@@ -4,7 +4,7 @@ module Yawast
   module Scanner
     module Plugins
       module SSL
-        class Sweet32 < Yawast::Scanner::Base
+        class Sweet32
           def self.get_tdes_session_msg_count(uri, limit = 10_000)
             Yawast::Shared::Output.log_value 'ssl', 'sweet32', 'limit', limit
 

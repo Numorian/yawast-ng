@@ -6,7 +6,7 @@ module Yawast
   module Scanner
     module Plugins
       module Spider
-        class Spider < Yawast::Scanner::Base
+        class Spider
           def self.spider(uri, silent = false)
             @uri = uri.copy
 

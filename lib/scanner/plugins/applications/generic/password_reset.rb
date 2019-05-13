@@ -8,7 +8,7 @@ module Yawast
     module Plugins
       module Applications
         module Generic
-          class PasswordReset < Yawast::Scanner::Base
+          class PasswordReset
             def self.setup
               @reset_page = Yawast.options.pass_reset_page
 

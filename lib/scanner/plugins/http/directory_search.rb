@@ -6,7 +6,7 @@ module Yawast
   module Scanner
     module Plugins
       module Http
-        class DirectorySearch < Yawast::Scanner::Base
+        class DirectorySearch
           def self.search(uri, recursive, list_redirects, search_list = nil)
             # first, we need to see if the site responds to 404 in a reasonable way
             unless Yawast::Shared::Http.check_not_found(uri, false)

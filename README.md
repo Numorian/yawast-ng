@@ -66,6 +66,7 @@ The following tests are performed:
 * *(Apache Tomcat)* Tomcat Manager Weak Password
 * *(Apache Tomcat)* Tomcat Host Manager Weak Password
 * *(Apache Tomcat)* Tomcat version detection via invalid HTTP verb
+* *(Apache Tomcat)* Tomcat version detection via File Not Found
 * *(Apache Tomcat)* Tomcat PUT RCE (CVE-2017-12617)
 * *(Apache Tomcat)* Tomcat Windows RCE (CVE-2019-0232)
 * *(Apache Struts)* Sample files which may be vulnerable

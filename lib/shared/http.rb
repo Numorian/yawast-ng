@@ -35,21 +35,24 @@ module Yawast
         end
       end
 
-      def self.get_with_code(uri, headers = nil)
-        body = ''
-        code = nil
+      def self.get_raw(uri, headers = nil)
+        res = nil
 
         begin
           req = get_http(uri)
           req.use_ssl = uri.scheme == 'https'
           res = req.request_get(uri, get_headers(headers))
-          body = res.read_body
-          code = res.code
         rescue => e # rubocop:disable Style/RescueStandardError
           Yawast::Utilities.puts_error "Error sending request to #{uri} - '#{e.message}'"
         end
 
-        {body: body, code: code}
+        res
+      end
+
+      def self.get_with_code(uri, headers = nil)
+        res = get_raw(uri, headers)
+
+        {body: res.body, code: res.code}
       end
 
       def self.get(uri, headers = nil)

@@ -67,7 +67,8 @@ module Yawast
             check_server_status(uri.copy)
             check_server_info(uri.copy)
             check_tomcat_manager(uri.copy)
-            check_tomcat_version(uri.copy)
+            check_tomcat_version(uri.copy, true)
+            check_tomcat_version(uri.copy, false)
             check_tomcat_put_rce(uri.copy)
             check_struts2_samples(uri.copy)
 
@@ -84,33 +85,46 @@ module Yawast
             check_page_for_string uri, '/server-info', 'Apache Server Information'
           end
 
-          def self.check_tomcat_version(uri)
+          def self.check_tomcat_version(uri, use_invalid_method)
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'apache_tomcat_version_exposed',
                                             {vulnerable: false, version: nil, body: nil}
 
             begin
-              req = Yawast::Shared::Http.get_http(uri)
-              req.use_ssl = uri.scheme == 'https'
-              headers = Yawast::Shared::Http.get_headers
-              res = req.request(Xyz.new('/', headers))
+              if use_invalid_method
+                vuln = 'apache_tomcat_version_exposed_invalid_method'
 
-              if !res.body.nil? && res.body.include?('Apache Tomcat') && res.code == '501'
+                req = Yawast::Shared::Http.get_http(uri)
+                req.use_ssl = uri.scheme == 'https'
+                headers = Yawast::Shared::Http.get_headers
+                res = req.request(Xyz.new('/', headers))
+              else
+                vuln = 'apache_tomcat_version_exposed_404'
+
+                uri.path = "/#{SecureRandom.hex}.jsp"
+                res = Yawast::Shared::Http.get_raw(uri)
+              end
+
+              if !res.body.nil? && res.body.include?('Apache Tomcat') && (res.code == '501' || res.code == '401')
                 # check to see if there's a version number
                 version = /Apache Tomcat\/\d*.\d*.\d*\b/.match res.body
 
                 if !version.nil? && !version[0].nil?
                   Yawast::Utilities.puts_warn "Apache Tomcat Version Found: #{version[0]}"
                   Yawast::Shared::Output.log_hash 'vulnerabilities',
-                                                  'apache_tomcat_version_exposed',
+                                                  vuln,
                                                   {vulnerable: true, version: version[0], body: res.body}
 
-                  puts "\t\t\"curl -X XYZ #{uri}\""
+                  if use_invalid_method
+                    puts "\t\t\"curl -X XYZ #{uri}\""
+                  else
+                    puts "\t\t\"curl #{uri}\""
+                  end
 
                   puts ''
                 else
                   Yawast::Shared::Output.log_hash 'vulnerabilities',
-                                                  'apache_tomcat_version_exposed',
+                                                  vuln,
                                                   {vulnerable: false, version: nil, body: res.body}
                 end
               end

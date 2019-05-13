@@ -1,3 +1,5 @@
+## 0.8.0 - In Development
+
 ## 0.7.2 - 2019-05-13
 
 * [#166](https://github.com/adamcaudill/yawast/issues/166) - Detect WWW/Non-WWW domain redirection

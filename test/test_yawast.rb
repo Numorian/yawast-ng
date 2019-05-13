@@ -22,7 +22,7 @@ class TestYawast < Minitest::Test
     new = Yawast::Scanner::Core.check_www_redirect original.copy
 
     assert original.host != new.host, "Host not changed: '#{new}'"
-    assert stdout_value.include?('Non-WWW redirect to'), "Non-WWW Redirect not found in: #{stdout_value}"
+    assert stdout_value.include?('Non-WWW Redirect'), "Non-WWW Redirect not found in: #{stdout_value}"
 
     restore_stdout
   end
@@ -34,7 +34,7 @@ class TestYawast < Minitest::Test
     new = Yawast::Scanner::Core.check_www_redirect original.copy
 
     assert original.host != new.host, "Host not changed: '#{new}'"
-    assert stdout_value.include?('WWW redirect to'), "WWW Redirect not found in: #{stdout_value}"
+    assert stdout_value.include?('WWW Redirect'), "WWW Redirect not found in: #{stdout_value}"
 
     restore_stdout
   end
@@ -46,8 +46,8 @@ class TestYawast < Minitest::Test
     new = Yawast::Scanner::Core.check_www_redirect original.copy
 
     assert original.host == new.host, "Host changed: '#{new}'"
-    assert !stdout_value.include?('Non-WWW redirect to'), "Non-WWW Redirect found in: #{stdout_value}"
-    assert !stdout_value.include?('WWW redirect to'), "WWW Redirect found in: #{stdout_value}"
+    assert !stdout_value.include?('Non-WWW Redirect'), "Non-WWW Redirect found in: #{stdout_value}"
+    assert !stdout_value.include?('WWW Redirect'), "WWW Redirect found in: #{stdout_value}"
 
     restore_stdout
   end
@@ -59,7 +59,7 @@ class TestYawast < Minitest::Test
     new = Yawast::Scanner::Core.check_www_redirect original.copy
 
     assert original.host != new.host, "Host not changed: '#{new}'"
-    assert stdout_value.include?('WWW redirect to'), "WWW Redirect not found in: #{stdout_value}"
+    assert stdout_value.include?('WWW Redirect'), "WWW Redirect not found in: #{stdout_value}"
     assert original.scheme != new.scheme, "Scheme not changed: Original: '#{original}' - New: '#{new}'"
 
     restore_stdout

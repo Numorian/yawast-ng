@@ -23,13 +23,23 @@ module Yawast
           Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan endpoint, uri.host, true
 
           status = ''
+          error_count = 0
           until status == 'READY' || status == 'ERROR' || status == 'DNS'
             # poll for updates every 5 seconds
             # don't want to poll faster, to avoid excess load / errors
             sleep(5)
 
-            data_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan endpoint, uri.host, false
-            status = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.extract_status data_body
+            begin
+              data_body = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.scan endpoint, uri.host, false
+              status = Yawast::Scanner::Plugins::SSL::SSLLabs::Analyze.extract_status data_body
+            rescue # rubocop:disable Style/RescueStandardError
+              # if we find ourselves here, we want to try a couple more times before we give up for good
+              error_count += 1
+
+              if error_count > 3
+                raise
+              end
+            end
 
             print '.'
           end

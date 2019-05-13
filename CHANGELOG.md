@@ -2,6 +2,7 @@
 
 * [#170](https://github.com/adamcaudill/yawast/issues/170) - When checking HEAD, follow redirects
 * [#172](https://github.com/adamcaudill/yawast/issues/172) - Check for Apache Tomcat version via 404
+* [#173](https://github.com/adamcaudill/yawast/issues/173) - Check X-Powered-By for PHP Version
 * [#169](https://github.com/adamcaudill/yawast/issues/169) - Bug: Error in connecting to SSL Labs
 
 ## 0.7.1 - 2019-05-07

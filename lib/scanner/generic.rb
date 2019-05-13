@@ -58,7 +58,7 @@ module Yawast
 
           if server != ''
             Yawast::Scanner::Plugins::Servers::Apache.check_banner(server)
-            Yawast::Scanner::Plugins::Servers::Generic.check_banner_php(server)
+            Yawast::Scanner::Plugins::Applications::Framework::PHP.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Iis.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Nginx.check_banner(server)
             Yawast::Scanner::Plugins::Servers::Python.check_banner(server)
@@ -71,7 +71,10 @@ module Yawast
             Yawast::Shared::Output.log_value 'server', server
           end
 
-          Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}" if powered_by != ''
+          if powered_by != ''
+            Yawast::Utilities.puts_warn "X-Powered-By Header Present: #{powered_by}"
+            Yawast::Scanner::Plugins::Applications::Framework::PHP.check_powered_by(powered_by)
+          end
 
           Yawast::Utilities.puts_warn 'X-XSS-Protection Disabled Header Present' if xss_protection == '0'
 

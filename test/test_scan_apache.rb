@@ -42,6 +42,7 @@ class TestScannerApache < Minitest::Test
     end
 
     assert !stdout_value.include?('[V]'), "Unexpected finding: #{stdout_value}"
+    assert !stdout_value.include?('[E]'), "Unexpected error: #{stdout_value}"
     assert error == nil, "Unexpected error: #{error}"
 
     restore_stdout

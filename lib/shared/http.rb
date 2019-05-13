@@ -51,8 +51,15 @@ module Yawast
 
       def self.get_with_code(uri, headers = nil)
         res = get_raw(uri, headers)
+        body = ''
+        code = nil
 
-        {body: res.body, code: res.code}
+        unless res.nil?
+          body = res.read_body
+          code = res.code
+        end
+
+        {body: body, code: code}
       end
 
       def self.get(uri, headers = nil)

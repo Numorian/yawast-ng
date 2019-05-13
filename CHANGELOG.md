@@ -7,6 +7,7 @@
 * [#173](https://github.com/adamcaudill/yawast/issues/173) - Check X-Powered-By for PHP Version
 * [#174](https://github.com/adamcaudill/yawast/issues/174) - SSL Labs: Add 1.3 0-RTT Support Field
 * [#169](https://github.com/adamcaudill/yawast/issues/169) - Bug: Error in connecting to SSL Labs
+* [#176](https://github.com/adamcaudill/yawast/issues/176) - Bug: NoMethodError (match?) in older versions of Ruby
 
 ## 0.7.1 - 2019-05-07
 

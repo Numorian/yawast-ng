@@ -541,6 +541,21 @@ module Yawast
                                           {vulnerable: false}
         end
 
+        unless ep['details']['zeroRTTEnabled'].nil?
+          case ep['details']['zeroRTTEnabled']
+            when -2
+              Yawast::Utilities.puts_error "\t\t\tTLS 1.3 0-RTT Support: Test Failed"
+            when -1
+              Yawast::Utilities.puts_info "\t\t\tTLS 1.3 0-RTT Support: Test Not Performed"
+            when 0
+              Yawast::Utilities.puts_info "\t\t\tTLS 1.3 0-RTT Support: No"
+            when 1
+              Yawast::Utilities.puts_warn "\t\t\tTLS 1.3 0-RTT Support: Yes"
+            else
+              Yawast::Utilities.puts_error "\t\t\tTLS 1.3 0-RTT Support: Unknown Response #{ep['details']['zeroRTTEnabled']}"
+          end
+        end
+
         unless ep['details']['renegSupport'].nil?
           if ep['details']['renegSupport'] & 1 != 0
             Yawast::Utilities.puts_vuln "\t\t\tSecure Renegotiation: insecure client-initiated renegotiation supported"
@@ -892,6 +907,20 @@ module Yawast
           Yawast::Shared::Output.log_hash 'vulnerabilities',
                                           'tls_aead_support_missing',
                                           {vulnerable: true}
+        end
+
+        if ep['details']['supportsCBC']
+          Yawast::Utilities.puts_warn "\t\t\tCBC Cipher Suites Supported: Yes"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_cbc_support',
+                                          {vulnerable: true}
+        else
+          Yawast::Utilities.puts_info "\t\t\tCBC Cipher Suites Supported: No"
+
+          Yawast::Shared::Output.log_hash 'vulnerabilities',
+                                          'tls_cbc_support',
+                                          {vulnerable: false}
         end
 
         Yawast::Utilities.puts_info "\t\t\tALPN: #{ep['details']['alpnProtocols']}"

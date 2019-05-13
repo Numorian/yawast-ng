@@ -1,9 +1,11 @@
 ## 0.8.0 - In Development
 
 * [#166](https://github.com/adamcaudill/yawast/issues/166) - Detect WWW/Non-WWW domain redirection
+* [#168](https://github.com/adamcaudill/yawast/issues/168) - SSL Labs: Add Supports CBC Field
 * [#170](https://github.com/adamcaudill/yawast/issues/170) - When checking HEAD, follow redirects
 * [#172](https://github.com/adamcaudill/yawast/issues/172) - Check for Apache Tomcat version via 404
 * [#173](https://github.com/adamcaudill/yawast/issues/173) - Check X-Powered-By for PHP Version
+* [#174](https://github.com/adamcaudill/yawast/issues/174) - SSL Labs: Add 1.3 0-RTT Support Field
 * [#169](https://github.com/adamcaudill/yawast/issues/169) - Bug: Error in connecting to SSL Labs
 
 ## 0.7.1 - 2019-05-07

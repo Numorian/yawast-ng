@@ -6,7 +6,7 @@ module Yawast
   module Scanner
     module Plugins
       module Http
-        class FilePresence
+        class FilePresence < Yawast::Scanner::Base
           def self.check_path(uri, path, vuln)
             # note: this only checks directly at the root, I'm not sure if this is what we want
             # should probably be relative to what's passed in, instead of overriding the path.

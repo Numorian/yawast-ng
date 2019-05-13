@@ -7,7 +7,7 @@ require 'sslshake'
 
 module Yawast
   module Scanner
-    class Ssl
+    class Ssl < Yawast::Scanner::Base
       def self.info(uri, check_ciphers, tdes_session_count)
         begin
           puts

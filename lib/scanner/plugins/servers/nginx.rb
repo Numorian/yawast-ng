@@ -4,7 +4,7 @@ module Yawast
   module Scanner
     module Plugins
       module Servers
-        class Nginx
+        class Nginx < Yawast::Scanner::Base
           def self.check_banner(banner)
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'nginx_version_exposed',

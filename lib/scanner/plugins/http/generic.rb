@@ -4,7 +4,7 @@ module Yawast
   module Scanner
     module Plugins
       module Http
-        class Generic
+        class Generic < Yawast::Scanner::Base
           def self.check_propfind(uri)
             begin
               req = Yawast::Shared::Http.get_http(uri)

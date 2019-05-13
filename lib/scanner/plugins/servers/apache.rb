@@ -7,7 +7,10 @@ module Yawast
   module Scanner
     module Plugins
       module Servers
-        class Apache
+        class Apache < Yawast::Scanner::Base
+
+          using Polyfill({Regexp: :all})
+
           def self.check_banner(banner)
             Yawast::Shared::Output.log_hash 'vulnerabilities',
                                             'apache_openssl_version_exposed',
@@ -28,7 +31,7 @@ module Yawast
 
             # fix '(distro)' issue, such as with 'Apache/2.2.22 (Ubuntu)'
             # if we don't do this, it triggers a false positive on the module check
-            if /\(\w*\)/.match? modules[1]
+            if !modules[1].nil? && /\(\w*\)/.match?(modules[1])
               server += " #{modules[1]}"
               modules.delete_at 1
             end

@@ -6,7 +6,7 @@ module Yawast
   module Scanner
     module Plugins
       module DNS
-        class CAA
+        class CAA < Yawast::Scanner::Base
           include Dnsruby
 
           def self.caa_info(uri)

@@ -5,7 +5,7 @@ module Yawast
     module Plugins
       module Applications
         module CMS
-          class Generic
+          class Generic < Yawast::Scanner::Base
             def self.get_generator(body)
               regex = /<meta name="generator[^>]+content\s*=\s*['"]([^'"]+)['"][^>]*>/
               match = body.match regex

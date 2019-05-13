@@ -7,7 +7,7 @@ require 'json'
 
 module Yawast
   module Scanner
-    class SslLabs
+    class SslLabs < Yawast::Scanner::Base
       def self.info(uri, tdes_session_count)
         puts 'Beginning SSL Labs scan (this could take a minute or two)'
 

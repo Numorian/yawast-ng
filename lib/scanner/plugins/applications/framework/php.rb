@@ -5,7 +5,7 @@ module Yawast
     module Plugins
       module Applications
         module Framework
-          class PHP
+          class PHP < Yawast::Scanner::Base
             def self.check_banner(banner)
               Yawast::Shared::Output.log_hash 'vulnerabilities',
                                               'php_version_exposed_banner',

@@ -2,7 +2,7 @@
 
 module Yawast
   module Scanner
-    class Core
+    class Core < Yawast::Scanner::Base
       def self.print_header
         Yawast.header
 

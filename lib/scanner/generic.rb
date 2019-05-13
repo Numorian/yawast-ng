@@ -6,7 +6,7 @@ require 'public_suffix'
 
 module Yawast
   module Scanner
-    class Generic
+    class Generic < Yawast::Scanner::Base
       def self.head_info(head, uri)
         begin
           server = ''

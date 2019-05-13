@@ -4,7 +4,7 @@ module Yawast
   module Scanner
     module Plugins
       module SSL
-        class SSL
+        class SSL < Yawast::Scanner::Base
           def self.print_precert(cert)
             scts = cert.extensions.find {|e| e.oid == 'ct_precert_scts'}
 

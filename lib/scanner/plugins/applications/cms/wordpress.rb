@@ -5,7 +5,7 @@ module Yawast
     module Plugins
       module Applications
         module CMS
-          class WordPress
+          class WordPress < Yawast::Scanner::Base
             # check to see if we can confirm the presence of WordPress
             def self.identify(uri)
               ret = nil

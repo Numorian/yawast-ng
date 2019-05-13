@@ -5,7 +5,7 @@ module Yawast
     module Plugins
       module Applications
         module Framework
-          class Rails
+          class Rails < Yawast::Scanner::Base
             def self.check_all(uri, links)
               check_cve_2019_5418 links
             end

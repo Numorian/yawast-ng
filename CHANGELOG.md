@@ -1,4 +1,4 @@
-## 0.8.0 - In Development
+## 0.7.2 - 2019-05-13
 
 * [#166](https://github.com/adamcaudill/yawast/issues/166) - Detect WWW/Non-WWW domain redirection
 * [#168](https://github.com/adamcaudill/yawast/issues/168) - SSL Labs: Add Supports CBC Field

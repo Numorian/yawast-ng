@@ -33,6 +33,8 @@ module Yawast
     # prevent multiple runs
     return if @header
 
+    encoding = "#{Encoding.default_external}/#{Encoding.default_internal}/#{Encoding.find('locale')}"
+
     puts '__   _____  _    _  ___   _____ _____ '
     puts '\ \ / / _ \| |  | |/ _ \ /  ___|_   _|'
     puts ' \ V / /_\ \ |  | / /_\ \\\ `--.  | |  '
@@ -43,7 +45,7 @@ module Yawast
     puts "YAWAST v#{VERSION} - #{DESCRIPTION}"
     puts ' Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com>'
     puts ' Support & Documentation: https://github.com/adamcaudill/yawast'
-    puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION} (#{RUBY_PLATFORM})"
+    puts " Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}; #{OpenSSL::OPENSSL_VERSION} (#{RUBY_PLATFORM}); #{encoding}"
     puts " Started at #{Time.now.strftime('%Y-%m-%d %H:%M:%S %Z')}"
 
     begin

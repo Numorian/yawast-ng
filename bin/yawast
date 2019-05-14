@@ -4,6 +4,9 @@
 require 'commander/import'
 require File.dirname(__FILE__) + '/../lib/yawast'
 
+# set the default encoding to UTF-8
+Encoding.default_internal = 'UTF-8'
+
 program :name, 'yawast'
 program :version, Yawast::VERSION
 program :description, Yawast::DESCRIPTION

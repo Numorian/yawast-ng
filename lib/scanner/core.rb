@@ -29,7 +29,11 @@ module Yawast
 
           Yawast::Scanner::Plugins::SSL::SSL.set_openssl_options
 
-          Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options unless options.nodns
+          begin
+            Yawast::Scanner::Plugins::DNS::Generic.dns_info @uri, options unless options.nodns
+          rescue => e
+            Yawast::Utilities.puts_error "Error: Could not retrieve DNS information. (#{e.class}: #{e.message})"
+          end
         end
 
         @setup = true

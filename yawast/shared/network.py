@@ -6,7 +6,9 @@ from urllib.parse import urlunparse
 
 import requests
 import urllib3
+from requests.adapters import HTTPAdapter
 from requests.models import Response, Request
+from urllib3 import Retry
 
 from yawast._version import get_version
 from yawast.shared import output
@@ -27,6 +29,20 @@ class _BlockCookiesSet(cookiejar.DefaultCookiePolicy):
 
 _requester = requests.Session()
 _requester.cookies.set_policy(_BlockCookiesSet())
+_requester.mount(
+    "http://",
+    HTTPAdapter(
+        max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
+        pool_maxsize=50,
+    ),
+)
+_requester.mount(
+    "https://",
+    HTTPAdapter(
+        max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
+        pool_maxsize=50,
+    ),
+)
 
 
 def http_head(url, allow_redirects=True, timeout=15) -> Response:
@@ -142,10 +158,11 @@ def http_custom(
 
 def http_json(url, allow_redirects=True) -> Tuple[Dict, int]:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    global _requester
 
     headers = {"User-Agent": SERVICE_UA}
 
-    res = requests.get(
+    res = _requester.get(
         url, headers=headers, verify=False, allow_redirects=allow_redirects
     )
     return res.json(), res.status_code

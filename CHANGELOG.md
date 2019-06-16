@@ -1,5 +1,7 @@
 ## 0.8.0 - In Development
 
+YAWAST has been completely written, and has moved from Ruby to Python.
+
 ## 0.7.2 - 2019-05-13
 
 * [#166](https://github.com/adamcaudill/yawast/issues/166) - Detect WWW/Non-WWW domain redirection

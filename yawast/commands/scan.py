@@ -28,7 +28,9 @@ def start(args, url):
             tls_redirect = network.check_ssl_redirect(url)
             if tls_redirect != url:
                 print(f"Server redirects to TLS: Scanning: {tls_redirect}")
+
                 url = tls_redirect
+                parsed = urlparse(url)
         except Exception:
             output.debug_exception()
 

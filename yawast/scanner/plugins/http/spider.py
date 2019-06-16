@@ -43,6 +43,8 @@ def _get_links(base_url: str, url: str):
                 else:
                     file_ext = None
 
+                _links.append(href)
+
                 # filter out some of the obvious binary files
                 if file_ext is None or file_ext not in [
                     "gzip",
@@ -53,8 +55,8 @@ def _get_links(base_url: str, url: str):
                     "zip",
                     "exe",
                     "gz",
+                    "pdf",
                 ]:
-                    _links.append(href)
                     _get_links(base_url, href)
                 else:
                     output.debug(

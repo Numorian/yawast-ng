@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 from yawast.reporting.enums import Vulnerabilities
 from yawast.shared import network, output
 from yawast.scanner.plugins.result import Result
@@ -88,8 +90,11 @@ def _get_links(base_url: str, url: str):
 
     # handle redirects
     if "Location" in res.headers:
-        # TODO: Handle relative URLs
         redirect = res.headers["Location"]
+
+        # check for relative link
+        if str(redirect).startswith("/"):
+            redirect = urljoin(base_url, redirect)
 
         # make sure that we aren't redirected out of scope
         if base_url in redirect:

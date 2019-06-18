@@ -1,3 +1,4 @@
+from yawast.reporting.enums import Vulnerabilities
 from yawast.shared import network, output
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.plugins.http import response_scanner
@@ -7,10 +8,11 @@ from bs4 import BeautifulSoup
 
 _links = []
 _results = []
+_insecure = []
 
 
 def spider(url) -> Tuple[List[str], List[Result]]:
-    global _links, _results
+    global _links, _results, _insecure
     _get_links(url, url)
 
     # copy data and reset
@@ -18,12 +20,13 @@ def spider(url) -> Tuple[List[str], List[Result]]:
     _links = []
     results = _results
     _results = []
+    _insecure = []
 
     return links, results
 
 
 def _get_links(base_url: str, url: str):
-    global _links, _results
+    global _links, _results, _insecure
 
     res = network.http_get(url, False)
 
@@ -64,7 +67,23 @@ def _get_links(base_url: str, url: str):
                     )
             else:
                 # TODO: Check PSL, if outside of scope, it's an issue
-                # TODO: Check for HTTP links from HTTPS source
+
+                if (
+                    "https://" in base_url
+                    and "http://" in href
+                    and href not in _insecure
+                ):
+                    # link from secure to insecure
+                    _insecure.append(href)
+
+                    _results.append(
+                        Result(
+                            f"Insecure Link: {url} links to {href}",
+                            Vulnerabilities.HTTP_INSECURE_LINK,
+                            url,
+                            [href, res.text],
+                        )
+                    )
                 pass
 
     # handle redirects

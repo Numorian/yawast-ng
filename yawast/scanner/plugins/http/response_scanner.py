@@ -27,12 +27,13 @@ def check_response(
 
         # check for things thar require parsed HTML
         results += retirejs.get_results(soup, url, raw_full)
-        results += _check_charset(url, res, raw_full)
         results += apache_tomcat.get_version(url, res)
 
     results += http_basic.get_header_issues(res.headers, raw_full, url)
     results += http_basic.get_cookie_issues(res, raw_full, url)
     results += rails.check_cve_2019_5418(url)
+
+    results += _check_charset(url, res, raw_full)
 
     return results
 

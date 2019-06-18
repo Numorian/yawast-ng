@@ -77,48 +77,39 @@ def scan(args: Namespace, url: str, domain: str):
     res = apache_httpd.check_all(url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     res = apache_tomcat.check_all(url, links)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     res = nginx.check_all(url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     res = iis.check_all(url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     res = http_basic.check_propfind(url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     res = http_basic.check_trace(url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     res = http_basic.check_options(url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     wp_path, res = wordpress.identify(url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-        output.empty()
 
     if wp_path is not None:
         res = wordpress.check_json_user_enum(wp_path)
         if len(res) > 0:
             reporter.display_results(res, "\t")
-            output.empty()
 
 
 def reset():

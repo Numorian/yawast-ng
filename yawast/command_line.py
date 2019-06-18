@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from yawast.shared import utils
-from yawast.commands import scan
+from yawast.commands import scan, dns
 from yawast.reporting import reporter
 
 
@@ -81,6 +81,19 @@ def build_parser():
     )
     parser_scan.set_defaults(func=command_scan)
 
+    # create the parser for the "scan" command
+    parser_dns = subparsers.add_parser(
+        "dns", help="Scans DNS for the provided URL(s)", parents=[parent_parser]
+    )
+    parser_dns.add_argument(
+        "--srv", action="store_true", help="Scan for known SRV DNS Records"
+    )
+    parser_dns.add_argument(
+        "--subdomains", action="store_true", help="Search for Common Subdomains"
+    )
+    parser_dns.add_argument("--output", type=str, help="Output JSON file")
+    parser_dns.set_defaults(func=command_dns)
+
     return parser
 
 
@@ -108,3 +121,12 @@ def command_scan(args, urls):
         reporter.setup(utils.get_domain(url))
 
         scan.start(args, url)
+
+
+def command_dns(args, urls):
+    for val in enumerate(urls):
+        url = utils.extract_url(val[1])
+
+        reporter.setup(utils.get_domain(url))
+
+        dns.start(args, url)

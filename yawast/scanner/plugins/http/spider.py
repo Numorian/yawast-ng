@@ -1,12 +1,12 @@
+from typing import List, Tuple
 from urllib.parse import urljoin
 
-from yawast.reporting.enums import Vulnerabilities
-from yawast.shared import network, output
-from yawast.scanner.plugins.result import Result
-from yawast.scanner.plugins.http import response_scanner
-from typing import List, Dict, Tuple
-from requests.models import Response
 from bs4 import BeautifulSoup
+
+from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.http import response_scanner
+from yawast.scanner.plugins.result import Result
+from yawast.shared import network, output
 
 _links = []
 _results = []
@@ -32,7 +32,12 @@ def _get_links(base_url: str, url: str):
 
     res = network.http_get(url, False)
 
-    soup = BeautifulSoup(res.text, "html.parser")
+    if "Content-Type" in res.headers and "text/html" in res.headers["Content-Type"]:
+        soup = BeautifulSoup(res.text, "html.parser")
+    else:
+        _results += response_scanner.check_response(url, res)
+
+        return
 
     # check the response for issues
     _results += response_scanner.check_response(url, res, soup)

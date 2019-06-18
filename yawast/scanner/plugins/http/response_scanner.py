@@ -17,20 +17,22 @@ def check_response(
     if res is None:
         return []
 
-    if soup is None:
-        soup = BeautifulSoup(res.text, "html.parser")
-
     results = []
 
     raw_full = "\n".join(network.http_build_raw_response(res))
 
+    if "Content-Type" in res.headers and "text/html" in res.headers["Content-Type"]:
+        if soup is None:
+            soup = BeautifulSoup(res.text, "html.parser")
+
+        # check for things thar require parsed HTML
+        results += retirejs.get_results(soup, url, raw_full)
+        results += _check_charset(url, res, raw_full)
+        results += apache_tomcat.get_version(url, res)
+
     results += http_basic.get_header_issues(res.headers, raw_full, url)
     results += http_basic.get_cookie_issues(res, raw_full, url)
-    results += retirejs.get_results(soup, url, raw_full)
     results += rails.check_cve_2019_5418(url)
-    results += apache_tomcat.get_version(url, res)
-
-    results += _check_charset(url, res, raw_full)
 
     return results
 

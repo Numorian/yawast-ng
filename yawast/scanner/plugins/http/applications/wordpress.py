@@ -98,6 +98,9 @@ def check_json_user_enum(url: str) -> List[Result]:
                     [
                         network.http_build_raw_request(res.request),
                         network.http_build_raw_response(res),
+                        user["id"],
+                        user["slug"],
+                        user["name"],
                     ],
                 )
             )

@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from yawast.shared import utils
-from yawast.commands import scan, dns
+from yawast.commands import scan, dns, ssl
 from yawast.reporting import reporter
 
 
@@ -26,11 +26,6 @@ def build_parser():
         "scan", help="Scans the provided URL(s)", parents=[parent_parser]
     )
     parser_scan.add_argument("--nossl", action="store_true", help="Disables SSL checks")
-    parser_scan.add_argument(
-        "--nociphers",
-        action="store_true",
-        help="Disables check for supported ciphers (only with --internalssl)",
-    )
     parser_scan.add_argument(
         "--internalssl", action="store_true", help="Disable SSL Labs integration"
     )
@@ -81,7 +76,7 @@ def build_parser():
     )
     parser_scan.set_defaults(func=command_scan)
 
-    # create the parser for the "scan" command
+    # create the parser for the "dns" command
     parser_dns = subparsers.add_parser(
         "dns", help="Scans DNS for the provided URL(s)", parents=[parent_parser]
     )
@@ -93,6 +88,22 @@ def build_parser():
     )
     parser_dns.add_argument("--output", type=str, help="Output JSON file")
     parser_dns.set_defaults(func=command_dns)
+
+    # create the parser for the "ssl" command
+    parser_ssl = subparsers.add_parser(
+        "ssl", help="Scans TLS/SSL for the provided URL(s)", parents=[parent_parser]
+    )
+    parser_ssl.add_argument(
+        "--internalssl", action="store_true", help="Disable SSL Labs integration"
+    )
+    parser_ssl.add_argument(
+        "--tdessessioncount",
+        action="store_true",
+        help="Counts the number of messages that can be sent in a single session (SWEET32)",
+    )
+    parser_ssl.add_argument("--nodns", action="store_true", help="Disable DNS checks")
+    parser_ssl.add_argument("--output", type=str, help="Output JSON file")
+    parser_ssl.set_defaults(func=command_ssl)
 
     return parser
 
@@ -130,3 +141,12 @@ def command_dns(args, urls):
         reporter.setup(utils.get_domain(url))
 
         dns.start(args, url)
+
+
+def command_ssl(args, urls):
+    for val in enumerate(urls):
+        url = utils.extract_url(val[1])
+
+        reporter.setup(utils.get_domain(url))
+
+        ssl.start(args, url)

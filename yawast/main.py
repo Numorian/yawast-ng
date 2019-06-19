@@ -53,7 +53,33 @@ def main():
 
 
 def print_header():
-    loc = "%s.%s" % (locale.getlocale()[0], locale.getlocale()[1])
+    # get the locale
+    try:
+        locale.setlocale(locale.LC_ALL, "")
+        lcl = locale.getdefaultlocale()
+
+    except Exception as error:
+        print(
+            f"Unable to get Locale: {str(error)} - attempting to force locale to en_US.utf8"
+        )
+
+        try:
+            if platform.system() == "Darwin":
+                locale.setlocale(locale.LC_ALL, "EN_US")
+            else:
+                locale.setlocale(locale.LC_ALL, "en_US.utf8")
+
+            lcl = locale.getdefaultlocale()
+        except Exception as err:
+            print(f"Unable to set locale: {str(err)}")
+
+            lcl = None
+
+    if lcl is not None:
+        loc = f"{lcl[0]}.{lcl[1]}"
+    else:
+        loc = "(Unknown locale)"
+
     start_time = time.strftime("%Y-%m-%d %H:%M:%S %Z (%z)", time.localtime())
 
     vm = psutil.virtual_memory()

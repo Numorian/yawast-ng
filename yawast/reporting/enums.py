@@ -137,6 +137,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     HTTP_HEADER_CONTENT_TYPE_MISSING = VulnerabilityInfo(
         "Http_Header_Content_Type_Missing", Severity.LOW, ""
     )
+    HTTP_ERROR_MESSAGE = VulnerabilityInfo(
+        "Http_Error_Message", Severity.MEDIUM, "", True
+    )
     HTTP_INSECURE_LINK = VulnerabilityInfo("Http_Insecure_Link", Severity.LOW, "", True)
     HTTP_PROPFIND_ENABLED = VulnerabilityInfo("Http_Propfind_Enabled", Severity.LOW, "")
     HTTP_TRACE_ENABLED = VulnerabilityInfo("Http_Trace_Enabled", Severity.LOW, "")

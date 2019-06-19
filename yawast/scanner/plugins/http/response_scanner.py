@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from requests.models import Response
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.http import http_basic, retirejs
+from yawast.scanner.plugins.http import http_basic, retirejs, error_checker
 from yawast.scanner.plugins.http.servers import rails, apache_tomcat
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network
@@ -23,12 +23,17 @@ def check_response(
     raw_full = "\n".join(network.http_build_raw_response(res))
 
     if "Content-Type" in res.headers and "text/html" in res.headers["Content-Type"]:
-        if soup is None:
-            soup = BeautifulSoup(res.text, "html.parser")
+        body = res.text
 
-        # check for things thar require parsed HTML
-        results += retirejs.get_results(soup, url, raw_full)
-        results += apache_tomcat.get_version(url, res)
+        # don't bother with these, if the body is empty
+        if len(body) > 0:
+            if soup is None:
+                soup = BeautifulSoup(body, "html.parser")
+
+            # check for things thar require parsed HTML
+            results += retirejs.get_results(soup, url, raw_full)
+            results += apache_tomcat.get_version(url, res)
+            results += error_checker.check_response(url, res, body)
 
     results += http_basic.get_header_issues(res.headers, raw_full, url)
     results += http_basic.get_cookie_issues(res, raw_full, url)

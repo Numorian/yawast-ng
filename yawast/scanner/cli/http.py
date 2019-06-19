@@ -12,6 +12,7 @@ from yawast.scanner.plugins.http import (
     retirejs,
     special_files,
     file_search,
+    error_checker,
 )
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.servers import apache_httpd, apache_tomcat, nginx, iis
@@ -115,6 +116,7 @@ def scan(args: Namespace, url: str, domain: str):
 def reset():
     retirejs.reset()
     file_search.reset()
+    error_checker.reset()
 
 
 def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:

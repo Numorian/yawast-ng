@@ -108,7 +108,7 @@ def _find_files(
         pool.close()
 
         while True:
-            if all(r.ready() for r in results):
+            if all(r.ready() for r in workers):
                 break
 
             time.sleep(1)

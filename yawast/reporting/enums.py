@@ -24,6 +24,9 @@ class VulnerabilityInfoEnum(VulnerabilityInfo, Enum):
 
 class Vulnerabilities(VulnerabilityInfoEnum):
     APP_WORDPRESS_VERSION = VulnerabilityInfo("App_WordPress_Version", Severity.LOW, "")
+    APP_WORDPRESS_OUTDATED = VulnerabilityInfo(
+        "App_WordPress_Outdated", Severity.MEDIUM, ""
+    )
     APP_WORDPRESS_USER_ENUM_API = VulnerabilityInfo(
         "App_WordPress_User_Enum_API", Severity.MEDIUM, ""
     )

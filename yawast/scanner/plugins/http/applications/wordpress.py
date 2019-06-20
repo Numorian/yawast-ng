@@ -54,7 +54,7 @@ def identify(url: str) -> Tuple[Union[str, None], List[Result]]:
             results.append(
                 Result(
                     f"WordPress Outdated: {ver} - Current: {curr_version}",
-                    Vulnerabilities.APP_WORDPRESS_VERSION,
+                    Vulnerabilities.APP_WORDPRESS_OUTDATED,
                     path,
                     [str(ver), network.http_build_raw_response(res)],
                 )

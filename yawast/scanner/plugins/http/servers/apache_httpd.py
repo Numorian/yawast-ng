@@ -12,7 +12,7 @@ from yawast.shared import network
 
 def check_banner(banner: str, raw: str, url: str) -> List[Result]:
     # don't bother if this doesn't look like Apache
-    if "Apache" not in banner:
+    if "Apache" not in banner or "Apache-" in banner:
         return []
 
     results = []

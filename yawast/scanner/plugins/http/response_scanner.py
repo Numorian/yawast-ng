@@ -68,7 +68,7 @@ def _check_charset(url: str, res: Response, raw: str) -> List[Result]:
         # content-type missing
         results.append(
             Result(
-                f"Content-Type Missing: {url}",
+                f"Content-Type Missing: {url} ({res.request.method} - {res.status_code})",
                 Vulnerabilities.HTTP_HEADER_CONTENT_TYPE_MISSING,
                 url,
                 raw,

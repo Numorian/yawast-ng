@@ -181,65 +181,23 @@ class _ProcessMonitor:
     def __init__(self):
         self.process = Process()
         self.peak_mem_res = 0
+        self.low_mem_warning = False
 
     def monitor_task(self):
-        from yawast.external.memory_size import Size
-
         if sys.stdout.isatty():
-            warning_displayed = False
 
             while self.busy:
                 try:
-                    # prime the call to cpu_percent, as the first call doesn't return useful data
-                    self.process.cpu_percent(interval=1)
+                    # only print the data out every 10 seconds
+                    if datetime.now().second / 10 == 0:
+                        info = self._get_info()
 
-                    # use oneshot() to cache the data, so we minimize hits
-                    with self.process.oneshot():
-                        pct = self.process.cpu_percent()
+                        output.debug(info)
+                    else:
+                        # call get_mem so that we record peak more accurately
+                        self._get_mem()
 
-                        times = self.process.cpu_times()
-                        mem = self.process.memory_info()
-                        mem_res = "{0:cM}".format(Size(mem.rss))
-                        mem_virt = "{0:cM}".format(Size(mem.vms))
-
-                        thr = self.process.num_threads()
-
-                        vm = psutil.virtual_memory()
-                        mem_total = "{0:cM}".format(Size(vm.total))
-                        mem_avail_bytes = vm.available
-                        mem_avail = "{0:cM}".format(Size(vm.available))
-
-                        if (
-                            mem_avail_bytes < self.WARNING_THRESHOLD
-                            and not warning_displayed
-                        ):
-                            warning_displayed = True
-
-                            output.error(f"Low RAM Available: {mem_avail}")
-
-                        cons = -1
-                        try:
-                            cons = len(self.process.connections(kind="inet"))
-                        except:
-                            # we don't care if this fails
-                            output.debug_exception()
-
-                        if mem.rss > self.peak_mem_res:
-                            self.peak_mem_res = mem.rss
-
-                        cpu_freq = psutil.cpu_freq()
-
-                    info = (
-                        f"Process Stats: CPU: {pct}% - Sys: {times.system} - "
-                        f"User: {times.user} - Res: {mem_res} - Virt: {mem_virt} - "
-                        f"Available: {mem_avail}/{mem_total} - Threads: {thr} - "
-                        f"Connections: {cons} - CPU Freq: "
-                        f"{int(cpu_freq.current)}MHz/{int(cpu_freq.max)}MHz"
-                    )
-
-                    output.debug(info)
-
-                    time.sleep(10)
+                    time.sleep(1)
                 except Exception:
                     output.debug_exception()
 
@@ -249,6 +207,60 @@ class _ProcessMonitor:
         else:
             # if this isn't a TTY, no point in doing any of this
             self.busy = False
+
+    def _get_info(self) -> str:
+        from yawast.external.memory_size import Size
+
+        # prime the call to cpu_percent, as the first call doesn't return useful data
+        self.process.cpu_percent(interval=1)
+
+        # use oneshot() to cache the data, so we minimize hits
+        with self.process.oneshot():
+            pct = self.process.cpu_percent()
+
+            times = self.process.cpu_times()
+            mem = self._get_mem()
+            mem_res = "{0:cM}".format(Size(mem.rss))
+            mem_virt = "{0:cM}".format(Size(mem.vms))
+
+            thr = self.process.num_threads()
+
+            vm = psutil.virtual_memory()
+            mem_total = "{0:cM}".format(Size(vm.total))
+            mem_avail_bytes = vm.available
+            mem_avail = "{0:cM}".format(Size(vm.available))
+
+            if mem_avail_bytes < self.WARNING_THRESHOLD and not self.low_mem_warning:
+                self.low_mem_warning = True
+
+                output.error(f"Low RAM Available: {mem_avail}")
+
+            cons = -1
+            try:
+                cons = len(self.process.connections(kind="inet"))
+            except Exception:
+                # we don't care if this fails
+                output.debug_exception()
+
+            cpu_freq = psutil.cpu_freq()
+
+        info = (
+            f"Process Stats: CPU: {pct}% - Sys: {times.system} - "
+            f"User: {times.user} - Res: {mem_res} - Virt: {mem_virt} - "
+            f"Available: {mem_avail}/{mem_total} - Threads: {thr} - "
+            f"Connections: {cons} - CPU Freq: "
+            f"{int(cpu_freq.current)}MHz/{int(cpu_freq.max)}MHz"
+        )
+
+        return info
+
+    def _get_mem(self):
+        mem = self.process.memory_info()
+
+        if mem.rss > self.peak_mem_res:
+            self.peak_mem_res = mem.rss
+
+        return mem
 
     def __enter__(self):
         self.busy = True

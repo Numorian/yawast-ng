@@ -29,10 +29,6 @@ def spider(url) -> Tuple[List[str], List[Result]]:
 
     asy = pool.apply_async(_get_links, (url, [url], queue, pool))
 
-    # work around a Python bug - this sets a long timeout
-    # this  triggers signals to be properly processed
-    # see https://stackoverflow.com/a/1408476
-    # asy.get(timeout=999999)
     with _lock:
         _tasks.append(asy)
 
@@ -130,8 +126,6 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                                 f'Skipping URL "{href}" due to file extension "{file_ext}"'
                             )
                     else:
-                        # TODO: Check PSL, if outside of scope, it's an issue
-
                         if (
                             "https://" in base_url
                             and "http://" in href

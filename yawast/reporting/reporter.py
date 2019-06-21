@@ -1,9 +1,12 @@
 import json
 import os
 import time
+import zipfile
 from typing import Dict, List, cast, Optional, Any, Union
+from zipfile import ZipFile
 
-from yawast.reporting.enums import Vulnerabilities, Severity, VulnerabilityInfo
+from yawast.external.memory_size import Size
+from yawast.reporting.enums import Vulnerabilities, Severity
 from yawast.reporting.issue import Issue
 from yawast.scanner.plugins.result import Result
 from yawast.shared import output
@@ -24,7 +27,7 @@ def init(output_file: Union[str, None] = None) -> None:
             # it's a directory, so we are going to create a name
             name = f"yawast_{int(time.time())}.json"
             output_file = os.path.join(output_file, name)
-        elif os.path.isfile(output_file):
+        elif os.path.isfile(output_file) or os.path.isfile(f"{_output_file}.zip"):
             # the file already exists
             print("WARNING: Output file already exists; it will be replaced.")
 
@@ -46,10 +49,13 @@ def save_output():
     json_data = json.dumps(data, sort_keys=True, indent=4)
 
     try:
-        with open(_output_file, "w") as o:
-            o.write(json_data)
+        zf = ZipFile(f"{_output_file}.zip", "x", zipfile.ZIP_LZMA)
+        zf.writestr(f"{os.path.basename(_output_file)}", json_data)
+        zf.close()
 
-        print(f"Saving {_output_file}...")
+        orig = "{0:cM}".format(Size(len(json_data)))
+        comp = "{0:cM}".format(Size(os.path.getsize(f"{_output_file}.zip")))
+        print(f"Saving {_output_file}.zip... (size reduced from {orig} to {comp})")
     except Exception as error:
         print(f"Error writing output file: {error}")
 
@@ -57,7 +63,7 @@ def save_output():
 def get_output_file() -> str:
     global _output_file
 
-    return _output_file
+    return f"{_output_file}.zip"
 
 
 def setup(domain: str) -> None:

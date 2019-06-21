@@ -6,7 +6,7 @@ class TestGetHost(TestCase):
     def test_get_host(self):
         res = basic.get_host("8.8.8.8")
 
-        self.assertEqual("google-public-dns-a.google.com", res)
+        self.assertEqual("dns.google", res)
 
     def test_get_host_na(self):
         res = basic.get_host("104.28.27.55")

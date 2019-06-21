@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from requests.models import Response
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.http import http_basic, retirejs, error_checker
+from yawast.scanner.plugins.http import http_basic, retirejs, error_checker, http_utils
 from yawast.scanner.plugins.http.servers import rails, apache_tomcat
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network
@@ -22,18 +22,16 @@ def check_response(
 
     raw_full = "\n".join(network.http_build_raw_response(res))
 
-    if "Content-Type" in res.headers and "text/html" in res.headers["Content-Type"]:
+    if http_utils.is_text(res):
         body = res.text
 
-        # don't bother with these, if the body is empty
-        if len(body) > 0:
-            if soup is None:
-                soup = BeautifulSoup(body, "html.parser")
+        if soup is None:
+            soup = BeautifulSoup(body, "html.parser")
 
-            # check for things thar require parsed HTML
-            results += retirejs.get_results(soup, url, raw_full)
-            results += apache_tomcat.get_version(url, res)
-            results += error_checker.check_response(url, res, body)
+        # check for things thar require parsed HTML
+        results += retirejs.get_results(soup, url, raw_full)
+        results += apache_tomcat.get_version(url, res)
+        results += error_checker.check_response(url, res, body)
 
     results += http_basic.get_header_issues(res.headers, raw_full, url)
     results += http_basic.get_cookie_issues(res, raw_full, url)
@@ -50,6 +48,10 @@ def check_response(
 
 def _check_charset(url: str, res: Response, raw: str) -> List[Result]:
     results = []
+
+    # if the body is empty, we really don't care about this
+    if len(res.content) == 0:
+        return results
 
     if "Content-Type" in res.headers:
         content_type = str(res.headers["Content-Type"]).lower()

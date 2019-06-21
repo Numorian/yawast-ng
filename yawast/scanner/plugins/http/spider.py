@@ -1,14 +1,13 @@
-import os
 import time
+from multiprocessing import Manager, Lock
+from multiprocessing.dummy import Pool
 from typing import List, Tuple
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
-from multiprocessing import Manager, active_children, Lock
-from multiprocessing.dummy import Pool
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.http import response_scanner
+from yawast.scanner.plugins.http import response_scanner, http_utils
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
 
@@ -88,12 +87,10 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
 
             res = network.http_get(url, False)
 
-            if (
-                "Content-Type" in res.headers
-                and "text/html" in res.headers["Content-Type"]
-            ):
+            if http_utils.is_text(res):
                 soup = BeautifulSoup(res.text, "html.parser")
             else:
+                # no clue what this is
                 results += response_scanner.check_response(url, res)
 
                 return

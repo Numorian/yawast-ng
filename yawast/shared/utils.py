@@ -5,6 +5,9 @@ from urllib.parse import urlunparse
 
 from validator_collection import checkers
 
+from yawast.shared import output
+from yawast.shared.exec_timer import ExecutionTimer
+
 
 def is_url(url):
     try:
@@ -52,6 +55,29 @@ def get_domain(val):
             val = val.rpartition(":")[0]
 
     return val
+
+
+def is_printable_str(b: bytes) -> bool:
+    decoders = ["utf_8", "latin_1", "cp1251"]
+    printable = False
+    good_decoder = None
+
+    with ExecutionTimer() as timer:
+        for decoder in decoders:
+            s = b.decode(decoder, "backslashreplace")
+
+            if not any(
+                repr(ch).startswith("'\\x") or repr(ch).startswith("'\\u") for ch in s
+            ):
+                printable = True
+                good_decoder = decoder
+
+                break
+
+    if good_decoder is not None:
+        output.debug(f"Decoded string as {good_decoder} in {timer.to_ms()}ms")
+
+    return printable
 
 
 def get_port(url: str) -> int:

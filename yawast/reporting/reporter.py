@@ -1,11 +1,63 @@
-from typing import Dict, List, cast, Optional
-from yawast.shared import output
-from yawast.reporting.enums import Vulnerabilities, Severity
+import json
+import os
+import time
+from typing import Dict, List, cast, Optional, Any, Union
+
+from yawast.reporting.enums import Vulnerabilities, Severity, VulnerabilityInfo
 from yawast.reporting.issue import Issue
 from yawast.scanner.plugins.result import Result
+from yawast.shared import output
 
 _issues: Dict[str, Dict[Vulnerabilities, List[Issue]]] = {}
+_info: Dict[str, Any] = {}
 _domain: str = ""
+_output_file: str = ""
+
+
+def init(output_file: Union[str, None] = None) -> None:
+    global _output_file
+
+    if output_file is not None:
+        # if we have something, let's figure out what
+        output_file = os.path.abspath(output_file)
+        if os.path.isdir(output_file):
+            # it's a directory, so we are going to create a name
+            name = f"yawast_{int(time.time())}.json"
+            output_file = os.path.join(output_file, name)
+        elif os.path.isfile(output_file):
+            # the file already exists
+            print("WARNING: Output file already exists; it will be replaced.")
+
+        _output_file = output_file
+
+
+def save_output():
+    global _issues, _info, _output_file
+
+    vulns = {}
+    for vuln in Vulnerabilities:
+        vulns[vuln.name] = {"severity": vuln.severity, "description": vuln.description}
+
+    data = {
+        "info": _convert_keys(_info),
+        "issues": _convert_keys(_issues),
+        "vulnerabilities": vulns,
+    }
+    json_data = json.dumps(data, sort_keys=True, indent=4)
+
+    try:
+        with open(_output_file, "w") as o:
+            o.write(json_data)
+
+        print(f"Saving {_output_file}...")
+    except Exception as error:
+        print(f"Error writing output file: {error}")
+
+
+def get_output_file() -> str:
+    global _output_file
+
+    return _output_file
 
 
 def setup(domain: str) -> None:
@@ -29,6 +81,12 @@ def is_registered(vuln: Vulnerabilities) -> bool:
                 return True
         else:
             return False
+
+
+def register_info(key: str, value: Any):
+    global _info
+
+    _info[key] = value
 
 
 def register(issue: Issue) -> None:
@@ -79,3 +137,18 @@ def display_results(results: List[Result], padding: Optional[str] = ""):
     for res in results:
         iss = Issue.from_result(res)
         display(f"{padding}{res.message}", iss)
+
+
+def _convert_keys(dct: Dict) -> Dict:
+    ret = {}
+
+    for k, v in dct.items():
+        if type(k) is Vulnerabilities:
+            k = k.name
+
+        if type(v) is dict:
+            v = _convert_keys(v)
+
+        ret[k] = v
+
+    return ret

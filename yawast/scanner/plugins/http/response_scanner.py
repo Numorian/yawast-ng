@@ -20,7 +20,7 @@ def check_response(
 
     results = []
 
-    raw_full = "\n".join(network.http_build_raw_response(res))
+    raw_full = network.http_build_raw_response(res)
 
     if http_utils.is_text(res):
         body = res.text

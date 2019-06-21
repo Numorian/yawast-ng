@@ -2,7 +2,7 @@ from enum import Enum
 from typing import NamedTuple
 
 
-class Severity(Enum):
+class Severity(str, Enum):
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"

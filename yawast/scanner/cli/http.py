@@ -24,9 +24,8 @@ def scan(args: Namespace, url: str, domain: str):
     output.norm("HEAD:")
     head = network.http_head(url)
 
-    head_raw = network.http_build_raw_response(head)
-    raw = "\n".join(head_raw)
-    for line in head_raw:
+    raw = network.http_build_raw_response(head)
+    for line in raw.splitlines():
         output.norm(f"\t{line}")
 
     output.empty()

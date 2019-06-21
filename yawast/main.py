@@ -15,10 +15,16 @@ from yawast import command_line
 from yawast._version import get_version
 from yawast.external.get_char import getchar
 from yawast.external.memory_size import Size
+from yawast.reporting import reporter
 from yawast.shared import output, network
+
+_start_time = datetime.now()
+_monitor = None
 
 
 def main():
+    global _start_time, _monitor
+
     signal.signal(signal.SIGINT, signal_handler)
 
     parser = command_line.build_parser()
@@ -33,53 +39,27 @@ def main():
     # we are good to keep going
     print_header()
 
+    if args.output is not None:
+        reporter.init(args.output)
+        _set_basic_info()
+
+        print(f"Saving output to '{reporter.get_output_file()}'")
+        print()
+
     try:
         with _KeyMonitor():
             with _ProcessMonitor() as pm:
-                start_time = datetime.now()
+                _monitor = pm
 
                 args.func(args, urls)
-
-                elapsed = datetime.now() - start_time
-                mem_res = "{0:cM}".format(Size(pm.peak_mem_res))
-
-                output.empty()
-                output.norm(
-                    f"Completed (Elapsed: {str(elapsed)} - Peak Memory: {mem_res})"
-                )
     except KeyboardInterrupt:
         output.empty()
         output.error("Scan cancelled by user.")
+    finally:
+        _shutdown()
 
 
 def print_header():
-    # get the locale
-    try:
-        locale.setlocale(locale.LC_ALL, "")
-        lcl = locale.getdefaultlocale()
-
-    except Exception as error:
-        print(
-            f"Unable to get Locale: {str(error)} - attempting to force locale to en_US.utf8"
-        )
-
-        try:
-            if platform.system() == "Darwin":
-                locale.setlocale(locale.LC_ALL, "EN_US")
-            else:
-                locale.setlocale(locale.LC_ALL, "en_US.utf8")
-
-            lcl = locale.getdefaultlocale()
-        except Exception as err:
-            print(f"Unable to set locale: {str(err)}")
-
-            lcl = None
-
-    if lcl is not None:
-        loc = f"{lcl[0]}.{lcl[1]}"
-    else:
-        loc = "(Unknown locale)"
-
     start_time = time.strftime("%Y-%m-%d %H:%M:%S %Z (%z)", time.localtime())
 
     vm = psutil.virtual_memory()
@@ -108,7 +88,7 @@ def print_header():
         f" Python {''.join(sys.version.splitlines())} ({platform.python_implementation()})"
     )
     print(f" {ssl.OPENSSL_VERSION}")
-    print(f" Platform: {platform.platform()} ({loc})")
+    print(f" Platform: {platform.platform()} ({_get_locale()})")
     print(
         f" CPU(s): {psutil.cpu_count()}@{cpu_max}MHz - RAM: {mem_total} ({mem_avail} Available)"
     )
@@ -122,18 +102,77 @@ def print_header():
 
 
 def signal_handler(sig, frame):
-    # check to see if we are a worker, or the main process
-    if current_process().name == "MainProcess":
-        print()
-        print("Shutting down...")
+    if sig == signal.SIGINT:
+        # check to see if we are a worker, or the main process
+        if current_process().name == "MainProcess":
+            print("Scan cancelled by user.")
+            _shutdown()
 
+        try:
+            active_children()
+        except:
+            # we don't care if this fails
+            pass
+
+        sys.exit(1)
+
+
+def _shutdown():
+    global _start_time, _monitor
+
+    elapsed = datetime.now() - _start_time
+    mem_res = "{0:cM}".format(Size(_monitor.peak_mem_res))
+
+    output.empty()
+
+    if reporter.get_output_file() != "":
+        reporter.save_output()
+
+    output.norm(f"Completed (Elapsed: {str(elapsed)} - Peak Memory: {mem_res})")
+
+
+def _get_locale() -> str:
+    # get the locale
     try:
-        active_children()
-    except:
-        # we don't care if this fails
-        pass
+        locale.setlocale(locale.LC_ALL, "")
+        lcl = locale.getdefaultlocale()
 
-    sys.exit(1)
+    except Exception as error:
+        print(
+            f"Unable to get Locale: {str(error)} - attempting to force locale to en_US.utf8"
+        )
+
+        try:
+            if platform.system() == "Darwin":
+                locale.setlocale(locale.LC_ALL, "EN_US")
+            else:
+                locale.setlocale(locale.LC_ALL, "en_US.utf8")
+
+            lcl = locale.getdefaultlocale()
+        except Exception as err:
+            print(f"Unable to set locale: {str(err)}")
+
+            lcl = None
+
+    if lcl is not None:
+        loc = f"{lcl[0]}.{lcl[1]}"
+    else:
+        loc = "(Unknown locale)"
+
+    return loc
+
+
+def _set_basic_info():
+    reporter.register_info("start_time", int(time.time()))
+    reporter.register_info("yawast_version", get_version())
+    reporter.register_info(
+        "python_version",
+        f"{''.join(sys.version.splitlines())} ({platform.python_implementation()})",
+    )
+    reporter.register_info("openssl_version", ssl.OPENSSL_VERSION)
+    reporter.register_info("platform", platform.platform())
+    reporter.register_info("options", str(sys.argv))
+    reporter.register_info("encoding", _get_locale())
 
 
 class _KeyMonitor:

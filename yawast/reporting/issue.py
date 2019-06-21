@@ -6,7 +6,7 @@ from yawast.scanner.plugins.result import Result
 from yawast.shared import output
 
 
-class Issue:
+class Issue(dict):
     def __init__(
         self,
         vuln: Vulnerabilities,
@@ -19,8 +19,9 @@ class Issue:
         self.severity = val.severity
         self.url = url
         self.evidence = evidence
-        self.description = val.description
         self.id = uuid.uuid4().hex
+
+        dict.__init__(self, id=self.id, url=self.url, evidence=evidence)
 
         output.debug(
             f"Issue Created: {self.id} - {self.vulnerability.name} - {self.url}"

@@ -168,7 +168,7 @@ def http_json(url, allow_redirects=True) -> Tuple[Dict, int]:
     return res.json(), res.status_code
 
 
-def http_build_raw_response(res: Response) -> List[str]:
+def http_build_raw_response(res: Response) -> str:
     lines = []
 
     if res.raw.version == 11:
@@ -196,7 +196,7 @@ def http_build_raw_response(res: Response) -> List[str]:
     except Exception:
         output.debug_exception()
 
-    return lines
+    return "\r\n".join(lines)
 
 
 def http_build_raw_request(req: Request) -> str:

@@ -20,6 +20,7 @@ from yawast.shared import output, network
 
 _start_time = datetime.now()
 _monitor = None
+_has_shutdown = False
 
 
 def main():
@@ -107,7 +108,8 @@ def signal_handler(sig, frame):
     if sig == signal.SIGINT:
         # check to see if we are a worker, or the main process
         if current_process().name == "MainProcess":
-            print("Scan cancelled by user.")
+            output.empty()
+            output.norm("Scan cancelled by user.")
             _shutdown()
 
         try:
@@ -120,7 +122,12 @@ def signal_handler(sig, frame):
 
 
 def _shutdown():
-    global _start_time, _monitor
+    global _start_time, _monitor, _has_shutdown
+
+    if _has_shutdown:
+        return
+
+    _has_shutdown = True
 
     elapsed = datetime.now() - _start_time
     mem_res = "{0:cM}".format(Size(_monitor.peak_mem_res))

@@ -143,6 +143,15 @@ def debug_exception():
         debug("Exception: " + "".join(val))
 
 
+def print_color(color: Fore, msg: str):
+    global _no_colors
+
+    if _no_colors:
+        _print(msg)
+    else:
+        _print(color + msg + Style.RESET_ALL)
+
+
 def _internal_debug(msg: str):
     val = str(msg)
 

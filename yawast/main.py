@@ -7,8 +7,11 @@ import threading
 import time
 from datetime import datetime
 from multiprocessing import current_process, active_children
+from typing import cast
 
 import psutil
+from colorama import Fore
+from packaging import version
 from psutil import Process
 
 from yawast import command_line
@@ -81,7 +84,7 @@ def print_header():
     print(r"  \ /|  _  | |/\| |  _  | `--. \ | |  ")
     print(r"  | || | | \  /\  / | | |/\__/ / | |  ")
     print(r"  \_/\_| |_/\/  \/\_| |_/\____/  \_/  ")
-    print("")
+    print()
     print(
         f"YAWAST v{get_version()} - The YAWAST Antecedent Web Application Security Toolkit"
     )
@@ -95,13 +98,15 @@ def print_header():
     print(
         f" CPU(s): {psutil.cpu_count()}@{cpu_max}MHz - RAM: {mem_total} ({mem_avail} Available)"
     )
+    output.print_color(Fore.CYAN, " " + _get_version_info())
+    print()
     print(f" Started at {start_time}")
     print("")
 
     print("Connection Status:")
     print(f" {network.check_ipv4_connection()}")
     print(f" {network.check_ipv6_connection()}")
-    print("")
+    print()
 
 
 def signal_handler(sig, frame):
@@ -182,6 +187,35 @@ def _set_basic_info():
     reporter.register_info("platform", platform.platform())
     reporter.register_info("options", str(sys.argv))
     reporter.register_info("encoding", _get_locale())
+
+
+def _get_version_info() -> str:
+    try:
+        data, code = network.http_json("https://pypi.org/pypi/yawast/json")
+    except Exception:
+        output.debug_exception()
+
+        return "Supported Version: (Unable to get version information)"
+
+    if code != 200:
+        ret = "Supported Version: (PyPi returned an error code while fetching current version)"
+    else:
+        if "info" in data and "version" in data["info"]:
+            ver = cast(version.Version, version.parse(get_version()))
+            curr_version = cast(version.Version, version.parse(data["info"]["version"]))
+
+            ret = f"Supported Version: {curr_version} - "
+
+            if ver == curr_version:
+                ret += "You are on the latest version."
+            elif ver > curr_version or "dev" in get_version():
+                ret += "You are on a pre-release version. Take care."
+            else:
+                ret += "Please update to the current version."
+        else:
+            ret = "Supported Version: (PyPi returned invalid data while fetching current version)"
+
+    return ret
 
 
 class _KeyMonitor:

@@ -6,7 +6,7 @@ import os
 class TestFindSubdomains(TestCase):
     def test_find_subdomains(self):
         target_dir = os.path.dirname(os.path.realpath("__file__"))
-        path = os.path.join(target_dir, "test_data/subdomains.txt")
+        path = os.path.join(target_dir, "tests/test_data/subdomains.txt")
 
         recs = subdomains.find_subdomains("adamcaudill.com", path)
 

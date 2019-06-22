@@ -30,7 +30,7 @@ def main():
     parser = command_line.build_parser()
     args, urls = parser.parse_known_args()
 
-    network.init(args.proxy)
+    network.init(args.proxy, args.cookie)
 
     # setup the output system
     output.setup(args.debug, args.nocolors)

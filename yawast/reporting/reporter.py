@@ -63,7 +63,10 @@ def save_output():
 def get_output_file() -> str:
     global _output_file
 
-    return f"{_output_file}.zip"
+    if len(_output_file) > 0:
+        return f"{_output_file}.zip"
+    else:
+        return ""
 
 
 def setup(domain: str) -> None:

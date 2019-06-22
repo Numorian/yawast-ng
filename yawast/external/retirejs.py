@@ -3,8 +3,9 @@
 # Copyright: Fallible Inc
 
 import hashlib
-import requests
 import re
+
+from yawast.shared import network
 
 
 def is_defined(o):
@@ -177,7 +178,7 @@ def scan_endpoint(uri, definitions):
     """
     uri_scan_result = scan_uri(uri, definitions)
 
-    filecontent = requests.get(uri, verify=False).text
+    filecontent = network.http_get(uri, False).text
     filecontent_scan_result = scan_file_content(filecontent, definitions)
 
     uri_scan_result.extend(filecontent_scan_result)

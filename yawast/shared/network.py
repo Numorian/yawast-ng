@@ -28,21 +28,35 @@ class _BlockCookiesSet(cookiejar.DefaultCookiePolicy):
 
 
 _requester = requests.Session()
-_requester.cookies.set_policy(_BlockCookiesSet())
-_requester.mount(
-    "http://",
-    HTTPAdapter(
-        max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
-        pool_maxsize=50,
-    ),
-)
-_requester.mount(
-    "https://",
-    HTTPAdapter(
-        max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
-        pool_maxsize=50,
-    ),
-)
+
+
+def init(proxy: str) -> None:
+    global _requester
+
+    _requester.cookies.set_policy(_BlockCookiesSet())
+    _requester.mount(
+        "http://",
+        HTTPAdapter(
+            max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
+            pool_maxsize=50,
+        ),
+    )
+    _requester.mount(
+        "https://",
+        HTTPAdapter(
+            max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
+            pool_maxsize=50,
+        ),
+    )
+
+    if proxy is not None and len(proxy) > 0:
+        # we have a proxy, set it
+        if not proxy.startswith("http"):
+            proxy = f"http://{proxy}"
+
+        proxies = {"http": proxy, "https": proxy}
+
+        _requester.proxies.update(proxies)
 
 
 def http_head(url, allow_redirects=True, timeout=15) -> Response:

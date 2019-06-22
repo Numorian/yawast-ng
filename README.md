@@ -20,7 +20,7 @@ YAWAST is packaged as a Python [package](https://pypi.org/project/yawast/) & Doc
 
 The simplest options to install are:
 
-As a Gem: `pip3 install yawast`
+As a Python package: `pip3 install yawast` (YAWAST requires Python 3.7)
 
 Via Docker: `docker pull adamcaudill/yawast`
 

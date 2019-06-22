@@ -11,6 +11,7 @@ from requests.models import Response, Request
 from urllib3 import Retry
 
 from yawast._version import get_version
+from yawast.reporting import reporter
 from yawast.shared import output
 
 YAWAST_UA = (
@@ -313,14 +314,22 @@ def check_ipv4_connection() -> str:
     prefix = "IPv4 -> Internet:"
     url = "https://ipv4.icanhazip.com/"
 
-    return f"{prefix} {_check_connection(url)}"
+    res = _check_connection(url)
+
+    reporter.register_info("ipv4", res)
+
+    return f"{prefix} {res}"
 
 
 def check_ipv6_connection() -> str:
     prefix = "IPv6 -> Internet:"
     url = "https://ipv6.icanhazip.com/"
 
-    return f"{prefix} {_check_connection(url)}"
+    res = _check_connection(url)
+
+    reporter.register_info("ipv6", res)
+
+    return f"{prefix} {res}"
 
 
 def _check_connection(url: str) -> str:

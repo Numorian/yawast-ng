@@ -37,17 +37,17 @@ def setup(enable_debug: bool, no_colors: bool):
     # setup the root logger
     rt = logging.getLogger()
     rt.addHandler(_LogHandler())
-    rt.setLevel(logging.CRITICAL)
+    rt.setLevel(logging.DEBUG)
 
     # setup our logger
     _logger = logging.getLogger("yawast")
-    _logger.setLevel(logging.CRITICAL)
+    _logger.setLevel(logging.DEBUG)
     _logger.addHandler(_LogHandler())
     _logger.propagate = False
 
     # setup the logger for multiprocessing
     lg = get_logger()
-    lg.level = logging.CRITICAL
+    lg.level = logging.DEBUG
     lg.addHandler(_LogHandler())
 
     if not no_colors:
@@ -68,28 +68,8 @@ def is_debug() -> bool:
 def toggle_debug():
     global _debug, _logger, _lock
 
-    _lock.acquire()
-
-    _debug = not _debug
-
-    if _debug:
-        _logger.setLevel(logging.DEBUG)
-
-        rt = logging.getLogger()
-        rt.setLevel(logging.DEBUG)
-
-        lg = get_logger()
-        lg.level = logging.DEBUG
-    else:
-        _logger.setLevel(logging.CRITICAL)
-
-        rt = logging.getLogger()
-        rt.setLevel(logging.CRITICAL)
-
-        lg = get_logger()
-        lg.level = logging.CRITICAL
-
-    _lock.release()
+    with _lock:
+        _debug = not _debug
 
 
 def empty():
@@ -127,9 +107,9 @@ def error(msg: str):
 
 
 def debug(msg: str):
-    global _init, _debug, _logger
+    global _init, _logger
 
-    if _init and _debug:
+    if _init:
         fi = cast(FrameInfo, inspect.stack()[1])
         val = str(f"{fi.function}:{msg}")
 
@@ -137,9 +117,9 @@ def debug(msg: str):
 
 
 def debug_exception():
-    global _init, _debug
+    global _init
 
-    if _init and _debug:
+    if _init:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         val = traceback.format_exception(exc_type, exc_value, exc_traceback)
 
@@ -177,7 +157,9 @@ def _print_special(color: str, header: str, msg: str):
 
 
 def _print(val):
-    global _wrapper, _lock
+    global _wrapper, _lock, _debug
+
+    is_dbg = False
 
     # we wrap this in a lock, to keep the output clean
     with _lock:
@@ -185,10 +167,13 @@ def _print(val):
         clean = utils.strip_ansi_str(val)
         if clean.startswith("[Debug]"):
             reporter.register_message(clean, "debug")
+
+            is_dbg = True
         else:
             reporter.register_message(clean, "normal")
 
-        print(_wrapper.fill(val))
+        if not is_dbg or (is_dbg and _debug):
+            print(_wrapper.fill(val))
 
 
 class _LogHandler(logging.StreamHandler):

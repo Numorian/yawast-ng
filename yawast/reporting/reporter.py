@@ -11,6 +11,7 @@ from yawast.reporting.enums import Vulnerabilities, Severity
 from yawast.reporting.issue import Issue
 from yawast.scanner.plugins.result import Result
 from yawast.shared import output
+from yawast.shared.exec_timer import ExecutionTimer
 
 _issues: Dict[str, Dict[Vulnerabilities, List[Issue]]] = {}
 _info: Dict[str, Any] = {}
@@ -50,13 +51,21 @@ def save_output():
     json_data = json.dumps(data, sort_keys=True, indent=4)
 
     try:
-        zf = ZipFile(f"{_output_file}.zip", "x", zipfile.ZIP_LZMA)
-        zf.writestr(f"{os.path.basename(_output_file)}", json_data)
+        zf = ZipFile(f"{_output_file}.zip", "x", zipfile.ZIP_BZIP2)
+
+        with ExecutionTimer() as tm:
+            zf.writestr(
+                f"{os.path.basename(_output_file)}",
+                json_data.encode("utf_8", "backslashreplace"),
+            )
+
         zf.close()
 
         orig = "{0:cM}".format(Size(len(json_data)))
         comp = "{0:cM}".format(Size(os.path.getsize(f"{_output_file}.zip")))
-        print(f"Saving {_output_file}.zip... (size reduced from {orig} to {comp})")
+        print(
+            f"Saving {_output_file}.zip... (size reduced from {orig} to {comp} in {tm.to_ms()}ms)"
+        )
     except Exception as error:
         print(f"Error writing output file: {error}")
 
@@ -134,9 +143,6 @@ def register(issue: Issue) -> None:
             return
 
     _issues[_domain][issue.vulnerability].append(issue)
-    output.debug(
-        f"Issue Registered: {issue.id} - {issue.vulnerability.name} - {issue.url}"
-    )
 
 
 def display(msg: str, issue: Issue) -> None:

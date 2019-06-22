@@ -18,6 +18,7 @@ from yawast import command_line
 from yawast._version import get_version
 from yawast.external.get_char import getchar
 from yawast.external.memory_size import Size
+from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
 from yawast.shared import output, network
 
@@ -34,10 +35,11 @@ def main():
     parser = command_line.build_parser()
     args, urls = parser.parse_known_args()
 
-    network.init(args.proxy, args.cookie)
-
     # setup the output system
     output.setup(args.debug, args.nocolors)
+    output.debug("Starting application...")
+
+    network.init(args.proxy, args.cookie)
 
     # if we made it this far, it means that the parsing worked.
     command_line.process_urls(urls)
@@ -133,16 +135,18 @@ def _shutdown():
         return
 
     _has_shutdown = True
+    output.debug("Shutting down...")
 
     elapsed = datetime.now() - _start_time
     mem_res = "{0:cM}".format(Size(_monitor.peak_mem_res))
 
     output.empty()
 
-    if reporter.get_output_file() != "":
-        reporter.save_output()
-
     output.norm(f"Completed (Elapsed: {str(elapsed)} - Peak Memory: {mem_res})")
+
+    if reporter.get_output_file() != "":
+        with Spinner():
+            reporter.save_output()
 
 
 def _get_locale() -> str:
@@ -341,6 +345,7 @@ class _ProcessMonitor:
 
         if mem.rss > self.peak_mem_res:
             self.peak_mem_res = mem.rss
+            output.debug(f"New high-memory threshold: {self.peak_mem_res}")
 
         return mem
 

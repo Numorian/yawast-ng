@@ -11,6 +11,9 @@ from typing import cast
 
 from colorama import init, Fore, Style
 
+from yawast.reporting import reporter
+from yawast.shared import utils
+
 _no_colors = False
 _init = False
 _wrapper = None
@@ -90,7 +93,7 @@ def toggle_debug():
 
 
 def empty():
-    _print("")
+    print("")
 
 
 def norm(msg: str):
@@ -177,9 +180,15 @@ def _print(val):
     global _wrapper, _lock
 
     # we wrap this in a lock, to keep the output clean
-    _lock.acquire()
-    print(_wrapper.fill(val))
-    _lock.release()
+    with _lock:
+        # register the message with the reporter
+        clean = utils.strip_ansi_str(val)
+        if clean.startswith("[Debug]"):
+            reporter.register_message(clean, "debug")
+        else:
+            reporter.register_message(clean, "normal")
+
+        print(_wrapper.fill(val))
 
 
 class _LogHandler(logging.StreamHandler):

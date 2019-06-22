@@ -9,6 +9,9 @@ from yawast.shared import output
 from yawast.shared.exec_timer import ExecutionTimer
 
 
+_ansi_strip = re.compile(r"\x1B\[[0-?]*[ -/]*[@-~]")
+
+
 def is_url(url):
     try:
         url = extract_url(url)
@@ -78,6 +81,12 @@ def is_printable_str(b: bytes) -> bool:
         output.debug(f"Decoded string as {good_decoder} in {timer.to_ms()}ms")
 
     return printable
+
+
+def strip_ansi_str(val: str) -> str:
+    global _ansi_strip
+
+    return _ansi_strip.sub("", val)
 
 
 def get_port(url: str) -> int:

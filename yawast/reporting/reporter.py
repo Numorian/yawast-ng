@@ -2,6 +2,7 @@ import json
 import os
 import time
 import zipfile
+from datetime import datetime
 from typing import Dict, List, cast, Optional, Any, Union
 from zipfile import ZipFile
 
@@ -96,6 +97,18 @@ def register_info(key: str, value: Any):
     global _info
 
     _info[key] = value
+
+
+def register_message(value: str, kind: str):
+    global _info
+
+    if "messages" not in _info:
+        _info["messages"] = {}
+
+    if kind not in _info["messages"]:
+        _info["messages"][kind] = []
+
+    _info["messages"][kind].append(f"[{datetime.utcnow()} UTC]: {value}")
 
 
 def register(issue: Issue) -> None:

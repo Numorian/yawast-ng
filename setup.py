@@ -64,6 +64,7 @@ setup(
         "pipenv",
     ],
     include_package_data=True,
+    package_data={"yawast": ["resources/*"]},
     zip_safe=False,
     python_requires=">=3.6",
     keywords="security tls ssl dns http scan vulnerability",

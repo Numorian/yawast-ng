@@ -1,4 +1,0 @@
-Active connections: 24
-server accepts handled requests
- 6347476 6347476 11266177
-Reading: 0 Writing: 1 Waiting: 23

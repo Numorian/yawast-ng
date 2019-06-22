@@ -1,4 +1,4 @@
-FROM ruby:2.4-jessie
+FROM python:3.7-stretch
 
 RUN apt-get update && apt-get install -y \
 	apt-transport-https \
@@ -43,6 +43,6 @@ ENV LANG      C.UTF-8
 ENV LANGUAGE  C.UTF-8
 ENV LC_ALL    C.UTF-8
 
-RUN bundle
+RUN pip install -r requirements.txt
 
 ENTRYPOINT ["/data/bin/yawast"]

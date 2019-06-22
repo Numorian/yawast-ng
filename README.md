@@ -1,4 +1,4 @@
-## YAWAST [![Build Status](https://travis-ci.org/adamcaudill/yawast.svg?branch=master)](https://travis-ci.org/adamcaudill/yawast) [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast/badges/gpa.svg)](https://codeclimate.com/github/adamcaudill/yawast) [![Test Coverage](https://codeclimate.com/github/adamcaudill/yawast/badges/coverage.svg)](https://codeclimate.com/github/adamcaudill/yawast/coverage) [![Gem Version](https://badge.fury.io/rb/yawast.svg)](https://badge.fury.io/rb/yawast) [![Docker Build](https://img.shields.io/docker/automated/adamcaudill/yawast.svg)](https://hub.docker.com/r/adamcaudill/yawast/)
+## YAWAST [![Build Status](https://travis-ci.org/adamcaudill/yawast.svg?branch=master)](https://travis-ci.org/adamcaudill/yawast) [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast/badges/gpa.svg)](https://codeclimate.com/github/adamcaudill/yawast) [![PyPI version](https://badge.fury.io/py/yawast.svg)](https://badge.fury.io/py/yawast) ![Docker Pulls](https://img.shields.io/docker/pulls/adamcaudill/yawast.svg) ![Twitter Follow](https://img.shields.io/twitter/follow/adamcaudill.svg?style=social)
 
 **The YAWAST Antecedent Web Application Security Toolkit**
 
@@ -16,11 +16,11 @@ Please see [the wiki](https://github.com/adamcaudill/yawast/wiki) for full docum
 
 ### Installing
 
-YAWAST is packaged as a Ruby Gem & Docker container to make installing it as easy as possible. Details are available [on the wiki](https://github.com/adamcaudill/yawast/wiki/Installation).
+YAWAST is packaged as a Python [package](https://pypi.org/project/yawast/) & Docker container to make installing it as easy as possible. Details are available [on the wiki](https://github.com/adamcaudill/yawast/wiki/Installation).
 
 The simplest options to install are:
 
-As a Gem: `gem install yawast`
+As a Gem: `pip3 install yawast`
 
 Via Docker: `docker pull adamcaudill/yawast`
 
@@ -83,10 +83,6 @@ The following tests are performed:
 * *(WordPress)* Version detection
 * *(WordPress)* WP-JSON User Enumeration
 
-CMS Detection:
-
-* Generic (Generator meta tag) *[Real detection coming as soon as I get around to it...]*
-
 SSL Information:
 
 * Certificate details
@@ -135,5 +131,5 @@ Sample output for a [scan](https://github.com/adamcaudill/yawast/wiki/Sample-Out
 
 ### Special Thanks
 
-* [AppSec Consulting](https://www.appsecconsulting.com/) - Generously providing time to improve this tool.
+* [BSI AppSec](https://www.appsecconsulting.com/) - Generously providing time to improve this tool.
 * [SecLists](https://github.com/danielmiessler/SecLists) - Various lists are based on the resources collected by this project.

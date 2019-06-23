@@ -1,7 +1,7 @@
 import base64
 import typing
 
-from typing import List
+from typing import List, Dict, Any
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -9,7 +9,7 @@ from cryptography.x509.oid import NameOID
 
 from yawast.shared import network
 
-_ct_log_info = {}
+_ct_log_info: Dict[str, str] = {}
 
 
 def format_extensions(cert: x509.Certificate):
@@ -117,6 +117,8 @@ def get_alt_names(cert: x509.Certificate) -> List[str]:
 
             return ext.value.get_values_for_type(x509.DNSName)
 
+    return []
+
 
 def get_must_staple(cert: x509.Certificate):
     ret = False
@@ -209,7 +211,7 @@ def get_ct_log_name(log_id: str):
 
 
 def _get_ct_log_data():
-    ct_log_info = {}
+    ct_log_info: Dict[str, str] = {}
 
     data, _ = network.http_json(
         "https://www.gstatic.com/ct/log_list/all_logs_list.json"

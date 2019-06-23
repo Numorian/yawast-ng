@@ -18,7 +18,7 @@ def check_response(
     if res is None:
         return []
 
-    results = []
+    results: List[Result] = []
 
     raw_full = network.http_build_raw_response(res)
 
@@ -47,7 +47,7 @@ def check_response(
 
 
 def _check_charset(url: str, res: Response, raw: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     # if the body is empty, we really don't care about this
     if len(res.content) == 0:

@@ -1,14 +1,11 @@
 import re
-from typing import Union, List, cast
+from typing import Union, List, cast, Any
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.result import Result
 from requests import Response
 
 from yawast.shared import network, output
-
-_data = []
-_reports = []
 
 
 class _MatchRule:
@@ -22,6 +19,10 @@ class _MatchRule:
         self.match_group = fields[1]
         self.type = fields[2]
         self.confidence = fields[4]
+
+
+_data: List[_MatchRule] = []
+_reports: List[str] = []
 
 
 def check_response(

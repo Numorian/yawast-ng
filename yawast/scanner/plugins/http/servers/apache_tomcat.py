@@ -1,7 +1,7 @@
 import base64
 import re
 import secrets
-from typing import List, cast, Union, Optional
+from typing import List, cast, Union, Optional, Any
 from urllib.parse import urljoin
 
 from packaging import version
@@ -14,7 +14,7 @@ from yawast.shared import network
 
 
 def check_all(url: str, links: List[str]) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     results += check_version(url)
     results += check_manager(url)
@@ -34,7 +34,7 @@ def get_version(url: str, res: Response, method: Optional[str] = None) -> List[R
     :return:
     """
 
-    results = []
+    results: List[Result] = []
 
     body = res.text
     ver = _get_version_from_body(body, res.status_code)
@@ -70,7 +70,7 @@ def check_version(url: str) -> List[Result]:
     :return:
     """
 
-    results = []
+    results: List[Result] = []
 
     results += _check_version_404(url)
     results += _check_version_verb(url)
@@ -200,8 +200,8 @@ def check_cve_2017_12615(url: str) -> List[Result]:
 
 
 def check_cve_2019_0232(links: List[str]) -> List[Result]:
-    results = []
-    targets = []
+    results: List[Result] = []
+    targets: List[str] = []
 
     for link in links:
         if "cgi-bin" in link:
@@ -234,7 +234,7 @@ def check_cve_2019_0232(links: List[str]) -> List[Result]:
 
 
 def check_struts_sample(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     # make sure we have real 404s
     file_good, _ = network.check_404_response(url)
@@ -276,7 +276,8 @@ def check_struts_sample(url: str) -> List[Result]:
 
 
 def _check_version_404(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
+
     rnd = secrets.token_hex(12)
 
     target = urljoin(url, f"{rnd}.jsp")
@@ -290,7 +291,7 @@ def _check_version_404(url: str) -> List[Result]:
 
 
 def _check_version_verb(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     res = network.http_custom("XYZ", url)
 
@@ -301,7 +302,7 @@ def _check_version_verb(url: str) -> List[Result]:
 
 
 def _check_version_post(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     res = network.http_custom("POST", url)
 
@@ -326,7 +327,7 @@ def _get_version_from_body(body, status_code) -> Union[str, None]:
 
 
 def _check_version_outdated(ver: str, url: str, body: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     # parse the version, and get the latest version - see if the server is up to date
     ver = cast(version.Version, version.parse(ver))

@@ -1,5 +1,5 @@
 from argparse import Namespace
-from typing import List
+from typing import List, Any, Union
 
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
@@ -16,6 +16,7 @@ from yawast.scanner.plugins.http import (
 )
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.servers import apache_httpd, apache_tomcat, nginx, iis
+from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
 
 
@@ -54,7 +55,7 @@ def scan(args: Namespace, url: str, domain: str):
 
     output.norm("Performing vulnerability scan (this will take a while)...")
 
-    links = []
+    links: List[str] = []
     with Spinner():
         try:
             links, res = spider.spider(url)
@@ -119,8 +120,12 @@ def reset():
 
 
 def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
-    new_files = []
+    new_files: List[str] = []
     file_good, path_good = network.check_404_response(url)
+
+    # these are here for data typing
+    results: Union[List[Result], None]
+    links: Union[List[str], None]
 
     if not file_good:
         reporter.display(

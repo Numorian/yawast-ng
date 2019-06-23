@@ -10,7 +10,7 @@ from yawast.shared import network
 
 
 def get_header_issues(headers: Dict, raw: str, url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     if "X-Powered-By" in headers:
         results.append(
@@ -166,7 +166,7 @@ def get_header_issues(headers: Dict, raw: str, url: str) -> List[Result]:
 def get_server_banner_issues(
     server: str, raw: str, url: str, headers: Dict
 ) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     results += apache_httpd.check_banner(server, raw, url)
     results += nginx.check_banner(server, raw, url)
@@ -177,7 +177,7 @@ def get_server_banner_issues(
 
 
 def check_propfind(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     res = network.http_custom("PROPFIND", url)
     body = res.text
@@ -202,7 +202,7 @@ def check_propfind(url: str) -> List[Result]:
 
 
 def check_trace(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     res = network.http_custom("TRACE", url)
     body = res.text
@@ -226,7 +226,7 @@ def check_trace(url: str) -> List[Result]:
 
 
 def check_options(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     res = network.http_options(url)
 
@@ -271,7 +271,7 @@ def get_cookie_issues(res: Response, raw: str, url: str) -> List[Result]:
 
 
 def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
     parsed = urlparse(url)
 
     for cookie in cookies:

@@ -39,6 +39,8 @@ def init(output_file: Union[str, None] = None) -> None:
 def save_output():
     global _issues, _info, _output_file
 
+    print("Saving...")
+
     vulns = {}
     for vuln in Vulnerabilities:
         vulns[vuln.name] = {"severity": vuln.severity, "description": vuln.description}
@@ -64,7 +66,7 @@ def save_output():
         orig = "{0:cM}".format(Size(len(json_data)))
         comp = "{0:cM}".format(Size(os.path.getsize(f"{_output_file}.zip")))
         print(
-            f"Saving {_output_file}.zip... (size reduced from {orig} to {comp} in {tm.to_ms()}ms)"
+            f"Saved {_output_file}.zip (size reduced from {orig} to {comp} in {tm.to_ms()}ms)"
         )
     except Exception as error:
         print(f"Error writing output file: {error}")

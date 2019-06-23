@@ -1,4 +1,4 @@
-from typing import List, cast, Dict
+from typing import List, cast, Dict, Any
 from packaging import version
 
 from yawast.scanner.plugins.http import version_checker, response_scanner
@@ -8,7 +8,7 @@ from yawast.shared import network, output
 
 
 def check_all(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     results += check_asp_net_debug(url)
 
@@ -16,10 +16,10 @@ def check_all(url: str) -> List[Result]:
 
 
 def check_version(banner: str, raw: str, url: str, headers: Dict) -> List[Result]:
-    if not banner.startswith("Microsoft-IIS/"):
-        return []
+    results: List[Result] = []
 
-    results = []
+    if not banner.startswith("Microsoft-IIS/"):
+        return results
 
     # we've got an IIS version
     results.append(
@@ -96,7 +96,7 @@ def check_version(banner: str, raw: str, url: str, headers: Dict) -> List[Result
 
 
 def check_asp_net_debug(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     res = network.http_custom(
         "DEBUG", url, additional_headers={"Command": "stop-debug", "Accept": "*/*"}

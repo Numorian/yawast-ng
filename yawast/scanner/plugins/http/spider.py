@@ -1,7 +1,7 @@
 import time
 from multiprocessing import Manager, Lock
 from multiprocessing.dummy import Pool
-from typing import List, Tuple
+from typing import List, Tuple, Any
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
@@ -11,8 +11,8 @@ from yawast.scanner.plugins.http import response_scanner, http_utils
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
 
-_links = []
-_insecure = []
+_links: List[str] = []
+_insecure: List[str] = []
 _lock = Lock()
 _tasks = []
 
@@ -20,7 +20,7 @@ _tasks = []
 def spider(url) -> Tuple[List[str], List[Result]]:
     global _links, _insecure, _tasks, _lock
 
-    results = []
+    results: List[Result] = []
 
     # create processing pool
     pool = Pool()
@@ -75,7 +75,7 @@ def spider(url) -> Tuple[List[str], List[Result]]:
 def _get_links(base_url: str, urls: List[str], queue, pool):
     global _links, _insecure, _tasks, _lock
 
-    results = []
+    results: List[Result] = []
 
     for url in urls:
         try:

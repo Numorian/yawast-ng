@@ -1,11 +1,13 @@
-from yawast.shared import network, utils, output
+from typing import Tuple, Dict, Any, List
+
+from yawast.shared import network, output
 
 API_SERVER = "https://api.ssllabs.com"
 
 
-def get_info_message():
+def get_info_message() -> List[str]:
     path = "/api/v3/info"
-    messages = []
+    messages: List[str] = []
 
     try:
         body, code = network.http_json(API_SERVER + path)
@@ -20,7 +22,7 @@ def get_info_message():
     return messages
 
 
-def start_scan(domain):
+def start_scan(domain: str) -> Tuple[str, Dict[str, Any]]:
     resp = _analyze(domain, True)
     status = resp["status"]
 
@@ -29,7 +31,7 @@ def start_scan(domain):
     return status, resp
 
 
-def check_scan(domain):
+def check_scan(domain: str) -> Tuple[str, Dict[str, Any]]:
     resp = _analyze(domain)
     status = resp["status"]
 
@@ -39,7 +41,7 @@ def check_scan(domain):
     return status, resp
 
 
-def _analyze(domain, new=False):
+def _analyze(domain: str, new=False) -> Dict[str, Any]:
     new_path = "host={target}&publish=off&startNew=on&all=done&ignoreMismatch=on".format(
         target=domain
     )

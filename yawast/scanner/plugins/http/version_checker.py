@@ -1,8 +1,8 @@
 from yawast.shared import network, output
 from packaging import version
-from typing import Union
+from typing import Union, Dict
 
-_versions = {}
+_versions: Union[Dict[str, Dict[str, str]], None] = {}
 
 
 def get_latest_version(
@@ -37,7 +37,7 @@ def get_latest_version(
 
 def _get_version_data() -> None:
     global _versions
-    data = None
+    data: Union[Dict[str, Dict[str, Dict[str, str]]], None] = None
     data_url = "https://raw.githubusercontent.com/adamcaudill/current_versions/master/current_versions.json"
 
     try:
@@ -46,7 +46,7 @@ def _get_version_data() -> None:
         output.debug(f"Failed to get version data: {error}")
         output.debug_exception()
 
-    if "software" in data:
+    if data is not None and "software" in data:
         _versions = data["software"]
     else:
         _versions = None

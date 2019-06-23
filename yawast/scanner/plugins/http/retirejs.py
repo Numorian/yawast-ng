@@ -1,5 +1,5 @@
 import json
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Any, Union
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
@@ -9,15 +9,15 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.result import Result
 from yawast.shared import output, network, utils
 
-_data = {}
-_checked = []
-_reports = []
+_data: Union[Dict[Any, Any], None] = {}
+_checked: List[str] = []
+_reports: List[str] = []
 
 
 def get_results(soup: BeautifulSoup, url: str, raw: str) -> List[Result]:
     global _reports
 
-    results = []
+    results: List[Result] = []
 
     parsed = urlparse(url)
     domain = utils.get_domain(parsed.netloc)
@@ -63,7 +63,7 @@ def _get_retirejs_results(
 ) -> Tuple[List[Tuple[str, Dict]], List[Result]]:
     global _data, _checked
     issues = []
-    results = []
+    results: List[Result] = []
 
     if _data is not None and len(_data) == 0:
         _get_data()
@@ -106,14 +106,15 @@ def _get_retirejs_results(
 
 def _get_data() -> None:
     global _data
-    data = None
+
+    data: Union[Dict[Any, Any], None] = None
     data_url = "https://raw.githubusercontent.com/RetireJS/retire.js/master/repository/jsrepository.json"
 
     try:
         raw = network.http_get(data_url).content
-        raw = raw.decode("utf-8").replace("§§version§§", "[0-9][0-9.a-z_\\\\-]+")
+        raw_js = raw.decode("utf-8").replace("§§version§§", "[0-9][0-9.a-z_\\\\-]+")
 
-        data = json.loads(raw)
+        data = json.loads(raw_js)
 
     except Exception as error:
         output.debug(f"Failed to get version data: {error}")

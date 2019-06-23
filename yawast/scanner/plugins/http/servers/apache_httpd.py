@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import List, cast, Any
 from urllib.parse import urljoin
 
 from packaging import version
@@ -82,7 +82,7 @@ def check_banner(banner: str, raw: str, url: str) -> List[Result]:
 
 
 def check_all(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     results += check_server_status(url)
     results += check_server_info(url)

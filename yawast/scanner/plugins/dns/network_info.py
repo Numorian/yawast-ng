@@ -1,8 +1,10 @@
+from typing import Dict, Any
+
 from yawast.shared import network, output
 
 
 _failure = False
-_cache = {}
+_cache: Dict[Any, Any] = {}
 
 
 def network_info(ip):

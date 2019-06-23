@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import List, cast, Any
 from urllib.parse import urljoin
 
 from packaging import version
@@ -10,7 +10,7 @@ from yawast.shared import network
 
 
 def check_all(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
 
     results += check_status(url)
 
@@ -21,7 +21,7 @@ def check_banner(banner: str, raw: str, url: str) -> List[Result]:
     if not banner.startswith("nginx"):
         return []
 
-    results = []
+    results: List[Result] = []
 
     if "/" in banner:
         # we've got a Nginx version
@@ -62,7 +62,7 @@ def check_banner(banner: str, raw: str, url: str) -> List[Result]:
 
 
 def check_status(url: str) -> List[Result]:
-    results = []
+    results: List[Result] = []
     search = ["status/", "stats/"]
 
     for path in search:

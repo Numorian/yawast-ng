@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Any
 from urllib.parse import urljoin
 
 from yawast.reporting.enums import Vulnerabilities
@@ -34,8 +34,8 @@ def check_special_paths(url: str) -> Tuple[List[str], List[Result]]:
 
 
 def _check_url(url: str, targets: List[str]) -> Tuple[List[str], List[Result]]:
-    files = []
-    results = []
+    files: List[str] = []
+    results: List[Result] = []
 
     for target in targets:
         target_url = urljoin(url, target)

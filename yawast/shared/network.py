@@ -7,7 +7,7 @@ from urllib.parse import urlunparse
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
-from requests.models import Response, Request
+from requests.models import Response, Request, PreparedRequest
 from urllib3 import Retry
 
 from yawast._version import get_version
@@ -221,7 +221,7 @@ def http_build_raw_response(res: Response) -> str:
     return "\r\n".join(lines)
 
 
-def http_build_raw_request(req: Request) -> str:
+def http_build_raw_request(req: Union[Request, PreparedRequest]) -> str:
     headers = "\n".join(f"{k}: {v}" for k, v in req.headers.items())
 
     body = ""
@@ -231,7 +231,7 @@ def http_build_raw_request(req: Request) -> str:
     return f"{req.method} {req.url}\n{headers}\n\n{body}"
 
 
-def check_404_response(url: str) -> [bool, bool]:
+def check_404_response(url: str) -> Tuple[bool, bool]:
     rnd = secrets.token_hex(12)
     file_url = urljoin(url, f"{rnd}.html")
     path_url = urljoin(url, f"{rnd}/")

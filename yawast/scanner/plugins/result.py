@@ -6,6 +6,11 @@ from yawast.shared import output
 
 
 class Result:
+    evidence: Union[str, List[str]]
+    url: str
+    vulnerability: Vulnerabilities
+    message: str
+
     def __init__(
         self,
         msg: str,
@@ -22,7 +27,7 @@ class Result:
 
             # if the evidence is a string, lets tack on the message as an extra element
             if type(evidence) is str:
-                self.evidence = [evidence, msg]
+                self.evidence = [str(evidence), msg]
         else:
             # fall back to the message if we don't have evidence - better than nothing
             self.evidence = msg

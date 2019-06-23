@@ -170,7 +170,7 @@ def _get_locale() -> str:
         except Exception as err:
             print(f"Unable to set locale: {str(err)}")
 
-            lcl = None
+            return "(Unknown locale)"
 
     if lcl is not None:
         loc = f"{lcl[0]}.{lcl[1]}"

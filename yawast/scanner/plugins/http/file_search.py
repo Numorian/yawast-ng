@@ -2,7 +2,7 @@ import os
 import time
 from multiprocessing import Manager, active_children
 from multiprocessing.dummy import Pool
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Any
 from urllib.parse import urljoin
 
 import pkg_resources
@@ -11,7 +11,7 @@ from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
 
-_files = []
+_files: List[str] = []
 _depth = 0
 
 
@@ -50,7 +50,7 @@ def reset():
 
 def _find_files(
     url: str,
-    path: Optional[str] = None,
+    path: str,
     follow_redirections: Optional[bool] = False,
     is_dir: Optional[bool] = False,
     recursive: Optional[bool] = False,
@@ -60,13 +60,12 @@ def _find_files(
     # increment the depth counter, if this is greater than 1, this is a recursive call
     _depth += 1
 
-    files = []
-    results = []
+    files: List[str] = []
+    results: List[Result] = []
     workers = []
 
     # create processing pool
-    # given the amount of waiting we do, go for double the CPU count
-    pool = Pool(os.cpu_count() * 2)
+    pool = Pool(os.cpu_count())
     mgr = Manager()
     queue = mgr.Queue()
 
@@ -146,8 +145,8 @@ def _find_files(
 
 
 def _check_url(urls: List[str], queue, follow_redirections, recursive) -> None:
-    files = []
-    results = []
+    files: List[str] = []
+    results: List[Result] = []
 
     for url in urls:
         try:

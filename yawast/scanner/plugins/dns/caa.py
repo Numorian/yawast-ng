@@ -1,20 +1,23 @@
-from dns import resolver, exception
-from yawast.shared import output
 import copy
+from typing import Union, Dict, List, Tuple
+
+from dns import resolver, exception
+from dns.resolver import Resolver
+
+from yawast.shared import output
+
+_checked: Dict[str, bool] = {}
+_results: List[List[Union[str, List[str]]]] = []
 
 
-_checked = {}
-_results = []
-
-
-def get_caa(domain):
+def get_caa(domain: str) -> List[List[Union[str, List[str]]]]:
     global _checked, _results
 
     # force DNS resolver to something that works
     # this is done to ensure that ISP resolvers don't get in the way
     # at some point, should probably do something else, but works for now
     # (Cloudflare & Google)
-    resv = resolver.Resolver()
+    resv: Resolver = resolver.Resolver()
     resv.nameservers = ["1.1.1.1", "8.8.8.8"]
 
     _chase_domain(domain, resv)
@@ -27,9 +30,9 @@ def get_caa(domain):
     return ret
 
 
-def _chase_domain(domain, resv):
+def _chase_domain(domain: str, resv: Resolver):
     global _checked, _results
-    curr = domain
+    curr: Union[str, None] = domain
 
     while curr is not None:
         # check to see if we've already ran into this one
@@ -55,8 +58,8 @@ def _chase_domain(domain, resv):
             curr = None
 
 
-def _get_caa_records(domain, resv):
-    records = []
+def _get_caa_records(domain: str, resv: Resolver) -> List[str]:
+    records: List[str] = []
 
     try:
         answers = resv.query(domain, "CAA", lifetime=3)
@@ -72,7 +75,7 @@ def _get_caa_records(domain, resv):
     return records
 
 
-def _get_cname(domain, resv):
+def _get_cname(domain: str, resv: Resolver) -> Union[str, None]:
     name = None
 
     try:

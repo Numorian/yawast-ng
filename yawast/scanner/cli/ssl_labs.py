@@ -1,6 +1,7 @@
+from argparse import Namespace
 from time import sleep
 import sys
-from typing import Optional
+from typing import Optional, List, Any
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -13,7 +14,7 @@ from yawast.scanner.plugins.ssl_labs import api
 from yawast.shared import output
 
 
-def scan(url, args, domain):
+def scan(args: Namespace, url: str, domain: str):
     tty = sys.stdout.isatty()
 
     output.norm("Beginning SSL Labs scan (this could take a minute or two)")
@@ -28,7 +29,7 @@ def scan(url, args, domain):
     status = ""
 
     error_count = 0
-    completed = []
+    completed: List[str] = []
     body = None
 
     while status != "READY" and status != "ERROR" and status != "DNS":

@@ -42,11 +42,19 @@ def find_subdomains(domain, path=None):
     return records
 
 
-def _get_records_for_domain(host, queue):
+def _get_records_for_domain(host: str, queue):
     records = []
 
+    res = resolver.Resolver()
+    res.nameservers.insert(0, "8.8.8.8")
+    res.nameservers.insert(0, "1.1.1.1")
+    res.search = []
+
+    if not host.endswith("."):
+        host = host + "."
+
     try:
-        answers = resolver.query(host, "CNAME", lifetime=3)
+        answers = res.query(host, "CNAME", lifetime=3, raise_on_no_answer=False)
 
         for data in answers:
             records.append(["CNAME", host, str(data.target)])
@@ -57,7 +65,7 @@ def _get_records_for_domain(host, queue):
         pass
 
     try:
-        answers = resolver.query(host, "A", lifetime=3)
+        answers = res.query(host, "A", lifetime=3, raise_on_no_answer=False)
 
         for data in answers:
             records.append(["A", host, str(data)])
@@ -68,7 +76,7 @@ def _get_records_for_domain(host, queue):
         pass
 
     try:
-        answers = resolver.query(host, "AAAA", lifetime=3)
+        answers = res.query(host, "AAAA", lifetime=3, raise_on_no_answer=False)
 
         for data in answers:
             records.append(["AAAA", host, str(data)])

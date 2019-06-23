@@ -3,6 +3,7 @@ import socket
 
 from publicsuffixlist import PublicSuffixList
 
+from yawast.external.spinner import Spinner
 from yawast.reporting import reporter, issue
 from yawast.reporting.enums import Vulnerabilities, Severity
 from yawast.scanner.plugins.dns import basic
@@ -94,7 +95,9 @@ def scan(args, url, domain):
         output.norm("Searching for SRV records, this will take a minute...")
         output.empty()
 
-        srv_records = srv.find_srv_records(root_domain)
+        with Spinner():
+            srv_records = srv.find_srv_records(root_domain)
+
         for rec in srv_records:
             server_ip = socket.gethostbyname(rec[1])
             ni = network_info.network_info(str(server_ip))
@@ -102,13 +105,15 @@ def scan(args, url, domain):
             info = "%s: %s:%s - %s (%s)" % (rec[0], rec[1], rec[2], server_ip, ni)
             output.norm("\tSRV: %s" % info)
 
-        output.empty()
+            output.empty()
 
     if args.subdomains:
         output.norm("Searching for sub-domains, this will take a few minutes...")
         output.empty()
 
-        sds = subdomains.find_subdomains(root_domain)
+        with Spinner():
+            sds = subdomains.find_subdomains(root_domain)
+
         for rec in sds:
             info = ""
 

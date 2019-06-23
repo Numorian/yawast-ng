@@ -105,21 +105,23 @@ def is_registered(vuln: Vulnerabilities) -> bool:
 
 
 def register_info(key: str, value: Any):
-    global _info
+    global _info, _output_file
 
-    _info[key] = value
+    if _output_file is not None and len(_output_file) > 0:
+        _info[key] = value
 
 
 def register_message(value: str, kind: str):
-    global _info
+    global _info, _output_file
 
-    if "messages" not in _info:
-        _info["messages"] = {}
+    if _output_file is not None and len(_output_file) > 0:
+        if "messages" not in _info:
+            _info["messages"] = {}
 
-    if kind not in _info["messages"]:
-        _info["messages"][kind] = []
+        if kind not in _info["messages"]:
+            _info["messages"][kind] = []
 
-    _info["messages"][kind].append(f"[{datetime.utcnow()} UTC]: {value}")
+        _info["messages"][kind].append(f"[{datetime.utcnow()} UTC]: {value}")
 
 
 def register(issue: Issue) -> None:

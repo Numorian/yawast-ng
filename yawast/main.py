@@ -80,12 +80,16 @@ def print_header():
         # in this case, we don't have a real max, so go with current
         cpu_max = int(cpu_freq.current)
 
-    print(r"__   _____  _    _  ___   _____ _____ ")
-    print(r"\ \ / / _ \| |  | |/ _ \ /  ___|_   _|")
-    print(r" \ V / /_\ \ |  | / /_\ \\ `--.  | |  ")
-    print(r"  \ /|  _  | |/\| |  _  | `--. \ | |  ")
-    print(r"  | || | | \  /\  / | | |/\__/ / | |  ")
-    print(r"  \_/\_| |_/\/  \/\_| |_/\____/  \_/  ")
+    print(r" .-.          .-                           ")
+    print(r"  \ \        / /                       _   ")
+    print(r"   \ \      / /                       | |  ")
+    print(r"    \ \    / /  __ ___      ____ _ ___| |_ ")
+    print(r"     \ \  / /  / _` \ \ /\ / / _` / __| __|")
+    print(r"      \ `  /  | (_| |\ V  V / (_| \__ \ |_ ")
+    print(r"       \  /    \__,_| \_/\_/ \__,_|___/\__|")
+    print(r"       / /                                 ")
+    print(r"   |`-' /     ...where a pentest starts    ")
+    print(r"    '..'                                   ")
     print()
     print(
         f"YAWAST v{get_version()} - The YAWAST Antecedent Web Application Security Toolkit"

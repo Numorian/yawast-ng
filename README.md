@@ -1,5 +1,7 @@
 ## YAWAST [![Build Status](https://travis-ci.org/adamcaudill/yawast.svg?branch=master)](https://travis-ci.org/adamcaudill/yawast) [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast/badges/gpa.svg)](https://codeclimate.com/github/adamcaudill/yawast) [![PyPI version](https://badge.fury.io/py/yawast.svg)](https://badge.fury.io/py/yawast) [![Docker Pulls](https://img.shields.io/docker/pulls/adamcaudill/yawast.svg)](https://hub.docker.com/r/adamcaudill/yawast/) [![Twitter Follow](https://img.shields.io/twitter/follow/adamcaudill.svg?style=social)](https://twitter.com/intent/user?screen_name=adamcaudill)
 
+![YAWAST](yawast_logo_v1.svg)
+
 **The YAWAST Antecedent Web Application Security Toolkit**
 
 YAWAST is an application meant to simplify initial analysis and information gathering for penetration testers and security auditors. It performs basic checks in these categories:

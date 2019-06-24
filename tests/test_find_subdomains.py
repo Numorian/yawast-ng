@@ -12,4 +12,4 @@ class TestFindSubdomains(TestCase):
 
         self.assertTrue(len(recs) > 0)
 
-        self.assertEqual("www.adamcaudill.com", recs[0][1])
+        self.assertEqual("www.adamcaudill.com.", recs[0][1])

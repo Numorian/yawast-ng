@@ -1,5 +1,6 @@
 import argparse
 import sys
+from typing import List
 
 from yawast.shared import utils
 from yawast.commands import scan, dns, ssl
@@ -108,21 +109,27 @@ def build_parser():
     return parser
 
 
-def process_urls(urls):
+def process_urls(urls) -> List[str]:
+    ret = []
+
     # now we need to make we have at least one arg that could be a URL.
     if len(urls) == 0:
         utils.exit_message("YAWAST Error: You must specify at least one URL.")
 
     # Next, we need to make sure we have something that looks like URLs.
     for val in enumerate(urls):
-        if not str(val[1]).startswith("--"):
+        if not str(val[1]).startswith("-"):
             if not utils.is_url(val[1]):
                 utils.exit_message("YAWAST Error: Invalid URL Specified: '%s" % val[1])
+            else:
+                ret.append(val[1])
         else:
             print(
                 "YAWAST Error: Invalid parameter: '%s' - Ignored." % val[1],
                 file=sys.stderr,
             )
+
+    return ret
 
 
 def command_scan(args, urls):

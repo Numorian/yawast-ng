@@ -42,7 +42,7 @@ def main():
     network.init(args.proxy, args.cookie)
 
     # if we made it this far, it means that the parsing worked.
-    command_line.process_urls(urls)
+    urls = command_line.process_urls(urls)
 
     # we are good to keep going
     print_header()

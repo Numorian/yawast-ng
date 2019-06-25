@@ -98,7 +98,10 @@ def scan(args: Namespace, url: str, domain: str):
     output.empty()
     output.empty()
 
+    reporter.register_data("ssl_labs_results", body)
+
     # HACK: this needs to be refactored, once we have a better way to do it. This is awful.
+    # (from a separation of duties perspective. this should happen in the plugin)
     if not body.get("endpoints") is None:
         for ep in body["endpoints"]:
             output.norm(f'IP: {ep["ipAddress"]} - Grade: {ep["grade"]}')

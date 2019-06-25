@@ -15,6 +15,7 @@ from yawast.shared.exec_timer import ExecutionTimer
 
 _issues: Dict[str, Dict[Vulnerabilities, List[Issue]]] = {}
 _info: Dict[str, Any] = {}
+_data: Dict[str, Any] = {}
 _domain: str = ""
 _output_file: str = ""
 
@@ -37,7 +38,7 @@ def init(output_file: Union[str, None] = None) -> None:
 
 
 def save_output():
-    global _issues, _info, _output_file
+    global _issues, _info, _output_file, _data
 
     print("Saving...")
 
@@ -46,7 +47,8 @@ def save_output():
         vulns[vuln.name] = {"severity": vuln.severity, "description": vuln.description}
 
     data = {
-        "info": _convert_keys(_info),
+        "_info": _convert_keys(_info),
+        "data": _convert_keys(_data),
         "issues": _convert_keys(_issues),
         "vulnerabilities": vulns,
     }
@@ -109,6 +111,13 @@ def register_info(key: str, value: Any):
 
     if _output_file is not None and len(_output_file) > 0:
         _info[key] = value
+
+
+def register_data(key: str, value: Any):
+    global _data, _output_file
+
+    if _output_file is not None and len(_output_file) > 0:
+        _data[key] = value
 
 
 def register_message(value: str, kind: str):

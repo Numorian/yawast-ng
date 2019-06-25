@@ -91,9 +91,7 @@ def print_header():
     print(r"   |`-' /     ...where a pentest starts    ")
     print(r"    '..'                                   ")
     print()
-    print(
-        f"YAWAST v{get_version()} - The YAWAST Antecedent Web Application Security Toolkit"
-    )
+    print(f"The YAWAST Antecedent Web Application Security Toolkit (v{get_version()})")
     print(" Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com>")
     print(" Support & Documentation: https://github.com/adamcaudill/yawast")
     print(

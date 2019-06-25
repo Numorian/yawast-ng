@@ -9,4 +9,4 @@ class TestPrintHeader(TestCase):
         with utils.capture_sys_output() as (stdout, stderr):
             main.print_header()
 
-        self.assertIn("YAWAST v%s" % get_version(), stdout.getvalue())
+        self.assertIn("(v%s)" % get_version(), stdout.getvalue())

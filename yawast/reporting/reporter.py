@@ -44,7 +44,11 @@ def save_output():
 
     vulns = {}
     for vuln in Vulnerabilities:
-        vulns[vuln.name] = {"severity": vuln.severity, "description": vuln.description}
+        vulns[vuln.name] = {
+            "severity": vuln.severity,
+            "description": vuln.description,
+            "id": vuln.id,
+        }
 
     data = {
         "_info": _convert_keys(_info),

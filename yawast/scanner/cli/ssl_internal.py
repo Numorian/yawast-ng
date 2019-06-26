@@ -137,7 +137,7 @@ def scan(args: Namespace, url: str, domain: str):
             if compression.compression_name is not None:
                 reporter.display(
                     f"\tCompression: {compression.compression_name}",
-                    issue.Issue(Vulnerabilities.TLS_COMPRESSION_ENABLED, url),
+                    issue.Issue(Vulnerabilities.TLS_COMPRESSION_ENABLED, url, {}),
                 )
             else:
                 output.norm("\tCompression: None")
@@ -155,7 +155,7 @@ def scan(args: Namespace, url: str, domain: str):
             else:
                 reporter.display(
                     "\tDowngrade Prevention: No",
-                    issue.Issue(Vulnerabilities.TLS_FALLBACK_SCSV_MISSING, url),
+                    issue.Issue(Vulnerabilities.TLS_FALLBACK_SCSV_MISSING, url, {}),
                 )
 
             # check Heartbleed
@@ -167,7 +167,7 @@ def scan(args: Namespace, url: str, domain: str):
             if heartbleed.is_vulnerable_to_heartbleed:
                 reporter.display(
                     "\tHeartbleed: Vulnerable",
-                    issue.Issue(Vulnerabilities.TLS_HEARTBLEED, url),
+                    issue.Issue(Vulnerabilities.TLS_HEARTBLEED, url, {}),
                 )
             else:
                 output.norm("\tHeartbleed: No")
@@ -184,7 +184,7 @@ def scan(args: Namespace, url: str, domain: str):
             if openssl_ccs.is_vulnerable_to_ccs_injection:
                 reporter.display(
                     "\tOpenSSL CCS (CVE-2014-0224): Vulnerable",
-                    issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2014_0224, url),
+                    issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2014_0224, url, {}),
                 )
             else:
                 output.norm("\tOpenSSL CCS (CVE-2014-0224): No")
@@ -236,7 +236,7 @@ def scan(args: Namespace, url: str, domain: str):
             ):
                 reporter.display(
                     "\tROBOT: Vulnerable - Not Exploitable",
-                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, url),
+                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, url, {}),
                 )
             elif (
                 robot.robot_result_enum
@@ -244,7 +244,7 @@ def scan(args: Namespace, url: str, domain: str):
             ):
                 reporter.display(
                     "\tROBOT: Vulnerable - Exploitable",
-                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, url),
+                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, url, {}),
                 )
             elif (
                 robot.robot_result_enum
@@ -270,7 +270,7 @@ def scan(args: Namespace, url: str, domain: str):
             else:
                 reporter.display(
                     "\tOCSP Stapling: No",
-                    issue.Issue(Vulnerabilities.TLS_OCSP_STAPLE_MISSING, url),
+                    issue.Issue(Vulnerabilities.TLS_OCSP_STAPLE_MISSING, url, {}),
                 )
 
             output.empty()
@@ -348,7 +348,9 @@ def _get_cert_chain(chain: List[x509.Certificate], url: str):
             if cert_info.check_symantec_root(fp):
                 reporter.display(
                     "\t\t Untrusted Symantec Root",
-                    issue.Issue(Vulnerabilities.TLS_SYMANTEC_ROOT, url, fp),
+                    issue.Issue(
+                        Vulnerabilities.TLS_SYMANTEC_ROOT, url, {"fingerprint": fp}
+                    ),
                 )
 
             output.norm(
@@ -386,7 +388,9 @@ def _get_suite_info(
                     output.info(f"\t\t  {name.ljust(50)} - {suite.key_size}-bits")
 
                     reporter.register(
-                        issue.Issue(Vulnerabilities.TLS_CBC_CIPHER_SUITE, url, name)
+                        issue.Issue(
+                            Vulnerabilities.TLS_CBC_CIPHER_SUITE, url, {"cipher": name}
+                        )
                     )
                 else:
                     output.norm(f"\t\t  {name.ljust(50)} - {suite.key_size}-bits")
@@ -394,7 +398,9 @@ def _get_suite_info(
                 output.vuln(f"\t\t  {name.ljust(50)} - {suite.key_size}-bits")
 
                 reporter.register(
-                    issue.Issue(Vulnerabilities.TLS_INSECURE_CIPHER_SUITE, url, name)
+                    issue.Issue(
+                        Vulnerabilities.TLS_INSECURE_CIPHER_SUITE, url, {"cipher": name}
+                    )
                 )
 
         output.norm(f"\t\t  ({len(result.rejected_cipher_list)} suites rejected)")

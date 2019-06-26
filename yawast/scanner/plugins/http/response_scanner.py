@@ -33,7 +33,7 @@ def check_response(
         results += apache_tomcat.get_version(url, res)
         results += error_checker.check_response(url, res, body)
 
-    results += http_basic.get_header_issues(res.headers, raw_full, url)
+    results += http_basic.get_header_issues(res, raw_full, url)
     results += http_basic.get_cookie_issues(res, raw_full, url)
 
     # this function will trigger a recursive call, as it calls this to check the response.

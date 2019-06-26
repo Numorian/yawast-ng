@@ -237,7 +237,7 @@ def check_struts_sample(url: str) -> List[Result]:
     results: List[Result] = []
 
     # make sure we have real 404s
-    file_good, _ = network.check_404_response(url)
+    file_good, _, _, _ = network.check_404_response(url)
     if not file_good:
         return results
 

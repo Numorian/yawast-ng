@@ -212,6 +212,13 @@ def _convert_keys(dct: Dict) -> Dict:
         if type(v) is dict:
             v = _convert_keys(v)
 
+        try:
+            _ = json.dumps(v)
+        except Exception as error:
+            output.debug(f"Error serializing data: {str(error)}")
+            # convert to string - this may be wrong, but at least it won't fail
+            v = str(v)
+
         ret[k] = v
 
     return ret

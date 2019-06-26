@@ -3,22 +3,23 @@ from requests.models import Response
 from urllib.parse import urlparse
 
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.plugins.http.servers import apache_httpd, php, iis, nginx, python
 from yawast.shared import network
 
 
-def get_header_issues(headers: Dict, raw: str, url: str) -> List[Result]:
+def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
     results: List[Result] = []
+    headers = res.headers
 
     if "X-Powered-By" in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f'X-Powered-By Header Present: {headers["X-Powered-By"]} ({url})',
                 Vulnerabilities.HTTP_HEADER_X_POWERED_BY,
-                url,
-                raw,
             )
         )
 
@@ -29,131 +30,118 @@ def get_header_issues(headers: Dict, raw: str, url: str) -> List[Result]:
         # header is present, check the value
         if headers["X-XSS-Protection"] == 0:
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(res),
                     f"X-XSS-Protection Disabled Header Present ({url})",
                     Vulnerabilities.HTTP_HEADER_X_XSS_PROTECTION_DISABLED,
-                    url,
-                    raw,
                 )
             )
     else:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"X-XSS-Protection Header Not Present ({url})",
                 Vulnerabilities.HTTP_HEADER_X_XSS_PROTECTION_MISSING,
-                url,
-                raw,
             )
         )
 
     if "X-Runtime" in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"X-Runtime Header Present; likely indicates a RoR application ({url})",
                 Vulnerabilities.HTTP_HEADER_X_RUNTIME,
-                url,
-                raw,
             )
         )
 
     if "X-Backend-Server" in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f'X-Backend-Server Header Present: {headers["X-Backend-Server"]} ({url})',
                 Vulnerabilities.HTTP_HEADER_X_BACKEND_SERVER,
-                url,
-                raw,
             )
         )
 
     if "Via" in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f'Via Header Present: #{headers["Via"]} ({url})',
                 Vulnerabilities.HTTP_HEADER_VIA,
-                url,
-                raw,
             )
         )
 
     if "X-Frame-Options" in headers:
         if "allow" in str(headers["X-Frame-Options"]).lower():
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(res),
                     f'X-Frame-Options Header: {headers["X-Frame-Options"]} ({url})',
                     Vulnerabilities.HTTP_HEADER_X_FRAME_OPTIONS_ALLOW,
-                    url,
-                    raw,
                 )
             )
     else:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"X-Frame-Options Header Not Present ({url})",
                 Vulnerabilities.HTTP_HEADER_X_FRAME_OPTIONS_MISSING,
-                url,
-                raw,
             )
         )
 
     if "X-Content-Type-Options" not in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"X-Content-Type-Options Header Not Present ({url})",
                 Vulnerabilities.HTTP_HEADER_X_CONTENT_TYPE_OPTIONS_MISSING,
-                url,
-                raw,
             )
         )
 
     if "Content-Security-Policy" not in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"Content-Security-Policy Header Not Present ({url})",
                 Vulnerabilities.HTTP_HEADER_CONTENT_SECURITY_POLICY_MISSING,
-                url,
-                raw,
             )
         )
 
     if "Referrer-Policy" not in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"Referrer-Policy Header Not Present ({url})",
                 Vulnerabilities.HTTP_HEADER_REFERRER_POLICY_MISSING,
-                url,
-                raw,
             )
         )
 
     if "Feature-Policy" not in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"Feature-Policy Header Not Present ({url})",
                 Vulnerabilities.HTTP_HEADER_FEATURE_POLICY_MISSING,
-                url,
-                raw,
             )
         )
 
     if "Access-Control-Allow-Origin" in headers:
         if headers["Access-Control-Allow-Origin"] == "*":
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(res),
                     f"Access-Control-Allow-Origin: Unrestricted ({url})",
                     Vulnerabilities.HTTP_HEADER_CORS_ACAO_UNRESTRICTED,
-                    url,
-                    raw,
                 )
             )
 
     if "Strict-Transport-Security" not in headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"Strict-Transport-Security Header Not Present ({url})",
                 Vulnerabilities.HTTP_HEADER_HSTS_MISSING,
-                url,
-                raw,
             )
         )
 

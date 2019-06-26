@@ -77,7 +77,7 @@ def scan(args: Namespace, url: str, domain: str):
             reporter.display(
                 f"\tTLS Session Request Limit: Connection not terminated after {count} requests; "
                 f"possibly vulnerable to SWEET32",
-                issue.Issue(Vulnerabilities.TLS_SWEET32, url),
+                issue.Issue(Vulnerabilities.TLS_SWEET32, url, {}),
             )
 
         except ssl_connection.SslHandshakeRejected as error:

@@ -141,61 +141,61 @@ def _get_cert_info(body, ep, url):
         if cert["issues"] & 1 != 0:
             reporter.display(
                 "\tCertificate Issue: no chain of trust",
-                issue.Issue(Vulnerabilities.TLS_CERT_NO_TRUST, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_NO_TRUST, url, {}),
             )
 
         if cert["issues"] & (1 << 1) != 0:
             reporter.display(
                 "\tCertificate Issue: certificate not yet valid",
-                issue.Issue(Vulnerabilities.TLS_CERT_NOT_YET_VALID, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_NOT_YET_VALID, url, {}),
             )
 
         if cert["issues"] & (1 << 2) != 0:
             reporter.display(
                 "\tCertificate Issue: certificate expired",
-                issue.Issue(Vulnerabilities.TLS_CERT_EXPIRED, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_EXPIRED, url, {}),
             )
 
         if cert["issues"] & (1 << 3) != 0:
             reporter.display(
                 "\tCertificate Issue: hostname mismatch",
-                issue.Issue(Vulnerabilities.TLS_CERT_HOSTNAME_MISMATCH, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_HOSTNAME_MISMATCH, url, {}),
             )
 
         if cert["issues"] & (1 << 4) != 0:
             reporter.display(
                 "\tCertificate Issue: revoked",
-                issue.Issue(Vulnerabilities.TLS_CERT_REVOKED, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_REVOKED, url, {}),
             )
 
         if cert["issues"] & (1 << 5) != 0:
             reporter.display(
                 "\tCertificate Issue: bad common name",
-                issue.Issue(Vulnerabilities.TLS_CERT_BAD_COMMON_NAME, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_BAD_COMMON_NAME, url, {}),
             )
 
         if cert["issues"] & (1 << 6) != 0:
             reporter.display(
                 "\tCertificate Issue: self-signed",
-                issue.Issue(Vulnerabilities.TLS_CERT_SELF_SIGNED, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_SELF_SIGNED, url, {}),
             )
 
         if cert["issues"] & (1 << 7) != 0:
             reporter.display(
                 "\tCertificate Issue: blacklisted",
-                issue.Issue(Vulnerabilities.TLS_CERT_BLACKLISTED, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_BLACKLISTED, url, {}),
             )
 
         if cert["issues"] & (1 << 8) != 0:
             reporter.display(
                 "\tCertificate Issue: insecure signature",
-                issue.Issue(Vulnerabilities.TLS_CERT_INSECURE_SIGNATURE, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_INSECURE_SIGNATURE, url, {}),
             )
 
         if cert["issues"] & (1 << 9) != 0:
             reporter.display(
                 "\tCertificate Issue: insecure key",
-                issue.Issue(Vulnerabilities.TLS_CERT_INSECURE_KEY, url),
+                issue.Issue(Vulnerabilities.TLS_CERT_INSECURE_KEY, url, {}),
             )
 
         output.empty()
@@ -406,7 +406,7 @@ def _get_cert_info(body, ep, url):
                                 issue.Issue(
                                     Vulnerabilities.TLS_SYMANTEC_ROOT,
                                     url,
-                                    c["sha1Hash"],
+                                    {"fingerprint": c["sha1Hash"]},
                                 ),
                             )
 
@@ -432,14 +432,14 @@ def _get_protocol_info(ep, url):
 
             reporter.display(
                 f'\t\t{proto["name"]} {proto["version"]}',
-                issue.Issue(Vulnerabilities.TLS_LEGACY_SSL_ENABLED, url),
+                issue.Issue(Vulnerabilities.TLS_LEGACY_SSL_ENABLED, url, {}),
             )
         elif proto["name"] == "TLS" and proto["version"] == "1.0":
             # show a warn for TLSv1.0
 
             reporter.display(
                 f'\t\t{proto["name"]} {proto["version"]}',
-                issue.Issue(Vulnerabilities.TLS_VERSION_1_0_ENABLED, url),
+                issue.Issue(Vulnerabilities.TLS_VERSION_1_0_ENABLED, url, {}),
             )
         elif proto["name"] == "TLS" and proto["version"] == "1.3":
             # capture TLS 1.3 status
@@ -454,7 +454,7 @@ def _get_protocol_info(ep, url):
     if not tls13_enabled:
         reporter.display(
             "\t\tTLS 1.3 Is Not Enabled",
-            issue.Issue(Vulnerabilities.TLS_VERSION_1_3_NOT_ENABLED, url),
+            issue.Issue(Vulnerabilities.TLS_VERSION_1_3_NOT_ENABLED, url, {}),
         )
 
     output.empty()
@@ -494,7 +494,9 @@ def _get_protocol_info(ep, url):
 
                         reporter.register(
                             issue.Issue(
-                                Vulnerabilities.TLS_CBC_CIPHER_SUITE, url, suite_info
+                                Vulnerabilities.TLS_CBC_CIPHER_SUITE,
+                                url,
+                                {"cipher": suite_info},
                             )
                         )
                     else:
@@ -504,7 +506,9 @@ def _get_protocol_info(ep, url):
 
                     reporter.register(
                         issue.Issue(
-                            Vulnerabilities.TLS_INSECURE_CIPHER_SUITE, url, suite_info
+                            Vulnerabilities.TLS_INSECURE_CIPHER_SUITE,
+                            url,
+                            {"cipher": suite_info},
                         )
                     )
 
@@ -599,7 +603,9 @@ def _get_vulnerability_info(ep, url):
                 output.norm(f'\t\t\t{dh["ip"]}:{dh["port"]} - {dh["status"]}')
                 output.norm(f'\t\t\t  https://test.drownattack.com/?site={dh["ip"]}')
 
-            reporter.register(issue.Issue(Vulnerabilities.TLS_DROWN, url, servers))
+            reporter.register(
+                issue.Issue(Vulnerabilities.TLS_DROWN, url, {"servers": servers})
+            )
         else:
             output.norm("\t\tDROWN: No")
     else:
@@ -615,7 +621,9 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["zeroRTTEnabled"] == 1:
             reporter.display(
                 "\t\tTLS 1.3 0-RTT Support: Yes",
-                issue.Issue(Vulnerabilities.TLS_VERSION_1_3_EARLY_DATA_ENABLED, url),
+                issue.Issue(
+                    Vulnerabilities.TLS_VERSION_1_3_EARLY_DATA_ENABLED, url, {}
+                ),
             )
         else:
             output.error(
@@ -628,7 +636,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["renegSupport"] & 1 != 0:
             reporter.display(
                 "\t\tSecure Renegotiation: insecure client-initiated renegotiation supported",
-                issue.Issue(Vulnerabilities.TLS_INSECURE_RENEG, url),
+                issue.Issue(Vulnerabilities.TLS_INSECURE_RENEG, url, {}),
             )
 
         if ep["details"]["renegSupport"] & (1 << 1) != 0:
@@ -650,7 +658,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["poodle"]:
             reporter.display(
                 "\t\tPOODLE (SSL): Vulnerable",
-                issue.Issue(Vulnerabilities.TLS_LEGACY_SSL_POODLE, url),
+                issue.Issue(Vulnerabilities.TLS_LEGACY_SSL_POODLE, url, {}),
             )
         else:
             output.norm("\t\tPOODLE (SSL): No")
@@ -667,13 +675,13 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["zombiePoodle"] == 2:
             reporter.display(
                 "\t\tZombie POODLE: Vulnerable - Not Exploitable",
-                issue.Issue(Vulnerabilities.TLS_ZOMBIE_POODLE_NE, url),
+                issue.Issue(Vulnerabilities.TLS_ZOMBIE_POODLE_NE, url, {}),
             )
         elif ep["details"]["zombiePoodle"] == 3:
             output.vuln("\t\tZombie POODLE: Vulnerable - Exploitable")
             reporter.display(
                 "\t\tZombie POODLE: Vulnerable - Exploitable",
-                issue.Issue(Vulnerabilities.TLS_ZOMBIE_POODLE, url),
+                issue.Issue(Vulnerabilities.TLS_ZOMBIE_POODLE, url, {}),
             )
         else:
             output.error(
@@ -692,12 +700,12 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["goldenDoodle"] == 4:
             reporter.display(
                 "\t\tGOLDENDOODLE: Vulnerable - Not Exploitable",
-                issue.Issue(Vulnerabilities.TLS_GOLDENDOODLE_NE, url),
+                issue.Issue(Vulnerabilities.TLS_GOLDENDOODLE_NE, url, {}),
             )
         elif ep["details"]["goldenDoodle"] == 5:
             reporter.display(
                 "\t\tGOLDENDOODLE: Vulnerable - Exploitable",
-                issue.Issue(Vulnerabilities.TLS_GOLDENDOODLE, url),
+                issue.Issue(Vulnerabilities.TLS_GOLDENDOODLE, url, {}),
             )
         else:
             output.error(
@@ -720,12 +728,12 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["zeroLengthPaddingOracle"] == 6:
             reporter.display(
                 "\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): Vulnerable - Not Exploitable",
-                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2019_1559_NE, url),
+                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2019_1559_NE, url, {}),
             )
         elif ep["details"]["zeroLengthPaddingOracle"] == 7:
             reporter.display(
                 "\t\tOpenSSL 0-Length Padding Oracle (CVE-2019-1559): Vulnerable - Exploitable",
-                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2019_1559, url),
+                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2019_1559, url, {}),
             )
         else:
             output.error(
@@ -747,13 +755,13 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["sleepingPoodle"] == 10:
             reporter.display(
                 "\t\tSleeping POODLE: Vulnerable - Not Exploitable",
-                issue.Issue(Vulnerabilities.TLS_SLEEPING_POODLE_NE, url),
+                issue.Issue(Vulnerabilities.TLS_SLEEPING_POODLE_NE, url, {}),
             )
         elif ep["details"]["sleepingPoodle"] == 11:
             output.vuln("\t\tSleeping POODLE: Vulnerable - Exploitable")
             reporter.display(
                 "\t\tSleeping POODLE: Vulnerable - Exploitable",
-                issue.Issue(Vulnerabilities.TLS_SLEEPING_POODLE, url),
+                issue.Issue(Vulnerabilities.TLS_SLEEPING_POODLE, url, {}),
             )
         else:
             output.error(
@@ -776,7 +784,7 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["poodleTls"] == 2:
             reporter.display(
                 "\t\tPOODLE (TLS): Vulnerable",
-                issue.Issue(Vulnerabilities.TLS_POODLE, url),
+                issue.Issue(Vulnerabilities.TLS_POODLE, url, {}),
             )
         else:
             output.error(
@@ -791,7 +799,7 @@ def _get_vulnerability_info(ep, url):
         else:
             reporter.display(
                 "\t\tDowngrade Prevention: No",
-                issue.Issue(Vulnerabilities.TLS_FALLBACK_SCSV_MISSING, url),
+                issue.Issue(Vulnerabilities.TLS_FALLBACK_SCSV_MISSING, url, {}),
             )
     else:
         output.error("t\tDowngrade Prevention: Information Not Received")
@@ -800,7 +808,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["compressionMethods"] & 1 != 0:
             reporter.display(
                 "\t\tCompression: DEFLATE",
-                issue.Issue(Vulnerabilities.TLS_COMPRESSION_ENABLED, url),
+                issue.Issue(Vulnerabilities.TLS_COMPRESSION_ENABLED, url, {}),
             )
         else:
             output.norm("\t\tCompression: No")
@@ -811,7 +819,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["heartbeat"]:
             reporter.display(
                 "\t\tHeartbeat: Enabled",
-                issue.Issue(Vulnerabilities.TLS_HEARTBEAT_ENABLED, url),
+                issue.Issue(Vulnerabilities.TLS_HEARTBEAT_ENABLED, url, {}),
             )
         else:
             output.norm("\t\tHeartbeat: Disabled")
@@ -822,7 +830,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["heartbleed"]:
             reporter.display(
                 "\t\tHeartbleed: Vulnerable",
-                issue.Issue(Vulnerabilities.TLS_HEARTBLEEDL, url),
+                issue.Issue(Vulnerabilities.TLS_HEARTBLEEDL, url, {}),
             )
         else:
             output.norm("\t\tHeartbleed: No")
@@ -839,7 +847,7 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["ticketbleed"] == 2:
             reporter.display(
                 "\t\tTicketbleed (CVE-2016-9244): Vulnerable",
-                issue.Issue(Vulnerabilities.TLS_TICKETBLEED, url),
+                issue.Issue(Vulnerabilities.TLS_TICKETBLEED, url, {}),
             )
         else:
             output.error(
@@ -858,13 +866,13 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["openSslCcs"] == 2:
             reporter.display(
                 "\t\tOpenSSL CCS (CVE-2014-0224): Vulnerable - Not Exploitable",
-                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2014_0224_NE, url),
+                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2014_0224_NE, url, {}),
             )
         elif ep["details"]["openSslCcs"] == 3:
             output.vuln("\t\tOpenSSL CCS (CVE-2014-0224): Vulnerable")
             reporter.display(
                 "\t\tOpenSSL CCS (CVE-2014-0224): Vulnerable",
-                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2014_0224, url),
+                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2014_0224, url, {}),
             )
         else:
             output.error(
@@ -885,7 +893,7 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["openSSLLuckyMinus20"] == 2:
             reporter.display(
                 "\t\tOpenSSL Padding Oracle (CVE-2016-2107): Vulnerable",
-                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2016_2107, url),
+                issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2016_2107, url, {}),
             )
         else:
             output.error(
@@ -907,12 +915,12 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["bleichenbacher"] == 2:
             reporter.display(
                 "\t\tROBOT: Vulnerable - Not Exploitable",
-                issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, url),
+                issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, url, {}),
             )
         elif ep["details"]["bleichenbacher"] == 3:
             reporter.display(
                 "\t\tROBOT: Vulnerable - Exploitable",
-                issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, url),
+                issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, url, {}),
             )
         elif ep["details"]["bleichenbacher"] == 4:
             output.norm("\t\tROBOT: Unknown - Inconsistent Results")
@@ -931,7 +939,7 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["forwardSecrecy"] & 1 != 0:
             reporter.display(
                 "\t\tForward Secrecy: Yes (limited support)",
-                issue.Issue(Vulnerabilities.TLS_LIMITED_FORWARD_SECRECY, url),
+                issue.Issue(Vulnerabilities.TLS_LIMITED_FORWARD_SECRECY, url, {}),
             )
         else:
             output.vuln("\t\tForward Secrecy: No")
@@ -944,7 +952,7 @@ def _get_vulnerability_info(ep, url):
         else:
             reporter.display(
                 "\t\tAEAD Cipher Suites Supported: No",
-                issue.Issue(Vulnerabilities.TLS_NO_AEAD_SUPPORT, url),
+                issue.Issue(Vulnerabilities.TLS_NO_AEAD_SUPPORT, url, {}),
             )
     else:
         output.error("\t\tAEAD Cipher Suites Supported: Information Not Received")
@@ -971,7 +979,7 @@ def _get_vulnerability_info(ep, url):
         elif ep["details"]["sessionResumption"] == 2:
             reporter.display(
                 "\t\tSession Resumption: Enabled",
-                issue.Issue(Vulnerabilities.TLS_SESSION_RESP_ENABLED, url),
+                issue.Issue(Vulnerabilities.TLS_SESSION_RESP_ENABLED, url, {}),
             )
         else:
             output.error(
@@ -986,7 +994,7 @@ def _get_vulnerability_info(ep, url):
         else:
             reporter.display(
                 "\t\tOCSP Stapling: No",
-                issue.Issue(Vulnerabilities.TLS_OCSP_STAPLE_MISSING, url),
+                issue.Issue(Vulnerabilities.TLS_OCSP_STAPLE_MISSING, url, {}),
             )
     else:
         output.error("\t\tOCSP Stapling: Information Not Received")
@@ -1024,7 +1032,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["freak"]:
             reporter.display(
                 "\t\tFREAK: Vulnerable (512-bit key exchange supported)",
-                issue.Issue(Vulnerabilities.TLS_FREAK, url),
+                issue.Issue(Vulnerabilities.TLS_FREAK, url, {}),
             )
         else:
             output.norm("\t\tFREAK: No")
@@ -1034,7 +1042,8 @@ def _get_vulnerability_info(ep, url):
     if "logjam" in ep["details"]:
         if ep["details"]["logjam"]:
             reporter.display(
-                "\t\tLogjam: Vulnerable", issue.Issue(Vulnerabilities.TLS_LOGJAM, url)
+                "\t\tLogjam: Vulnerable",
+                issue.Issue(Vulnerabilities.TLS_LOGJAM, url, {}),
             )
         else:
             output.norm("\t\tLogjam: No")
@@ -1048,12 +1057,12 @@ def _get_vulnerability_info(ep, url):
             output.warn("\t\tUses common DH primes: Yes (not weak)")
             reporter.display(
                 "\t\tUses common DH primes: Yes (weak)",
-                issue.Issue(Vulnerabilities.TLS_DH_KNOWN_PRIMES_STRONG, url),
+                issue.Issue(Vulnerabilities.TLS_DH_KNOWN_PRIMES_STRONG, url, {}),
             )
         elif ep["details"]["dhUsesKnownPrimes"] == 2:
             reporter.display(
                 "\t\tUses common DH primes: Yes (weak)",
-                issue.Issue(Vulnerabilities.TLS_DH_KNOWN_PRIMES_WEAK, url),
+                issue.Issue(Vulnerabilities.TLS_DH_KNOWN_PRIMES_WEAK, url, {}),
             )
         else:
             output.error(
@@ -1064,7 +1073,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["dhYsReuse"]:
             reporter.display(
                 "\t\tDH public server param (Ys) reuse: Yes",
-                issue.Issue(Vulnerabilities.TLS_DH_PARAM_REUSE, url),
+                issue.Issue(Vulnerabilities.TLS_DH_PARAM_REUSE, url, {}),
             )
         else:
             output.norm("\t\tDH public server param (Ys) reuse: No")
@@ -1073,7 +1082,7 @@ def _get_vulnerability_info(ep, url):
         if ep["details"]["ecdhParameterReuse"]:
             reporter.display(
                 "\t\tECDH Public Server Param Reuse: Yes",
-                issue.Issue(Vulnerabilities.TLS_ECDH_PARAM_REUSE, url),
+                issue.Issue(Vulnerabilities.TLS_ECDH_PARAM_REUSE, url, {}),
             )
         else:
             output.norm("\t\tECDH Public Server Param Reuse: No")

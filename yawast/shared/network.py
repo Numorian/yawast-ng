@@ -231,7 +231,7 @@ def http_build_raw_request(req: Union[Request, PreparedRequest]) -> str:
     return f"{req.method} {req.url}\n{headers}\n\n{body}"
 
 
-def check_404_response(url: str) -> Tuple[bool, bool]:
+def check_404_response(url: str) -> Tuple[bool, Response, bool, Response]:
     rnd = secrets.token_hex(12)
     file_url = urljoin(url, f"{rnd}.html")
     path_url = urljoin(url, f"{rnd}/")
@@ -239,7 +239,7 @@ def check_404_response(url: str) -> Tuple[bool, bool]:
     file_res = http_get(file_url, False)
     path_res = http_get(path_url, False)
 
-    return file_res.status_code == 404, path_res.status_code == 404
+    return file_res.status_code == 404, file_res, path_res.status_code == 404, path_res
 
 
 def check_ssl_redirect(url):

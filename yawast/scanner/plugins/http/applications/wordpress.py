@@ -6,6 +6,7 @@ from packaging import version
 from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import version_checker
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network
@@ -38,11 +39,10 @@ def identify(url: str) -> Tuple[Union[str, None], List[Result]]:
 
         # report that we found WordPress
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res, {"version": ver}),
                 f"Found WordPress v{ver} at {path}",
                 Vulnerabilities.APP_WORDPRESS_VERSION,
-                path,
-                [ver, network.http_build_raw_response(res)],
             )
         )
 
@@ -52,11 +52,12 @@ def identify(url: str) -> Tuple[Union[str, None], List[Result]]:
 
         if curr_version is not None and curr_version > ver:
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(
+                        res, {"version": str(ver), "current_verison": str(curr_version)}
+                    ),
                     f"WordPress Outdated: {ver} - Current: {curr_version}",
                     Vulnerabilities.APP_WORDPRESS_OUTDATED,
-                    path,
-                    [str(ver), network.http_build_raw_response(res)],
                 )
             )
 
@@ -77,31 +78,27 @@ def check_json_user_enum(url: str) -> List[Result]:
 
         # log the enum finding
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"WordPress WP-JSON User Enumeration at {target}",
                 Vulnerabilities.APP_WORDPRESS_USER_ENUM_API,
-                target,
-                [
-                    network.http_build_raw_request(res.request),
-                    network.http_build_raw_response(res),
-                ],
             )
         )
 
         # log the individual users
         for user in data:
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(
+                        res,
+                        {
+                            "user_id": user["id"],
+                            "user_slug": user["slug"],
+                            "user_name": user["name"],
+                        },
+                    ),
                     f"ID: {user['id']}\tUser Slug: '{user['slug']}'\t\tUser Name: '{user['name']}'",
                     Vulnerabilities.APP_WORDPRESS_USER_FOUND,
-                    target,
-                    [
-                        network.http_build_raw_request(res.request),
-                        network.http_build_raw_response(res),
-                        user["id"],
-                        user["slug"],
-                        user["name"],
-                    ],
                 )
             )
 

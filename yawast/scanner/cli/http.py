@@ -5,6 +5,7 @@ from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.issue import Issue
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import (
     http_basic,
     waf,
@@ -34,7 +35,7 @@ def scan(args: Namespace, url: str, domain: str):
 
     output.empty()
 
-    res = http_basic.get_header_issues(head.headers, raw, url)
+    res = http_basic.get_header_issues(head, raw, url)
     if len(res) > 0:
         output.norm("Header Issues:")
 
@@ -124,7 +125,7 @@ def reset():
 
 def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
     new_files: List[str] = []
-    file_good, path_good = network.check_404_response(url)
+    file_good, file_res, path_good, path_res = network.check_404_response(url)
 
     # these are here for data typing
     results: Union[List[Result], None]
@@ -133,12 +134,20 @@ def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
     if not file_good:
         reporter.display(
             "Web server does not respond properly to file 404 errors.",
-            Issue(Vulnerabilities.SERVER_INVALID_404_FILE, url),
+            Issue(
+                Vulnerabilities.SERVER_INVALID_404_FILE,
+                url,
+                Evidence.from_response(file_res),
+            ),
         )
     if not path_good:
         reporter.display(
             "Web server does not respond properly to path 404 errors.",
-            Issue(Vulnerabilities.SERVER_INVALID_404_PATH, url),
+            Issue(
+                Vulnerabilities.SERVER_INVALID_404_PATH,
+                url,
+                Evidence.from_response(path_res),
+            ),
         )
 
     if not (file_good or path_good):

@@ -1,17 +1,12 @@
 import uuid
-from typing import Union, List, cast
+from typing import cast, Dict, Any
 
 from yawast.reporting.enums import Vulnerabilities, VulnerabilityInfo
 from yawast.scanner.plugins.result import Result
 
 
 class Issue(dict):
-    def __init__(
-        self,
-        vuln: Vulnerabilities,
-        url: str,
-        evidence: Union[str, List[str], None] = None,
-    ):
+    def __init__(self, vuln: Vulnerabilities, url: str, evidence: Dict[str, Any]):
         val = cast(VulnerabilityInfo, vuln.value)
 
         self.vulnerability = vuln

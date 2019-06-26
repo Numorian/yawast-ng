@@ -168,7 +168,7 @@ def scan(args: Namespace, url: str, domain: str):
     if caa_count == 0:
         reporter.display(
             "\tCAA: Domain does not have protection from CAA",
-            issue.Issue(Vulnerabilities.DNS_CAA_MISSING, url),
+            issue.Issue(Vulnerabilities.DNS_CAA_MISSING, url, {"caa_records": carec}),
         )
 
     dk = dnssec.get_dnskey(domain)
@@ -182,7 +182,7 @@ def scan(args: Namespace, url: str, domain: str):
     else:
         reporter.display(
             "\tDNSKEY: Domain does not use DNSSEC",
-            issue.Issue(Vulnerabilities.DNS_DNSSEC_NOT_ENABLED, url),
+            issue.Issue(Vulnerabilities.DNS_DNSSEC_NOT_ENABLED, url, {}),
         )
 
     output.empty()

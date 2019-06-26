@@ -2,6 +2,7 @@ import re
 from typing import Union, List, cast, Any
 
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.result import Result
 from requests import Response
 
@@ -58,14 +59,10 @@ def check_response(
 
             if msg not in _reports:
                 results.append(
-                    Result(
+                    Result.from_evidence(
+                        Evidence.from_response(res),
                         msg,
                         Vulnerabilities.HTTP_ERROR_MESSAGE,
-                        url,
-                        [
-                            network.http_build_raw_request(res.request),
-                            network.http_build_raw_response(res),
-                        ],
                     )
                 )
 

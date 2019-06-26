@@ -84,11 +84,15 @@ def get_output_file() -> str:
 
 
 def setup(domain: str) -> None:
-    global _domain, _issues
+    global _domain, _issues, _data
 
     _domain = domain
 
-    _issues[_domain] = {}
+    if _domain not in _issues:
+        _issues[_domain] = {}
+
+    if _domain not in _data:
+        _data[_domain] = {}
 
 
 def is_registered(vuln: Vulnerabilities) -> bool:
@@ -114,10 +118,17 @@ def register_info(key: str, value: Any):
 
 
 def register_data(key: str, value: Any):
-    global _data, _output_file
+    global _data, _output_file, _domain
 
     if _output_file is not None and len(_output_file) > 0:
-        _data[key] = value
+        if _domain is not None:
+            if _domain in _data:
+                _register_data(_data[_domain], key, value)
+            else:
+                _data[_domain] = {}
+                _register_data(_data[_domain], key, value)
+        else:
+            _register_data(_data, key, value)
 
 
 def register_message(value: str, kind: str):
@@ -178,6 +189,17 @@ def display_results(results: List[Result], padding: Optional[str] = ""):
     for res in results:
         iss = Issue.from_result(res)
         display(f"{padding}{res.message}", iss)
+
+
+def _register_data(data: Dict, key: str, value: Any):
+    if key in data and type(data[key]) is list and type(value) is list:
+        ls = cast(list, data[key])
+        ls.extend(value)
+    elif key in data and type(data[key]) is dict and type(value) is dict:
+        dt = cast(dict, data[key])
+        dt.update(value)
+    else:
+        data[key] = value
 
 
 def _convert_keys(dct: Dict) -> Dict:

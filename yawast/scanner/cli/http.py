@@ -1,5 +1,5 @@
 from argparse import Namespace
-from typing import List, Any, Union
+from typing import List, Union
 
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
@@ -21,6 +21,9 @@ from yawast.shared import network, output
 
 
 def scan(args: Namespace, url: str, domain: str):
+    reporter.register_data("url", url)
+    reporter.register_data("domain", domain)
+
     output.empty()
     output.norm("HEAD:")
     head = network.http_head(url)

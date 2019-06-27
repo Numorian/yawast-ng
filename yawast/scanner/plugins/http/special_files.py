@@ -28,7 +28,16 @@ def check_special_files(url: str) -> Tuple[List[str], List[Result]]:
 
 
 def check_special_paths(url: str) -> Tuple[List[str], List[Result]]:
-    targets = [".git/", ".hg/", ".svn/", ".bzr/", ".cvs/"]
+    targets = [
+        ".git/",
+        ".git/index",
+        ".svn/entries",
+        ".svn/wc.db",
+        ".hg/",
+        ".svn/",
+        ".bzr/",
+        ".cvs/",
+    ]
 
     return _check_url(url, targets)
 

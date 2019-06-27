@@ -75,15 +75,23 @@ def spider(url) -> Tuple[List[str], List[Result]]:
 def _get_links(base_url: str, urls: List[str], queue, pool):
     global _links, _insecure, _tasks, _lock
 
+    max_length = 1024 * 1024 * 3  # 3MB
+
     results: List[Result] = []
 
     for url in urls:
         try:
+            # list of pages found that will need to be processed
             to_process = []
 
             res = network.http_get(url, False)
 
-            if http_utils.is_text(res):
+            if "Content-Length" in res.headers:
+                length = int(res.headers["Content-Length"])
+            else:
+                length = len(res.content)
+
+            if http_utils.is_text(res) and length < max_length:
                 soup = BeautifulSoup(res.text, "html.parser")
             else:
                 # no clue what this is
@@ -97,7 +105,7 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
             for link in soup.find_all("a"):
                 href = link.get("href")
 
-                if href is not None:
+                if href is not None and not _is_unsafe_link(href, link.string):
                     # check to see if this link is in scope
                     if base_url in href and href not in _links:
                         if "." in href.split("/")[-1]:
@@ -165,3 +173,30 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
             output.debug_exception()
 
     queue.put(results)
+
+
+def _is_unsafe_link(href: str, description: str) -> bool:
+    """
+    Check for strings that indicate an unsafe link
+    :param href:
+    :param description:
+    :return:
+    """
+    unsafe_fragments = [
+        "logoff",
+        "log off",
+        "log_off",
+        "logout",
+        "log out",
+        "log_out",
+        "delete",
+    ]
+
+    ret = False
+    description = description if description is not None else ""
+
+    for frag in unsafe_fragments:
+        if frag in href or frag in description:
+            return True
+
+    return ret

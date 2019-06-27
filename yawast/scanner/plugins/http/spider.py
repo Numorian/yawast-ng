@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner, http_utils
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
@@ -82,10 +83,11 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
     for url in urls:
         try:
             # list of pages found that will need to be processed
-            to_process = []
+            to_process: List[str] = []
 
             res = network.http_get(url, False)
 
+            # get the length, so that we don't parse huge documents
             if "Content-Length" in res.headers:
                 length = int(res.headers["Content-Length"])
             else:
@@ -105,7 +107,7 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
             for link in soup.find_all("a"):
                 href = link.get("href")
 
-                if href is not None and not _is_unsafe_link(href, link.string):
+                if href is not None:
                     # check to see if this link is in scope
                     if base_url in href and href not in _links:
                         if "." in href.split("/")[-1]:
@@ -128,7 +130,12 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                             "gz",
                             "pdf",
                         ]:
-                            to_process.append(href)
+                            if not _is_unsafe_link(href, link.string):
+                                to_process.append(href)
+                            else:
+                                output.debug(
+                                    f"Skipping unsafe URL: {link.string} - {href}"
+                                )
                         else:
                             output.debug(
                                 f'Skipping URL "{href}" due to file extension "{file_ext}"'
@@ -144,11 +151,10 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                                 _insecure.append(href)
 
                             results.append(
-                                Result(
+                                Result.from_evidence(
+                                    Evidence.from_response(res, {"link": href}),
                                     f"Insecure Link: {url} links to {href}",
                                     Vulnerabilities.HTTP_INSECURE_LINK,
-                                    url,
-                                    [href, res.text],
                                 )
                             )
                         pass
@@ -190,10 +196,11 @@ def _is_unsafe_link(href: str, description: str) -> bool:
         "log out",
         "log_out",
         "delete",
+        "destroy",
     ]
 
     ret = False
-    description = description if description is not None else ""
+    description = str(description) if description is not None else ""
 
     for frag in unsafe_fragments:
         if frag in href or frag in description:

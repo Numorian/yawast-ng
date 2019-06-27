@@ -2,6 +2,7 @@ from typing import List, Tuple, Any
 from urllib.parse import urljoin
 
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network
@@ -56,11 +57,10 @@ def _check_url(url: str, targets: List[str]) -> Tuple[List[str], List[Result]]:
         if res.status_code < 300:
             files.append(target_url)
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(res),
                     f"File found: {target_url}",
                     Vulnerabilities.SERVER_SPECIAL_FILE_EXPOSED,
-                    target_url,
-                    res.text,
                 )
             )
 

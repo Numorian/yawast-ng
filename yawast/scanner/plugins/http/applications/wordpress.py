@@ -54,7 +54,11 @@ def identify(url: str) -> Tuple[Union[str, None], List[Result]]:
             results.append(
                 Result.from_evidence(
                     Evidence.from_response(
-                        res, {"version": str(ver), "current_verison": str(curr_version)}
+                        res,
+                        {
+                            "installed_version": str(ver),
+                            "current_verison": str(curr_version),
+                        },
                     ),
                     f"WordPress Outdated: {ver} - Current: {curr_version}",
                     Vulnerabilities.APP_WORDPRESS_OUTDATED,

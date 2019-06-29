@@ -234,7 +234,7 @@ def check_options(url: str) -> List[Result]:
     if "Public" in res.headers:
         results.append(
             Result(
-                f"Public HTTP Verbs (OPTIONS): {res.headers['Allow']}",
+                f"Public HTTP Verbs (OPTIONS): {res.headers['Public']}",
                 Vulnerabilities.HTTP_OPTIONS_PUBLIC,
                 url,
                 [

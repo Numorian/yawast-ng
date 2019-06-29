@@ -1,59 +1,45 @@
 import socket
-from urllib.parse import urlparse
 
+from yawast.commands import utils as cutils
 from yawast.scanner.cli import ssl_internal, ssl_sweet32, ssl_labs
-from yawast.shared import utils, network, output
+from yawast.scanner.session import Session
+from yawast.shared import utils, output
 
 
-def start(args, url):
-    print(f"Scanning: {url}")
-
-    # parse the URL, we'll need this
-    parsed = urlparse(url)
-    # get rid of any port number & credentials that may exist
-    domain = utils.get_domain(parsed.netloc)
+def start(session: Session):
+    print(f"Scanning: {session.url}")
 
     # make sure it resolves
     try:
-        socket.gethostbyname(domain)
+        socket.gethostbyname(session.domain)
     except socket.gaierror as error:
-        print(f"Fatal Error: Unable to resolve {domain} ({str(error)})")
+        print(f"Fatal Error: Unable to resolve {session.domain} ({str(error)})")
 
         return
 
-    if parsed.scheme == "http":
-        try:
-            # check for TLS redirect
-            tls_redirect = network.check_ssl_redirect(url)
-            if tls_redirect != url:
-                print(f"Server redirects to TLS: Scanning: {tls_redirect}")
+    try:
+        cutils.check_redirect(session)
+    except ValueError as error:
+        print(f"Unable to continue: {str(error)}")
 
-                url = tls_redirect
-                parsed = urlparse(url)
-        except Exception as error:
-            output.debug_exception()
-            output.error(f"Failed to connect to {url} ({str(error)})")
-
-            return
-
-    www_redirect = network.check_www_redirect(url)
-    if www_redirect is not None and www_redirect != url:
-        print(f"Server performs WWW redirect: Scanning: {www_redirect}")
-        url = www_redirect
-        parsed = urlparse(url)
+        return
 
     # check to see if we are looking at an HTTPS server
-    if parsed.scheme == "https":
-        if args.internalssl or utils.is_ip(domain) or utils.get_port(url) != 443:
+    if session.url_parsed.scheme == "https":
+        if (
+            session.args.internalssl
+            or utils.is_ip(session.domain)
+            or utils.get_port(session.url) != 443
+        ):
             # use internal scanner
-            ssl_internal.scan(args, url, domain)
+            ssl_internal.scan(session)
         else:
             try:
-                ssl_labs.scan(args, url, domain)
+                ssl_labs.scan(session)
             except Exception as error:
                 output.debug_exception()
 
                 output.error(f"Error running scan with SSL Labs: {str(error)}")
 
-        if args.tdessessioncount:
-            ssl_sweet32.scan(args, url, domain)
+        if session.args.tdessessioncount:
+            ssl_sweet32.scan(session)

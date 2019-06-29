@@ -23,21 +23,22 @@ from yawast.reporting import reporter, issue
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.dns import basic
 from yawast.scanner.plugins.ssl import cert_info
+from yawast.scanner.session import Session
 from yawast.shared import output, utils
 
 
-def scan(args: Namespace, url: str, domain: str):
+def scan(session: Session):
     output.norm(
         f"Beginning SSL scan using sslyze {__version__} (this could take a minute or two)"
     )
     output.empty()
 
-    ips = basic.get_ips(domain)
+    ips = basic.get_ips(session.domain)
 
     for ip in ips:
         try:
             conn_tester = server_connectivity_tester.ServerConnectivityTester(
-                hostname=domain, port=utils.get_port(url), ip_address=ip
+                hostname=session.domain, port=utils.get_port(session.url), ip_address=ip
             )
 
             output.norm(f"IP: {conn_tester.ip_address}:{conn_tester.port}")
@@ -56,7 +57,7 @@ def scan(args: Namespace, url: str, domain: str):
             _get_leaf_cert_info(cinfo.verified_certificate_chain[0])
 
             # get all but the first element
-            _get_cert_chain(cinfo.verified_certificate_chain[1:], url)
+            _get_cert_chain(cinfo.verified_certificate_chain[1:], session.url)
 
             # list the root stores this is trusted by
             trust = ""
@@ -77,7 +78,7 @@ def scan(args: Namespace, url: str, domain: str):
                 openssl_cipher_suites_plugin.CipherSuiteScanResult, sslv2
             )
 
-            _get_suite_info("SSLv2", sslv2, url)
+            _get_suite_info("SSLv2", sslv2, session.url)
 
             sslv3 = scanner.run_scan_command(
                 server_info, openssl_cipher_suites_plugin.Sslv30ScanCommand()
@@ -86,7 +87,7 @@ def scan(args: Namespace, url: str, domain: str):
                 openssl_cipher_suites_plugin.CipherSuiteScanResult, sslv3
             )
 
-            _get_suite_info("SSLv3", sslv3, url)
+            _get_suite_info("SSLv3", sslv3, session.url)
 
             tls10 = scanner.run_scan_command(
                 server_info, openssl_cipher_suites_plugin.Tlsv10ScanCommand()
@@ -95,7 +96,7 @@ def scan(args: Namespace, url: str, domain: str):
                 openssl_cipher_suites_plugin.CipherSuiteScanResult, tls10
             )
 
-            _get_suite_info("TLSv1.0", tls10, url)
+            _get_suite_info("TLSv1.0", tls10, session.url)
 
             tls11 = scanner.run_scan_command(
                 server_info, openssl_cipher_suites_plugin.Tlsv11ScanCommand()
@@ -104,7 +105,7 @@ def scan(args: Namespace, url: str, domain: str):
                 openssl_cipher_suites_plugin.CipherSuiteScanResult, tls11
             )
 
-            _get_suite_info("TLSv1.1", tls11, url)
+            _get_suite_info("TLSv1.1", tls11, session.url)
 
             tls12 = scanner.run_scan_command(
                 server_info, openssl_cipher_suites_plugin.Tlsv12ScanCommand()
@@ -113,7 +114,7 @@ def scan(args: Namespace, url: str, domain: str):
                 openssl_cipher_suites_plugin.CipherSuiteScanResult, tls12
             )
 
-            _get_suite_info("TLSv1.2", tls12, url)
+            _get_suite_info("TLSv1.2", tls12, session.url)
 
             tls13 = scanner.run_scan_command(
                 server_info, openssl_cipher_suites_plugin.Tlsv13ScanCommand()
@@ -122,7 +123,7 @@ def scan(args: Namespace, url: str, domain: str):
                 openssl_cipher_suites_plugin.CipherSuiteScanResult, tls13
             )
 
-            _get_suite_info("TLSv1.3", tls13, url)
+            _get_suite_info("TLSv1.3", tls13, session.url)
 
             output.empty()
 
@@ -137,7 +138,9 @@ def scan(args: Namespace, url: str, domain: str):
             if compression.compression_name is not None:
                 reporter.display(
                     f"\tCompression: {compression.compression_name}",
-                    issue.Issue(Vulnerabilities.TLS_COMPRESSION_ENABLED, url, {}),
+                    issue.Issue(
+                        Vulnerabilities.TLS_COMPRESSION_ENABLED, session.url, {}
+                    ),
                 )
             else:
                 output.norm("\tCompression: None")
@@ -155,7 +158,9 @@ def scan(args: Namespace, url: str, domain: str):
             else:
                 reporter.display(
                     "\tDowngrade Prevention: No",
-                    issue.Issue(Vulnerabilities.TLS_FALLBACK_SCSV_MISSING, url, {}),
+                    issue.Issue(
+                        Vulnerabilities.TLS_FALLBACK_SCSV_MISSING, session.url, {}
+                    ),
                 )
 
             # check Heartbleed
@@ -167,7 +172,7 @@ def scan(args: Namespace, url: str, domain: str):
             if heartbleed.is_vulnerable_to_heartbleed:
                 reporter.display(
                     "\tHeartbleed: Vulnerable",
-                    issue.Issue(Vulnerabilities.TLS_HEARTBLEED, url, {}),
+                    issue.Issue(Vulnerabilities.TLS_HEARTBLEED, session.url, {}),
                 )
             else:
                 output.norm("\tHeartbleed: No")
@@ -184,7 +189,9 @@ def scan(args: Namespace, url: str, domain: str):
             if openssl_ccs.is_vulnerable_to_ccs_injection:
                 reporter.display(
                     "\tOpenSSL CCS (CVE-2014-0224): Vulnerable",
-                    issue.Issue(Vulnerabilities.TLS_OPENSSL_CVE_2014_0224, url, {}),
+                    issue.Issue(
+                        Vulnerabilities.TLS_OPENSSL_CVE_2014_0224, session.url, {}
+                    ),
                 )
             else:
                 output.norm("\tOpenSSL CCS (CVE-2014-0224): No")
@@ -236,7 +243,7 @@ def scan(args: Namespace, url: str, domain: str):
             ):
                 reporter.display(
                     "\tROBOT: Vulnerable - Not Exploitable",
-                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, url, {}),
+                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, session.url, {}),
                 )
             elif (
                 robot.robot_result_enum
@@ -244,7 +251,9 @@ def scan(args: Namespace, url: str, domain: str):
             ):
                 reporter.display(
                     "\tROBOT: Vulnerable - Exploitable",
-                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, url, {}),
+                    issue.Issue(
+                        Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, session.url, {}
+                    ),
                 )
             elif (
                 robot.robot_result_enum
@@ -270,7 +279,9 @@ def scan(args: Namespace, url: str, domain: str):
             else:
                 reporter.display(
                     "\tOCSP Stapling: No",
-                    issue.Issue(Vulnerabilities.TLS_OCSP_STAPLE_MISSING, url, {}),
+                    issue.Issue(
+                        Vulnerabilities.TLS_OCSP_STAPLE_MISSING, session.url, {}
+                    ),
                 )
 
             output.empty()

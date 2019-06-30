@@ -363,6 +363,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     SERVER_SPECIAL_FILE_EXPOSED = VulnerabilityInfo(
         "Server_Special_File_Exposed", Severity.INFO, "", 10118, True
     )
+    SERVER_INT_IP_EXP_HTTP10 = VulnerabilityInfo(
+        "Server_Int_IP_Exp_Http10", Severity.LOW, "", 10121
+    )
 
     WAF_CLOUDFLARE = VulnerabilityInfo("Waf_Cloudflare", Severity.INFO, "", 10119)
     WAF_INCAPSULA = VulnerabilityInfo("Waf_Incapsula", Severity.INFO, "", 10120)

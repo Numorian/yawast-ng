@@ -60,6 +60,7 @@ def scan(session: Session):
     output.norm("Performing vulnerability scan (this will take a while)...")
 
     links: List[str] = []
+    res: List[Result] = []
     with Spinner():
         try:
             links, res = spider.spider(session.url)
@@ -78,6 +79,10 @@ def scan(session: Session):
 
     # get files, and add those to the link list
     links += _file_search(session, links)
+
+    res = http_basic.check_local_ip_disclosure(session)
+    if len(res) > 0:
+        reporter.display_results(res, "\t")
 
     res = apache_httpd.check_all(session.url)
     if len(res) > 0:

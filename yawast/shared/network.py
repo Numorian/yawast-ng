@@ -191,8 +191,6 @@ def http_json(url, allow_redirects=True) -> Tuple[Dict, int]:
 
 
 def http_build_raw_response(res: Response) -> str:
-    lines = []
-
     if res.raw.version == 11:
         res_line = f"HTTP/1.1 {res.raw.status} {res.raw.reason}"
     elif res.raw.version == 10:
@@ -200,35 +198,31 @@ def http_build_raw_response(res: Response) -> str:
     else:
         raise ValueError(f"Invalid HTTP version ({res.raw.version})")
 
-    if res_line != "":
-        lines.append(res_line)
+    res_string = res_line + "\r\n"
 
-    for header in res.headers:
-        lines.append(f"{header}: {res.headers[header]}")
+    res_string += "\r\n".join(f"{k}: {v}" for k, v in res.headers.items())
 
     try:
         txt = res.text
 
         if txt != "":
-            lines.append("")
-            lines.append("")
+            res_string += "\r\n\r\n"
 
-            for line in txt.splitlines():
-                lines.append(line)
+            res_string += txt
     except Exception:
         output.debug_exception()
 
-    return "\r\n".join(lines)
+    return res_string
 
 
 def http_build_raw_request(req: Union[Request, PreparedRequest]) -> str:
-    headers = "\n".join(f"{k}: {v}" for k, v in req.headers.items())
+    headers = "\r\n".join(f"{k}: {v}" for k, v in req.headers.items())
 
     body = ""
     if req.body is not None:
         body = req.body
 
-    return f"{req.method} {req.url}\n{headers}\n\n{body}"
+    return f"{req.method} {req.url}\r\n{headers}\r\n\r\n{body}"
 
 
 def check_404_response(url: str) -> Tuple[bool, Response, bool, Response]:

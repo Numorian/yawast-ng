@@ -56,13 +56,25 @@ The following tests are performed:
 * *(Generic)* Presence of RELEASE-NOTES.txt
 * *(Generic)* Presence of readme.html
 * *(Generic)* Presence of CHANGELOG.txt
+* *(Generic)* Presence of license.txt
 * *(Generic)* Missing cookie flags (Secure, HttpOnly, and SameSite)
+* *(Generic)* Cookies with SameSite=None flag
 * *(Generic)* Search for 14,405 common files (via `--files`) & 21,332 common directories (via `--dir`)
+* *(Generic)* CAA DNS records missing
+* *(Generic)* DNSSEC not enabled
+* *(Generic)* Detailed error messages
+* *(Generic)* Charset not defined
+* *(Generic)* Content-Type header missing
+* *(Generic)* Insecure links
+* *(Generic)* Internal IP address exposed
+* *(JavaScript)* Vulnerable libraries used (via RetireJS)
+* *(JavaScript)* Third-party scripts used
 * *(Apache)* Info Disclosure: Module listing enabled
 * *(Apache)* Info Disclosure: Server version
 * *(Apache)* Info Disclosure: OpenSSL module version
 * *(Apache)* Presence of /server-status
 * *(Apache)* Presence of /server-info
+* *(Apache)* Outdated version
 * *(Apache Tomcat)* Presence of Tomcat Manager
 * *(Apache Tomcat)* Presence of Tomcat Host Manager
 * *(Apache Tomcat)* Tomcat Manager Weak Password
@@ -71,42 +83,85 @@ The following tests are performed:
 * *(Apache Tomcat)* Tomcat version detection via File Not Found
 * *(Apache Tomcat)* Tomcat PUT RCE (CVE-2017-12617)
 * *(Apache Tomcat)* Tomcat Windows RCE (CVE-2019-0232)
+* *(Apache Tomcat)* Outdated version
 * *(Apache Struts)* Sample files which may be vulnerable
 * *(Nginx)* Info Disclosure: Server version
 * *(Nginx)* Info Disclosure: Server status
+* *(Nginx)* Outdated version
 * *(IIS)* Info Disclosure: Server version
 * *(ASP.NET)* Info Disclosure: ASP.NET version
 * *(ASP.NET)* Info Disclosure: ASP.NET MVC version
+* *(ASP.NET)* Info Disclosure: Registered handlers
 * *(ASP.NET)* Presence of Trace.axd
 * *(ASP.NET)* Presence of Elmah.axd
 * *(ASP.NET)* Debugging Enabled
+* *(ASP.NET)* Outdated version
 * *(PHP)* Info Disclosure: PHP version
+* *(PHP)* Outdated version
 * *(Rails)* File Content Disclosure: CVE-2019-5418
+* *(Rails)* Presence of X-Runtime header
 * *(WordPress)* Version detection
 * *(WordPress)* WP-JSON User Enumeration
+* *(WordPress)* Outdated version
 
-SSL Information:
+### TLS/SSL Information
+
+By default, YAWAST uses SSL Labs to gather information and issues related to TLS. This includes the full list of issues reported by SSL Labs, with some additional information and issues captured. When a scan is performed against a target that SSL Labs would not be able to scan (such as a private IP address), YAWAST will use SSLyze to perform this analysis.
+
+By using SSL Labs and SSLyze, YAWAST is able to capture a significant number of TLS issues; the full list is too long (and updated too often) to display here.
 
 * Certificate details
 * Certificate chain
 * Supported ciphers
-* Maximum requests using 3DES in a single connection
 * DNS CAA records
+* ...many others
 
-Checks for the following SSL issues are performed:
-
-*Note: By default, YAWAST uses SSL Labs, meaning this is a small subset of issues detected.*
+Checks for the following SSL issues are performed (the exact list depends on which integration is used):
 
 * Expired Certificate
 * Self-Signed Certificate
 * MD5 Signature
 * SHA1 Signature
 * RC4 Cipher Suites
+* CBC Cipher Suites
 * Weak (< 128 bit) Cipher Suites
-* SWEET32
-* 64-bit Serial Numbers ([details](https://adamcaudill.com/2019/03/09/tls-64bit-ish-serial-numbers-mass-revocation/))
+* SWEET32 (via `--tdessessioncount` parameter)
+* POODLE
+* ROBOT
+* Sleeping POODLE
+* Untrusted Symantec Root
+* TICKETBLEED
+* SSLv3 Supported
+* TLS 1.0 Supported
+* TLS 1.3 Early Data Supported
+* TLS 1.3 Not Supported
+* Zombie POODLE
+* OpenSSL CVE-2014-0224
+* OpenSSL CVE-2016-2107
+* OpenSSL CVE-2019-1559
+* OCSP Staple Missing
+* LOGJAM
+* Missing AEAD Support
+* Insecure Renegotiation
+* HEARTBLEED
+* Heartbeat Extension Enabled
+* GOLDENDOODLE
+* Fallback SCSV Missing
+* FREAK
+* DROWN
+* ECDH Parameter Reuse
+* DH Parameter Reuse
+* DH Common Primes
+* Compression Enabled
+* ...many others
 
-Certain DNS information is collected:
+#### SWEET32
+
+YAWAST is unique among the tools available, in that it provides the only implementation of a test for SWEET32 that does more than check for cipher suites with a 64-bit block size. This allows YAWAST to provide the most accurate assessment of this issue available.
+
+See [here](https://adamcaudill.com/2016/09/15/testing-sweet32-yawast/) for more information.
+
+### DNS Information
 
 * IP Addresses
 * IP Owner/Network (via [api.iptoasn.com](https://api.iptoasn.com/))

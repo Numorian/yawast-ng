@@ -1,7 +1,7 @@
 import base64
 import re
 import secrets
-from typing import List, cast, Union, Optional, Any
+from typing import List, cast, Union, Optional
 from urllib.parse import urljoin
 
 from packaging import version

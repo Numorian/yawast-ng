@@ -351,6 +351,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     SERVER_ASPNET_DEBUG_ENABLED = VulnerabilityInfo(
         "Server_AspNet_Debug_Enabled", Severity.HIGH, "", 10114
     )
+    SERVER_ASPNET_HANDLER_ENUM = VulnerabilityInfo(
+        "Server_AspNet_Handler_Enum", Severity.LOW, "", 10122, True
+    )
     SERVER_RAILS_CVE_2019_5418 = VulnerabilityInfo(
         "Server_Rails_CVE_2019_5418", Severity.CRITICAL, "", 10115
     )

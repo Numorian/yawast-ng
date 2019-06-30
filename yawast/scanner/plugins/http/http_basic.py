@@ -1,6 +1,6 @@
 import socket
 from http.client import HTTPResponse
-from typing import List, Dict, Union, Tuple
+from typing import List, Dict, Union, Tuple, Any
 from urllib.parse import urlparse
 
 from nassl.ssl_client import OpenSslVersionEnum
@@ -323,7 +323,7 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
                 )
             )
 
-    results = []
+    results: List[Result] = []
 
     if session.url_parsed.scheme == "https":
         conn_tester = server_connectivity_tester.ServerConnectivityTester(

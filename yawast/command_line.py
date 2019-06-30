@@ -2,6 +2,7 @@ import argparse
 import sys
 from typing import List
 
+from yawast.scanner.session import Session
 from yawast.shared import utils
 from yawast.commands import scan, dns, ssl
 from yawast.reporting import reporter
@@ -138,7 +139,9 @@ def command_scan(args, urls):
 
         reporter.setup(utils.get_domain(url))
 
-        scan.start(args, url)
+        session = Session(args, url)
+
+        scan.start(session)
 
 
 def command_dns(args, urls):
@@ -147,7 +150,9 @@ def command_dns(args, urls):
 
         reporter.setup(utils.get_domain(url))
 
-        dns.start(args, url)
+        session = Session(args, url)
+
+        dns.start(session)
 
 
 def command_ssl(args, urls):
@@ -156,4 +161,6 @@ def command_ssl(args, urls):
 
         reporter.setup(utils.get_domain(url))
 
-        ssl.start(args, url)
+        session = Session(args, url)
+
+        ssl.start(session)

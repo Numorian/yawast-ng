@@ -1,13 +1,21 @@
-from typing import List, Dict
-from requests.models import Response
+import socket
+from http.client import HTTPResponse
+from typing import List, Dict, Union, Tuple
 from urllib.parse import urlparse
+
+from nassl.ssl_client import OpenSslVersionEnum
+from requests.models import Response
+from sslyze import server_connectivity_tester
+from sslyze.utils import ssl_connection_configurator, http_response_parser
+from sslyze.utils.ssl_connection import SslConnection
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
-from yawast.scanner.plugins.result import Result
 from yawast.scanner.plugins.http.servers import apache_httpd, php, iis, nginx, python
-from yawast.shared import network
+from yawast.scanner.plugins.result import Result
+from yawast.scanner.session import Session
+from yawast.shared import network, utils
 
 
 def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
@@ -234,7 +242,7 @@ def check_options(url: str) -> List[Result]:
     if "Public" in res.headers:
         results.append(
             Result(
-                f"Public HTTP Verbs (OPTIONS): {res.headers['Allow']}",
+                f"Public HTTP Verbs (OPTIONS): {res.headers['Public']}",
                 Vulnerabilities.HTTP_OPTIONS_PUBLIC,
                 url,
                 [
@@ -245,6 +253,104 @@ def check_options(url: str) -> List[Result]:
         )
 
     results += response_scanner.check_response(url, res)
+
+    return results
+
+
+def check_local_ip_disclosure(session: Session) -> List[Result]:
+    def _send_http_10_get(
+        con: Union[SslConnection, socket.socket]
+    ) -> Tuple[str, HTTPResponse]:
+        req = (
+            "HEAD / HTTP/1.0\r\n"
+            "User-Agent: {user_agent}\r\n"
+            "Accept: */*\r\n\r\n".format(user_agent=network.YAWAST_UA)
+        )
+
+        if type(con) is SslConnection:
+            con.ssl_client.write(req.encode("utf_8"))
+
+            res = http_response_parser.HttpResponseParser.parse_from_ssl_connection(
+                con.ssl_client
+            )
+        else:
+            con.sendall(req.encode("utf_8"))
+
+            res = http_response_parser.HttpResponseParser.parse_from_socket(con)
+
+        return req, res
+
+    def _resp_to_str(res: HTTPResponse) -> str:
+        ver = "1.1" if res.version == 11 else "1.0"
+        body = f"HTTP/{ver} {res.code} {res.reason}\r\n"
+        for k, v in res.headers.items():
+            body += f"{k}: {v}\r\n"
+
+        return body
+
+    def _get_ip(res: HTTPResponse) -> Union[str, None]:
+        loc = res.getheader("Location")
+        if loc is not None:
+            # it's a redirect, check to see if there's an IP in it
+            parsed = urlparse(loc)
+            domain = utils.get_domain(parsed.netloc)
+
+            if utils.is_ip(domain):
+                # it's an IP, now, is it private?
+                if utils.is_private_ip(domain):
+                    return domain
+                else:
+                    return None
+
+        return None
+
+    def _get_result(client, prt):
+        req, resp = _send_http_10_get(client)
+        ip = _get_ip(resp)
+
+        if ip is not None:
+            results.append(
+                Result(
+                    f"Private IP Found: {ip} via HTTP 1.0 Redirect",
+                    Vulnerabilities.SERVER_INT_IP_EXP_HTTP10,
+                    session.url,
+                    {
+                        "request": req,
+                        "response": _resp_to_str(resp),
+                        "ip": {ip},
+                        "port": prt,
+                    },
+                )
+            )
+
+    results = []
+
+    if session.url_parsed.scheme == "https":
+        conn_tester = server_connectivity_tester.ServerConnectivityTester(
+            hostname=session.domain, port=utils.get_port(session.url)
+        )
+
+        server_info = conn_tester.perform()
+
+        conn = ssl_connection_configurator.SslConnectionConfigurator.get_connection(
+            ssl_version=OpenSslVersionEnum.SSLV23,
+            server_info=server_info,
+            should_ignore_client_auth=True,
+            ssl_verify_locations=None,
+            should_use_legacy_openssl=False,
+        )
+
+        conn.connect()
+
+        _get_result(conn, utils.get_port(session.url))
+
+    if session.supports_http:
+        url = session.get_http_url()
+        port = utils.get_port(url)
+        conn = socket.socket()
+        conn.connect((utils.get_domain(url), port))
+
+        _get_result(conn, port)
 
     return results
 

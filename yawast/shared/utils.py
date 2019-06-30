@@ -1,3 +1,4 @@
+import ipaddress
 import re
 import sys
 from urllib.parse import urlparse
@@ -41,6 +42,13 @@ def is_ip(val):
     val = str(val).lstrip("[").rstrip("]")
 
     return checkers.is_ip_address(val)
+
+
+def is_private_ip(val):
+    # strip any wrapping for an IPv6 used in a URL
+    val = str(val).lstrip("[").rstrip("]")
+
+    return ipaddress.ip_address(str(val)).is_private
 
 
 def get_domain(val):
@@ -108,7 +116,7 @@ def get_port(url: str) -> int:
 
     if parsed.scheme == "https":
         return 443
-    elif parsed.scheme == "http:":
+    elif parsed.scheme == "http":
         return 80
 
 

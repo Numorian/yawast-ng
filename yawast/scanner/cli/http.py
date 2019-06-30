@@ -1,4 +1,3 @@
-from argparse import Namespace
 from typing import List, Union
 
 from yawast.external.spinner import Spinner
@@ -18,16 +17,17 @@ from yawast.scanner.plugins.http import (
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.servers import apache_httpd, apache_tomcat, nginx, iis
 from yawast.scanner.plugins.result import Result
+from yawast.scanner.session import Session
 from yawast.shared import network, output
 
 
-def scan(args: Namespace, url: str, domain: str):
-    reporter.register_data("url", url)
-    reporter.register_data("domain", domain)
+def scan(session: Session):
+    reporter.register_data("url", session.url)
+    reporter.register_data("domain", session.domain)
 
     output.empty()
     output.norm("HEAD:")
-    head = network.http_head(url)
+    head = network.http_head(session.url)
 
     raw = network.http_build_raw_response(head)
     for line in raw.splitlines():
@@ -35,14 +35,14 @@ def scan(args: Namespace, url: str, domain: str):
 
     output.empty()
 
-    res = http_basic.get_header_issues(head, raw, url)
+    res = http_basic.get_header_issues(head, raw, session.url)
     if len(res) > 0:
         output.norm("Header Issues:")
 
         reporter.display_results(res, "\t")
         output.empty()
 
-    res = http_basic.get_cookie_issues(head, raw, url)
+    res = http_basic.get_cookie_issues(head, raw, session.url)
     if len(res) > 0:
         output.norm("Cookie Issues:")
 
@@ -50,7 +50,7 @@ def scan(args: Namespace, url: str, domain: str):
         output.empty()
 
     # check for WAF signatures
-    res = waf.get_waf(head.headers, raw, url)
+    res = waf.get_waf(head.headers, raw, session.url)
     if len(res) > 0:
         output.norm("WAF Detection:")
 
@@ -60,9 +60,10 @@ def scan(args: Namespace, url: str, domain: str):
     output.norm("Performing vulnerability scan (this will take a while)...")
 
     links: List[str] = []
+    res: List[Result] = []
     with Spinner():
         try:
-            links, res = spider.spider(url)
+            links, res = spider.spider(session.url)
         except Exception as error:
             output.debug_exception()
             output.error(f"Error running scan: {str(error)}")
@@ -77,37 +78,41 @@ def scan(args: Namespace, url: str, domain: str):
         output.empty()
 
     # get files, and add those to the link list
-    links += _file_search(args, url, links)
+    links += _file_search(session, links)
 
-    res = apache_httpd.check_all(url)
+    res = http_basic.check_local_ip_disclosure(session)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = apache_tomcat.check_all(url, links)
+    res = apache_httpd.check_all(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = nginx.check_all(url)
+    res = apache_tomcat.check_all(session.url, links)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = iis.check_all(url)
+    res = nginx.check_all(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = http_basic.check_propfind(url)
+    res = iis.check_all(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = http_basic.check_trace(url)
+    res = http_basic.check_propfind(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = http_basic.check_options(url)
+    res = http_basic.check_trace(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    wp_path, res = wordpress.identify(url)
+    res = http_basic.check_options(session.url)
+    if len(res) > 0:
+        reporter.display_results(res, "\t")
+
+    wp_path, res = wordpress.identify(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
@@ -123,9 +128,9 @@ def reset():
     error_checker.reset()
 
 
-def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
+def _file_search(session: Session, orig_links: List[str]) -> List[str]:
     new_files: List[str] = []
-    file_good, file_res, path_good, path_res = network.check_404_response(url)
+    file_good, file_res, path_good, path_res = network.check_404_response(session.url)
 
     # these are here for data typing
     results: Union[List[Result], None]
@@ -136,7 +141,7 @@ def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
             "Web server does not respond properly to file 404 errors.",
             Issue(
                 Vulnerabilities.SERVER_INVALID_404_FILE,
-                url,
+                session.url,
                 Evidence.from_response(file_res),
             ),
         )
@@ -145,7 +150,7 @@ def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
             "Web server does not respond properly to path 404 errors.",
             Issue(
                 Vulnerabilities.SERVER_INVALID_404_PATH,
-                url,
+                session.url,
                 Evidence.from_response(path_res),
             ),
         )
@@ -156,19 +161,19 @@ def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
         )
 
     if file_good:
-        links, results = special_files.check_special_files(url)
+        links, results = special_files.check_special_files(session.url)
         if len(results) > 0:
             reporter.display_results(results, "\t")
 
             new_files += links
 
-        if args.files:
+        if session.args.files:
             output.empty()
             output.norm("Searching for common files (this will take a few minutes)...")
 
             with Spinner():
                 try:
-                    links, results = file_search.find_files(url)
+                    links, results = file_search.find_files(session.url)
                 except Exception as error:
                     output.debug_exception()
                     output.error(f"Error running scan: {str(error)}")
@@ -188,14 +193,14 @@ def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
                 output.empty()
 
     if path_good:
-        links, results = special_files.check_special_paths(url)
+        links, results = special_files.check_special_paths(session.url)
 
         if len(results) > 0:
             reporter.display_results(results, "\t")
 
             new_files += links
 
-        if args.dir:
+        if session.args.dir:
             output.empty()
             output.norm(
                 "Searching for common directories (this will take a few minutes)..."
@@ -204,7 +209,9 @@ def _file_search(args: Namespace, url: str, orig_links: List[str]) -> List[str]:
             with Spinner():
                 try:
                     links, results = file_search.find_directories(
-                        url, args.dirlistredir, args.dirrecursive
+                        session.url,
+                        session.args.dirlistredir,
+                        session.args.dirrecursive,
                     )
                 except Exception as error:
                     output.debug_exception()

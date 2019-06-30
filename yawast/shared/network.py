@@ -12,7 +12,7 @@ from urllib3 import Retry
 
 from yawast._version import get_version
 from yawast.reporting import reporter
-from yawast.shared import output
+from yawast.shared import output, utils
 
 YAWAST_UA = (
     f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -285,16 +285,22 @@ def check_www_redirect(url):
 
         try:
             parsed_location = urlparse(location)
+            location_domain = utils.get_domain(parsed_location.netloc)
+            domain = utils.get_domain(parsed.netloc)
 
-            if parsed.netloc.startswith("www") & (
-                not parsed_location.netloc.startswith("www")
+            if (
+                domain.startswith("www")
+                and (not location_domain.startswith("www"))
+                and location_domain in domain
             ):
                 parsed_location = parsed._replace(netloc=parsed_location.netloc)
 
                 return urlunparse(parsed_location)
             elif (
-                not parsed.netloc.startswith("www")
-            ) & parsed_location.netloc.startswith("www"):
+                (not domain.startswith("www"))
+                and location_domain.startswith("www")
+                and domain in location_domain
+            ):
                 parsed_location = parsed._replace(netloc=parsed_location.netloc)
 
                 return urlunparse(parsed_location)

@@ -49,13 +49,16 @@ def check_response(
         mtch = re.search(rule.pattern, body)
 
         if mtch:
-            val = mtch.group(rule.match_group)
+            val = mtch.group(int(rule.match_group))
 
             err_start = body.find(val)
 
             # get the error, plus 25 characters on each side
             err = body[err_start - 25 : err_start + len(val) + 25]
-            msg = f"Found {rule.type} error message (confidence: {rule.confidence}) on {url}: {err}"
+            msg = (
+                f"Found error message (confidence: {rule.confidence}) "
+                f"on {url} ({res.request.method}): ...{err}..."
+            )
 
             if msg not in _reports:
                 results.append(
@@ -67,6 +70,8 @@ def check_response(
                 )
 
                 _reports.append(msg)
+
+                break
             else:
                 output.debug(f"Ignored duplicate error message: {msg}")
 

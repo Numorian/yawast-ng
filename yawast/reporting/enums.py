@@ -351,6 +351,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     SERVER_ASPNET_DEBUG_ENABLED = VulnerabilityInfo(
         "Server_AspNet_Debug_Enabled", Severity.HIGH, "", 10114
     )
+    SERVER_ASPNET_HANDLER_ENUM = VulnerabilityInfo(
+        "Server_AspNet_Handler_Enum", Severity.LOW, "", 10122, True
+    )
     SERVER_RAILS_CVE_2019_5418 = VulnerabilityInfo(
         "Server_Rails_CVE_2019_5418", Severity.CRITICAL, "", 10115
     )
@@ -362,6 +365,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     )
     SERVER_SPECIAL_FILE_EXPOSED = VulnerabilityInfo(
         "Server_Special_File_Exposed", Severity.INFO, "", 10118, True
+    )
+    SERVER_INT_IP_EXP_HTTP10 = VulnerabilityInfo(
+        "Server_Int_IP_Exp_Http10", Severity.LOW, "", 10121
     )
 
     WAF_CLOUDFLARE = VulnerabilityInfo("Waf_Cloudflare", Severity.INFO, "", 10119)

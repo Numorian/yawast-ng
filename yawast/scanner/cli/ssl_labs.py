@@ -11,10 +11,11 @@ from yawast.reporting import reporter, issue
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.ssl import cert_info
 from yawast.scanner.plugins.ssl_labs import api
+from yawast.scanner.session import Session
 from yawast.shared import output
 
 
-def scan(args: Namespace, url: str, domain: str):
+def scan(session: Session):
     tty = sys.stdout.isatty()
 
     output.norm("Beginning SSL Labs scan (this could take a minute or two)")
@@ -25,7 +26,7 @@ def scan(args: Namespace, url: str, domain: str):
     for msg in messages:
         output.norm("[SSL Labs] {msg}".format(msg=msg))
 
-    api.start_scan(domain)
+    api.start_scan(session.domain)
     status = ""
 
     error_count = 0
@@ -36,7 +37,7 @@ def scan(args: Namespace, url: str, domain: str):
         sleep(5)
 
         try:
-            status, body = api.check_scan(domain)
+            status, body = api.check_scan(session.domain)
         except Exception:
             # if we find ourselves here, we want to try a couple more times before we give up for good
             output.debug_exception()
@@ -107,9 +108,9 @@ def scan(args: Namespace, url: str, domain: str):
             output.norm(f'IP: {ep["ipAddress"]} - Grade: {ep["grade"]}')
 
             if ep["statusMessage"] == "Ready":
-                _get_cert_info(body, ep, url)
-                _get_protocol_info(ep, url)
-                _get_vulnerability_info(ep, url)
+                _get_cert_info(body, ep, session.url)
+                _get_protocol_info(ep, session.url)
+                _get_vulnerability_info(ep, session.url)
             else:
                 output.error(
                     f'Error getting information for IP: {ep["ipAddress"]}: {ep["statusMessage"]}'

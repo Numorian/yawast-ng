@@ -1,24 +1,18 @@
 import socket
-from urllib.parse import urlparse
 
 from yawast.scanner.cli import dns
-from yawast.shared import utils
+from yawast.scanner.session import Session
 
 
-def start(args, url):
-    print(f"Scanning: {url}")
-
-    # parse the URL, we'll need this
-    parsed = urlparse(url)
-    # get rid of any port number & credentials that may exist
-    domain = utils.get_domain(parsed.netloc)
+def start(session: Session):
+    print(f"Scanning: {session.url}")
 
     # make sure it resolves
     try:
-        socket.gethostbyname(domain)
+        socket.gethostbyname(session.domain)
     except socket.gaierror as error:
-        print(f"Fatal Error: Unable to resolve {domain} ({str(error)})")
+        print(f"Fatal Error: Unable to resolve {session.domain} ({str(error)})")
 
         return
 
-    dns.scan(args, url, domain)
+    dns.scan(session)

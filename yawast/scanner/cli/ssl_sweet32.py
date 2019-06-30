@@ -1,5 +1,3 @@
-from argparse import Namespace
-
 from nassl.ssl_client import OpenSslVersionEnum
 from sslyze import server_connectivity_tester
 from sslyze.plugins.openssl_cipher_suites_plugin import OPENSSL_TO_RFC_NAMES_MAPPING
@@ -10,14 +8,15 @@ from sslyze.utils import (
 )
 from validator_collection import checkers
 
-from yawast.scanner.plugins.dns import basic
-from yawast.shared import output, utils, network
 from yawast.reporting import reporter, issue
-from yawast.reporting.enums import Vulnerabilities, Severity
+from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.dns import basic
+from yawast.scanner.session import Session
+from yawast.shared import output, utils, network
 
 
-def scan(args: Namespace, url: str, domain: str):
-    ips = basic.get_ips(domain)
+def scan(session: Session):
+    ips = basic.get_ips(session.domain)
 
     for ip in ips:
         conn = None
@@ -27,7 +26,7 @@ def scan(args: Namespace, url: str, domain: str):
             count = 0
 
             conn_tester = server_connectivity_tester.ServerConnectivityTester(
-                hostname=domain, port=utils.get_port(url), ip_address=ip
+                hostname=session.domain, port=utils.get_port(session.url), ip_address=ip
             )
 
             output.norm(
@@ -53,7 +52,7 @@ def scan(args: Namespace, url: str, domain: str):
                 "User-Agent: {user_agent}\r\n"
                 "Accept: */*\r\n"
                 "Connection: keep-alive\r\n\r\n".format(
-                    host=domain, user_agent=network.YAWAST_UA
+                    host=session.domain, user_agent=network.YAWAST_UA
                 )
             )
 
@@ -77,7 +76,7 @@ def scan(args: Namespace, url: str, domain: str):
             reporter.display(
                 f"\tTLS Session Request Limit: Connection not terminated after {count} requests; "
                 f"possibly vulnerable to SWEET32",
-                issue.Issue(Vulnerabilities.TLS_SWEET32, url, {}),
+                issue.Issue(Vulnerabilities.TLS_SWEET32, session.url, {}),
             )
 
         except ssl_connection.SslHandshakeRejected as error:

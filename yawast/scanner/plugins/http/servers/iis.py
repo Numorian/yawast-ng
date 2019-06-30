@@ -1,8 +1,12 @@
-from typing import List, cast, Dict, Any
+import secrets
+from typing import List, cast, Dict
+from urllib.parse import urljoin
+
 from packaging import version
 
-from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
+from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
 
@@ -11,6 +15,7 @@ def check_all(url: str) -> List[Result]:
     results: List[Result] = []
 
     results += check_asp_net_debug(url)
+    results += check_aspnet_handlers(url)
 
     return results
 
@@ -95,6 +100,42 @@ def check_version(banner: str, raw: str, url: str, headers: Dict) -> List[Result
     return results
 
 
+def check_aspnet_handlers(url: str) -> List[Result]:
+    results = []
+
+    file_name = secrets.token_hex(12)
+
+    exts = ["ashx", "aspx", "asmx", "soap", "rem"]
+
+    for ext in exts:
+        target = urljoin(url, f"{file_name}.{ext}")
+        vuln = False
+
+        res = network.http_get(target, False)
+        body = res.text
+
+        if "Location" in res.headers and "aspxerrorpath" in res.headers["Location"]:
+            vuln = True
+        elif (
+            res.status_code >= 400
+            and "Remoting.RemotingException" in body
+            or "HttpException" in body
+            or "FileNotFoundException" in body
+        ):
+            vuln = True
+
+        if vuln:
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(res, {"handler": ext}),
+                    f"ASP.NET Handler Enumeration: {ext}",
+                    Vulnerabilities.SERVER_ASPNET_HANDLER_ENUM,
+                )
+            )
+
+    return results
+
+
 def check_asp_net_debug(url: str) -> List[Result]:
     results: List[Result] = []
 
@@ -102,7 +143,7 @@ def check_asp_net_debug(url: str) -> List[Result]:
         "DEBUG", url, additional_headers={"Command": "stop-debug", "Accept": "*/*"}
     )
 
-    if res.status_code == 200:
+    if res.status_code == 200 and "OK" in res.text:
         # we've got a hit, but could be a false positive
         # try this again, with a different verb
         xres = network.http_custom(

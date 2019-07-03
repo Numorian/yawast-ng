@@ -80,44 +80,54 @@ def scan(session: Session):
     # get files, and add those to the link list
     links += _file_search(session, links)
 
-    res = http_basic.check_local_ip_disclosure(session)
+    with Spinner():
+        res = http_basic.check_local_ip_disclosure(session)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = apache_httpd.check_all(session.url)
+    with Spinner():
+        res = apache_httpd.check_all(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = apache_tomcat.check_all(session.url, links)
+    with Spinner():
+        res = apache_tomcat.check_all(session.url, links)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = nginx.check_all(session.url)
+    with Spinner():
+        res = nginx.check_all(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = iis.check_all(session.url)
+    with Spinner():
+        res = iis.check_all(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = http_basic.check_propfind(session.url)
+    with Spinner():
+        res = http_basic.check_propfind(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = http_basic.check_trace(session.url)
+    with Spinner():
+        res = http_basic.check_trace(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    res = http_basic.check_options(session.url)
+    with Spinner():
+        res = http_basic.check_options(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
-    wp_path, res = wordpress.identify(session.url)
+    with Spinner():
+        wp_path, res = wordpress.identify(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 
     if wp_path is not None:
-        res = wordpress.check_json_user_enum(wp_path)
+        with Spinner():
+            res = wordpress.check_json_user_enum(wp_path)
         if len(res) > 0:
             reporter.display_results(res, "\t")
 

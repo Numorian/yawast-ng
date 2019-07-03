@@ -1,6 +1,7 @@
 import ipaddress
 import socket
 from argparse import Namespace
+from typing import Tuple
 
 from publicsuffixlist import PublicSuffixList
 
@@ -72,8 +73,7 @@ def scan(session: Session):
     mx = basic.get_mx(session.domain)
     reporter.register_data("dns_mx", {session.domain: mx})
     for rec in mx:
-        server_ip = socket.gethostbyname(rec[0])
-        ni = network_info.network_info(str(server_ip))
+        server_ip, ni = _get_ip_info(rec[0])
 
         info = "%s (%s) - %s (%s)" % (rec[0], rec[1], server_ip, ni)
         output.norm("\tMX: %s" % info)
@@ -83,8 +83,7 @@ def scan(session: Session):
         mx = basic.get_mx(root_domain)
         reporter.register_data("dns_mx", {root_domain: mx})
         for rec in mx:
-            server_ip = socket.gethostbyname(rec[0])
-            ni = network_info.network_info(str(server_ip))
+            server_ip, ni = _get_ip_info(rec[0])
 
             info = "%s (%s) - %s (%s)" % (rec[0], rec[1], server_ip, ni)
             output.norm("\tMX (%s): %s" % (root_domain, info))
@@ -95,8 +94,7 @@ def scan(session: Session):
     ns = basic.get_ns(root_domain)
     reporter.register_data("dns_ns", {root_domain: ns})
     for rec in ns:
-        server_ip = socket.gethostbyname(rec)
-        ni = network_info.network_info(str(server_ip))
+        server_ip, ni = _get_ip_info(rec)
 
         info = "%s - %s (%s)" % (rec, server_ip, ni)
         output.norm("\tNS: %s" % info)
@@ -112,8 +110,7 @@ def scan(session: Session):
             reporter.register_data("dns_srv", srv_records)
 
         for rec in srv_records:
-            server_ip = socket.gethostbyname(rec[1])
-            ni = network_info.network_info(str(server_ip))
+            server_ip, ni = _get_ip_info(rec[1])
 
             info = "%s: %s:%s - %s (%s)" % (rec[0], rec[1], rec[2], server_ip, ni)
             output.norm("\tSRV: %s" % info)
@@ -132,8 +129,7 @@ def scan(session: Session):
             info = ""
 
             if rec[0] == "CNAME":
-                server_ip = socket.gethostbyname(rec[2])
-                ni = network_info.network_info(str(server_ip))
+                server_ip, ni = _get_ip_info(rec[2])
 
                 info = "(CNAME) %s -> %s - %s (%s)" % (rec[1], rec[2], server_ip, ni)
             elif rec[0] == "A":
@@ -189,3 +185,16 @@ def scan(session: Session):
         )
 
     output.empty()
+
+
+def _get_ip_info(ip: str) -> Tuple[str, str]:
+    try:
+        server_ip = socket.gethostbyname(ip)
+        ni = network_info.network_info(str(server_ip))
+    except Exception:
+        server_ip = "(Unavailable)"
+        ni = "(Unavailable)"
+
+        output.debug_exception()
+
+    return server_ip, ni

@@ -15,7 +15,7 @@ from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.http.servers import apache_httpd, php, iis, nginx, python
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
-from yawast.shared import network, utils
+from yawast.shared import network, utils, output
 
 
 def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
@@ -342,7 +342,10 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
 
         conn.connect()
 
-        _get_result(conn, utils.get_port(session.url))
+        try:
+            _get_result(conn, utils.get_port(session.url))
+        except Exception:
+            output.debug_exception()
 
     if session.supports_http:
         url = session.get_http_url()
@@ -350,7 +353,10 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
         conn = socket.socket()
         conn.connect((utils.get_domain(url), port))
 
-        _get_result(conn, port)
+        try:
+            _get_result(conn, port)
+        except Exception:
+            output.debug_exception()
 
     return results
 

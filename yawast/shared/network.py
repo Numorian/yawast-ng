@@ -1,6 +1,6 @@
 import secrets
 from http import cookiejar
-from typing import List, Dict, Union, Tuple
+from typing import List, Dict, Union, Tuple, Optional
 from urllib.parse import urlparse, urljoin
 from urllib.parse import urlunparse
 
@@ -38,14 +38,14 @@ def init(proxy: str, cookie: str) -> None:
     _requester.mount(
         "http://",
         HTTPAdapter(
-            max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
+            max_retries=Retry(total=3, read=5, connect=5, backoff_factor=0.3),
             pool_maxsize=50,
         ),
     )
     _requester.mount(
         "https://",
         HTTPAdapter(
-            max_retries=Retry(total=5, read=5, connect=5, backoff_factor=0.3),
+            max_retries=Retry(total=3, read=5, connect=5, backoff_factor=0.3),
             pool_maxsize=50,
         ),
     )
@@ -67,7 +67,9 @@ def init(proxy: str, cookie: str) -> None:
         _requester.cookies.set_cookie(c)
 
 
-def http_head(url, allow_redirects=True, timeout=15) -> Response:
+def http_head(
+    url: str, allow_redirects: Optional[bool] = True, timeout: Optional[int] = 30
+) -> Response:
     global _requester
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -89,7 +91,7 @@ def http_head(url, allow_redirects=True, timeout=15) -> Response:
     return res
 
 
-def http_options(url, timeout=15) -> Response:
+def http_options(url: str, timeout: Optional[int] = 30) -> Response:
     global _requester
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -106,7 +108,10 @@ def http_options(url, timeout=15) -> Response:
 
 
 def http_get(
-    url: str, allow_redirects=True, additional_headers: Union[None, Dict] = None
+    url: str,
+    allow_redirects: Optional[bool] = True,
+    additional_headers: Union[None, Dict] = None,
+    timeout: Optional[int] = 30,
 ) -> Response:
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -118,7 +123,11 @@ def http_get(
         headers = {**headers, **additional_headers}
 
     res = _requester.get(
-        url, headers=headers, verify=False, allow_redirects=allow_redirects
+        url,
+        headers=headers,
+        verify=False,
+        allow_redirects=allow_redirects,
+        timeout=timeout,
     )
 
     output.debug(
@@ -134,6 +143,7 @@ def http_put(
     data: str,
     allow_redirects=True,
     additional_headers: Union[None, Dict] = None,
+    timeout: Optional[int] = 30,
 ) -> Response:
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -145,7 +155,12 @@ def http_put(
         headers = {**headers, **additional_headers}
 
     res = _requester.put(
-        url, data=data, headers=headers, verify=False, allow_redirects=allow_redirects
+        url,
+        data=data,
+        headers=headers,
+        verify=False,
+        allow_redirects=allow_redirects,
+        timeout=timeout,
     )
 
     output.debug(
@@ -157,7 +172,10 @@ def http_put(
 
 
 def http_custom(
-    verb: str, url: str, additional_headers: Union[None, Dict] = None
+    verb: str,
+    url: str,
+    additional_headers: Union[None, Dict] = None,
+    timeout: Optional[int] = 30,
 ) -> Response:
 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -168,7 +186,7 @@ def http_custom(
     if additional_headers is not None:
         headers = {**headers, **additional_headers}
 
-    res = _requester.request(verb, url, headers=headers, verify=False)
+    res = _requester.request(verb, url, headers=headers, verify=False, timeout=timeout)
 
     output.debug(
         f"{res.request.method}: {url} - completed ({res.status_code}) in "
@@ -178,14 +196,20 @@ def http_custom(
     return res
 
 
-def http_json(url, allow_redirects=True) -> Tuple[Dict, int]:
+def http_json(
+    url, allow_redirects=True, timeout: Optional[int] = 30
+) -> Tuple[Dict, int]:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     global _requester
 
     headers = {"User-Agent": SERVICE_UA}
 
     res = _requester.get(
-        url, headers=headers, verify=False, allow_redirects=allow_redirects
+        url,
+        headers=headers,
+        verify=False,
+        allow_redirects=allow_redirects,
+        timeout=timeout,
     )
     return res.json(), res.status_code
 

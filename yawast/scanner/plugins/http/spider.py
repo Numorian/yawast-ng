@@ -80,6 +80,16 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
 
     results: List[Result] = []
 
+    # fail-safe to make sure we don't go too crazy
+    if len(_links) > 10000:
+        # if we have more than 10,000 URLs in our list, just stop
+        queue.put(results)
+        output.debug(
+            "Spider: Link list contains > 10,000 items. Stopped gathering more links."
+        )
+
+        return
+
     for url in urls:
         try:
             # list of pages found that will need to be processed
@@ -200,7 +210,8 @@ def _is_unsafe_link(href: str, description: str) -> bool:
     ]
 
     ret = False
-    description = str(description) if description is not None else ""
+    description = str(description).lower() if description is not None else ""
+    href = str(href).lower()
 
     for frag in unsafe_fragments:
         if frag in href or frag in description:

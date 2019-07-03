@@ -77,7 +77,7 @@ def check_version(banner: str, raw: str, url: str, headers: Dict) -> List[Result
     if "X-AspNet-Version" in headers:
         results.append(
             Result(
-                f'ASP.NET  Version Exposed: {headers["X-AspNet-Version"]}',
+                f'ASP.NET CLR Version Exposed: {headers["X-AspNet-Version"]}',
                 Vulnerabilities.HTTP_HEADER_X_ASPNET_VERSION,
                 url,
                 raw,

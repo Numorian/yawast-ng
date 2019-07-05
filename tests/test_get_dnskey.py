@@ -7,7 +7,7 @@ from yawast.shared import output
 
 class TestGetDnsKey(TestCase):
     def test_get_dnskey_good(self):
-        output.setup(False, False)
+        output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
             recs = dnssec.get_dnskey("cloudflare.com")
 
@@ -15,7 +15,7 @@ class TestGetDnsKey(TestCase):
         self.assertTrue(len(recs) > 0)
 
     def test_get_dnskey_none(self):
-        output.setup(False, False)
+        output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
             recs = dnssec.get_dnskey("adamcaudill.com")
 

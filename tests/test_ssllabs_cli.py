@@ -8,10 +8,12 @@ from yawast.scanner.cli.ssl_labs import (
     _get_protocol_info,
     _get_vulnerability_info,
 )
+from yawast.shared import output
 
 
 class TestSslLabsCLI(TestCase):
     def test__get_cert_info(self):
+        output.setup(False, False, False)
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/ssl_labs_analyze_data.json")
         with open(path) as json_file:
@@ -26,6 +28,7 @@ class TestSslLabsCLI(TestCase):
             self.assertIsNone(error)
 
     def test__get_protocol_info(self):
+        output.setup(False, False, False)
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/ssl_labs_analyze_data.json")
         with open(path) as json_file:
@@ -40,6 +43,7 @@ class TestSslLabsCLI(TestCase):
             self.assertIsNone(error)
 
     def test__get_vulnerability_info(self):
+        output.setup(False, False, False)
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/ssl_labs_analyze_data.json")
         with open(path) as json_file:

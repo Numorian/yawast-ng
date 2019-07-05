@@ -36,7 +36,7 @@ def main():
     args, urls = parser.parse_known_args()
 
     # setup the output system
-    output.setup(args.debug, args.nocolors)
+    output.setup(args.debug, args.nocolors, args.nowrap)
     output.debug("Starting application...")
 
     network.init(args.proxy, args.cookie)

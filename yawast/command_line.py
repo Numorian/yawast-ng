@@ -16,6 +16,11 @@ def build_parser():
     parent_parser.add_argument(
         "--nocolors", action="store_true", help="Disables the use of colors in output"
     )
+    parent_parser.add_argument(
+        "--nowrap",
+        action="store_true",
+        help="Disables the use of line wrapping in output",
+    )
 
     parser = argparse.ArgumentParser(prog="yawast")
 

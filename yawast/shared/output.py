@@ -15,6 +15,7 @@ from yawast.reporting import reporter
 from yawast.shared import utils
 
 _no_colors = False
+_no_wrap = False
 _init = False
 _wrapper = None
 _debug = False
@@ -22,10 +23,12 @@ _logger: Optional[logging.Logger] = None
 _lock = Lock()
 
 
-def setup(enable_debug: bool, no_colors: bool):
-    global _no_colors, _init, _wrapper, _debug, _logger
+def setup(enable_debug: bool, no_colors: bool, no_wrap: bool):
+    global _no_colors, _init, _wrapper, _debug, _logger, _no_wrap
 
     _init = True
+
+    _no_wrap = no_wrap
 
     _wrapper = textwrap.TextWrapper()
     width = shutil.get_terminal_size().columns
@@ -158,7 +161,7 @@ def _print_special(color: str, header: str, msg: str):
 
 
 def _print(val):
-    global _wrapper, _lock, _debug
+    global _wrapper, _lock, _debug, _no_wrap
 
     is_dbg = False
 
@@ -174,7 +177,10 @@ def _print(val):
             reporter.register_message(clean, "normal")
 
         if not is_dbg or (is_dbg and _debug):
-            print(_wrapper.fill(val))
+            if _no_wrap:
+                print(val)
+            else:
+                print(_wrapper.fill(val))
 
 
 class _LogHandler(logging.StreamHandler):

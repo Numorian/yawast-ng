@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from requests.models import Response
 
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import http_basic, retirejs, error_checker, http_utils
 from yawast.scanner.plugins.http.servers import rails, apache_tomcat
 from yawast.scanner.plugins.result import Result
@@ -32,6 +33,8 @@ def check_response(
         results += retirejs.get_results(soup, url, raw_full)
         results += apache_tomcat.get_version(url, res)
         results += error_checker.check_response(url, res, body)
+
+        results += _check_cache_headers(url, res)
 
     results += http_basic.get_header_issues(res, raw_full, url)
     results += http_basic.get_cookie_issues(res, raw_full, url)
@@ -74,6 +77,81 @@ def _check_charset(url: str, res: Response, raw: str) -> List[Result]:
                 Vulnerabilities.HTTP_HEADER_CONTENT_TYPE_MISSING,
                 url,
                 raw,
+            )
+        )
+
+    return results
+
+
+def _check_cache_headers(url: str, res: Response) -> List[Result]:
+    results = []
+
+    if "Cache-Control" in res.headers:
+        # we have the header, check the content
+        if "public" in str(res.headers["Cache-Control"]).lower():
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(res),
+                    f"Cache-Control: Public: {url}",
+                    Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_PUBLIC,
+                )
+            )
+
+        if "no-cache" not in str(res.headers["Cache-Control"]).lower():
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(res),
+                    f"Cache-Control: no-cache Not Found: {url}",
+                    Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_NO_CACHE_MISSING,
+                )
+            )
+
+        if "no-store" not in str(res.headers["Cache-Control"]).lower():
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(res),
+                    f"Cache-Control: no-store Not Found: {url}",
+                    Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_NO_STORE_MISSING,
+                )
+            )
+
+        if "private" not in str(res.headers["Cache-Control"]).lower():
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(res),
+                    f"Cache-Control: private Not Found: {url}",
+                    Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_PRIVATE_MISSING,
+                )
+            )
+    else:
+        # header missing
+        results.append(
+            Result.from_evidence(
+                Evidence.from_response(res),
+                f"Cache-Control Header Not Found: {url}",
+                Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_MISSING,
+            )
+        )
+
+    if "Expires" not in res.headers:
+        results.append(
+            Result.from_evidence(
+                Evidence.from_response(res),
+                f"Expires Header Not Found: {url}",
+                Vulnerabilities.HTTP_HEADER_EXPIRES_MISSING,
+            )
+        )
+
+    else:
+        # TODO: parse the value and see if it's less than now
+        pass
+
+    if "Pragma" not in res.headers or "no-cache" not in str(res.headers["Pragma"]):
+        results.append(
+            Result.from_evidence(
+                Evidence.from_response(res),
+                f"Pragma: no-cache Not Found: {url}",
+                Vulnerabilities.HTTP_HEADER_PRAGMA_NO_CACHE_MISSING,
             )
         )
 

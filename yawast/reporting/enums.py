@@ -167,6 +167,27 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     HTTP_HEADER_CONTENT_TYPE_MISSING = VulnerabilityInfo(
         "Http_Header_Content_Type_Missing", Severity.LOW, ""
     )
+    HTTP_HEADER_CACHE_CONTROL_MISSING = VulnerabilityInfo(
+        "Http_Header_Cache_Control_Missing", Severity.LOW, ""
+    )
+    HTTP_HEADER_CACHE_CONTROL_NO_CACHE_MISSING = VulnerabilityInfo(
+        "Http_Header_Cache_Control_No_Cache_Missing", Severity.LOW, ""
+    )
+    HTTP_HEADER_CACHE_CONTROL_NO_STORE_MISSING = VulnerabilityInfo(
+        "Http_Header_Cache_Control_No_Store_Missing", Severity.LOW, ""
+    )
+    HTTP_HEADER_CACHE_CONTROL_PRIVATE_MISSING = VulnerabilityInfo(
+        "Http_Header_Cache_Control_Private_Missing", Severity.LOW, ""
+    )
+    HTTP_HEADER_CACHE_CONTROL_PUBLIC = VulnerabilityInfo(
+        "Http_Header_Cache_Control_Public", Severity.LOW, ""
+    )
+    HTTP_HEADER_EXPIRES_MISSING = VulnerabilityInfo(
+        "Http_Header_Expires_Missing", Severity.LOW, ""
+    )
+    HTTP_HEADER_PRAGMA_NO_CACHE_MISSING = VulnerabilityInfo(
+        "Http_Header_Pragma_No_Cache_Missing", Severity.LOW, ""
+    )
     HTTP_ERROR_MESSAGE = VulnerabilityInfo(
         "Http_Error_Message", Severity.MEDIUM, "", True
     )

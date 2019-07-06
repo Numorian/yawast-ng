@@ -30,26 +30,26 @@ def check_response(
             soup = BeautifulSoup(body, "html.parser")
 
         # check for things thar require parsed HTML
-        results += retirejs.get_results(soup, url, raw_full)
+        results += retirejs.get_results(soup, url, res)
         results += apache_tomcat.get_version(url, res)
         results += error_checker.check_response(url, res, body)
 
         results += _check_cache_headers(url, res)
 
     results += http_basic.get_header_issues(res, raw_full, url)
-    results += http_basic.get_cookie_issues(res, raw_full, url)
+    results += http_basic.get_cookie_issues(res, url)
 
     # this function will trigger a recursive call, as it calls this to check the response.
     # to deal with this, we'll check the caller, to make sure it's not what we're about to call.
     if "check_cve_2019_5418" not in inspect.stack()[1].function:
         results += rails.check_cve_2019_5418(url)
 
-    results += _check_charset(url, res, raw_full)
+    results += _check_charset(url, res)
 
     return results
 
 
-def _check_charset(url: str, res: Response, raw: str) -> List[Result]:
+def _check_charset(url: str, res: Response) -> List[Result]:
     results: List[Result] = []
 
     # if the body is empty, we really don't care about this
@@ -63,21 +63,19 @@ def _check_charset(url: str, res: Response, raw: str) -> List[Result]:
             if "charset" not in content_type and "text/html" in content_type:
                 # not charset specified
                 results.append(
-                    Result(
+                    Result.from_evidence(
+                        Evidence.from_response(res, {"content-type": content_type}),
                         f"Charset Not Defined in '{res.headers['Content-Type']}' at {url}",
                         Vulnerabilities.HTTP_HEADER_CONTENT_TYPE_NO_CHARSET,
-                        url,
-                        [res.headers["Content-Type"], raw],
                     )
                 )
         else:
             # content-type missing
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(res),
                     f"Content-Type Missing: {url} ({res.request.method} - {res.status_code})",
                     Vulnerabilities.HTTP_HEADER_CONTENT_TYPE_MISSING,
-                    url,
-                    raw,
                 )
             )
     except Exception:

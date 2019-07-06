@@ -3,9 +3,11 @@ from typing import List, Dict, Tuple, Any, Union
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
+from requests import Response
 
 from yawast.external import retirejs
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.result import Result
 from yawast.shared import output, network, utils
 
@@ -14,7 +16,7 @@ _checked: List[str] = []
 _reports: List[str] = []
 
 
-def get_results(soup: BeautifulSoup, url: str, raw: str) -> List[Result]:
+def get_results(soup: BeautifulSoup, url: str, res: Response) -> List[Result]:
     global _reports
 
     results: List[Result] = []
@@ -23,7 +25,7 @@ def get_results(soup: BeautifulSoup, url: str, raw: str) -> List[Result]:
         parsed = urlparse(url)
         domain = utils.get_domain(parsed.netloc)
 
-        issues, r = _get_retirejs_results(soup, url, domain)
+        issues, r = _get_retirejs_results(soup, url, domain, res)
         results += r
         for js_url, issue in issues:
             comp = issue["component"]
@@ -41,11 +43,19 @@ def get_results(soup: BeautifulSoup, url: str, raw: str) -> List[Result]:
                         _reports.append(info)
 
                         results.append(
-                            Result(
+                            Result.from_evidence(
+                                Evidence.from_response(
+                                    res,
+                                    {
+                                        "js_file": js_url,
+                                        "js_lib": comp,
+                                        "js_lib_ver": ver,
+                                        "vuln_info": list(vuln["info"]),
+                                        "vuln_sev": vuln["severity"],
+                                    },
+                                ),
                                 info,
                                 Vulnerabilities.JS_VULNERABLE_VERSION,
-                                js_url,
-                                [url, raw],
                             )
                         )
     except Exception:
@@ -62,7 +72,7 @@ def reset():
 
 
 def _get_retirejs_results(
-    soup: BeautifulSoup, url: str, domain: str
+    soup: BeautifulSoup, url: str, domain: str, res: Response
 ) -> Tuple[List[Tuple[str, Dict]], List[Result]]:
     global _data, _checked
     issues = []
@@ -90,11 +100,10 @@ def _get_retirejs_results(
                 if domain not in file:
                     # external JS file
                     results.append(
-                        Result(
+                        Result.from_evidence(
+                            Evidence.from_response(res, {"js_file": file}),
                             f"External JavaScript File: {file}",
                             Vulnerabilities.JS_EXTERNAL_FILE,
-                            file,
-                            [url, file],
                         )
                     )
 

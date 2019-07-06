@@ -42,7 +42,7 @@ def scan(session: Session):
         reporter.display_results(res, "\t")
         output.empty()
 
-    res = http_basic.get_cookie_issues(head, raw, session.url)
+    res = http_basic.get_cookie_issues(head, session.url)
     if len(res) > 0:
         output.norm("Cookie Issues:")
 

@@ -373,16 +373,16 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
     return results
 
 
-def get_cookie_issues(res: Response, raw: str, url: str) -> List[Result]:
+def get_cookie_issues(res: Response, url: str) -> List[Result]:
     if "Set-Cookie" in res.headers:
         cookies = res.raw.headers.getlist("Set-Cookie")
 
-        return _get_cookie_issues(cookies, raw, url)
+        return _get_cookie_issues(cookies, url, res)
     else:
         return []
 
 
-def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
+def _get_cookie_issues(cookies: List[str], url: str, res: Response) -> List[Result]:
     global _checked_cookies
 
     # setup the checked list
@@ -424,11 +424,10 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
                         ]
                     ):
                         results.append(
-                            Result(
+                            Result.from_evidence(
+                                Evidence.from_response(res, {"cookie": name}),
                                 f"Cookie Missing Secure Flag: {cookie}",
                                 Vulnerabilities.COOKIE_MISSING_SECURE_FLAG,
-                                url,
-                                [name, raw],
                             )
                         )
 
@@ -445,11 +444,10 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
                             ]
                         ):
                             results.append(
-                                Result(
+                                Result.from_evidence(
+                                    Evidence.from_response(res, {"cookie": name}),
                                     f"Cookie Secure Flag Invalid (over HTTP): {cookie}",
                                     Vulnerabilities.COOKIE_INVALID_SECURE_FLAG,
-                                    url,
-                                    [name, raw],
                                 )
                             )
 
@@ -466,11 +464,10 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
                     ]
                 ):
                     results.append(
-                        Result(
+                        Result.from_evidence(
+                            Evidence.from_response(res, {"cookie": name}),
                             f"Cookie Missing HttpOnly Flag: {cookie}",
                             Vulnerabilities.COOKIE_MISSING_HTTPONLY_FLAG,
-                            url,
-                            [name, raw],
                         )
                     )
 
@@ -491,11 +488,10 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
                     ]
                 ):
                     results.append(
-                        Result(
+                        Result.from_evidence(
+                            Evidence.from_response(res, {"cookie": name}),
                             f"Cookie Missing SameSite Flag: {cookie}",
                             Vulnerabilities.COOKIE_MISSING_SAMESITE_FLAG,
-                            url,
-                            [name, raw],
                         )
                     )
 
@@ -513,11 +509,10 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
                         ]
                     ):
                         results.append(
-                            Result(
+                            Result.from_evidence(
+                                Evidence.from_response(res, {"cookie": name}),
                                 f"Cookie With SameSite=None Flag: {cookie}",
                                 Vulnerabilities.COOKIE_WITH_SAMESITE_NONE_FLAG,
-                                url,
-                                [name, raw],
                             )
                         )
 
@@ -532,11 +527,10 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
                         ]
                     ):
                         results.append(
-                            Result(
+                            Result.from_evidence(
+                                Evidence.from_response(res, {"cookie": name}),
                                 f"Cookie SameSite=None Flag Invalid (without Secure flag): {cookie}",
                                 Vulnerabilities.COOKIE_INVALID_SAMESITE_NONE_FLAG,
-                                url,
-                                [name, raw],
                             )
                         )
 

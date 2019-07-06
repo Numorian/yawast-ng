@@ -57,6 +57,12 @@ def spider(url) -> Tuple[List[str], List[Result]]:
 
     pool.close()
 
+    for t in _tasks:
+        try:
+            t.get()
+        except Exception:
+            output.debug_exception()
+
     while not queue.empty():
         res = queue.get()
 
@@ -83,7 +89,6 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
     # fail-safe to make sure we don't go too crazy
     if len(_links) > 10000:
         # if we have more than 10,000 URLs in our list, just stop
-        queue.put(results)
         output.debug(
             "Spider: Link list contains > 10,000 items. Stopped gathering more links."
         )
@@ -107,67 +112,64 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                 soup = BeautifulSoup(res.text, "html.parser")
             else:
                 # no clue what this is
-                results += response_scanner.check_response(url, res)
+                soup = None
 
-                return
-
-            # check the response for issues
             results += response_scanner.check_response(url, res, soup)
 
-            for link in soup.find_all("a"):
-                href = link.get("href")
+            if soup is not None:
+                for link in soup.find_all("a"):
+                    href = link.get("href")
 
-                if href is not None:
-                    # check to see if this link is in scope
-                    if base_url in href and href not in _links:
-                        if "." in href.split("/")[-1]:
-                            file_ext = href.split("/")[-1].split(".")[-1]
-                        else:
-                            file_ext = None
+                    if href is not None:
+                        # check to see if this link is in scope
+                        if base_url in href and href not in _links:
+                            if "." in href.split("/")[-1]:
+                                file_ext = href.split("/")[-1].split(".")[-1]
+                            else:
+                                file_ext = None
 
-                        with _lock:
-                            _links.append(href)
+                            with _lock:
+                                _links.append(href)
 
-                        # filter out some of the obvious binary files
-                        if file_ext is None or file_ext not in [
-                            "gzip",
-                            "jpg",
-                            "jpeg",
-                            "gif",
-                            "woff",
-                            "zip",
-                            "exe",
-                            "gz",
-                            "pdf",
-                        ]:
-                            if not _is_unsafe_link(href, link.string):
-                                to_process.append(href)
+                            # filter out some of the obvious binary files
+                            if file_ext is None or file_ext not in [
+                                "gzip",
+                                "jpg",
+                                "jpeg",
+                                "gif",
+                                "woff",
+                                "zip",
+                                "exe",
+                                "gz",
+                                "pdf",
+                            ]:
+                                if not _is_unsafe_link(href, link.string):
+                                    to_process.append(href)
+                                else:
+                                    output.debug(
+                                        f"Skipping unsafe URL: {link.string} - {href}"
+                                    )
                             else:
                                 output.debug(
-                                    f"Skipping unsafe URL: {link.string} - {href}"
+                                    f'Skipping URL "{href}" due to file extension "{file_ext}"'
                                 )
                         else:
-                            output.debug(
-                                f'Skipping URL "{href}" due to file extension "{file_ext}"'
-                            )
-                    else:
-                        if (
-                            "https://" in base_url
-                            and "http://" in href
-                            and href not in _insecure
-                        ):
-                            # link from secure to insecure
-                            with _lock:
-                                _insecure.append(href)
+                            if (
+                                "https://" in base_url
+                                and "http://" in href
+                                and href not in _insecure
+                            ):
+                                # link from secure to insecure
+                                with _lock:
+                                    _insecure.append(href)
 
-                            results.append(
-                                Result.from_evidence(
-                                    Evidence.from_response(res, {"link": href}),
-                                    f"Insecure Link: {url} links to {href}",
-                                    Vulnerabilities.HTTP_INSECURE_LINK,
+                                results.append(
+                                    Result.from_evidence(
+                                        Evidence.from_response(res, {"link": href}),
+                                        f"Insecure Link: {url} links to {href}",
+                                        Vulnerabilities.HTTP_INSECURE_LINK,
+                                    )
                                 )
-                            )
-                        pass
 
             # handle redirects
             if "Location" in res.headers:
@@ -181,13 +183,15 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                 if base_url in redirect:
                     to_process.append(redirect)
 
-            asy = pool.apply_async(_get_links, (base_url, to_process, queue, pool))
+            if len(to_process) > 0:
+                asy = pool.apply_async(_get_links, (base_url, to_process, queue, pool))
 
-            with _lock:
-                _tasks.append(asy)
+                with _lock:
+                    _tasks.append(asy)
         except Exception:
             output.debug_exception()
 
+    output.debug(f"GetLinks Task Completed - {len(results)} issues found.")
     queue.put(results)
 
 
@@ -210,11 +214,15 @@ def _is_unsafe_link(href: str, description: str) -> bool:
     ]
 
     ret = False
-    description = str(description).lower() if description is not None else ""
-    href = str(href).lower()
 
-    for frag in unsafe_fragments:
-        if frag in href or frag in description:
-            return True
+    try:
+        description = str(description).lower() if description is not None else ""
+        href = str(href).lower()
+
+        for frag in unsafe_fragments:
+            if frag in href or frag in description:
+                return True
+    except Exception:
+        output.debug_exception()
 
     return ret

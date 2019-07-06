@@ -30,50 +30,52 @@ def check_response(
     url: str, res: Response, body: Union[str, None] = None
 ) -> List[Result]:
     global _data, _reports
-
-    # make sure we actually have something
-    if res is None:
-        return []
-
-    if _data is None or len(_data) == 0:
-        _get_data()
-
     results = []
 
-    if body is None:
-        body = res.text
+    try:
+        # make sure we actually have something
+        if res is None:
+            return []
 
-    for rule in _data:
-        rule = cast(_MatchRule, rule)
+        if _data is None or len(_data) == 0:
+            _get_data()
 
-        mtch = re.search(rule.pattern, body)
+        if body is None:
+            body = res.text
 
-        if mtch:
-            val = mtch.group(int(rule.match_group))
+        for rule in _data:
+            rule = cast(_MatchRule, rule)
 
-            err_start = body.find(val)
+            mtch = re.search(rule.pattern, body)
 
-            # get the error, plus 25 characters on each side
-            err = body[err_start - 25 : err_start + len(val) + 25]
-            msg = (
-                f"Found error message (confidence: {rule.confidence}) "
-                f"on {url} ({res.request.method}): ...{err}..."
-            )
+            if mtch:
+                val = mtch.group(int(rule.match_group))
 
-            if msg not in _reports:
-                results.append(
-                    Result.from_evidence(
-                        Evidence.from_response(res),
-                        msg,
-                        Vulnerabilities.HTTP_ERROR_MESSAGE,
-                    )
+                err_start = body.find(val)
+
+                # get the error, plus 25 characters on each side
+                err = body[err_start - 25 : err_start + len(val) + 25]
+                msg = (
+                    f"Found error message (confidence: {rule.confidence}) "
+                    f"on {url} ({res.request.method}): ...{err}..."
                 )
 
-                _reports.append(msg)
+                if msg not in _reports:
+                    results.append(
+                        Result.from_evidence(
+                            Evidence.from_response(res),
+                            msg,
+                            Vulnerabilities.HTTP_ERROR_MESSAGE,
+                        )
+                    )
 
-                break
-            else:
-                output.debug(f"Ignored duplicate error message: {msg}")
+                    _reports.append(msg)
+
+                    break
+                else:
+                    output.debug(f"Ignored duplicate error message: {msg}")
+    except Exception:
+        output.debug_exception()
 
     return results
 

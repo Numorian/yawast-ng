@@ -60,7 +60,6 @@ def scan(session: Session):
     output.norm("Performing vulnerability scan (this will take a while)...")
 
     links: List[str] = []
-    res: List[Result] = []
     with Spinner():
         try:
             links, res = spider.spider(session.url)

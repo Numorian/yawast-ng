@@ -19,34 +19,37 @@ def get_results(soup: BeautifulSoup, url: str, raw: str) -> List[Result]:
 
     results: List[Result] = []
 
-    parsed = urlparse(url)
-    domain = utils.get_domain(parsed.netloc)
+    try:
+        parsed = urlparse(url)
+        domain = utils.get_domain(parsed.netloc)
 
-    issues, r = _get_retirejs_results(soup, url, domain)
-    results += r
-    for js_url, issue in issues:
-        comp = issue["component"]
-        ver = issue["version"]
+        issues, r = _get_retirejs_results(soup, url, domain)
+        results += r
+        for js_url, issue in issues:
+            comp = issue["component"]
+            ver = issue["version"]
 
-        if "vulnerabilities" in issue:
-            for vuln in issue["vulnerabilities"]:
-                info = (
-                    f'Vulnerable JavaScript: {comp}-{ver} ({js_url}): Severity: {vuln["severity"]} - '
-                    f'Info: {" ".join(vuln["info"])}'
-                )
-
-                # make sure we haven't reported this issue before
-                if info not in _reports:
-                    _reports.append(info)
-
-                    results.append(
-                        Result(
-                            info,
-                            Vulnerabilities.JS_VULNERABLE_VERSION,
-                            js_url,
-                            [url, raw],
-                        )
+            if "vulnerabilities" in issue:
+                for vuln in issue["vulnerabilities"]:
+                    info = (
+                        f'Vulnerable JavaScript: {comp}-{ver} ({js_url}): Severity: {vuln["severity"]} - '
+                        f'Info: {" ".join(vuln["info"])}'
                     )
+
+                    # make sure we haven't reported this issue before
+                    if info not in _reports:
+                        _reports.append(info)
+
+                        results.append(
+                            Result(
+                                info,
+                                Vulnerabilities.JS_VULNERABLE_VERSION,
+                                js_url,
+                                [url, raw],
+                            )
+                        )
+    except Exception:
+        output.debug_exception()
 
     return results
 

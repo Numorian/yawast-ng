@@ -4,6 +4,8 @@ from typing import NamedTuple
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
+from yawast.shared import output
+
 
 class Severity(str, Enum):
     CRITICAL = "critical"
@@ -14,35 +16,23 @@ class Severity(str, Enum):
     INFO = "info"
 
 
-class VulnerabilityInfoBase(NamedTuple):
+class VulnerabilityInfo(NamedTuple):
     name: str
     severity: Severity
     description: str
     display_all: bool = False
-    id: str = None  # must be the last item
+    id: str = "(Invalid)"  # must be the last item
 
+    @classmethod
+    def create(
+        cls, name: str, severity: Severity, description: str, display_all: bool = False
+    ):
+        digest = hashes.Hash(hashes.SHAKE128(5), backend=default_backend())
+        digest.update(name.encode("utf_8"))
+        d = digest.finalize().hex()
+        id_val = f"Y{d}"
 
-class VulnerabilityInfo(VulnerabilityInfoBase):
-    def __new__(cls, *args, **kwargs):
-        base = super().__new__(cls, *args, **kwargs)
-        data = list(base)
-
-        # if the last item is none, replace with a generated ID
-        # if it isn't none, leave it alone - this allows for manual values
-        if data[-1] is None:
-            digest = hashes.Hash(hashes.SHAKE128(5), backend=default_backend())
-            digest.update(args[0].encode("utf_8"))
-            d = digest.finalize().hex()
-            id_val = f"Y{d}"
-
-            data.pop(-1)
-            data.append(id_val)
-
-            self = super().__new__(cls, *tuple(data))
-        else:
-            self = base
-
-        return self
+        return cls.__new__(cls, name, severity, description, display_all, id_val)
 
 
 class VulnerabilityInfoEnum(VulnerabilityInfo, Enum):
@@ -50,334 +40,372 @@ class VulnerabilityInfoEnum(VulnerabilityInfo, Enum):
 
 
 class Vulnerabilities(VulnerabilityInfoEnum):
-    APP_WORDPRESS_VERSION = VulnerabilityInfo("App_WordPress_Version", Severity.LOW, "")
-    APP_WORDPRESS_OUTDATED = VulnerabilityInfo(
+    APP_WORDPRESS_VERSION = VulnerabilityInfo.create(
+        "App_WordPress_Version", Severity.LOW, ""
+    )
+    APP_WORDPRESS_OUTDATED = VulnerabilityInfo.create(
         "App_WordPress_Outdated", Severity.MEDIUM, ""
     )
-    APP_WORDPRESS_USER_ENUM_API = VulnerabilityInfo(
+    APP_WORDPRESS_USER_ENUM_API = VulnerabilityInfo.create(
         "App_WordPress_User_Enum_API", Severity.MEDIUM, ""
     )
-    APP_WORDPRESS_USER_FOUND = VulnerabilityInfo(
+    APP_WORDPRESS_USER_FOUND = VulnerabilityInfo.create(
         "App_WordPress_User_Found", Severity.LOW, "", True
     )
 
-    COOKIE_MISSING_SECURE_FLAG = VulnerabilityInfo(
+    COOKIE_MISSING_SECURE_FLAG = VulnerabilityInfo.create(
         "Cookie_Missing_Secure_Flag", Severity.MEDIUM, ""
     )
-    COOKIE_MISSING_HTTPONLY_FLAG = VulnerabilityInfo(
+    COOKIE_MISSING_HTTPONLY_FLAG = VulnerabilityInfo.create(
         "Cookie_Missing_HttpOnly_Flag", Severity.LOW, ""
     )
-    COOKIE_MISSING_SAMESITE_FLAG = VulnerabilityInfo(
+    COOKIE_MISSING_SAMESITE_FLAG = VulnerabilityInfo.create(
         "Cookie_Missing_SameSite_Flag", Severity.BEST_PRACTICE, ""
     )
-    COOKIE_WITH_SAMESITE_NONE_FLAG = VulnerabilityInfo(
+    COOKIE_WITH_SAMESITE_NONE_FLAG = VulnerabilityInfo.create(
         "Cookie_With_SameSite_None_Flag", Severity.BEST_PRACTICE, ""
     )
-    COOKIE_INVALID_SECURE_FLAG = VulnerabilityInfo(
+    COOKIE_INVALID_SECURE_FLAG = VulnerabilityInfo.create(
         "Cookie_Invalid_Secure_Flag", Severity.MEDIUM, ""
     )
-    COOKIE_INVALID_SAMESITE_NONE_FLAG = VulnerabilityInfo(
+    COOKIE_INVALID_SAMESITE_NONE_FLAG = VulnerabilityInfo.create(
         "Cookie_Invalid_SameSite_None_Flag", Severity.LOW, ""
     )
 
-    DNS_CAA_MISSING = VulnerabilityInfo("Dns_CAA_Missing", Severity.LOW, "")
-    DNS_DNSSEC_NOT_ENABLED = VulnerabilityInfo(
+    DNS_CAA_MISSING = VulnerabilityInfo.create("Dns_CAA_Missing", Severity.LOW, "")
+    DNS_DNSSEC_NOT_ENABLED = VulnerabilityInfo.create(
         "Dns_DNSSEC_Not_Enabled", Severity.BEST_PRACTICE, ""
     )
 
-    JS_VULNERABLE_VERSION = VulnerabilityInfo(
+    JS_VULNERABLE_VERSION = VulnerabilityInfo.create(
         "Js_Vulnerable_Version", Severity.MEDIUM, "", True
     )
-    JS_EXTERNAL_FILE = VulnerabilityInfo("Js_External_File", Severity.LOW, "", True)
+    JS_EXTERNAL_FILE = VulnerabilityInfo.create(
+        "Js_External_File", Severity.LOW, "", True
+    )
 
-    HTTP_BANNER_GENERIC_APACHE = VulnerabilityInfo(
+    HTTP_BANNER_GENERIC_APACHE = VulnerabilityInfo.create(
         "Http_Banner_Generic_Apache", Severity.INFO, ""
     )
-    HTTP_BANNER_APACHE_VERSION = VulnerabilityInfo(
+    HTTP_BANNER_APACHE_VERSION = VulnerabilityInfo.create(
         "Http_Banner_Apache_Version", Severity.LOW, ""
     )
-    HTTP_BANNER_GENERIC_NGINX = VulnerabilityInfo(
+    HTTP_BANNER_GENERIC_NGINX = VulnerabilityInfo.create(
         "Http_Banner_Generic_Nginx", Severity.INFO, ""
     )
-    HTTP_BANNER_NGINX_VERSION = VulnerabilityInfo(
+    HTTP_BANNER_NGINX_VERSION = VulnerabilityInfo.create(
         "Http_Banner_Nginx_Version", Severity.LOW, ""
     )
-    HTTP_BANNER_PYTHON_VERSION = VulnerabilityInfo(
+    HTTP_BANNER_PYTHON_VERSION = VulnerabilityInfo.create(
         "Http_Banner_Python_Version", Severity.LOW, ""
     )
-    HTTP_BANNER_IIS_VERSION = VulnerabilityInfo(
+    HTTP_BANNER_IIS_VERSION = VulnerabilityInfo.create(
         "Http_Banner_IIS_Version", Severity.LOW, ""
     )
-    HTTP_BANNER_OPENSSL_VERSION = VulnerabilityInfo(
+    HTTP_BANNER_OPENSSL_VERSION = VulnerabilityInfo.create(
         "Http_Banner_OpenSSL_Version", Severity.LOW, ""
     )
-    HTTP_PHP_VERSION_EXPOSED = VulnerabilityInfo(
+    HTTP_PHP_VERSION_EXPOSED = VulnerabilityInfo.create(
         "Http_PHP_Version_Exposed", Severity.LOW, ""
     )
 
-    HTTP_HEADER_CONTENT_SECURITY_POLICY_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_CONTENT_SECURITY_POLICY_MISSING = VulnerabilityInfo.create(
         "Http_Header_Content_Security_Policy_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_CORS_ACAO_UNRESTRICTED = VulnerabilityInfo(
+    HTTP_HEADER_CORS_ACAO_UNRESTRICTED = VulnerabilityInfo.create(
         "Http_Header_CORS_ACAO_Unrestricted", Severity.LOW, ""
     )
-    HTTP_HEADER_FEATURE_POLICY_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_FEATURE_POLICY_MISSING = VulnerabilityInfo.create(
         "Http_Header_Feature_Policy_Missing", Severity.BEST_PRACTICE, ""
     )
-    HTTP_HEADER_HSTS_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_HSTS_MISSING = VulnerabilityInfo.create(
         "Http_Hsts_Missing", Severity.MEDIUM, ""
     )
-    HTTP_HEADER_REFERRER_POLICY_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_REFERRER_POLICY_MISSING = VulnerabilityInfo.create(
         "Http_Header_Referrer_Policy_Missing", Severity.BEST_PRACTICE, ""
     )
-    HTTP_HEADER_VIA = VulnerabilityInfo("Http_Header_Via", Severity.BEST_PRACTICE, "")
-    HTTP_HEADER_X_BACKEND_SERVER = VulnerabilityInfo(
+    HTTP_HEADER_VIA = VulnerabilityInfo.create(
+        "Http_Header_Via", Severity.BEST_PRACTICE, ""
+    )
+    HTTP_HEADER_X_BACKEND_SERVER = VulnerabilityInfo.create(
         "Http_Header_X_Backend_Server", Severity.BEST_PRACTICE, ""
     )
-    HTTP_HEADER_X_CONTENT_TYPE_OPTIONS_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_X_CONTENT_TYPE_OPTIONS_MISSING = VulnerabilityInfo.create(
         "Http_Header_X_Content_Type_Options_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_X_FRAME_OPTIONS_ALLOW = VulnerabilityInfo(
+    HTTP_HEADER_X_FRAME_OPTIONS_ALLOW = VulnerabilityInfo.create(
         "Http_Header_X_Frame_Options_Allow", Severity.LOW, ""
     )
-    HTTP_HEADER_X_FRAME_OPTIONS_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_X_FRAME_OPTIONS_MISSING = VulnerabilityInfo.create(
         "Http_Header_X_Frame_Options_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_X_POWERED_BY = VulnerabilityInfo(
+    HTTP_HEADER_X_POWERED_BY = VulnerabilityInfo.create(
         "Http_Header_X_Powered_By", Severity.BEST_PRACTICE, ""
     )
-    HTTP_HEADER_X_RUNTIME = VulnerabilityInfo(
+    HTTP_HEADER_X_RUNTIME = VulnerabilityInfo.create(
         "Http_Header_X_Runtime", Severity.BEST_PRACTICE, ""
     )
-    HTTP_HEADER_X_XSS_PROTECTION_DISABLED = VulnerabilityInfo(
+    HTTP_HEADER_X_XSS_PROTECTION_DISABLED = VulnerabilityInfo.create(
         "Http_Header_X_Xss_Protection_Disabled", Severity.LOW, ""
     )
-    HTTP_HEADER_X_XSS_PROTECTION_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_X_XSS_PROTECTION_MISSING = VulnerabilityInfo.create(
         "Http_Header_X_Xss_Protection_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_X_ASPNETMVC_VERSION = VulnerabilityInfo(
+    HTTP_HEADER_X_ASPNETMVC_VERSION = VulnerabilityInfo.create(
         "Http_X_AspNetMvc_Version", Severity.LOW, ""
     )
-    HTTP_HEADER_X_ASPNET_VERSION = VulnerabilityInfo(
+    HTTP_HEADER_X_ASPNET_VERSION = VulnerabilityInfo.create(
         "Http_X_AspNet_Version", Severity.LOW, ""
     )
-    HTTP_HEADER_CONTENT_TYPE_NO_CHARSET = VulnerabilityInfo(
+    HTTP_HEADER_CONTENT_TYPE_NO_CHARSET = VulnerabilityInfo.create(
         "Http_Header_Content_Type_No_Charset", Severity.LOW, ""
     )
-    HTTP_HEADER_CONTENT_TYPE_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_CONTENT_TYPE_MISSING = VulnerabilityInfo.create(
         "Http_Header_Content_Type_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_CACHE_CONTROL_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_CACHE_CONTROL_MISSING = VulnerabilityInfo.create(
         "Http_Header_Cache_Control_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_CACHE_CONTROL_NO_CACHE_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_CACHE_CONTROL_NO_CACHE_MISSING = VulnerabilityInfo.create(
         "Http_Header_Cache_Control_No_Cache_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_CACHE_CONTROL_NO_STORE_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_CACHE_CONTROL_NO_STORE_MISSING = VulnerabilityInfo.create(
         "Http_Header_Cache_Control_No_Store_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_CACHE_CONTROL_PRIVATE_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_CACHE_CONTROL_PRIVATE_MISSING = VulnerabilityInfo.create(
         "Http_Header_Cache_Control_Private_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_CACHE_CONTROL_PUBLIC = VulnerabilityInfo(
+    HTTP_HEADER_CACHE_CONTROL_PUBLIC = VulnerabilityInfo.create(
         "Http_Header_Cache_Control_Public", Severity.LOW, ""
     )
-    HTTP_HEADER_EXPIRES_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_EXPIRES_MISSING = VulnerabilityInfo.create(
         "Http_Header_Expires_Missing", Severity.LOW, ""
     )
-    HTTP_HEADER_PRAGMA_NO_CACHE_MISSING = VulnerabilityInfo(
+    HTTP_HEADER_PRAGMA_NO_CACHE_MISSING = VulnerabilityInfo.create(
         "Http_Header_Pragma_No_Cache_Missing", Severity.LOW, ""
     )
-    HTTP_ERROR_MESSAGE = VulnerabilityInfo(
+    HTTP_ERROR_MESSAGE = VulnerabilityInfo.create(
         "Http_Error_Message", Severity.MEDIUM, "", True
     )
-    HTTP_INSECURE_LINK = VulnerabilityInfo("Http_Insecure_Link", Severity.LOW, "", True)
-    HTTP_PROPFIND_ENABLED = VulnerabilityInfo("Http_Propfind_Enabled", Severity.LOW, "")
-    HTTP_TRACE_ENABLED = VulnerabilityInfo("Http_Trace_Enabled", Severity.LOW, "")
-    HTTP_OPTIONS_ALLOW = VulnerabilityInfo("Http_Option_Allow", Severity.INFO, "")
-    HTTP_OPTIONS_PUBLIC = VulnerabilityInfo("Http_Option_Public", Severity.INFO, "")
+    HTTP_INSECURE_LINK = VulnerabilityInfo.create(
+        "Http_Insecure_Link", Severity.LOW, "", True
+    )
+    HTTP_PROPFIND_ENABLED = VulnerabilityInfo.create(
+        "Http_Propfind_Enabled", Severity.LOW, ""
+    )
+    HTTP_TRACE_ENABLED = VulnerabilityInfo.create(
+        "Http_Trace_Enabled", Severity.LOW, ""
+    )
+    HTTP_OPTIONS_ALLOW = VulnerabilityInfo.create(
+        "Http_Option_Allow", Severity.INFO, ""
+    )
+    HTTP_OPTIONS_PUBLIC = VulnerabilityInfo.create(
+        "Http_Option_Public", Severity.INFO, ""
+    )
 
-    TLS_CBC_CIPHER_SUITE = VulnerabilityInfo(
+    TLS_CBC_CIPHER_SUITE = VulnerabilityInfo.create(
         "Tls_CBC_Cipher_Suite", Severity.BEST_PRACTICE, ""
     )
 
-    TLS_CERT_BAD_COMMON_NAME = VulnerabilityInfo(
+    TLS_CERT_BAD_COMMON_NAME = VulnerabilityInfo.create(
         "Tls_Cert_Bad_Common_Name", Severity.HIGH, ""
     )
-    TLS_CERT_BLACKLISTED = VulnerabilityInfo("Tls_Cert_Blacklisted", Severity.HIGH, "")
-    TLS_CERT_EXPIRED = VulnerabilityInfo("Tls_Cert_Expired", Severity.HIGH, "")
-    TLS_CERT_HOSTNAME_MISMATCH = VulnerabilityInfo(
+    TLS_CERT_BLACKLISTED = VulnerabilityInfo.create(
+        "Tls_Cert_Blacklisted", Severity.HIGH, ""
+    )
+    TLS_CERT_EXPIRED = VulnerabilityInfo.create("Tls_Cert_Expired", Severity.HIGH, "")
+    TLS_CERT_HOSTNAME_MISMATCH = VulnerabilityInfo.create(
         "Tls_Cert_Hostname_Mismatch", Severity.HIGH, ""
     )
-    TLS_CERT_INSECURE_KEY = VulnerabilityInfo(
+    TLS_CERT_INSECURE_KEY = VulnerabilityInfo.create(
         "Tls_Cert_Insecure_Key", Severity.HIGH, ""
     )
-    TLS_CERT_INSECURE_SIGNATURE = VulnerabilityInfo(
+    TLS_CERT_INSECURE_SIGNATURE = VulnerabilityInfo.create(
         "Tls_Cert_Insecure_Signature", Severity.HIGH, ""
     )
-    TLS_CERT_NOT_YET_VALID = VulnerabilityInfo(
+    TLS_CERT_NOT_YET_VALID = VulnerabilityInfo.create(
         "Tls_Cert_Not_Yet_Valid", Severity.HIGH, ""
     )
-    TLS_CERT_NO_TRUST = VulnerabilityInfo("Tls_Cert_No_Trust", Severity.HIGH, "")
-    TLS_CERT_REVOKED = VulnerabilityInfo("Tls_Cert_Revoked", Severity.HIGH, "")
-    TLS_CERT_SELF_SIGNED = VulnerabilityInfo("Tls_Cert_Self_Signed", Severity.HIGH, "")
+    TLS_CERT_NO_TRUST = VulnerabilityInfo.create("Tls_Cert_No_Trust", Severity.HIGH, "")
+    TLS_CERT_REVOKED = VulnerabilityInfo.create("Tls_Cert_Revoked", Severity.HIGH, "")
+    TLS_CERT_SELF_SIGNED = VulnerabilityInfo.create(
+        "Tls_Cert_Self_Signed", Severity.HIGH, ""
+    )
 
-    TLS_COMPRESSION_ENABLED = VulnerabilityInfo(
+    TLS_COMPRESSION_ENABLED = VulnerabilityInfo.create(
         "Tls_Compression_Enabled", Severity.HIGH, ""
     )
-    TLS_DH_KNOWN_PRIMES_STRONG = VulnerabilityInfo(
+    TLS_DH_KNOWN_PRIMES_STRONG = VulnerabilityInfo.create(
         "Tls_DH_Known_Primes_Strong", Severity.MEDIUM, ""
     )
-    TLS_DH_KNOWN_PRIMES_WEAK = VulnerabilityInfo(
+    TLS_DH_KNOWN_PRIMES_WEAK = VulnerabilityInfo.create(
         "Tls_DH_Known_Primes_Weak", Severity.HIGH, ""
     )
-    TLS_DH_PARAM_REUSE = VulnerabilityInfo("Tls_DH_Param_Reuse", Severity.LOW, "")
-    TLS_DROWN = VulnerabilityInfo("Tls_Drown", Severity.MEDIUM, "")
-    TLS_ECDH_PARAM_REUSE = VulnerabilityInfo("Tls_ECDH_Param_Reuse", Severity.LOW, "")
-    TLS_FALLBACK_SCSV_MISSING = VulnerabilityInfo(
+    TLS_DH_PARAM_REUSE = VulnerabilityInfo.create(
+        "Tls_DH_Param_Reuse", Severity.LOW, ""
+    )
+    TLS_DROWN = VulnerabilityInfo.create("Tls_Drown", Severity.MEDIUM, "")
+    TLS_ECDH_PARAM_REUSE = VulnerabilityInfo.create(
+        "Tls_ECDH_Param_Reuse", Severity.LOW, ""
+    )
+    TLS_FALLBACK_SCSV_MISSING = VulnerabilityInfo.create(
         "Tls_Fallback_SCSV_Missing", Severity.LOW, ""
     )
-    TLS_FREAK = VulnerabilityInfo("Tls_Freak", Severity.HIGH, "")
-    TLS_GOLDENDOODLE = VulnerabilityInfo("Tls_Goldendoodle", Severity.HIGH, "")
-    TLS_GOLDENDOODLE_NE = VulnerabilityInfo("Tls_Goldendoodle_NE", Severity.MEDIUM, "")
-    TLS_HEARTBEAT_ENABLED = VulnerabilityInfo(
+    TLS_FREAK = VulnerabilityInfo.create("Tls_Freak", Severity.HIGH, "")
+    TLS_GOLDENDOODLE = VulnerabilityInfo.create("Tls_Goldendoodle", Severity.HIGH, "")
+    TLS_GOLDENDOODLE_NE = VulnerabilityInfo.create(
+        "Tls_Goldendoodle_NE", Severity.MEDIUM, ""
+    )
+    TLS_HEARTBEAT_ENABLED = VulnerabilityInfo.create(
         "Tls_Heartbeat_Enabled", Severity.BEST_PRACTICE, ""
     )
-    TLS_HEARTBLEED = VulnerabilityInfo("Tls_Heartbleed", Severity.CRITICAL, "")
+    TLS_HEARTBLEED = VulnerabilityInfo.create("Tls_Heartbleed", Severity.CRITICAL, "")
     TLS_INSECURE_CIPHER_SUITE = VulnerabilityInfo(
         "Tls_Insecure_Cipher_Suite", Severity.MEDIUM, ""
     )
-    TLS_INSECURE_RENEG = VulnerabilityInfo("Tls_Insecure_Reneg", Severity.HIGH, "")
-    TLS_LEGACY_SSL_ENABLED = VulnerabilityInfo(
+    TLS_INSECURE_RENEG = VulnerabilityInfo.create(
+        "Tls_Insecure_Reneg", Severity.HIGH, ""
+    )
+    TLS_LEGACY_SSL_ENABLED = VulnerabilityInfo.create(
         "Tls_Legacy_SSL_Enabled", Severity.HIGH, ""
     )
-    TLS_LEGACY_SSL_POODLE = VulnerabilityInfo(
+    TLS_LEGACY_SSL_POODLE = VulnerabilityInfo.create(
         "Tls_Legacy_SSL_Poodle", Severity.HIGH, ""
     )
-    TLS_LIMITED_FORWARD_SECRECY = VulnerabilityInfo(
+    TLS_LIMITED_FORWARD_SECRECY = VulnerabilityInfo.create(
         "Tls_Limited_Forward_Secrecy", Severity.LOW, ""
     )
-    TLS_LOGJAM = VulnerabilityInfo("Tls_Logjam", Severity.HIGH, "")
-    TLS_NO_AEAD_SUPPORT = VulnerabilityInfo(
+    TLS_LOGJAM = VulnerabilityInfo.create("Tls_Logjam", Severity.HIGH, "")
+    TLS_NO_AEAD_SUPPORT = VulnerabilityInfo.create(
         "Tls_No_AEAD_Support", Severity.BEST_PRACTICE, ""
     )
-    TLS_OCSP_STAPLE_MISSING = VulnerabilityInfo(
+    TLS_OCSP_STAPLE_MISSING = VulnerabilityInfo.create(
         "Tls_OCSP_Staple_Missing", Severity.LOW, ""
     )
 
-    TLS_OPENSSL_CVE_2014_0224 = VulnerabilityInfo(
+    TLS_OPENSSL_CVE_2014_0224 = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2014_0224", Severity.HIGH, ""
     )
-    TLS_OPENSSL_CVE_2014_0224_NE = VulnerabilityInfo(
+    TLS_OPENSSL_CVE_2014_0224_NE = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2014_0224_NE", Severity.MEDIUM, ""
     )
-    TLS_OPENSSL_CVE_2016_2107 = VulnerabilityInfo(
+    TLS_OPENSSL_CVE_2016_2107 = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2016_2107", Severity.HIGH, ""
     )
-    TLS_OPENSSL_CVE_2019_1559 = VulnerabilityInfo(
+    TLS_OPENSSL_CVE_2019_1559 = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2019_1559", Severity.HIGH, ""
     )
-    TLS_OPENSSL_CVE_2019_1559_NE = VulnerabilityInfo(
+    TLS_OPENSSL_CVE_2019_1559_NE = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2019_1559_NE", Severity.MEDIUM, ""
     )
 
-    TLS_POODLE = VulnerabilityInfo("Tls_Poodle", Severity.HIGH, "")
-    TLS_ROBOT_ORACLE_STRONG = VulnerabilityInfo(
+    TLS_POODLE = VulnerabilityInfo.create("Tls_Poodle", Severity.HIGH, "")
+    TLS_ROBOT_ORACLE_STRONG = VulnerabilityInfo.create(
         "Tls_Robot_Oracle_Strong", Severity.MEDIUM, ""
     )
-    TLS_ROBOT_ORACLE_WEAK = VulnerabilityInfo("Tls_Robot_Oracle_Weak", Severity.LOW, "")
-    TLS_SESSION_RESP_ENABLED = VulnerabilityInfo(
+    TLS_ROBOT_ORACLE_WEAK = VulnerabilityInfo.create(
+        "Tls_Robot_Oracle_Weak", Severity.LOW, ""
+    )
+    TLS_SESSION_RESP_ENABLED = VulnerabilityInfo.create(
         "Tls_Session_Resp_Enabled", Severity.BEST_PRACTICE, ""
     )
-    TLS_SLEEPING_POODLE = VulnerabilityInfo("Tls_Sleeping_Poodle", Severity.HIGH, "")
-    TLS_SLEEPING_POODLE_NE = VulnerabilityInfo(
+    TLS_SLEEPING_POODLE = VulnerabilityInfo.create(
+        "Tls_Sleeping_Poodle", Severity.HIGH, ""
+    )
+    TLS_SLEEPING_POODLE_NE = VulnerabilityInfo.create(
         "Tls_Sleeping_Poodle_NE", Severity.MEDIUM, ""
     )
-    TLS_SWEET32 = VulnerabilityInfo("Tls_SWEET32", Severity.HIGH, "")
-    TLS_SYMANTEC_ROOT = VulnerabilityInfo("Tls_Symantec_Root", Severity.HIGH, "")
-    TLS_TICKETBLEED = VulnerabilityInfo("Tls_Ticketbleed", Severity.HIGH, "")
+    TLS_SWEET32 = VulnerabilityInfo.create("Tls_SWEET32", Severity.HIGH, "")
+    TLS_SYMANTEC_ROOT = VulnerabilityInfo.create("Tls_Symantec_Root", Severity.HIGH, "")
+    TLS_TICKETBLEED = VulnerabilityInfo.create("Tls_Ticketbleed", Severity.HIGH, "")
 
-    TLS_VERSION_1_0_ENABLED = VulnerabilityInfo(
+    TLS_VERSION_1_0_ENABLED = VulnerabilityInfo.create(
         "Tls_Version_1_0_Enabled", Severity.LOW, ""
     )
-    TLS_VERSION_1_3_EARLY_DATA_ENABLED = VulnerabilityInfo(
+    TLS_VERSION_1_3_EARLY_DATA_ENABLED = VulnerabilityInfo.create(
         "Tls_Version_1_3_Early_Data_Enabled", Severity.BEST_PRACTICE, ""
     )
-    TLS_VERSION_1_3_NOT_ENABLED = VulnerabilityInfo(
+    TLS_VERSION_1_3_NOT_ENABLED = VulnerabilityInfo.create(
         "Tls_Version_1_3_Not_Enabled", Severity.BEST_PRACTICE, ""
     )
 
-    TLS_ZOMBIE_POODLE = VulnerabilityInfo("Tls_Zombie_Poodle", Severity.HIGH, "")
-    TLS_ZOMBIE_POODLE_NE = VulnerabilityInfo(
+    TLS_ZOMBIE_POODLE = VulnerabilityInfo.create("Tls_Zombie_Poodle", Severity.HIGH, "")
+    TLS_ZOMBIE_POODLE_NE = VulnerabilityInfo.create(
         "Tls_Zombie_Poodle_NE", Severity.MEDIUM, ""
     )
 
-    SERVER_APACHE_OUTDATED = VulnerabilityInfo(
+    SERVER_APACHE_OUTDATED = VulnerabilityInfo.create(
         "Server_Apache_Outdated", Severity.MEDIUM, ""
     )
-    SERVER_APACHE_STATUS = VulnerabilityInfo(
+    SERVER_APACHE_STATUS = VulnerabilityInfo.create(
         "Server_Apache_Status", Severity.MEDIUM, ""
     )
-    SERVER_APACHE_INFO = VulnerabilityInfo("Server_Apache_Info", Severity.MEDIUM, "")
-    SERVER_TOMCAT_VERSION = VulnerabilityInfo(
+    SERVER_APACHE_INFO = VulnerabilityInfo.create(
+        "Server_Apache_Info", Severity.MEDIUM, ""
+    )
+    SERVER_TOMCAT_VERSION = VulnerabilityInfo.create(
         "Server_Tomcat_Version", Severity.MEDIUM, ""
     )
-    SERVER_TOMCAT_OUTDATED = VulnerabilityInfo(
+    SERVER_TOMCAT_OUTDATED = VulnerabilityInfo.create(
         "Server_Tomcat_Outdated", Severity.MEDIUM, ""
     )
-    SERVER_TOMCAT_MANAGER_EXPOSED = VulnerabilityInfo(
+    SERVER_TOMCAT_MANAGER_EXPOSED = VulnerabilityInfo.create(
         "Server_Tomcat_Manager_Exposed", Severity.HIGH, ""
     )
-    SERVER_TOMCAT_HOST_MANAGER_EXPOSED = VulnerabilityInfo(
+    SERVER_TOMCAT_HOST_MANAGER_EXPOSED = VulnerabilityInfo.create(
         "Server_Tomcat_Host_Manager_Exposed", Severity.HIGH, ""
     )
-    SERVER_TOMCAT_MANAGER_WEAK_PASSWORD = VulnerabilityInfo(
+    SERVER_TOMCAT_MANAGER_WEAK_PASSWORD = VulnerabilityInfo.create(
         "Server_Tomcat_Manager_Weak_Password", Severity.CRITICAL, "", True
     )
-    SERVER_TOMCAT_CVE_2017_12615 = VulnerabilityInfo(
+    SERVER_TOMCAT_CVE_2017_12615 = VulnerabilityInfo.create(
         "Server_Tomcat_CVE_2017_12615", Severity.CRITICAL, ""
     )
-    SERVER_TOMCAT_CVE_2019_0232 = VulnerabilityInfo(
+    SERVER_TOMCAT_CVE_2019_0232 = VulnerabilityInfo.create(
         "Server_Tomcat_CVE_2019_0232", Severity.CRITICAL, ""
     )
-    SERVER_TOMCAT_STRUTS_SAMPLE = VulnerabilityInfo(
+    SERVER_TOMCAT_STRUTS_SAMPLE = VulnerabilityInfo.create(
         "Server_Tomcat_Struts_Sample", Severity.LOW, "", True
     )
-    SERVER_NGINX_OUTDATED = VulnerabilityInfo(
+    SERVER_NGINX_OUTDATED = VulnerabilityInfo.create(
         "Server_Nginx_Outdated", Severity.MEDIUM, ""
     )
-    SERVER_NGINX_STATUS_EXPOSED = VulnerabilityInfo(
+    SERVER_NGINX_STATUS_EXPOSED = VulnerabilityInfo.create(
         "Server_Nginx_Status_Exposed", Severity.LOW, ""
     )
-    SERVER_PHP_OUTDATED = VulnerabilityInfo("Server_PHP_Outdated", Severity.MEDIUM, "")
-    SERVER_IIS_OUTDATED = VulnerabilityInfo("Server_IIS_Outdated", Severity.MEDIUM, "")
-    SERVER_ASPNETMVC_OUTDATED = VulnerabilityInfo(
+    SERVER_PHP_OUTDATED = VulnerabilityInfo.create(
+        "Server_PHP_Outdated", Severity.MEDIUM, ""
+    )
+    SERVER_IIS_OUTDATED = VulnerabilityInfo.create(
+        "Server_IIS_Outdated", Severity.MEDIUM, ""
+    )
+    SERVER_ASPNETMVC_OUTDATED = VulnerabilityInfo.create(
         "Server_AspNetMvc_Outdated", Severity.MEDIUM, ""
     )
-    SERVER_ASPNET_OUTDATED = VulnerabilityInfo(
+    SERVER_ASPNET_OUTDATED = VulnerabilityInfo.create(
         "Server_AspNet_Outdated", Severity.MEDIUM, ""
     )
-    SERVER_ASPNET_DEBUG_ENABLED = VulnerabilityInfo(
+    SERVER_ASPNET_DEBUG_ENABLED = VulnerabilityInfo.create(
         "Server_AspNet_Debug_Enabled", Severity.HIGH, ""
     )
-    SERVER_ASPNET_HANDLER_ENUM = VulnerabilityInfo(
+    SERVER_ASPNET_HANDLER_ENUM = VulnerabilityInfo.create(
         "Server_AspNet_Handler_Enum", Severity.LOW, "", True
     )
-    SERVER_RAILS_CVE_2019_5418 = VulnerabilityInfo(
+    SERVER_RAILS_CVE_2019_5418 = VulnerabilityInfo.create(
         "Server_Rails_CVE_2019_5418", Severity.CRITICAL, ""
     )
-    SERVER_INVALID_404_FILE = VulnerabilityInfo(
+    SERVER_INVALID_404_FILE = VulnerabilityInfo.create(
         "Server_Invalid_404_File", Severity.INFO, ""
     )
-    SERVER_INVALID_404_PATH = VulnerabilityInfo(
+    SERVER_INVALID_404_PATH = VulnerabilityInfo.create(
         "Server_Invalid_404_Path", Severity.INFO, ""
     )
-    SERVER_SPECIAL_FILE_EXPOSED = VulnerabilityInfo(
+    SERVER_SPECIAL_FILE_EXPOSED = VulnerabilityInfo.create(
         "Server_Special_File_Exposed", Severity.INFO, "", True
     )
-    SERVER_INT_IP_EXP_HTTP10 = VulnerabilityInfo(
+    SERVER_INT_IP_EXP_HTTP10 = VulnerabilityInfo.create(
         "Server_Int_IP_Exp_Http10", Severity.LOW, ""
     )
 
-    WAF_CLOUDFLARE = VulnerabilityInfo("Waf_Cloudflare", Severity.INFO, "")
-    WAF_INCAPSULA = VulnerabilityInfo("Waf_Incapsula", Severity.INFO, "")
+    WAF_CLOUDFLARE = VulnerabilityInfo.create("Waf_Cloudflare", Severity.INFO, "")
+    WAF_INCAPSULA = VulnerabilityInfo.create("Waf_Incapsula", Severity.INFO, "")

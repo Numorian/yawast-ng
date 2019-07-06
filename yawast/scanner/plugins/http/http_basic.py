@@ -17,6 +17,14 @@ from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import network, utils, output
 
+_checked_cookies: Dict[Vulnerabilities, List[str]] = {}
+
+
+def reset():
+    global _checked_cookies
+
+    _checked_cookies = {}
+
 
 def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
     results: List[Result] = []
@@ -375,6 +383,22 @@ def get_cookie_issues(res: Response, raw: str, url: str) -> List[Result]:
 
 
 def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
+    global _checked_cookies
+
+    # setup the checked list
+    if Vulnerabilities.COOKIE_MISSING_SECURE_FLAG not in _checked_cookies:
+        _checked_cookies[Vulnerabilities.COOKIE_MISSING_SECURE_FLAG] = []
+    if Vulnerabilities.COOKIE_INVALID_SECURE_FLAG not in _checked_cookies:
+        _checked_cookies[Vulnerabilities.COOKIE_INVALID_SECURE_FLAG] = []
+    if Vulnerabilities.COOKIE_MISSING_HTTPONLY_FLAG not in _checked_cookies:
+        _checked_cookies[Vulnerabilities.COOKIE_MISSING_HTTPONLY_FLAG] = []
+    if Vulnerabilities.COOKIE_MISSING_SAMESITE_FLAG not in _checked_cookies:
+        _checked_cookies[Vulnerabilities.COOKIE_MISSING_SAMESITE_FLAG] = []
+    if Vulnerabilities.COOKIE_WITH_SAMESITE_NONE_FLAG not in _checked_cookies:
+        _checked_cookies[Vulnerabilities.COOKIE_WITH_SAMESITE_NONE_FLAG] = []
+    if Vulnerabilities.COOKIE_INVALID_SAMESITE_NONE_FLAG not in _checked_cookies:
+        _checked_cookies[Vulnerabilities.COOKIE_INVALID_SAMESITE_NONE_FLAG] = []
+
     results: List[Result] = []
 
     try:
@@ -393,36 +417,66 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
             # check Secure flag
             if "secure" not in comp:
                 if parsed.scheme == "https":
-                    results.append(
-                        Result(
-                            f"Cookie Missing Secure Flag: {cookie}",
-                            Vulnerabilities.COOKIE_MISSING_SECURE_FLAG,
-                            url,
-                            [name, raw],
-                        )
-                    )
-                else:
-                    # secure flag over HTTP is invalid
-                    if "secure" in comp:
+                    if (
+                        name
+                        not in _checked_cookies[
+                            Vulnerabilities.COOKIE_MISSING_SECURE_FLAG
+                        ]
+                    ):
                         results.append(
                             Result(
-                                f"Cookie Secure Flag Invalid (over HTTP): {cookie}",
-                                Vulnerabilities.COOKIE_INVALID_SECURE_FLAG,
+                                f"Cookie Missing Secure Flag: {cookie}",
+                                Vulnerabilities.COOKIE_MISSING_SECURE_FLAG,
                                 url,
                                 [name, raw],
                             )
                         )
 
+                        _checked_cookies[
+                            Vulnerabilities.COOKIE_MISSING_SECURE_FLAG
+                        ].append(name)
+                else:
+                    # secure flag over HTTP is invalid
+                    if "secure" in comp:
+                        if (
+                            name
+                            not in _checked_cookies[
+                                Vulnerabilities.COOKIE_INVALID_SECURE_FLAG
+                            ]
+                        ):
+                            results.append(
+                                Result(
+                                    f"Cookie Secure Flag Invalid (over HTTP): {cookie}",
+                                    Vulnerabilities.COOKIE_INVALID_SECURE_FLAG,
+                                    url,
+                                    [name, raw],
+                                )
+                            )
+
+                            _checked_cookies[
+                                Vulnerabilities.COOKIE_INVALID_SECURE_FLAG
+                            ].append(name)
+
             # check HttpOnly flag
             if "httponly" not in comp:
-                results.append(
-                    Result(
-                        f"Cookie Missing HttpOnly Flag: {cookie}",
-                        Vulnerabilities.COOKIE_MISSING_HTTPONLY_FLAG,
-                        url,
-                        [name, raw],
+                if (
+                    name
+                    not in _checked_cookies[
+                        Vulnerabilities.COOKIE_MISSING_HTTPONLY_FLAG
+                    ]
+                ):
+                    results.append(
+                        Result(
+                            f"Cookie Missing HttpOnly Flag: {cookie}",
+                            Vulnerabilities.COOKIE_MISSING_HTTPONLY_FLAG,
+                            url,
+                            [name, raw],
+                        )
                     )
-                )
+
+                    _checked_cookies[
+                        Vulnerabilities.COOKIE_MISSING_HTTPONLY_FLAG
+                    ].append(name)
 
             # check SameSite flag
             if (
@@ -430,35 +484,65 @@ def _get_cookie_issues(cookies: List[str], raw: str, url: str) -> List[Result]:
                 and "samesite=strict" not in comp
                 and "samesite=none" not in comp
             ):
-                results.append(
-                    Result(
-                        f"Cookie Missing SameSite Flag: {cookie}",
-                        Vulnerabilities.COOKIE_MISSING_SAMESITE_FLAG,
-                        url,
-                        [name, raw],
+                if (
+                    name
+                    not in _checked_cookies[
+                        Vulnerabilities.COOKIE_MISSING_SAMESITE_FLAG
+                    ]
+                ):
+                    results.append(
+                        Result(
+                            f"Cookie Missing SameSite Flag: {cookie}",
+                            Vulnerabilities.COOKIE_MISSING_SAMESITE_FLAG,
+                            url,
+                            [name, raw],
+                        )
                     )
-                )
+
+                    _checked_cookies[
+                        Vulnerabilities.COOKIE_MISSING_SAMESITE_FLAG
+                    ].append(name)
 
             # check SameSite=None flag
             if "samesite=none" in comp:
                 if "secure" in comp:
-                    results.append(
-                        Result(
-                            f"Cookie With SameSite=None Flag: {cookie}",
-                            Vulnerabilities.COOKIE_WITH_SAMESITE_NONE_FLAG,
-                            url,
-                            [name, raw],
+                    if (
+                        name
+                        not in _checked_cookies[
+                            Vulnerabilities.COOKIE_WITH_SAMESITE_NONE_FLAG
+                        ]
+                    ):
+                        results.append(
+                            Result(
+                                f"Cookie With SameSite=None Flag: {cookie}",
+                                Vulnerabilities.COOKIE_WITH_SAMESITE_NONE_FLAG,
+                                url,
+                                [name, raw],
+                            )
                         )
-                    )
+
+                        _checked_cookies[
+                            Vulnerabilities.COOKIE_WITH_SAMESITE_NONE_FLAG
+                        ].append(name)
                 else:
-                    results.append(
-                        Result(
-                            f"Cookie SameSite=None Flag Invalid (without Secure flag): {cookie}",
-                            Vulnerabilities.COOKIE_INVALID_SAMESITE_NONE_FLAG,
-                            url,
-                            [name, raw],
+                    if (
+                        name
+                        not in _checked_cookies[
+                            Vulnerabilities.COOKIE_INVALID_SAMESITE_NONE_FLAG
+                        ]
+                    ):
+                        results.append(
+                            Result(
+                                f"Cookie SameSite=None Flag Invalid (without Secure flag): {cookie}",
+                                Vulnerabilities.COOKIE_INVALID_SAMESITE_NONE_FLAG,
+                                url,
+                                [name, raw],
+                            )
                         )
-                    )
+
+                        _checked_cookies[
+                            Vulnerabilities.COOKIE_INVALID_SAMESITE_NONE_FLAG
+                        ].append(name)
     except Exception:
         output.debug_exception()
 

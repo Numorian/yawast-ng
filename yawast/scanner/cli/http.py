@@ -135,6 +135,7 @@ def reset():
     retirejs.reset()
     file_search.reset()
     error_checker.reset()
+    http_basic.reset()
 
 
 def _file_search(session: Session, orig_links: List[str]) -> List[str]:

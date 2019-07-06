@@ -54,22 +54,22 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     )
 
     COOKIE_MISSING_SECURE_FLAG = VulnerabilityInfo.create(
-        "Cookie_Missing_Secure_Flag", Severity.MEDIUM, ""
+        "Cookie_Missing_Secure_Flag", Severity.MEDIUM, "", True
     )
     COOKIE_MISSING_HTTPONLY_FLAG = VulnerabilityInfo.create(
-        "Cookie_Missing_HttpOnly_Flag", Severity.LOW, ""
+        "Cookie_Missing_HttpOnly_Flag", Severity.LOW, "", True
     )
     COOKIE_MISSING_SAMESITE_FLAG = VulnerabilityInfo.create(
-        "Cookie_Missing_SameSite_Flag", Severity.BEST_PRACTICE, ""
+        "Cookie_Missing_SameSite_Flag", Severity.BEST_PRACTICE, "", True
     )
     COOKIE_WITH_SAMESITE_NONE_FLAG = VulnerabilityInfo.create(
-        "Cookie_With_SameSite_None_Flag", Severity.BEST_PRACTICE, ""
+        "Cookie_With_SameSite_None_Flag", Severity.BEST_PRACTICE, "", True
     )
     COOKIE_INVALID_SECURE_FLAG = VulnerabilityInfo.create(
-        "Cookie_Invalid_Secure_Flag", Severity.MEDIUM, ""
+        "Cookie_Invalid_Secure_Flag", Severity.MEDIUM, "", True
     )
     COOKIE_INVALID_SAMESITE_NONE_FLAG = VulnerabilityInfo.create(
-        "Cookie_Invalid_SameSite_None_Flag", Severity.LOW, ""
+        "Cookie_Invalid_SameSite_None_Flag", Severity.LOW, "", True
     )
 
     DNS_CAA_MISSING = VulnerabilityInfo.create("Dns_CAA_Missing", Severity.LOW, "")

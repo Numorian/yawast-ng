@@ -2,6 +2,10 @@ dist: xenial
 
 language: python
 
+env:
+  global:
+    - CC_TEST_REPORTER_ID=6fd9c710b9a6e0da2011c62b81075b9bd620200a2a400f4dbeab9c88829f4cb6
+
 python:
   - "3.7"
 
@@ -18,6 +22,7 @@ script:
   - coverage run -m unittest discover
 
 after_script:
+  - coverage xml
   - ./cc-test-reporter after-build
 
 notifications:

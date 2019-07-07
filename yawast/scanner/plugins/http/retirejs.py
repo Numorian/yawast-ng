@@ -78,7 +78,7 @@ def _get_retirejs_results(
     issues = []
     results: List[Result] = []
 
-    if _data is not None and len(_data) == 0:
+    if _data is None or len(_data) == 0:
         _get_data()
 
     if _data is not None:

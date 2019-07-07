@@ -62,6 +62,7 @@ setup(
         "beautifulsoup4",
         "psutil",
         "pipenv",
+        "requests-mock",
     ],
     include_package_data=True,
     package_data={"yawast": ["resources/*"]},

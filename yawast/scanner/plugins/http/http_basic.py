@@ -46,7 +46,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
 
         if "X-XSS-Protection" in headers:
             # header is present, check the value
-            if headers["X-XSS-Protection"] == 0:
+            if "0" in headers["X-XSS-Protection"]:
                 results.append(
                     Result.from_evidence(
                         Evidence.from_response(res),
@@ -193,14 +193,10 @@ def check_propfind(url: str) -> List[Result]:
     if res.status_code <= 400 and len(body) > 0:
         if "Content-Type" in res.headers and "text/xml" in res.headers["Content-Type"]:
             results.append(
-                Result(
+                Result.from_evidence(
+                    Evidence.from_response(res),
                     "Possible Info Disclosure: PROPFIND Enabled",
                     Vulnerabilities.HTTP_PROPFIND_ENABLED,
-                    url,
-                    [
-                        network.http_build_raw_request(res.request),
-                        network.http_build_raw_response(res),
-                    ],
                 )
             )
 
@@ -217,14 +213,10 @@ def check_trace(url: str) -> List[Result]:
 
     if res.status_code == 200 and "TRACE / HTTP/1.1" in body:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 "HTTP TRACE Enabled",
                 Vulnerabilities.HTTP_TRACE_ENABLED,
-                url,
-                [
-                    network.http_build_raw_request(res.request),
-                    network.http_build_raw_response(res),
-                ],
             )
         )
 
@@ -240,27 +232,19 @@ def check_options(url: str) -> List[Result]:
 
     if "Allow" in res.headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"Allow HTTP Verbs (OPTIONS): {res.headers['Allow']}",
                 Vulnerabilities.HTTP_OPTIONS_ALLOW,
-                url,
-                [
-                    network.http_build_raw_request(res.request),
-                    network.http_build_raw_response(res),
-                ],
             )
         )
 
     if "Public" in res.headers:
         results.append(
-            Result(
+            Result.from_evidence(
+                Evidence.from_response(res),
                 f"Public HTTP Verbs (OPTIONS): {res.headers['Public']}",
                 Vulnerabilities.HTTP_OPTIONS_PUBLIC,
-                url,
-                [
-                    network.http_build_raw_request(res.request),
-                    network.http_build_raw_response(res),
-                ],
             )
         )
 

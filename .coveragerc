@@ -4,5 +4,6 @@ omit =
     */.local/*
     # omit everything in /usr
     /usr/*
-    # omit site-packages
+    # omit site-packages & other outside files
     */site-packages/*
+    */virtualenv/*

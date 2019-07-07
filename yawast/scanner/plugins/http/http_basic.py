@@ -415,45 +415,39 @@ def _get_cookie_issues(cookies: List[str], url: str, res: Response) -> List[Resu
             comp = list(map(str.lower, comp))
 
             # check Secure flag
-            if "secure" not in comp:
-                if parsed.scheme == "https":
-                    if (
-                        name
-                        not in _checked_cookies[
-                            Vulnerabilities.COOKIE_MISSING_SECURE_FLAG
-                        ]
-                    ):
-                        results.append(
-                            Result.from_evidence(
-                                Evidence.from_response(res, {"cookie": name}),
-                                f"Cookie Missing Secure Flag: {cookie}",
-                                Vulnerabilities.COOKIE_MISSING_SECURE_FLAG,
-                            )
+            if "secure" not in comp and parsed.scheme == "https":
+                if (
+                    name
+                    not in _checked_cookies[Vulnerabilities.COOKIE_MISSING_SECURE_FLAG]
+                ):
+                    results.append(
+                        Result.from_evidence(
+                            Evidence.from_response(res, {"cookie": name}),
+                            f"Cookie Missing Secure Flag: {cookie}",
+                            Vulnerabilities.COOKIE_MISSING_SECURE_FLAG,
                         )
+                    )
 
-                        _checked_cookies[
-                            Vulnerabilities.COOKIE_MISSING_SECURE_FLAG
-                        ].append(name)
-                else:
-                    # secure flag over HTTP is invalid
-                    if "secure" in comp:
-                        if (
-                            name
-                            not in _checked_cookies[
-                                Vulnerabilities.COOKIE_INVALID_SECURE_FLAG
-                            ]
-                        ):
-                            results.append(
-                                Result.from_evidence(
-                                    Evidence.from_response(res, {"cookie": name}),
-                                    f"Cookie Secure Flag Invalid (over HTTP): {cookie}",
-                                    Vulnerabilities.COOKIE_INVALID_SECURE_FLAG,
-                                )
-                            )
+                    _checked_cookies[Vulnerabilities.COOKIE_MISSING_SECURE_FLAG].append(
+                        name
+                    )
+            elif "secure" in comp and parsed.scheme == "http":
+                # secure flag over HTTP is invalid
+                if (
+                    name
+                    not in _checked_cookies[Vulnerabilities.COOKIE_INVALID_SECURE_FLAG]
+                ):
+                    results.append(
+                        Result.from_evidence(
+                            Evidence.from_response(res, {"cookie": name}),
+                            f"Cookie Secure Flag Invalid (over HTTP): {cookie}",
+                            Vulnerabilities.COOKIE_INVALID_SECURE_FLAG,
+                        )
+                    )
 
-                            _checked_cookies[
-                                Vulnerabilities.COOKIE_INVALID_SECURE_FLAG
-                            ].append(name)
+                    _checked_cookies[Vulnerabilities.COOKIE_INVALID_SECURE_FLAG].append(
+                        name
+                    )
 
             # check HttpOnly flag
             if "httponly" not in comp:

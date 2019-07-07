@@ -8,6 +8,7 @@ import requests
 import urllib3
 from requests.adapters import HTTPAdapter
 from requests.models import Response, Request, PreparedRequest
+from requests_mock.request import _RequestObjectProxy
 from urllib3 import Retry
 
 from yawast._version import get_version
@@ -217,10 +218,8 @@ def http_json(
 def http_build_raw_response(res: Response) -> str:
     if res.raw.version == 11:
         res_line = f"HTTP/1.1 {res.raw.status} {res.raw.reason}"
-    elif res.raw.version == 10:
-        res_line = f"HTTP/1.0 {res.raw.status} {res.raw.reason}"
     else:
-        raise ValueError(f"Invalid HTTP version ({res.raw.version})")
+        res_line = f"HTTP/1.0 {res.raw.status} {res.raw.reason}"
 
     res_string = res_line + "\r\n"
 
@@ -239,7 +238,12 @@ def http_build_raw_response(res: Response) -> str:
     return res_string
 
 
-def http_build_raw_request(req: Union[Request, PreparedRequest]) -> str:
+def http_build_raw_request(
+    req: Union[Request, PreparedRequest, _RequestObjectProxy]
+) -> str:
+    if type(req) is _RequestObjectProxy:
+        req = req._request
+
     headers = "\r\n".join(f"{k}: {v}" for k, v in req.headers.items())
 
     body = ""

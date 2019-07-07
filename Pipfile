@@ -9,6 +9,7 @@ mypy = "*"
 [packages]
 yawast = {editable = true,path = "."}
 sslyze = "*"
+requests-mock = "*"
 
 [requires]
 python_version = "3.7"

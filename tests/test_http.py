@@ -5,6 +5,7 @@ import requests_mock
 
 from yawast.scanner.plugins.http import http_basic, response_scanner
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
+from yawast.scanner.plugins.http.servers import rails
 from yawast.shared import network
 
 
@@ -441,3 +442,36 @@ class TestHttpBasic(TestCase):
 
         self.assertTrue(any("External JavaScript File" in r.message for r in res))
         self.assertTrue(any("Vulnerable JavaScript" in r.message for r in res))
+
+    def test_rails_cve_2019_5418_none(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(url, text="body")
+
+            rails.reset()
+            res = rails.check_cve_2019_5418(url)
+
+        self.assertFalse(any("Rails CVE-2019-5418" in r.message for r in res))
+
+    def test_rails_cve_2019_5418(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(url, text="root:x:0:0:root:/root:/bin/bash")
+
+            rails.reset()
+            res = rails.check_cve_2019_5418(url)
+
+        self.assertTrue(any("Rails CVE-2019-5418" in r.message for r in res))
+
+    def test_rails_cve_2019_5418_fp(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(url, text="root: File")
+
+            rails.reset()
+            res = rails.check_cve_2019_5418(url)
+
+        self.assertFalse(any("Rails CVE-2019-5418" in r.message for r in res))

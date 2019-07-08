@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 from yawast.reporting.enums import Vulnerabilities
@@ -6,6 +7,12 @@ from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
 
 _checked: List[str] = []
+
+
+def reset():
+    global _checked
+
+    _checked = []
 
 
 def check_cve_2019_5418(url: str) -> List[Result]:
@@ -27,10 +34,13 @@ def check_cve_2019_5418(url: str) -> List[Result]:
 
         results += response_scanner.check_response(url, res)
 
-        if "root:" in body:
+        pattern = r"root:[a-zA-Z0-9]+:0:0:.+$"
+        mtch = re.search(pattern, body)
+
+        if mtch:
             results.append(
                 Result(
-                    f"Rails CVE-2019-5418: File Content Disclosure: {url}",
+                    f"Rails CVE-2019-5418: File Content Disclosure: {url} - {mtch.group(0)}",
                     Vulnerabilities.SERVER_RAILS_CVE_2019_5418,
                     url,
                     [body, req],

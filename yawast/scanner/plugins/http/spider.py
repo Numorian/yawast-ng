@@ -155,13 +155,13 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                                 )
                         else:
                             if (
-                                "https://" in base_url
-                                and "http://" in href
-                                and href not in _insecure
+                                base_url.startswith("https://")
+                                and str(href).startswith("http://")
+                                and str(href) not in _insecure
                             ):
                                 # link from secure to insecure
                                 with _lock:
-                                    _insecure.append(href)
+                                    _insecure.append(str(href))
 
                                 results.append(
                                     Result.from_evidence(

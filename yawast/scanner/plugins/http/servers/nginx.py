@@ -30,7 +30,7 @@ def check_banner(banner: str, raw: str, url: str) -> List[Result]:
                 f"Nginx Version Exposed: {banner}",
                 Vulnerabilities.HTTP_BANNER_NGINX_VERSION,
                 url,
-                raw,
+                {"response": raw, "banner": banner},
             )
         )
 
@@ -44,7 +44,7 @@ def check_banner(banner: str, raw: str, url: str) -> List[Result]:
                     f"Nginx Outdated: {ver} - Current: {curr_version}",
                     Vulnerabilities.SERVER_NGINX_OUTDATED,
                     url,
-                    raw,
+                    {"response": raw, "banner": banner},
                 )
             )
     else:
@@ -54,7 +54,7 @@ def check_banner(banner: str, raw: str, url: str) -> List[Result]:
                 "Generic Nginx Server Banner Found",
                 Vulnerabilities.HTTP_BANNER_GENERIC_NGINX,
                 url,
-                raw,
+                {"response": raw, "banner": banner},
             )
         )
 

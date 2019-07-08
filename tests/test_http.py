@@ -5,7 +5,7 @@ import requests_mock
 
 from yawast.scanner.plugins.http import http_basic, response_scanner
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
-from yawast.scanner.plugins.http.servers import rails
+from yawast.scanner.plugins.http.servers import rails, python, nginx
 from yawast.shared import network
 
 
@@ -475,3 +475,25 @@ class TestHttpBasic(TestCase):
             res = rails.check_cve_2019_5418(url)
 
         self.assertFalse(any("Rails CVE-2019-5418" in r.message for r in res))
+
+    def test_python_check_banner(self):
+        res = python.check_banner("Python/3.0.3", "head_data", "http://example.com")
+
+        self.assertTrue(any("Python Version Exposed" in r.message for r in res))
+
+    def test_nginx_check_banner_gen(self):
+        res = nginx.check_banner("nginx", "head_data", "http://example.com")
+
+        self.assertTrue(
+            any("Generic Nginx Server Banner Found" in r.message for r in res)
+        )
+
+    def test_nginx_check_banner(self):
+        res = nginx.check_banner("nginx/1.0.0", "head_data", "http://example.com")
+
+        self.assertTrue(any("Nginx Version Exposed" in r.message for r in res))
+
+    def test_nginx_check_banner_outdated(self):
+        res = nginx.check_banner("nginx/1.0.0", "head_data", "http://example.com")
+
+        self.assertTrue(any("Nginx Outdated" in r.message for r in res))

@@ -177,7 +177,7 @@ def display(msg: str, issue: Issue) -> None:
     if issue.vulnerability.display_all or not is_registered(issue.vulnerability):
         if issue.severity == Severity.CRITICAL or issue.severity == Severity.HIGH:
             output.vuln(msg)
-        elif issue.severity == Severity.MEDIUM or issue.severity == Severity.LOW:
+        elif issue.severity == Severity.MEDIUM:
             output.warn(msg)
         else:
             output.info(msg)

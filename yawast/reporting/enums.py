@@ -233,105 +233,115 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     )
 
     TLS_COMPRESSION_ENABLED = VulnerabilityInfo.create(
-        "Tls_Compression_Enabled", Severity.HIGH, ""
+        "Tls_Compression_Enabled", Severity.HIGH, "", True
     )
     TLS_DH_KNOWN_PRIMES_STRONG = VulnerabilityInfo.create(
-        "Tls_DH_Known_Primes_Strong", Severity.MEDIUM, ""
+        "Tls_DH_Known_Primes_Strong", Severity.MEDIUM, "", True
     )
     TLS_DH_KNOWN_PRIMES_WEAK = VulnerabilityInfo.create(
-        "Tls_DH_Known_Primes_Weak", Severity.HIGH, ""
+        "Tls_DH_Known_Primes_Weak", Severity.HIGH, "", True
     )
     TLS_DH_PARAM_REUSE = VulnerabilityInfo.create(
-        "Tls_DH_Param_Reuse", Severity.LOW, ""
+        "Tls_DH_Param_Reuse", Severity.LOW, "", True
     )
-    TLS_DROWN = VulnerabilityInfo.create("Tls_Drown", Severity.MEDIUM, "")
+    TLS_DROWN = VulnerabilityInfo.create("Tls_Drown", Severity.MEDIUM, "", True)
     TLS_ECDH_PARAM_REUSE = VulnerabilityInfo.create(
-        "Tls_ECDH_Param_Reuse", Severity.LOW, ""
+        "Tls_ECDH_Param_Reuse", Severity.LOW, "", True
     )
     TLS_FALLBACK_SCSV_MISSING = VulnerabilityInfo.create(
-        "Tls_Fallback_SCSV_Missing", Severity.LOW, ""
+        "Tls_Fallback_SCSV_Missing", Severity.LOW, "", True
     )
-    TLS_FREAK = VulnerabilityInfo.create("Tls_Freak", Severity.HIGH, "")
-    TLS_GOLDENDOODLE = VulnerabilityInfo.create("Tls_Goldendoodle", Severity.HIGH, "")
+    TLS_FREAK = VulnerabilityInfo.create("Tls_Freak", Severity.HIGH, "", True)
+    TLS_GOLDENDOODLE = VulnerabilityInfo.create(
+        "Tls_Goldendoodle", Severity.HIGH, "", True
+    )
     TLS_GOLDENDOODLE_NE = VulnerabilityInfo.create(
-        "Tls_Goldendoodle_NE", Severity.MEDIUM, ""
+        "Tls_Goldendoodle_NE", Severity.MEDIUM, "", True
     )
     TLS_HEARTBEAT_ENABLED = VulnerabilityInfo.create(
-        "Tls_Heartbeat_Enabled", Severity.BEST_PRACTICE, ""
+        "Tls_Heartbeat_Enabled", Severity.BEST_PRACTICE, "", True
     )
-    TLS_HEARTBLEED = VulnerabilityInfo.create("Tls_Heartbleed", Severity.CRITICAL, "")
+    TLS_HEARTBLEED = VulnerabilityInfo.create(
+        "Tls_Heartbleed", Severity.CRITICAL, "", True
+    )
     TLS_INSECURE_CIPHER_SUITE = VulnerabilityInfo(
-        "Tls_Insecure_Cipher_Suite", Severity.MEDIUM, ""
+        "Tls_Insecure_Cipher_Suite", Severity.MEDIUM, "", True
     )
     TLS_INSECURE_RENEG = VulnerabilityInfo.create(
-        "Tls_Insecure_Reneg", Severity.HIGH, ""
+        "Tls_Insecure_Reneg", Severity.HIGH, "", True
     )
     TLS_LEGACY_SSL_ENABLED = VulnerabilityInfo.create(
-        "Tls_Legacy_SSL_Enabled", Severity.HIGH, ""
+        "Tls_Legacy_SSL_Enabled", Severity.HIGH, "", True
     )
     TLS_LEGACY_SSL_POODLE = VulnerabilityInfo.create(
-        "Tls_Legacy_SSL_Poodle", Severity.HIGH, ""
+        "Tls_Legacy_SSL_Poodle", Severity.HIGH, "", True
     )
     TLS_LIMITED_FORWARD_SECRECY = VulnerabilityInfo.create(
-        "Tls_Limited_Forward_Secrecy", Severity.LOW, ""
+        "Tls_Limited_Forward_Secrecy", Severity.LOW, "", True
     )
-    TLS_LOGJAM = VulnerabilityInfo.create("Tls_Logjam", Severity.HIGH, "")
+    TLS_LOGJAM = VulnerabilityInfo.create("Tls_Logjam", Severity.HIGH, "", True)
     TLS_NO_AEAD_SUPPORT = VulnerabilityInfo.create(
-        "Tls_No_AEAD_Support", Severity.BEST_PRACTICE, ""
+        "Tls_No_AEAD_Support", Severity.BEST_PRACTICE, "", True
     )
     TLS_OCSP_STAPLE_MISSING = VulnerabilityInfo.create(
-        "Tls_OCSP_Staple_Missing", Severity.LOW, ""
+        "Tls_OCSP_Staple_Missing", Severity.LOW, "", True
     )
 
     TLS_OPENSSL_CVE_2014_0224 = VulnerabilityInfo.create(
-        "Tls_OpenSSL_CVE_2014_0224", Severity.HIGH, ""
+        "Tls_OpenSSL_CVE_2014_0224", Severity.HIGH, "", True
     )
     TLS_OPENSSL_CVE_2014_0224_NE = VulnerabilityInfo.create(
-        "Tls_OpenSSL_CVE_2014_0224_NE", Severity.MEDIUM, ""
+        "Tls_OpenSSL_CVE_2014_0224_NE", Severity.MEDIUM, "", True
     )
     TLS_OPENSSL_CVE_2016_2107 = VulnerabilityInfo.create(
-        "Tls_OpenSSL_CVE_2016_2107", Severity.HIGH, ""
+        "Tls_OpenSSL_CVE_2016_2107", Severity.HIGH, "", True
     )
     TLS_OPENSSL_CVE_2019_1559 = VulnerabilityInfo.create(
-        "Tls_OpenSSL_CVE_2019_1559", Severity.HIGH, ""
+        "Tls_OpenSSL_CVE_2019_1559", Severity.HIGH, "", True
     )
     TLS_OPENSSL_CVE_2019_1559_NE = VulnerabilityInfo.create(
-        "Tls_OpenSSL_CVE_2019_1559_NE", Severity.MEDIUM, ""
+        "Tls_OpenSSL_CVE_2019_1559_NE", Severity.MEDIUM, "", True
     )
 
-    TLS_POODLE = VulnerabilityInfo.create("Tls_Poodle", Severity.HIGH, "")
+    TLS_POODLE = VulnerabilityInfo.create("Tls_Poodle", Severity.HIGH, "", True)
     TLS_ROBOT_ORACLE_STRONG = VulnerabilityInfo.create(
-        "Tls_Robot_Oracle_Strong", Severity.MEDIUM, ""
+        "Tls_Robot_Oracle_Strong", Severity.MEDIUM, "", True
     )
     TLS_ROBOT_ORACLE_WEAK = VulnerabilityInfo.create(
-        "Tls_Robot_Oracle_Weak", Severity.LOW, ""
+        "Tls_Robot_Oracle_Weak", Severity.LOW, "", True
     )
     TLS_SESSION_RESP_ENABLED = VulnerabilityInfo.create(
-        "Tls_Session_Resp_Enabled", Severity.BEST_PRACTICE, ""
+        "Tls_Session_Resp_Enabled", Severity.BEST_PRACTICE, "", True
     )
     TLS_SLEEPING_POODLE = VulnerabilityInfo.create(
-        "Tls_Sleeping_Poodle", Severity.HIGH, ""
+        "Tls_Sleeping_Poodle", Severity.HIGH, "", True
     )
     TLS_SLEEPING_POODLE_NE = VulnerabilityInfo.create(
-        "Tls_Sleeping_Poodle_NE", Severity.MEDIUM, ""
+        "Tls_Sleeping_Poodle_NE", Severity.MEDIUM, "", True
     )
-    TLS_SWEET32 = VulnerabilityInfo.create("Tls_SWEET32", Severity.HIGH, "")
-    TLS_SYMANTEC_ROOT = VulnerabilityInfo.create("Tls_Symantec_Root", Severity.HIGH, "")
-    TLS_TICKETBLEED = VulnerabilityInfo.create("Tls_Ticketbleed", Severity.HIGH, "")
+    TLS_SWEET32 = VulnerabilityInfo.create("Tls_SWEET32", Severity.HIGH, "", True)
+    TLS_SYMANTEC_ROOT = VulnerabilityInfo.create(
+        "Tls_Symantec_Root", Severity.HIGH, "", True
+    )
+    TLS_TICKETBLEED = VulnerabilityInfo.create(
+        "Tls_Ticketbleed", Severity.HIGH, "", True
+    )
 
     TLS_VERSION_1_0_ENABLED = VulnerabilityInfo.create(
-        "Tls_Version_1_0_Enabled", Severity.LOW, ""
+        "Tls_Version_1_0_Enabled", Severity.LOW, "", True
     )
     TLS_VERSION_1_3_EARLY_DATA_ENABLED = VulnerabilityInfo.create(
-        "Tls_Version_1_3_Early_Data_Enabled", Severity.BEST_PRACTICE, ""
+        "Tls_Version_1_3_Early_Data_Enabled", Severity.BEST_PRACTICE, "", True
     )
     TLS_VERSION_1_3_NOT_ENABLED = VulnerabilityInfo.create(
-        "Tls_Version_1_3_Not_Enabled", Severity.BEST_PRACTICE, ""
+        "Tls_Version_1_3_Not_Enabled", Severity.BEST_PRACTICE, "", True
     )
 
-    TLS_ZOMBIE_POODLE = VulnerabilityInfo.create("Tls_Zombie_Poodle", Severity.HIGH, "")
+    TLS_ZOMBIE_POODLE = VulnerabilityInfo.create(
+        "Tls_Zombie_Poodle", Severity.HIGH, "", True
+    )
     TLS_ZOMBIE_POODLE_NE = VulnerabilityInfo.create(
-        "Tls_Zombie_Poodle_NE", Severity.MEDIUM, ""
+        "Tls_Zombie_Poodle_NE", Severity.MEDIUM, "", True
     )
 
     SERVER_APACHE_OUTDATED = VulnerabilityInfo.create(

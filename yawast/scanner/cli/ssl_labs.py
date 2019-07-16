@@ -32,7 +32,7 @@ def scan(session: Session):
     completed: List[str] = []
     body = None
 
-    while status != "READY" and status != "ERROR" and status != "DNS":
+    while status != "READY" and status != "ERROR":
         sleep(5)
 
         try:

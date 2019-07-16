@@ -120,6 +120,9 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                 for link in soup.find_all("a"):
                     href = link.get("href")
 
+                    if str(href).startswith("/") and not str(href).startswith("//"):
+                        href = urljoin(base_url, href)
+
                     if href is not None:
                         # check to see if this link is in scope
                         if base_url in href and href not in _links:

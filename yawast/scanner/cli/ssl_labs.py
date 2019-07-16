@@ -854,7 +854,7 @@ def _get_vulnerability_info(ep, url):
                 ),
             )
     else:
-        output.error("t\tDowngrade Prevention: Information Not Received")
+        output.error("\t\tDowngrade Prevention: Information Not Received")
 
     if "compressionMethods" in ep["details"]:
         if ep["details"]["compressionMethods"] & 1 != 0:

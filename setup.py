@@ -1,9 +1,43 @@
+import sys
 from setuptools import setup, find_packages
 from os import path
+from cx_Freeze import setup, Executable
 
+# Dependencies are automatically detected.
+# I'm not sure about the *version.py files, but this hack works.
+build_exe_options = {"packages": ["os","dns"],
+    "include_files": ["yawast\_static_version.py", ("yawast\_version.py", "lib/validator_collection/_version.py")],
+    "includes": [
+        "six",
+        "appdirs",
+        "packaging.version",
+        "packaging.specifiers",
+        "packaging.requirements",
+        "html.parser",
+        "setuptools.msvc",
+        "psutil",
+        "colorama",
+        "validator_collection",
+        "jsonschema",
+        "cryptography",
+        "_cffi_backend",
+        "requests",
+        "requests.packages.idna",
+        "requests.packages.idna.idnadata",
+        "idna.idnadata",
+        "publicsuffixlist",
+        "sslyze",
+        "bs4",
+        "selenium"],
+    "excludes": ["tkinter"]}
+bdist_msi_options = {"add_to_path": True}
 
-root_path = path.abspath(path.dirname(__file__))
-
+if getattr(sys, 'frozen', False):
+    # frozen
+    root_path = path.dirname(sys.executable)
+else:
+    # unfrozen
+    root_path = path.dirname(path.realpath(__file__))
 
 def get_version_and_cmdclass(package_path):
     """Load version.py module without importing the whole package.
@@ -46,6 +80,8 @@ setup(
     author="Adam Caudill",
     author_email="adam@adamcaudill.com",
     license="MIT",
+    options = {"build_exe": build_exe_options, "build_msi": bdist_msi_options},
+    executables = [Executable("bin/yawast", base=None)],
     packages=find_packages(exclude=["tests"]),
     scripts=["bin/yawast"],
     install_requires=[

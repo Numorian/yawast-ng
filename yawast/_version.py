@@ -14,7 +14,7 @@ Version = namedtuple("Version", ("release", "dev", "labels"))
 # No public API
 __all__ = []
 
-if getattr(sys, 'frozen', False):
+if getattr(sys, "frozen", False):
     # frozen
     package_root = os.path.dirname(sys.executable)
 else:

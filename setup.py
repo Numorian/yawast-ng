@@ -1,7 +1,12 @@
 import sys
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from cx_Freeze import Executable
 from os import path
-from cx_Freeze import setup, Executable
+
+if "build_exe" in sys.argv:
+    from cx_Freeze import setup
+else:
+    from setuptools import setup
 
 # Dependencies are automatically detected.
 # I'm not sure about the *version.py files, but this hack works.

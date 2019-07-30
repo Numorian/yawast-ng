@@ -21,6 +21,10 @@ def build_parser():
         action="store_true",
         help="Disables the use of line wrapping in output",
     )
+    parent_parser.add_argument(
+        "--proxy", type=str, help="HTTP Proxy Server (such as Burp Suite)"
+    )
+    parent_parser.add_argument("--cookie", type=str, help="Session cookie")
 
     parser = argparse.ArgumentParser(prog="yawast")
 
@@ -66,10 +70,6 @@ def build_parser():
         "--subdomains", action="store_true", help="Search for Common Subdomains"
     )
     parser_scan.add_argument("--nodns", action="store_true", help="Disable DNS checks")
-    parser_scan.add_argument(
-        "--proxy", type=str, help="HTTP Proxy Server (such as Burp Suite)"
-    )
-    parser_scan.add_argument("--cookie", type=str, help="Session cookie")
     parser_scan.add_argument("--output", type=str, help="Output JSON file")
     parser_scan.add_argument(
         "--user",

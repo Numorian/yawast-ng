@@ -8,6 +8,7 @@ import threading
 
 
 class Spinner:
+    running = False
     busy = False
     delay = 0.1
 
@@ -34,13 +35,31 @@ class Spinner:
             except Exception:
                 # we don't care what happens here
                 pass
+        self.running = False
 
-    def __enter__(self):
+    def start(self):
+        self.running = True
         self.busy = True
         threading.Thread(target=self.spinner_task).start()
 
-    def __exit__(self, exception, value, tb):
+    def stop(self, exception = None):
         self.busy = False
         time.sleep(self.delay)
+
+        while self.running:
+            pass
+        sys.stdout.write(" ")
+        sys.stdout.flush()
+        sys.stdout.write("\b")
+        sys.stdout.flush()
+
         if exception is not None:
             return False
+
+    def __enter__(self):
+        self.start()
+
+        return self
+
+    def __exit__(self, exception, value, tb):
+        return self.stop(exception)

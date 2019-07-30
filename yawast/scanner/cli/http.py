@@ -14,6 +14,7 @@ from yawast.scanner.plugins.http import (
     file_search,
     error_checker,
 )
+from yawast.scanner.plugins.http.applications import password_reset
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.servers import apache_httpd, apache_tomcat, nginx, iis
 from yawast.scanner.plugins.result import Result
@@ -79,6 +80,11 @@ def scan(session: Session):
     # get files, and add those to the link list
     links += _file_search(session, links)
 
+    with Spinner() as spinner:
+        res = password_reset.check_resp_user_enum(spinner, session)
+    if len(res) > 0:
+        reporter.display_results(res, "\t")
+
     with Spinner():
         res = http_basic.check_local_ip_disclosure(session)
     if len(res) > 0:
@@ -118,7 +124,7 @@ def scan(session: Session):
         res = http_basic.check_options(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-
+    
     with Spinner():
         wp_path, res = wordpress.identify(session.url)
     if len(res) > 0:

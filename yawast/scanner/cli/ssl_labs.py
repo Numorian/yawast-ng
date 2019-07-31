@@ -102,11 +102,13 @@ def scan(session: Session):
 
     # HACK: this needs to be refactored, once we have a better way to do it. This is awful.
     # (from a separation of duties perspective. this should happen in the plugin)
-    if not body.get("endpoints") is None:
+    if body["status"] is not "ERROR":
+        raise ValueError(f"SSL Labs Error: {body['status']}")
+    elif "endpoints" in body:
         for ep in body["endpoints"]:
-            output.norm(f'IP: {ep["ipAddress"]} - Grade: {ep["grade"]}')
-
             if ep["statusMessage"] == "Ready":
+                output.norm(f'IP: {ep["ipAddress"]} - Grade: {ep["grade"]}')
+
                 _get_cert_info(body, ep, session.url)
                 _get_protocol_info(ep, session.url)
                 _get_vulnerability_info(ep, session.url)
@@ -119,6 +121,8 @@ def scan(session: Session):
         output.debug(f"Invalid response received: {body}")
         output.error("Invalid response received: Endpoint data not found.")
         output.empty()
+
+        raise ValueError(f"SSL Labs Error: {body['status']}")
 
 
 def _get_cert_info(body, ep, url):

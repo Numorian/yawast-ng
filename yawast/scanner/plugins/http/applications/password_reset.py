@@ -136,14 +136,14 @@ def check_resp_user_enum(spinner, session: Session) -> List[Result]:
                 )
         except selenium.common.exceptions.WebDriverException as e:
             output.error("Selenium error encountered: " + e.msg)
-        except ArgumentError as e:
+        except ValueError as e:
             output.error(
                 "Unable to find a matching element to perform the User Enumeration via Password Reset: "
-                + e.msg
+                + str(e)
             )
-        except:
+        except Exception as e:
             output.error(
-                "Failed to execute Password Reset Page User Enumeration: " + e.msg
+                "Failed to execute Password Reset Page User Enumeration: " + str(e)
             )
 
         spinner.start()
@@ -243,7 +243,7 @@ def find_user_field(driver):
         if element:
             return element
 
-    raise ArgumentError("No matching element found.")
+    raise ValueError("No matching element found.")
 
 
 def find_element(driver, name):

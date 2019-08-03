@@ -1,25 +1,16 @@
-import re
 import secrets
-import selenium
-import sys
 import time
-import traceback
-from typing import Tuple, Union, List, cast
-from urllib.parse import urljoin
+from typing import List
 
-from packaging import version
-from requests import Response
-
+import selenium
 from selenium import webdriver
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
-from yawast.scanner.plugins.http import version_checker
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
-from yawast.shared import network, output
+from yawast.shared import output
 from yawast.shared import utils
-
 
 timing = {True: [], False: []}
 

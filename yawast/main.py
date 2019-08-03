@@ -58,11 +58,11 @@ def main():
         print()
 
     try:
-        # with _KeyMonitor():
-        with _ProcessMonitor() as pm:
-            _monitor = pm
+        with _KeyMonitor():
+            with _ProcessMonitor() as pm:
+                _monitor = pm
 
-            args.func(args, urls)
+                args.func(args, urls)
     except KeyboardInterrupt:
         output.empty()
         output.error("Scan cancelled by user.")
@@ -234,9 +234,8 @@ class _KeyMonitor:
         if sys.stdout.isatty():
             while self.busy:
                 try:
-                    utils._input_lock.acquire()
-                    key = getchar()
-                    utils._input_lock.release()
+                    with utils._input_lock:
+                        key = getchar()
 
                     if key != "":
                         output.debug(f"Received from keyboard: {key}")
@@ -258,6 +257,8 @@ class _KeyMonitor:
     def __enter__(self):
         self.busy = True
         threading.Thread(target=self.wait_task).start()
+
+        return self
 
     def __exit__(self, exception, value, tb):
         self.busy = False

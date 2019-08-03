@@ -13,14 +13,16 @@ def start(session: Session):
     try:
         socket.gethostbyname(session.domain)
     except socket.gaierror as error:
-        print(f"Fatal Error: Unable to resolve {session.domain} ({str(error)})")
+        output.debug_exception()
+        output.error(f"Fatal Error: Unable to resolve {session.domain} ({str(error)})")
 
         return
 
     try:
         cutils.check_redirect(session)
-    except ValueError as error:
-        print(f"Unable to continue: {str(error)}")
+    except Exception as error:
+        output.debug_exception()
+        output.error(f"Unable to continue: {str(error)}")
 
         return
 
@@ -43,6 +45,9 @@ def start(session: Session):
                 output.debug_exception()
 
                 output.error(f"Error running scan with SSL Labs: {str(error)}")
+                output.norm("Switching to internal SSL scanner...")
+
+                ssl_internal.scan(session)
 
         if session.args.tdessessioncount:
             ssl_sweet32.scan(session)

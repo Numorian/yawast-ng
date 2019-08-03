@@ -124,7 +124,7 @@ def scan(session: Session):
         res = http_basic.check_options(session.url)
     if len(res) > 0:
         reporter.display_results(res, "\t")
-    
+
     with Spinner():
         wp_path, res = wordpress.identify(session.url)
     if len(res) > 0:

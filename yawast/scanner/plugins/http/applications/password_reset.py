@@ -23,6 +23,7 @@ from yawast.shared import utils
 
 timing = {True: [], False: []}
 
+
 def check_resp_user_enum(spinner, session: Session) -> List[Result]:
     global timing
     results = []
@@ -33,30 +34,70 @@ def check_resp_user_enum(spinner, session: Session) -> List[Result]:
         user = session.args.user
         spinner.stop()
         if user is None:
-            user = utils.prompt('What is a valid user? ')
+            user = utils.prompt("What is a valid user? ")
 
         try:
             # checks for user enum via differences in response
             # run each test 5 times to collect timing info
-            good_user_res, good_user_img = fill_form_get_body(session, pass_reset_page, user, True, True)
+            good_user_res, good_user_img = fill_form_get_body(
+                session, pass_reset_page, user, True, True
+            )
             fill_form_get_body(session, pass_reset_page, user, True, False)
             fill_form_get_body(session, pass_reset_page, user, True, False)
             fill_form_get_body(session, pass_reset_page, user, True, False)
             fill_form_get_body(session, pass_reset_page, user, True, False)
 
-            bad_user_res, bad_user_img = fill_form_get_body(session, pass_reset_page, secrets.token_hex() + "@invalid.example.com", False, True)
-            fill_form_get_body(session, pass_reset_page, secrets.token_hex() + "@invalid.example.com", False, False)
-            fill_form_get_body(session, pass_reset_page, secrets.token_hex() + "@invalid.example.com", False, False)
-            fill_form_get_body(session, pass_reset_page, secrets.token_hex() + "@invalid.example.com", False, False)
-            fill_form_get_body(session, pass_reset_page, secrets.token_hex() + "@invalid.example.com", False, False)
+            bad_user_res, bad_user_img = fill_form_get_body(
+                session,
+                pass_reset_page,
+                secrets.token_hex() + "@invalid.example.com",
+                False,
+                True,
+            )
+            fill_form_get_body(
+                session,
+                pass_reset_page,
+                secrets.token_hex() + "@invalid.example.com",
+                False,
+                False,
+            )
+            fill_form_get_body(
+                session,
+                pass_reset_page,
+                secrets.token_hex() + "@invalid.example.com",
+                False,
+                False,
+            )
+            fill_form_get_body(
+                session,
+                pass_reset_page,
+                secrets.token_hex() + "@invalid.example.com",
+                False,
+                False,
+            )
+            fill_form_get_body(
+                session,
+                pass_reset_page,
+                secrets.token_hex() + "@invalid.example.com",
+                False,
+                False,
+            )
 
             # check for difference in response
             if good_user_res != bad_user_res:
                 results.append(
                     Result.from_evidence(
-                        Evidence(url=pass_reset_page, request=None, response=None,
-                            custom={"good_response": good_user_res, "bad_response": bad_user_res,
-                                "good_response_img": good_user_img, "bad_response_img": bad_user_img}),
+                        Evidence(
+                            url=pass_reset_page,
+                            request=None,
+                            response=None,
+                            custom={
+                                "good_response": good_user_res,
+                                "bad_response": bad_user_res,
+                                "good_response_img": good_user_img,
+                                "bad_response_img": bad_user_img,
+                            },
+                        ),
                         f"Password Reset: Possible User Enumeration - Difference in Response",
                         Vulnerabilities.HTTP_USER_ENUMERATION,
                     )
@@ -71,10 +112,24 @@ def check_resp_user_enum(spinner, session: Session) -> List[Result]:
                 # this is an arbitrary number, but 10ms is likely good enough
                 results.append(
                     Result.from_evidence(
-                        Evidence(url=pass_reset_page, request=None, response=None,
-                            custom={"difference": timing_diff, "valid_1": timing[True][0], "valid_2": timing[True][1], "valid_3": timing[True][2],
-                                "valid_4": timing[True][3], "valid_5": timing[True][4], "invalid_1": timing[False][0], "invalid_2": timing[False][1],
-                                "invalid_3": timing[False][2], "invalid_4": timing[False][3], "invalid_5": timing[False][4]}),
+                        Evidence(
+                            url=pass_reset_page,
+                            request=None,
+                            response=None,
+                            custom={
+                                "difference": timing_diff,
+                                "valid_1": timing[True][0],
+                                "valid_2": timing[True][1],
+                                "valid_3": timing[True][2],
+                                "valid_4": timing[True][3],
+                                "valid_5": timing[True][4],
+                                "invalid_1": timing[False][0],
+                                "invalid_2": timing[False][1],
+                                "invalid_3": timing[False][2],
+                                "invalid_4": timing[False][3],
+                                "invalid_5": timing[False][4],
+                            },
+                        ),
                         f"Password Reset: Possible User Enumeration - Difference in Timing",
                         Vulnerabilities.HTTP_USER_ENUMERATION_TIMING,
                     )
@@ -82,23 +137,29 @@ def check_resp_user_enum(spinner, session: Session) -> List[Result]:
         except selenium.common.exceptions.WebDriverException as e:
             output.error("Selenium error encountered: " + e.msg)
         except ArgumentError as e:
-            output.error("Unable to find a matching element to perform the User Enumeration via Password Reset: " + e.msg)
+            output.error(
+                "Unable to find a matching element to perform the User Enumeration via Password Reset: "
+                + e.msg
+            )
         except:
-            output.error("Failed to execute Password Reset Page User Enumeration: " + e.msg)
+            output.error(
+                "Failed to execute Password Reset Page User Enumeration: " + e.msg
+            )
 
         spinner.start()
 
     return results
 
+
 def fill_form_get_body(session: Session, uri, user, valid, log_output):
     global timing
 
     options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('incognito')
-    options.add_argument('disable-dev-shm-usage')
-    options.add_argument('no-sandbox')
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument("headless")
+    options.add_argument("incognito")
+    options.add_argument("disable-dev-shm-usage")
+    options.add_argument("no-sandbox")
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
     # if we have a proxy set, use that
     if session.args.proxy:
@@ -106,11 +167,11 @@ def fill_form_get_body(session: Session, uri, user, valid, log_output):
         proxy.http_proxy = f"http://#{session.args.proxy}"
         proxy.ssl_proxy = f"http://#{session.args.proxy}"
         caps = webdriver.DesiredCapabilities.CHROME.copy()
-        caps['acceptInsecureCerts'] = True
-        caps['proxy'] = proxy
+        caps["acceptInsecureCerts"] = True
+        caps["proxy"] = proxy
     else:
         caps = webdriver.DesiredCapabilities.CHROME.copy()
-        caps['acceptInsecureCerts'] = True
+        caps["acceptInsecureCerts"] = True
 
     driver = webdriver.Chrome(chrome_options=options, desired_capabilities=caps)
     driver.get(uri)
@@ -142,6 +203,7 @@ def fill_form_get_body(session: Session, uri, user, valid, log_output):
 
     return res, img
 
+
 def find_user_field(driver):
     # find the page form element - this is going to be a best effort thing, and may not always be right
     element = find_element(driver, "user_login")
@@ -163,21 +225,26 @@ def find_user_field(driver):
     element = find_element(driver, "username")
     if element:
         return element
-    
+
     element = find_element(driver, "user")
     if element:
         return element
 
     # if we got here, it means that we don't have an element we know about, so we have to prompt
     if element is None:
-        print("Unable to find a known element to enter the user name. Please identify the proper element.")
-        print("If this element seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues")
-        name = utils.prompt('What is the user/email entry element name? ')
+        print(
+            "Unable to find a known element to enter the user name. Please identify the proper element."
+        )
+        print(
+            "If this element seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues"
+        )
+        name = utils.prompt("What is the user/email entry element name? ")
         element = find_element(driver, name)
         if element:
             return element
-    
+
     raise ArgumentError("No matching element found.")
+
 
 def find_element(driver, name):
     ret = None
@@ -194,5 +261,5 @@ def find_element(driver, name):
             ret = driver.find_element_by_id(name)
         except:
             pass
-    
+
     return ret

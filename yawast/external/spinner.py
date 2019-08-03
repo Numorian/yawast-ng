@@ -42,7 +42,7 @@ class Spinner:
         self.busy = True
         threading.Thread(target=self.spinner_task).start()
 
-    def stop(self, exception = None):
+    def stop(self, exception=None):
         self.busy = False
         time.sleep(self.delay)
 

@@ -33,7 +33,7 @@ def main():
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    warnings.simplefilter('ignore')
+    warnings.simplefilter("ignore")
 
     parser = command_line.build_parser()
     args, urls = parser.parse_known_args()
@@ -58,7 +58,7 @@ def main():
         print()
 
     try:
-        #with _KeyMonitor():
+        # with _KeyMonitor():
         with _ProcessMonitor() as pm:
             _monitor = pm
 

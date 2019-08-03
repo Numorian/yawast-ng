@@ -37,7 +37,7 @@ def init(output_file: Union[str, None] = None) -> None:
         _output_file = output_file
 
 
-def save_output(spinner = None):
+def save_output(spinner=None):
     global _issues, _info, _output_file, _data
 
     if spinner:

@@ -256,33 +256,34 @@ def _check_password_reset(session: Session, element_name: Optional[str] = None):
     user = session.args.user
     if user is None:
         user = utils.prompt("What is a valid user? ")
-        try:
-            with Spinner():
-                res = password_reset.check_resp_user_enum(session, user, element_name)
 
-                if len(res) > 0:
-                    reporter.display_results(res, "\t")
-        except WebDriverException as e:
-            output.error("Selenium error encountered: " + e.msg)
-        except PasswordResetElementNotFound as e:
-            if element_name is not None:
-                # we failed to find the element, and we had one specified - this isn't going to work
-                output.error(
-                    "Unable to find a matching element to perform the User Enumeration via Password Reset: "
-                    + str(e)
-                )
-            else:
-                # we failed, because we don't have the element - so we prompt for it.
-                print(
-                    "Unable to find a known element to enter the user name. Please identify the proper element."
-                )
-                print(
-                    "If this element seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues"
-                )
-                name = utils.prompt("What is the user/email entry element name? ")
+    try:
+        with Spinner():
+            res = password_reset.check_resp_user_enum(session, user, element_name)
 
-                _check_password_reset(session, name)
-        except Exception as e:
+        if len(res) > 0:
+            reporter.display_results(res, "\t")
+    except WebDriverException as e:
+        output.error("Selenium error encountered: " + e.msg)
+    except PasswordResetElementNotFound as e:
+        if element_name is not None:
+            # we failed to find the element, and we had one specified - this isn't going to work
             output.error(
-                "Failed to execute Password Reset Page User Enumeration: " + str(e)
+                "Unable to find a matching element to perform the User Enumeration via Password Reset: "
+                + str(e)
             )
+        else:
+            # we failed, because we don't have the element - so we prompt for it.
+            print(
+                "Unable to find a known element to enter the user name. Please identify the proper element."
+            )
+            print(
+                "If this element seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues"
+            )
+            name = utils.prompt("What is the user/email entry element name? ")
+
+            _check_password_reset(session, name)
+    except Exception as e:
+        output.error(
+            "Failed to execute Password Reset Page User Enumeration: " + str(e)
+        )

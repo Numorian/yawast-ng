@@ -1,6 +1,6 @@
 import secrets
 import time
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from selenium import webdriver
 
@@ -9,9 +9,8 @@ from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import output
-from yawast.shared import utils
 
-timing = {True: [], False: []}
+timing: Dict[bool, List[int]] = {True: [], False: []}
 
 
 def check_resp_user_enum(
@@ -116,11 +115,12 @@ def check_resp_user_enum(
                                 "invalid_5": timing[False][4],
                             },
                         ),
-                        f"Password Reset: Possible User Enumeration - Difference in Timing",
+                        f"Password Reset: Possible User Enumeration - Difference in Timing "
+                        f"(Valid: {valid_average}ms - Invalid: {invalid_average}ms)",
                         Vulnerabilities.HTTP_USER_ENUMERATION_TIMING,
                     )
                 )
-        except Exception as e:
+        except Exception:
             output.debug_exception()
 
             raise
@@ -168,10 +168,10 @@ def fill_form_get_body(session: Session, uri, user, valid, element_name):
 
     element.send_keys(user)
 
-    beginning_time = time.clock()
+    beginning_time = time.time()
     element.submit()
-    end_time = time.clock()
-    timing[valid] += [(end_time - beginning_time) * 1000]
+    end_time = time.time()
+    timing[valid] += [int((end_time - beginning_time) * 1000)]
 
     res = driver.page_source
     img = driver.get_screenshot_as_base64()

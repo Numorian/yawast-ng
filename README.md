@@ -18,19 +18,27 @@ Please see [the wiki](https://github.com/adamcaudill/yawast/wiki) for full docum
 
 ### Installing
 
-YAWAST is packaged as a Python [package](https://pypi.org/project/yawast/) & Docker container to make installing it as easy as possible. Details are available [on the wiki](https://github.com/adamcaudill/yawast/wiki/Installation).
+YAWAST is packaged as a Python [package](https://pypi.org/project/yawast/), Docker container, and as a Windows EXE to make installing it as easy as possible. Details are available [on the wiki](https://github.com/adamcaudill/yawast/wiki/Installation).
+
+#### Windows
+
+The simplest option for Windows users is to [download](https://github.com/adamcaudill/yawast/releases) the compiled executable, as Windows requires certain dependentcies to be compile.
+
+#### macOS, Linux, etc.
 
 The simplest options to install are:
 
 As a Python package: `pip3 install yawast` (YAWAST requires Python 3.7)
 
-Via Docker: `docker pull adamcaudill/yawast`
+#### Docker
+
+`docker pull adamcaudill/yawast`
 
 It's strongly recommended that you review the [installation](https://github.com/adamcaudill/yawast/wiki/Installation) documentation, to make sure you have the proper dependencies.
 
-### Tests
+### Checks
 
-The following tests are performed:
+The following checks are performed:
 
 * *(Generic)* User Enumeration via Password Reset Form Response Differences
 * *(Generic)* User Enumeration via Password Reset Form Timing Differences

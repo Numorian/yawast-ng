@@ -1,6 +1,6 @@
 import secrets
 from http import cookiejar
-from typing import List, Dict, Union, Tuple, Optional
+from typing import Dict, Union, Tuple, Optional
 from urllib.parse import urlparse, urljoin
 from urllib.parse import urlunparse
 
@@ -9,7 +9,6 @@ import urllib3
 from requests.adapters import HTTPAdapter
 from requests.models import Response, Request, PreparedRequest
 from requests_mock.request import _RequestObjectProxy
-from urllib3 import Retry
 
 from yawast._version import get_version
 from yawast.reporting import reporter
@@ -39,14 +38,14 @@ def init(proxy: str, cookie: str) -> None:
     _requester.mount(
         "http://",
         HTTPAdapter(
-            max_retries=Retry(total=3, read=5, connect=5, backoff_factor=0.3),
+            max_retries=urllib3.Retry(total=3, read=5, connect=5, backoff_factor=0.3),
             pool_maxsize=50,
         ),
     )
     _requester.mount(
         "https://",
         HTTPAdapter(
-            max_retries=Retry(total=3, read=5, connect=5, backoff_factor=0.3),
+            max_retries=urllib3.Retry(total=3, read=5, connect=5, backoff_factor=0.3),
             pool_maxsize=50,
         ),
     )

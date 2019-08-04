@@ -22,5 +22,3 @@ def scan(session: Session):
                     reporter.display_results(res, "\t")
         except Exception as error:
             output.error(f"Error checking for open ports: {str(error)}")
-
-    pass

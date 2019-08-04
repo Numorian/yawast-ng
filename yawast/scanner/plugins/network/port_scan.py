@@ -69,5 +69,3 @@ def _is_port_open(url: str, ip: str, rec, queue):
                 {"ip": ip, "port": port},
             )
         )
-
-    pass

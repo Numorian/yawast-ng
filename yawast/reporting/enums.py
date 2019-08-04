@@ -417,5 +417,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
         "Server_Int_IP_Exp_Http10", Severity.LOW, ""
     )
 
+    NETWORK_OPEN_PORT = VulnerabilityInfo.create(
+        "Network_Open_Port", Severity.INFO, "", True
+    )
+
     WAF_CLOUDFLARE = VulnerabilityInfo.create("Waf_Cloudflare", Severity.INFO, "")
     WAF_INCAPSULA = VulnerabilityInfo.create("Waf_Incapsula", Severity.INFO, "")

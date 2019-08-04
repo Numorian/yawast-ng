@@ -1,7 +1,7 @@
 import socket
 
 from yawast.commands import utils as cutils
-from yawast.scanner.cli import dns, ssl_labs, ssl_internal, ssl_sweet32, http
+from yawast.scanner.cli import dns, ssl_labs, ssl_internal, ssl_sweet32, http, network
 from yawast.scanner.session import Session
 from yawast.shared import utils, output
 
@@ -28,6 +28,9 @@ def start(session: Session):
 
     if not session.args.nodns:
         dns.scan(session)
+
+    if session.args.ports:
+        network.scan(session)
 
     # check to see if we are looking at an HTTPS server
     if session.url_parsed.scheme == "https" and not session.args.nossl:

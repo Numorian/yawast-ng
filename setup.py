@@ -9,7 +9,7 @@ else:
 
     # fake Executable class to avoid cx_Freeze on non-Windows
     class Executable:
-        def __init__(self, script, targetName):
+        def __init__(self, script=None, base=None):
             pass
 
 

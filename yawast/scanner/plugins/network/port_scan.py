@@ -62,7 +62,7 @@ def _is_port_open(url: str, ip: str, port: int, rec, queue):
     if connected:
         queue.put(
             Result(
-                f"Open Port: IP: {ip} - Port: {port} ({rec['name']} - {rec['desc']})",
+                f"Open Port: IP: {ip} - Port: {port} (Assigned Service: {rec['name']} - {rec['desc']})",
                 Vulnerabilities.NETWORK_OPEN_PORT,
                 url,
                 {"ip": ip, "port": port},

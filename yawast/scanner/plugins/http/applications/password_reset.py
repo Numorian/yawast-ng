@@ -1,6 +1,6 @@
 import secrets
 import time
-from typing import List, Optional, Dict, Union
+from typing import List, Optional, Dict, Union, Tuple
 
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -11,13 +11,11 @@ from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import output
 
-timing: Dict[bool, List[int]] = {True: [], False: []}
-
 
 def check_resp_user_enum(
     session: Session, user: str, element_name: Optional[str] = None
 ) -> List[Result]:
-    global timing
+    timing: Dict[bool, List[int]] = {True: [], False: []}
     results: List[Result] = []
 
     pass_reset_page = session.args.pass_reset_page
@@ -25,49 +23,34 @@ def check_resp_user_enum(
         try:
             # checks for user enum via differences in response
             # run each test 5 times to collect timing info
-            good_user_res, good_user_img = _fill_form_get_body(
-                session, pass_reset_page, user, True, element_name
+            good_user_res, good_user_img, delay = _fill_form_get_body(
+                session, pass_reset_page, user, element_name
             )
-            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
-            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
-            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
-            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
+            timing[True] += [delay]
+            # run a few extra times to build timing data
+            for i in range(4):
+                _, _, delay = _fill_form_get_body(
+                    session, pass_reset_page, user, element_name
+                )
+                timing[True] += [delay]
 
-            bad_user_res, bad_user_img = _fill_form_get_body(
+            bad_user_res, bad_user_img, delay = _fill_form_get_body(
                 session,
                 pass_reset_page,
                 secrets.token_hex() + "@invalid.example.com",
-                False,
                 element_name,
             )
-            _fill_form_get_body(
-                session,
-                pass_reset_page,
-                secrets.token_hex() + "@invalid.example.com",
-                False,
-                element_name,
-            )
-            _fill_form_get_body(
-                session,
-                pass_reset_page,
-                secrets.token_hex() + "@invalid.example.com",
-                False,
-                element_name,
-            )
-            _fill_form_get_body(
-                session,
-                pass_reset_page,
-                secrets.token_hex() + "@invalid.example.com",
-                False,
-                element_name,
-            )
-            _fill_form_get_body(
-                session,
-                pass_reset_page,
-                secrets.token_hex() + "@invalid.example.com",
-                False,
-                element_name,
-            )
+            timing[False] += [delay]
+            # run a few extra times to build timing data
+            for i in range(4):
+                _, _, delay = _fill_form_get_body(
+                    session,
+                    pass_reset_page,
+                    secrets.token_hex() + "@invalid.example.com",
+                    element_name,
+                )
+
+                timing[False] += [delay]
 
             # check for difference in response
             if good_user_res != bad_user_res:
@@ -129,8 +112,9 @@ def check_resp_user_enum(
     return results
 
 
-def _fill_form_get_body(session: Session, uri, user, valid, element_name):
-    global timing
+def _fill_form_get_body(
+    session: Session, uri: str, user: str, element_name: Optional[str] = None
+) -> Tuple[str, str, int]:
 
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
@@ -172,17 +156,17 @@ def _fill_form_get_body(session: Session, uri, user, valid, element_name):
     beginning_time = time.time()
     element.submit()
     end_time = time.time()
-    timing[valid] += [int((end_time - beginning_time) * 1000)]
+    delay = int((end_time - beginning_time) * 1000)
 
     res = driver.page_source
     img = driver.get_screenshot_as_base64()
 
     driver.close()
 
-    return res, img
+    return res, img, delay
 
 
-def _find_user_field(driver: webdriver, name: str) -> WebElement:
+def _find_user_field(driver: webdriver, name: Optional[str] = None) -> WebElement:
     # if a name was specified, try that one first
     if name is not None:
         element = _find_element(driver, name)

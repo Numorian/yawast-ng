@@ -31,7 +31,7 @@ def check_open_ports(url: str, ip: str, path: Optional[str] = None) -> List[Resu
         data = json.load(json_file)
 
     for rec in data:
-        pool.apply_async(_is_port_open, (url, ip, rec["port"], rec, queue))
+        pool.apply_async(_is_port_open, (url, ip, rec, queue))
 
     pool.close()
     pool.join()
@@ -44,8 +44,9 @@ def check_open_ports(url: str, ip: str, path: Optional[str] = None) -> List[Resu
     return results
 
 
-def _is_port_open(url: str, ip: str, port: int, rec, queue):
+def _is_port_open(url: str, ip: str, rec, queue):
     sock = socket.socket()
+    port = rec["port"]
 
     # set a timeout - this has a huge speed impact
     sock.settimeout(0.75)

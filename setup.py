@@ -1,12 +1,17 @@
 import sys
 from setuptools import find_packages
-from cx_Freeze import Executable
 from os import path
 
 if "build_exe" in sys.argv:
-    from cx_Freeze import setup
+    from cx_Freeze import setup, Executable
 else:
     from setuptools import setup
+
+    # fake Executable class to avoid cx_Freeze on non-Windows
+    class Executable:
+        def __init__(self, script=None, base=None):
+            pass
+
 
 # Dependencies are automatically detected.
 # I'm not sure about the *version.py files, but this hack works.

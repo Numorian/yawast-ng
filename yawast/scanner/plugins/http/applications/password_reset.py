@@ -1,8 +1,9 @@
 import secrets
 import time
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 
 from selenium import webdriver
+from selenium.webdriver.remote.webelement import WebElement
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
@@ -17,50 +18,50 @@ def check_resp_user_enum(
     session: Session, user: str, element_name: Optional[str] = None
 ) -> List[Result]:
     global timing
-    results = []
+    results: List[Result] = []
 
     pass_reset_page = session.args.pass_reset_page
     if pass_reset_page:
         try:
             # checks for user enum via differences in response
             # run each test 5 times to collect timing info
-            good_user_res, good_user_img = fill_form_get_body(
+            good_user_res, good_user_img = _fill_form_get_body(
                 session, pass_reset_page, user, True, element_name
             )
-            fill_form_get_body(session, pass_reset_page, user, True, element_name)
-            fill_form_get_body(session, pass_reset_page, user, True, element_name)
-            fill_form_get_body(session, pass_reset_page, user, True, element_name)
-            fill_form_get_body(session, pass_reset_page, user, True, element_name)
+            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
+            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
+            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
+            _fill_form_get_body(session, pass_reset_page, user, True, element_name)
 
-            bad_user_res, bad_user_img = fill_form_get_body(
+            bad_user_res, bad_user_img = _fill_form_get_body(
                 session,
                 pass_reset_page,
                 secrets.token_hex() + "@invalid.example.com",
                 False,
                 element_name,
             )
-            fill_form_get_body(
+            _fill_form_get_body(
                 session,
                 pass_reset_page,
                 secrets.token_hex() + "@invalid.example.com",
                 False,
                 element_name,
             )
-            fill_form_get_body(
+            _fill_form_get_body(
                 session,
                 pass_reset_page,
                 secrets.token_hex() + "@invalid.example.com",
                 False,
                 element_name,
             )
-            fill_form_get_body(
+            _fill_form_get_body(
                 session,
                 pass_reset_page,
                 secrets.token_hex() + "@invalid.example.com",
                 False,
                 element_name,
             )
-            fill_form_get_body(
+            _fill_form_get_body(
                 session,
                 pass_reset_page,
                 secrets.token_hex() + "@invalid.example.com",
@@ -128,7 +129,7 @@ def check_resp_user_enum(
     return results
 
 
-def fill_form_get_body(session: Session, uri, user, valid, element_name):
+def _fill_form_get_body(session: Session, uri, user, valid, element_name):
     global timing
 
     options = webdriver.ChromeOptions()
@@ -154,7 +155,7 @@ def fill_form_get_body(session: Session, uri, user, valid, element_name):
     driver.get(uri)
 
     # find the page form element - this is going to be a best effort thing, and may not always be right
-    element = find_user_field(driver, element_name)
+    element = _find_user_field(driver, element_name)
 
     # the element may not actually be visible yet (heavy JS pages)
     # so, we'll go into a loop for a few seconds to see if it'll show up
@@ -181,55 +182,55 @@ def fill_form_get_body(session: Session, uri, user, valid, element_name):
     return res, img
 
 
-def find_user_field(driver, name):
+def _find_user_field(driver: webdriver, name: str) -> WebElement:
     # if a name was specified, try that one first
     if name is not None:
-        element = find_element(driver, name)
+        element = _find_element(driver, name)
         if element:
             return element
 
     # find the page form element - this is going to be a best effort thing, and may not always be right
-    element = find_element(driver, "user_login")
+    element = _find_element(driver, "user_login")
     if element:
         return element
 
-    element = find_element(driver, "email")
+    element = _find_element(driver, "email")
     if element:
         return element
 
-    element = find_element(driver, "email_address")
+    element = _find_element(driver, "email_address")
     if element:
         return element
 
-    element = find_element(driver, "forgetPasswordEmailOrUsername")
+    element = _find_element(driver, "forgetPasswordEmailOrUsername")
     if element:
         return element
 
-    element = find_element(driver, "username")
+    element = _find_element(driver, "username")
     if element:
         return element
 
-    element = find_element(driver, "user")
+    element = _find_element(driver, "user")
     if element:
         return element
 
     raise PasswordResetElementNotFound("No matching element found.")
 
 
-def find_element(driver, name):
+def _find_element(driver: webdriver, name: str) -> Union[None, WebElement]:
     ret = None
 
     # first, check by name
     try:
         ret = driver.find_element_by_name(name)
-    except:
+    except Exception:
         pass
 
     if not ret:
         # next, maybe it's id instead of name
         try:
             ret = driver.find_element_by_id(name)
-        except:
+        except Exception:
             pass
 
     return ret

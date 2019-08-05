@@ -6,12 +6,12 @@ from yawast.shared import utils
 
 class Session:
     args: Namespace
-    url: str
+    url: str = ""
     url_parsed: ParseResult
-    domain: str
-    supports_https: bool
-    redirects_https: bool
-    supports_http: bool
+    domain: str = ""
+    supports_https: bool = False
+    redirects_https: bool = False
+    supports_http: bool = False
 
     def __init__(self, args: Namespace, url: str):
         self.args = args

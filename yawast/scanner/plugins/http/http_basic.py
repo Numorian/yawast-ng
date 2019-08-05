@@ -1,9 +1,8 @@
 import re
 import socket
 import struct
-import ctypes
 from http.client import HTTPResponse
-from typing import List, Dict, Union, Tuple, Any
+from typing import List, Dict, Union, Tuple
 from urllib.parse import urlparse
 
 from nassl.ssl_client import OpenSslVersionEnum
@@ -529,6 +528,8 @@ def _decode_big_ip_cookie(value: str) -> Union[str, None]:
         r"(rd\d+o([a-f0-9]{32})o(\d{1,5})))(?:$|,|;|\s)"
     )
 
+    ret = None
+
     if re.match(value_pattern, value):
         # it fits the pattern
         if re.search(r"(\d{8,10})\.(\d{1,5})\.", value):
@@ -541,7 +542,7 @@ def _decode_big_ip_cookie(value: str) -> Union[str, None]:
             port = _swap_endianness(int(comps[1]), 16)
 
             if utils.is_private_ip(host):
-                return f"{host}:{port}"
+                ret = f"{host}:{port}"
         elif re.search(r"rd\d+o0{20}f{4}([a-f0-9]{8})o(\d{1,5})", value):
             # BIGipServerWEB=rd5o00000000000000000000ffffc0000201o80 - IPv4
             comps = value.split("o")
@@ -551,7 +552,7 @@ def _decode_big_ip_cookie(value: str) -> Union[str, None]:
             port = int(comps[2])
 
             if utils.is_private_ip(host):
-                return f"{host}:{port}"
+                ret = f"{host}:{port}"
         elif re.search(r"vi([a-f0-9]{32})\.(\d{1,5})", value):
             # BIGipServerWEB=vi20010112000000000000000000000030.20480 - IPv6
             comps = value.split(".")
@@ -562,7 +563,7 @@ def _decode_big_ip_cookie(value: str) -> Union[str, None]:
             port = _swap_endianness(int(comps[1]), 16)
 
             if utils.is_private_ip(host):
-                return f"{host}:{port}"
+                ret = f"{host}:{port}"
         elif re.search(r"rd\d+o([a-f0-9]{32})o(\d{1,5})", value):
             # BIGipServerWEB=rd3o20010112000000000000000000000030o80 - IPv6
             comps = value.split("o")
@@ -572,6 +573,6 @@ def _decode_big_ip_cookie(value: str) -> Union[str, None]:
             port = int(comps[2])
 
             if utils.is_private_ip(host):
-                return f"{host}:{port}"
+                ret = f"{host}:{port}"
 
-    return None
+    return ret

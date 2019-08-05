@@ -62,7 +62,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"X-XSS-Protection Header Not Present ({url})",
-                    Vulnerabilities.HTTP_HEADER_X_XSS_PROTECTION_MISSING,
+                    v.HTTP_HEADER_X_XSS_PROTECTION_MISSING,
                 )
             )
 

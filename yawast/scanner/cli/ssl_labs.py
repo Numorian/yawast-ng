@@ -102,8 +102,8 @@ def scan(session: Session):
 
     # HACK: this needs to be refactored, once we have a better way to do it. This is awful.
     # (from a separation of duties perspective. this should happen in the plugin)
-    if body["status"] is not "ERROR":
-        raise ValueError(f"SSL Labs Error: {body['status']}")
+    if body["status"] is "ERROR":
+        raise ValueError(f"SSL Labs Error: {body['status']}: {body['statusMessage']}")
     elif "endpoints" in body:
         for ep in body["endpoints"]:
             if ep["statusMessage"] == "Ready":

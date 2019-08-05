@@ -71,6 +71,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     COOKIE_INVALID_SAMESITE_NONE_FLAG = VulnerabilityInfo.create(
         "Cookie_Invalid_SameSite_None_Flag", Severity.LOW, "", True
     )
+    COOKIE_BIGIP_IP_DISCLOSURE = VulnerabilityInfo.create(
+        "Cookie_BigIP_IP_Disclosure", Severity.LOW, "", True
+    )
 
     DNS_CAA_MISSING = VulnerabilityInfo.create("Dns_CAA_Missing", Severity.LOW, "")
     DNS_DNSSEC_NOT_ENABLED = VulnerabilityInfo.create(

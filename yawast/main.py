@@ -13,7 +13,6 @@ from typing import cast
 import psutil
 from colorama import Fore
 from packaging import version
-from psutil import Process
 
 from yawast import command_line
 from yawast._version import get_version
@@ -273,7 +272,7 @@ class _ProcessMonitor:
     busy = False
 
     def __init__(self):
-        self.process = Process()
+        self.process = psutil.Process()
         self.peak_mem_res = 0
         self.low_mem_warning = False
 

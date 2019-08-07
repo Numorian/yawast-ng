@@ -1,0 +1,4997 @@
+[
+  {
+    "port": 80,
+    "name": "http",
+    "desc": "World Wide Web HTTP"
+  },
+  {
+    "port": 23,
+    "name": "telnet",
+    "desc": "Telnet"
+  },
+  {
+    "port": 443,
+    "name": "https",
+    "desc": "http protocol over TLS/SSL"
+  },
+  {
+    "port": 21,
+    "name": "ftp",
+    "desc": "File Transfer Protocol [Control]"
+  },
+  {
+    "port": 22,
+    "name": "ssh",
+    "desc": "The Secure Shell (SSH) Protocol"
+  },
+  {
+    "port": 25,
+    "name": "smtp",
+    "desc": "Simple Mail Transfer"
+  },
+  {
+    "port": 3389,
+    "name": "ms-wbt-server",
+    "desc": "MS WBT Server"
+  },
+  {
+    "port": 110,
+    "name": "pop3",
+    "desc": "Post Office Protocol - Version 3"
+  },
+  {
+    "port": 445,
+    "name": "microsoft-ds",
+    "desc": "Microsoft-DS"
+  },
+  {
+    "port": 139,
+    "name": "netbios-ssn",
+    "desc": "NETBIOS Session Service"
+  },
+  {
+    "port": 143,
+    "name": "imap",
+    "desc": "Internet Message Access Protocol"
+  },
+  {
+    "port": 53,
+    "name": "domain",
+    "desc": "Domain Name Server"
+  },
+  {
+    "port": 135,
+    "name": "epmap",
+    "desc": "DCE endpoint resolution"
+  },
+  {
+    "port": 3306,
+    "name": "mysql",
+    "desc": "MySQL"
+  },
+  {
+    "port": 8080,
+    "name": "http-alt",
+    "desc": "HTTP Alternate (see port 80)"
+  },
+  {
+    "port": 1723,
+    "name": "pptp",
+    "desc": "pptp"
+  },
+  {
+    "port": 111,
+    "name": "sunrpc",
+    "desc": "SUN Remote Procedure Call"
+  },
+  {
+    "port": 995,
+    "name": "pop3s",
+    "desc": "POP3 over TLS protocol"
+  },
+  {
+    "port": 993,
+    "name": "imaps",
+    "desc": "IMAP over TLS protocol"
+  },
+  {
+    "port": 5900,
+    "name": "rfb",
+    "desc": "Remote Framebuffer"
+  },
+  {
+    "port": 1025,
+    "name": "blackjack",
+    "desc": "network blackjack"
+  },
+  {
+    "port": 587,
+    "name": "submission",
+    "desc": "Message Submission"
+  },
+  {
+    "port": 8888,
+    "name": "ddi-tcp-1",
+    "desc": "NewsEDGE server TCP (TCP 1)"
+  },
+  {
+    "port": 199,
+    "name": "smux",
+    "desc": "SMUX"
+  },
+  {
+    "port": 1720,
+    "name": "h323hostcall",
+    "desc": "H.323 Call Control Signalling"
+  },
+  {
+    "port": 465,
+    "name": "urd",
+    "desc": "URL Rendezvous Directory for SSM"
+  },
+  {
+    "port": 548,
+    "name": "afpovertcp",
+    "desc": "AFP over TCP"
+  },
+  {
+    "port": 113,
+    "name": "ident",
+    "desc": "Reserved"
+  },
+  {
+    "port": 81,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6001,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10000,
+    "name": "ndmp",
+    "desc": "Network Data Management Protocol"
+  },
+  {
+    "port": 514,
+    "name": "shell",
+    "desc": "cmd like exec, but automatic authentication is performed as for login server"
+  },
+  {
+    "port": 5060,
+    "name": "sip",
+    "desc": "SIP"
+  },
+  {
+    "port": 179,
+    "name": "bgp",
+    "desc": "Border Gateway Protocol"
+  },
+  {
+    "port": 1026,
+    "name": "cap",
+    "desc": "Calendar Access Protocol"
+  },
+  {
+    "port": 2000,
+    "name": "cisco-sccp",
+    "desc": "Cisco SCCP"
+  },
+  {
+    "port": 8443,
+    "name": "pcsync-https",
+    "desc": "PCsync HTTPS"
+  },
+  {
+    "port": 8000,
+    "name": "irdmi",
+    "desc": "iRDMI"
+  },
+  {
+    "port": 32768,
+    "name": "filenet-tms",
+    "desc": "Filenet TMS"
+  },
+  {
+    "port": 554,
+    "name": "rtsp",
+    "desc": "Real Time Streaming Protocol (RTSP)"
+  },
+  {
+    "port": 26,
+    "name": "(Unknown)",
+    "desc": "Unassigned"
+  },
+  {
+    "port": 1433,
+    "name": "ms-sql-s",
+    "desc": "Microsoft-SQL-Server"
+  },
+  {
+    "port": 49152,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2001,
+    "name": "dc",
+    "desc": "Reserved"
+  },
+  {
+    "port": 515,
+    "name": "printer",
+    "desc": "spooler"
+  },
+  {
+    "port": 8008,
+    "name": "http-alt",
+    "desc": "HTTP Alternate"
+  },
+  {
+    "port": 49154,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1027,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5666,
+    "name": "nrpe",
+    "desc": "Nagios Remote Plugin Executor"
+  },
+  {
+    "port": 646,
+    "name": "ldp",
+    "desc": "LDP"
+  },
+  {
+    "port": 5000,
+    "name": "commplex-main",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5631,
+    "name": "pcanywheredata",
+    "desc": "pcANYWHEREdata"
+  },
+  {
+    "port": 631,
+    "name": "ipp",
+    "desc": "IPP (Internet Printing Protocol)"
+  },
+  {
+    "port": 49153,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8081,
+    "name": "sunproxyadmin",
+    "desc": "Sun Proxy Admin Service"
+  },
+  {
+    "port": 2049,
+    "name": "shilp",
+    "desc": "Reserved"
+  },
+  {
+    "port": 88,
+    "name": "kerberos",
+    "desc": "Kerberos"
+  },
+  {
+    "port": 79,
+    "name": "finger",
+    "desc": "Finger"
+  },
+  {
+    "port": 5800,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 106,
+    "name": "3com-tsmux",
+    "desc": "3COM-TSMUX"
+  },
+  {
+    "port": 2121,
+    "name": "scientia-ssdb",
+    "desc": "SCIENTIA-SSDB"
+  },
+  {
+    "port": 1110,
+    "name": "webadmstart",
+    "desc": "Start web admin server"
+  },
+  {
+    "port": 49155,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6000,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 513,
+    "name": "login",
+    "desc": "remote login a la telnet; automatic authentication performed based on priviledged port numbers and distributed data bases which identify 'authentication domains'"
+  },
+  {
+    "port": 990,
+    "name": "ftps",
+    "desc": "ftp protocol, control, over TLS/SSL"
+  },
+  {
+    "port": 5357,
+    "name": "wsdapi",
+    "desc": "Web Services for Devices"
+  },
+  {
+    "port": 427,
+    "name": "svrloc",
+    "desc": "Server Location"
+  },
+  {
+    "port": 49156,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 543,
+    "name": "klogin",
+    "desc": "Reserved"
+  },
+  {
+    "port": 544,
+    "name": "kshell",
+    "desc": "krcmd"
+  },
+  {
+    "port": 5101,
+    "name": "talarian-tcp",
+    "desc": "Talarian_TCP"
+  },
+  {
+    "port": 144,
+    "name": "uma",
+    "desc": "Universal Management Architecture"
+  },
+  {
+    "port": 7,
+    "name": "echo",
+    "desc": "Echo"
+  },
+  {
+    "port": 389,
+    "name": "ldap",
+    "desc": "Lightweight Directory Access Protocol"
+  },
+  {
+    "port": 8009,
+    "name": "nvme-disc",
+    "desc": "NVMe over Fabrics Discovery Service"
+  },
+  {
+    "port": 3128,
+    "name": "ndl-aas",
+    "desc": "Active API Server Port"
+  },
+  {
+    "port": 444,
+    "name": "snpp",
+    "desc": "Simple Network Paging Protocol"
+  },
+  {
+    "port": 9999,
+    "name": "distinct",
+    "desc": "distinct"
+  },
+  {
+    "port": 5009,
+    "name": "winfs",
+    "desc": "Microsoft Windows Filesystem"
+  },
+  {
+    "port": 7070,
+    "name": "arcp",
+    "desc": "ARCP"
+  },
+  {
+    "port": 5190,
+    "name": "aol",
+    "desc": "America-Online"
+  },
+  {
+    "port": 3000,
+    "name": "hbci",
+    "desc": "HBCI"
+  },
+  {
+    "port": 5432,
+    "name": "postgresql",
+    "desc": "PostgreSQL Database"
+  },
+  {
+    "port": 3986,
+    "name": "mapper-ws-ethd",
+    "desc": "MAPPER workstation server"
+  },
+  {
+    "port": 1900,
+    "name": "ssdp",
+    "desc": "SSDP"
+  },
+  {
+    "port": 13,
+    "name": "daytime",
+    "desc": "Daytime"
+  },
+  {
+    "port": 1029,
+    "name": "solid-mux",
+    "desc": "Solid Mux Server"
+  },
+  {
+    "port": 9,
+    "name": "discard",
+    "desc": "Discard"
+  },
+  {
+    "port": 5051,
+    "name": "ita-agent",
+    "desc": "ITA Agent"
+  },
+  {
+    "port": 6646,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49157,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1028,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 873,
+    "name": "rsync",
+    "desc": "rsync"
+  },
+  {
+    "port": 1755,
+    "name": "ms-streaming",
+    "desc": "ms-streaming"
+  },
+  {
+    "port": 2717,
+    "name": "pn-requester",
+    "desc": "PN REQUESTER"
+  },
+  {
+    "port": 4899,
+    "name": "radmin-port",
+    "desc": "RAdmin Port"
+  },
+  {
+    "port": 9100,
+    "name": "hp-pdl-datastr",
+    "desc": "PDL Data Streaming Port"
+  },
+  {
+    "port": 119,
+    "name": "nntp",
+    "desc": "Network News Transfer Protocol"
+  },
+  {
+    "port": 37,
+    "name": "time",
+    "desc": "Time"
+  },
+  {
+    "port": 1000,
+    "name": "cadlock2",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3001,
+    "name": "origo-native",
+    "desc": "OrigoDB Server Native Interface"
+  },
+  {
+    "port": 5001,
+    "name": "commplex-link",
+    "desc": "Reserved"
+  },
+  {
+    "port": 82,
+    "name": "xfer",
+    "desc": "XFER Utility"
+  },
+  {
+    "port": 10010,
+    "name": "rxapi",
+    "desc": "ooRexx rxapi services"
+  },
+  {
+    "port": 1030,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9090,
+    "name": "websm",
+    "desc": "WebSM"
+  },
+  {
+    "port": 2107,
+    "name": "bintec-admin",
+    "desc": "BinTec Admin"
+  },
+  {
+    "port": 1024,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2103,
+    "name": "zephyr-clt",
+    "desc": "Zephyr serv-hm connection"
+  },
+  {
+    "port": 6004,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1801,
+    "name": "msmq",
+    "desc": "Microsoft Message Que"
+  },
+  {
+    "port": 5050,
+    "name": "mmcc",
+    "desc": "multimedia conference control tool"
+  },
+  {
+    "port": 19,
+    "name": "chargen",
+    "desc": "Character Generator"
+  },
+  {
+    "port": 8031,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1041,
+    "name": "danf-ak2",
+    "desc": "AK2 Product"
+  },
+  {
+    "port": 255,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3703,
+    "name": "adobeserver-3",
+    "desc": "Adobe Server 3"
+  },
+  {
+    "port": 1054,
+    "name": "brvread",
+    "desc": "BRVREAD"
+  },
+  {
+    "port": 1064,
+    "name": "jstel",
+    "desc": "JSTEL"
+  },
+  {
+    "port": 1048,
+    "name": "neod2",
+    "desc": "Sun's NEO Object Request Broker"
+  },
+  {
+    "port": 1053,
+    "name": "remote-as",
+    "desc": "Remote Assistant (RA)"
+  },
+  {
+    "port": 2967,
+    "name": "ssc-agent",
+    "desc": "SSC-AGENT"
+  },
+  {
+    "port": 1065,
+    "name": "syscomlan",
+    "desc": "SYSCOMLAN"
+  },
+  {
+    "port": 1049,
+    "name": "td-postman",
+    "desc": "Tobit David Postman VPMN"
+  },
+  {
+    "port": 1056,
+    "name": "vfo",
+    "desc": "VFO"
+  },
+  {
+    "port": 17,
+    "name": "qotd",
+    "desc": "Quote of the Day"
+  },
+  {
+    "port": 808,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3689,
+    "name": "daap",
+    "desc": "Digital Audio Access Protocol (iTunes)"
+  },
+  {
+    "port": 1031,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1071,
+    "name": "bsquare-voip",
+    "desc": "BSQUARE-VOIP"
+  },
+  {
+    "port": 1044,
+    "name": "dcutility",
+    "desc": "Dev Consortium Utility"
+  },
+  {
+    "port": 5901,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9102,
+    "name": "bacula-fd",
+    "desc": "Bacula File Daemon"
+  },
+  {
+    "port": 100,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5120,
+    "name": "barracuda-bbs",
+    "desc": "Barracuda Backup Protocol"
+  },
+  {
+    "port": 9000,
+    "name": "cslistener",
+    "desc": "CSlistener"
+  },
+  {
+    "port": 2869,
+    "name": "icslap",
+    "desc": "ICSLAP"
+  },
+  {
+    "port": 4001,
+    "name": "newoak",
+    "desc": "NewOak"
+  },
+  {
+    "port": 1039,
+    "name": "sbl",
+    "desc": "Streamlined Blackhole"
+  },
+  {
+    "port": 8010,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2105,
+    "name": "minipay",
+    "desc": "MiniPay"
+  },
+  {
+    "port": 636,
+    "name": "ldaps",
+    "desc": "ldap protocol over TLS/SSL (was sldap)"
+  },
+  {
+    "port": 1038,
+    "name": "mtqp",
+    "desc": "Message Tracking Query Protocol"
+  },
+  {
+    "port": 2601,
+    "name": "discp-client",
+    "desc": "discp client"
+  },
+  {
+    "port": 7000,
+    "name": "afs3-fileserver",
+    "desc": "file server itself"
+  },
+  {
+    "port": 1,
+    "name": "tcpmux",
+    "desc": "TCP Port Service Multiplexer"
+  },
+  {
+    "port": 1069,
+    "name": "cognex-insight",
+    "desc": "COGNEX-INSIGHT"
+  },
+  {
+    "port": 1066,
+    "name": "fpo-fns",
+    "desc": "FPO-FNS"
+  },
+  {
+    "port": 625,
+    "name": "dec-dlm",
+    "desc": "DEC DLM"
+  },
+  {
+    "port": 311,
+    "name": "asip-webadmin",
+    "desc": "AppleShare IP WebAdmin"
+  },
+  {
+    "port": 280,
+    "name": "http-mgmt",
+    "desc": "http-mgmt"
+  },
+  {
+    "port": 254,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 4000,
+    "name": "terabase",
+    "desc": "Terabase"
+  },
+  {
+    "port": 5003,
+    "name": "fmpro-internal",
+    "desc": "FileMaker, Inc. - Proprietary transport"
+  },
+  {
+    "port": 1761,
+    "name": "cft-0",
+    "desc": "cft-0"
+  },
+  {
+    "port": 2002,
+    "name": "globe",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2005,
+    "name": "berknet",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1998,
+    "name": "x25-svc-port",
+    "desc": "cisco X.25 service (XOT)"
+  },
+  {
+    "port": 1032,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1050,
+    "name": "cma",
+    "desc": "CORBA Management Agent"
+  },
+  {
+    "port": 6112,
+    "name": "dtspcd",
+    "desc": "Desk-Top Sub-Process Control Daemon"
+  },
+  {
+    "port": 3690,
+    "name": "svn",
+    "desc": "Subversion"
+  },
+  {
+    "port": 1521,
+    "name": "ncube-lm",
+    "desc": "nCube License Manager"
+  },
+  {
+    "port": 2161,
+    "name": "apc-2161",
+    "desc": "APC 2161"
+  },
+  {
+    "port": 1080,
+    "name": "socks",
+    "desc": "Socks"
+  },
+  {
+    "port": 6002,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2401,
+    "name": "cvspserver",
+    "desc": "cvspserver"
+  },
+  {
+    "port": 902,
+    "name": "ideafarm-door",
+    "desc": "self documenting Telnet Door"
+  },
+  {
+    "port": 4045,
+    "name": "npp",
+    "desc": "Network Paging Protocol"
+  },
+  {
+    "port": 7937,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 787,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1058,
+    "name": "nim",
+    "desc": "nim"
+  },
+  {
+    "port": 2383,
+    "name": "ms-olap4",
+    "desc": "Microsoft OLAP"
+  },
+  {
+    "port": 32771,
+    "name": "filenet-rmi",
+    "desc": "FileNET RMI"
+  },
+  {
+    "port": 1033,
+    "name": "netinfo-local",
+    "desc": "local netinfo port"
+  },
+  {
+    "port": 1040,
+    "name": "netarx",
+    "desc": "Netarx Netcare"
+  },
+  {
+    "port": 1059,
+    "name": "nimreg",
+    "desc": "nimreg"
+  },
+  {
+    "port": 50000,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5555,
+    "name": "personal-agent",
+    "desc": "Personal Agent"
+  },
+  {
+    "port": 10001,
+    "name": "scp-config",
+    "desc": "SCP Configuration"
+  },
+  {
+    "port": 1494,
+    "name": "ica",
+    "desc": "ica"
+  },
+  {
+    "port": 2301,
+    "name": "cpq-wbem",
+    "desc": "Compaq HTTP"
+  },
+  {
+    "port": 3,
+    "name": "compressnet",
+    "desc": "Compression Process"
+  },
+  {
+    "port": 593,
+    "name": "http-rpc-epmap",
+    "desc": "HTTP RPC Ep Map"
+  },
+  {
+    "port": 3268,
+    "name": "msft-gc",
+    "desc": "Microsoft Global Catalog"
+  },
+  {
+    "port": 7938,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1022,
+    "name": "exp2",
+    "desc": "RFC3692-style Experiment 2"
+  },
+  {
+    "port": 1234,
+    "name": "search-agent",
+    "desc": "Infoseek Search Agent"
+  },
+  {
+    "port": 1037,
+    "name": "ams",
+    "desc": "AMS"
+  },
+  {
+    "port": 1035,
+    "name": "mxxrlogin",
+    "desc": "MX-XR RPC"
+  },
+  {
+    "port": 1036,
+    "name": "nsstp",
+    "desc": "Nebula Secure Segment Transfer Protocol"
+  },
+  {
+    "port": 8002,
+    "name": "teradataordbms",
+    "desc": "Teradata ORDBMS"
+  },
+  {
+    "port": 9001,
+    "name": "etlservicemgr",
+    "desc": "ETL Service Manager"
+  },
+  {
+    "port": 1074,
+    "name": "warmspotMgmt",
+    "desc": "Warmspot Management Protocol"
+  },
+  {
+    "port": 464,
+    "name": "kpasswd",
+    "desc": "kpasswd"
+  },
+  {
+    "port": 2003,
+    "name": "brutus",
+    "desc": "Brutus Server"
+  },
+  {
+    "port": 6666,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 497,
+    "name": "retrospect",
+    "desc": "Retrospect backup and restore service"
+  },
+  {
+    "port": 1935,
+    "name": "macromedia-fcs",
+    "desc": "Macromedia Flash Communications Server MX"
+  },
+  {
+    "port": 6543,
+    "name": "lds-distrib",
+    "desc": "lds_distrib"
+  },
+  {
+    "port": 1352,
+    "name": "lotusnote",
+    "desc": "Lotus Note"
+  },
+  {
+    "port": 24,
+    "name": "(Unknown)",
+    "desc": "any private mail system"
+  },
+  {
+    "port": 3269,
+    "name": "msft-gc-ssl",
+    "desc": "Microsoft Global Catalog with LDAP/SSL"
+  },
+  {
+    "port": 1111,
+    "name": "lmsocialserver",
+    "desc": "LM Social Server"
+  },
+  {
+    "port": 500,
+    "name": "isakmp",
+    "desc": "isakmp"
+  },
+  {
+    "port": 407,
+    "name": "timbuktu",
+    "desc": "Timbuktu"
+  },
+  {
+    "port": 20,
+    "name": "ftp-data",
+    "desc": "File Transfer [Default Data]"
+  },
+  {
+    "port": 2006,
+    "name": "invokator",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1218,
+    "name": "aeroflight-ads",
+    "desc": "AeroFlight-ADs"
+  },
+  {
+    "port": 15000,
+    "name": "hydap",
+    "desc": "Hypack Data Aquisition"
+  },
+  {
+    "port": 3260,
+    "name": "iscsi-target",
+    "desc": "iSCSI port"
+  },
+  {
+    "port": 1034,
+    "name": "activesync",
+    "desc": "ActiveSync Notifications"
+  },
+  {
+    "port": 4444,
+    "name": "krb524",
+    "desc": "KRB524"
+  },
+  {
+    "port": 264,
+    "name": "bgmp",
+    "desc": "BGMP"
+  },
+  {
+    "port": 33,
+    "name": "dsp",
+    "desc": "Display Support Protocol"
+  },
+  {
+    "port": 2004,
+    "name": "mailbox",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1042,
+    "name": "afrog",
+    "desc": "Subnet Roaming"
+  },
+  {
+    "port": 42510,
+    "name": "caerpc",
+    "desc": "CA eTrust RPC"
+  },
+  {
+    "port": 999,
+    "name": "garcon",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3052,
+    "name": "apc-3052",
+    "desc": "APC 3052"
+  },
+  {
+    "port": 1023,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1068,
+    "name": "instl-bootc",
+    "desc": "Installation Bootstrap Proto. Cli."
+  },
+  {
+    "port": 222,
+    "name": "rsh-spx",
+    "desc": "Berkeley rshd with SPX auth"
+  },
+  {
+    "port": 888,
+    "name": "accessbuilder",
+    "desc": "AccessBuilder"
+  },
+  {
+    "port": 7100,
+    "name": "font-service",
+    "desc": "X Font Service"
+  },
+  {
+    "port": 563,
+    "name": "nntps",
+    "desc": "nntp protocol over TLS/SSL (was snntp)"
+  },
+  {
+    "port": 1717,
+    "name": "fj-hdnet",
+    "desc": "fj-hdnet"
+  },
+  {
+    "port": 2008,
+    "name": "conf",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32770,
+    "name": "filenet-nch",
+    "desc": "Filenet NCH"
+  },
+  {
+    "port": 992,
+    "name": "telnets",
+    "desc": "telnet protocol over TLS/SSL"
+  },
+  {
+    "port": 7001,
+    "name": "afs3-callback",
+    "desc": "callbacks to cache managers"
+  },
+  {
+    "port": 32772,
+    "name": "filenet-pa",
+    "desc": "FileNET Process Analyzer"
+  },
+  {
+    "port": 8082,
+    "name": "us-cli",
+    "desc": "Utilistor (Client)"
+  },
+  {
+    "port": 2007,
+    "name": "dectalk",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5550,
+    "name": "cbus",
+    "desc": "Model Railway control using the CBUS message protocol"
+  },
+  {
+    "port": 1043,
+    "name": "boinc-client",
+    "desc": "BOINC Client Control"
+  },
+  {
+    "port": 512,
+    "name": "exec",
+    "desc": "remote process execution; authentication performed using passwords and UNIX login names"
+  },
+  {
+    "port": 2009,
+    "name": "news",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5801,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7019,
+    "name": "doceri-ctl",
+    "desc": "doceri drawing service control"
+  },
+  {
+    "port": 1700,
+    "name": "mps-raft",
+    "desc": "mps-raft"
+  },
+  {
+    "port": 2701,
+    "name": "sms-rcinfo",
+    "desc": "SMS RCINFO"
+  },
+  {
+    "port": 50001,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 4662,
+    "name": "oms",
+    "desc": "OrbitNet Message Service"
+  },
+  {
+    "port": 2065,
+    "name": "dlsrpn",
+    "desc": "Data Link Switch Read Port Number"
+  },
+  {
+    "port": 42,
+    "name": "name",
+    "desc": "Host Name Server"
+  },
+  {
+    "port": 2010,
+    "name": "search",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3333,
+    "name": "dec-notes",
+    "desc": "DEC Notes"
+  },
+  {
+    "port": 9535,
+    "name": "mngsuite",
+    "desc": "Management Suite Remote Control"
+  },
+  {
+    "port": 2602,
+    "name": "discp-server",
+    "desc": "discp server"
+  },
+  {
+    "port": 161,
+    "name": "snmp",
+    "desc": "SNMP"
+  },
+  {
+    "port": 5100,
+    "name": "socalia",
+    "desc": "Socalia service mux"
+  },
+  {
+    "port": 4002,
+    "name": "pxc-spvr-ft",
+    "desc": "pxc-spvr-ft"
+  },
+  {
+    "port": 2604,
+    "name": "nsc-ccs",
+    "desc": "NSC CCS"
+  },
+  {
+    "port": 5002,
+    "name": "rfe",
+    "desc": "radio free ethernet"
+  },
+  {
+    "port": 16992,
+    "name": "amt-soap-http",
+    "desc": "Intel(R) AMT SOAP/HTTP"
+  },
+  {
+    "port": 16993,
+    "name": "amt-soap-https",
+    "desc": "Intel(R) AMT SOAP/HTTPS"
+  },
+  {
+    "port": 1055,
+    "name": "ansyslmd",
+    "desc": "ANSYS - License Manager"
+  },
+  {
+    "port": 9593,
+    "name": "cba8",
+    "desc": "LANDesk Management Agent (cba8)"
+  },
+  {
+    "port": 1052,
+    "name": "ddt",
+    "desc": "Dynamic DNS Tools"
+  },
+  {
+    "port": 32769,
+    "name": "filenet-rpc",
+    "desc": "Filenet RPC"
+  },
+  {
+    "port": 5225,
+    "name": "hp-server",
+    "desc": "HP Server"
+  },
+  {
+    "port": 5226,
+    "name": "hp-status",
+    "desc": "HP Status"
+  },
+  {
+    "port": 6789,
+    "name": "radg",
+    "desc": "GSS-API for the Oracle Remote Administration Daemon"
+  },
+  {
+    "port": 9594,
+    "name": "msgsys",
+    "desc": "Message System"
+  },
+  {
+    "port": 1047,
+    "name": "neod1",
+    "desc": "Sun's NEO Object Request Broker"
+  },
+  {
+    "port": 3283,
+    "name": "Apple Remote Desktop (Net Assistant)",
+    "desc": "Net Assistant"
+  },
+  {
+    "port": 1051,
+    "name": "optima-vnet",
+    "desc": "Optima VNET"
+  },
+  {
+    "port": 9595,
+    "name": "pds",
+    "desc": "Ping Discovery Service"
+  },
+  {
+    "port": 4443,
+    "name": "pharos",
+    "desc": "Pharos"
+  },
+  {
+    "port": 1060,
+    "name": "polestar",
+    "desc": "POLESTAR"
+  },
+  {
+    "port": 1311,
+    "name": "rxmon",
+    "desc": "RxMon"
+  },
+  {
+    "port": 2702,
+    "name": "sms-xfer",
+    "desc": "SMS XFER"
+  },
+  {
+    "port": 8192,
+    "name": "spytechphone",
+    "desc": "SpyTech Phone Service"
+  },
+  {
+    "port": 8193,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8194,
+    "name": "blp1",
+    "desc": "Bloomberg data API"
+  },
+  {
+    "port": 20828,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 23502,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 33354,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 35500,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 52869,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 55555,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 55600,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 64623,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 64680,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 65000,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 65389,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8089,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8651,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8652,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8701,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9415,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1062,
+    "name": "veracity",
+    "desc": "Veracity"
+  },
+  {
+    "port": 6059,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1067,
+    "name": "instl-boots",
+    "desc": "Installation Bootstrap Proto. Serv."
+  },
+  {
+    "port": 13782,
+    "name": "bpcd",
+    "desc": "VERITAS NetBackup"
+  },
+  {
+    "port": 366,
+    "name": "odmr",
+    "desc": "ODMR"
+  },
+  {
+    "port": 5902,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9050,
+    "name": "versiera",
+    "desc": "Versiera Agent Listener"
+  },
+  {
+    "port": 5500,
+    "name": "fcp-addr-srvr1",
+    "desc": "fcp-addr-srvr1"
+  },
+  {
+    "port": 85,
+    "name": "mit-ml-dev",
+    "desc": "MIT ML Device"
+  },
+  {
+    "port": 1002,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1863,
+    "name": "msnp",
+    "desc": "MSNP"
+  },
+  {
+    "port": 1864,
+    "name": "paradym-31port",
+    "desc": "Paradym 31 Port"
+  },
+  {
+    "port": 5431,
+    "name": "park-agent",
+    "desc": "PARK AGENT"
+  },
+  {
+    "port": 10243,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 45100,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49999,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 51103,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8085,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49,
+    "name": "tacacs",
+    "desc": "Login Host Protocol (TACACS)"
+  },
+  {
+    "port": 90,
+    "name": "dnsix",
+    "desc": "DNSIX Securit Attribute Token Map"
+  },
+  {
+    "port": 6667,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6881,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 27000,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1503,
+    "name": "imtc-mcs",
+    "desc": "Databeam"
+  },
+  {
+    "port": 8021,
+    "name": "intu-ec-client",
+    "desc": "Intuit Entitlement Client"
+  },
+  {
+    "port": 340,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1500,
+    "name": "vlsi-lm",
+    "desc": "VLSI License Manager"
+  },
+  {
+    "port": 2222,
+    "name": "EtherNet-IP-1",
+    "desc": "EtherNet/IP I/O"
+  },
+  {
+    "port": 8899,
+    "name": "ospf-lite",
+    "desc": "ospf-lite"
+  },
+  {
+    "port": 8088,
+    "name": "radan-http",
+    "desc": "Radan HTTP"
+  },
+  {
+    "port": 9071,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5566,
+    "name": "westec-connect",
+    "desc": "Westec Connect"
+  },
+  {
+    "port": 5102,
+    "name": "oms-nonsecure",
+    "desc": "Oracle OMS non-secure"
+  },
+  {
+    "port": 9101,
+    "name": "bacula-dir",
+    "desc": "Bacula Director"
+  },
+  {
+    "port": 1501,
+    "name": "saiscm",
+    "desc": "Satellite-data Acquisition System 3"
+  },
+  {
+    "port": 9876,
+    "name": "sd",
+    "desc": "Session Director"
+  },
+  {
+    "port": 32774,
+    "name": "filenet-re",
+    "desc": "FileNET Rules Engine"
+  },
+  {
+    "port": 32773,
+    "name": "filenet-cm",
+    "desc": "FileNET Component Manager"
+  },
+  {
+    "port": 6005,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5679,
+    "name": "dccm",
+    "desc": "Direct Cable Connect Manager"
+  },
+  {
+    "port": 163,
+    "name": "cmip-man",
+    "desc": "CMIP/TCP Manager"
+  },
+  {
+    "port": 146,
+    "name": "iso-tp0",
+    "desc": "ISO-IP0"
+  },
+  {
+    "port": 1666,
+    "name": "netview-aix-6",
+    "desc": "netview-aix-6"
+  },
+  {
+    "port": 648,
+    "name": "rrp",
+    "desc": "Registry Registrar Protocol (RRP)"
+  },
+  {
+    "port": 901,
+    "name": "smpnameres",
+    "desc": "SMPNAMERES"
+  },
+  {
+    "port": 83,
+    "name": "mit-ml-dev",
+    "desc": "MIT ML Device"
+  },
+  {
+    "port": 5004,
+    "name": "avt-profile-1",
+    "desc": "RTP media data"
+  },
+  {
+    "port": 3476,
+    "name": "nppmp",
+    "desc": "NVIDIA Mgmt Protocol"
+  },
+  {
+    "port": 14238,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5214,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8084,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8083,
+    "name": "us-srv",
+    "desc": "Utilistor (Server)"
+  },
+  {
+    "port": 8001,
+    "name": "vcom-tunnel",
+    "desc": "VCOM Tunnel"
+  },
+  {
+    "port": 9207,
+    "name": "wap-vcal-s",
+    "desc": "WAP vCal Secure"
+  },
+  {
+    "port": 912,
+    "name": "apex-mesh",
+    "desc": "APEX relay-relay service"
+  },
+  {
+    "port": 12345,
+    "name": "italk",
+    "desc": "Italk Chat System"
+  },
+  {
+    "port": 30,
+    "name": "(Unknown)",
+    "desc": "Unassigned"
+  },
+  {
+    "port": 2605,
+    "name": "nsc-posa",
+    "desc": "NSC POSA"
+  },
+  {
+    "port": 2030,
+    "name": "device2",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6,
+    "name": "(Unknown)",
+    "desc": "Unassigned"
+  },
+  {
+    "port": 541,
+    "name": "uucp-rlogin",
+    "desc": "uucp-rlogin"
+  },
+  {
+    "port": 8007,
+    "name": "warppipe",
+    "desc": "I/O oriented cluster computing software"
+  },
+  {
+    "port": 3005,
+    "name": "geniuslm",
+    "desc": "Genius License Manager"
+  },
+  {
+    "port": 1248,
+    "name": "hermes",
+    "desc": "hermes"
+  },
+  {
+    "port": 4,
+    "name": "(Unknown)",
+    "desc": "Unassigned"
+  },
+  {
+    "port": 2500,
+    "name": "rtsserv",
+    "desc": "Resource Tracking system server"
+  },
+  {
+    "port": 306,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 880,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1088,
+    "name": "cplscrambler-al",
+    "desc": "CPL Scrambler Alarm Log"
+  },
+  {
+    "port": 1086,
+    "name": "cplscrambler-lg",
+    "desc": "CPL Scrambler Logging"
+  },
+  {
+    "port": 2525,
+    "name": "ms-v-worlds",
+    "desc": "MS V-Worlds"
+  },
+  {
+    "port": 9009,
+    "name": "pichat",
+    "desc": "Pichat Server"
+  },
+  {
+    "port": 1097,
+    "name": "sunclustermgr",
+    "desc": "Sun Cluster Manager"
+  },
+  {
+    "port": 52822,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8291,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 4242,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6101,
+    "name": "synchronet-rtc",
+    "desc": "SynchroNet-rtc"
+  },
+  {
+    "port": 900,
+    "name": "omginitialrefs",
+    "desc": "OMG Initial Refs"
+  },
+  {
+    "port": 2809,
+    "name": "corbaloc",
+    "desc": "CORBA LOC"
+  },
+  {
+    "port": 7200,
+    "name": "fodms",
+    "desc": "FODMS FLIP"
+  },
+  {
+    "port": 211,
+    "name": "914c-g",
+    "desc": "Texas Instruments 914C/G Terminal"
+  },
+  {
+    "port": 1083,
+    "name": "ansoft-lm-1",
+    "desc": "Anasoft License Manager"
+  },
+  {
+    "port": 12000,
+    "name": "entextxid",
+    "desc": "IBM Enterprise Extender SNA XID Exchange"
+  },
+  {
+    "port": 800,
+    "name": "mdbs-daemon",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32775,
+    "name": "filenet-pch",
+    "desc": "Performance Clearinghouse"
+  },
+  {
+    "port": 987,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 705,
+    "name": "agentx",
+    "desc": "AgentX"
+  },
+  {
+    "port": 20005,
+    "name": "openwebnet",
+    "desc": "OpenWebNet protocol for electric network"
+  },
+  {
+    "port": 711,
+    "name": "cisco-tdp",
+    "desc": "Cisco TDP"
+  },
+  {
+    "port": 6969,
+    "name": "acmsoda",
+    "desc": "acmsoda"
+  },
+  {
+    "port": 13783,
+    "name": "vopied",
+    "desc": "VOPIED Protocol"
+  },
+  {
+    "port": 8402,
+    "name": "abarsd",
+    "desc": "abarsd"
+  },
+  {
+    "port": 3323,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3325,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2100,
+    "name": "amiganetfs",
+    "desc": "Amiga Network Filesystem"
+  },
+  {
+    "port": 1082,
+    "name": "amt-esd-prot",
+    "desc": "AMT-ESD-PROT"
+  },
+  {
+    "port": 2160,
+    "name": "apc-2160",
+    "desc": "APC 2160"
+  },
+  {
+    "port": 2260,
+    "name": "apc-2260",
+    "desc": "APC 2260"
+  },
+  {
+    "port": 3551,
+    "name": "apcupsd",
+    "desc": "Apcupsd Information Port"
+  },
+  {
+    "port": 3659,
+    "name": "apple-sasl",
+    "desc": "Apple SASL"
+  },
+  {
+    "port": 1079,
+    "name": "asprovatalk",
+    "desc": "ASPROVATalk"
+  },
+  {
+    "port": 8600,
+    "name": "asterix",
+    "desc": "Surveillance Data"
+  },
+  {
+    "port": 1078,
+    "name": "avocent-proxy",
+    "desc": "Avocent Proxy Protocol"
+  },
+  {
+    "port": 3211,
+    "name": "avsecuremgmt",
+    "desc": "Avocent Secure Management"
+  },
+  {
+    "port": 6123,
+    "name": "backup-express",
+    "desc": "Backup Express"
+  },
+  {
+    "port": 5633,
+    "name": "beorl",
+    "desc": "BE Operations Request Listener"
+  },
+  {
+    "port": 15660,
+    "name": "bex-xr",
+    "desc": "Backup Express Restore Server"
+  },
+  {
+    "port": 3784,
+    "name": "bfd-control",
+    "desc": "BFD Control Protocol"
+  },
+  {
+    "port": 8333,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1073,
+    "name": "bridgecontrol",
+    "desc": "Bridge Control"
+  },
+  {
+    "port": 3351,
+    "name": "btrieve",
+    "desc": "Btrieve port"
+  },
+  {
+    "port": 1072,
+    "name": "cardax",
+    "desc": "CARDAX"
+  },
+  {
+    "port": 7777,
+    "name": "cbt",
+    "desc": "cbt"
+  },
+  {
+    "port": 3300,
+    "name": "ceph",
+    "desc": "Ceph monitor"
+  },
+  {
+    "port": 6389,
+    "name": "clariion-evr01",
+    "desc": "clariion-evr01"
+  },
+  {
+    "port": 5910,
+    "name": "cm",
+    "desc": "Context Management"
+  },
+  {
+    "port": 1096,
+    "name": "cnrprotocol",
+    "desc": "Common Name Resolution Protocol"
+  },
+  {
+    "port": 2381,
+    "name": "compaq-https",
+    "desc": "Compaq HTTPS"
+  },
+  {
+    "port": 9618,
+    "name": "condor",
+    "desc": "Condor Collector Service"
+  },
+  {
+    "port": 2607,
+    "name": "connection",
+    "desc": "Dell Connection"
+  },
+  {
+    "port": 5911,
+    "name": "cpdlc",
+    "desc": "Controller Pilot Data Link Communication"
+  },
+  {
+    "port": 3071,
+    "name": "xplat-replicate",
+    "desc": "Crossplatform replication protocol"
+  },
+  {
+    "port": 1272,
+    "name": "cspmlockmgr",
+    "desc": "CSPMLockMgr"
+  },
+  {
+    "port": 8400,
+    "name": "cvd",
+    "desc": "cvd"
+  },
+  {
+    "port": 8086,
+    "name": "d-s-n",
+    "desc": "Distributed SCADA Networking Rendezvous Port"
+  },
+  {
+    "port": 9011,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 4126,
+    "name": "ddrepl",
+    "desc": "Data Domain Replication Service"
+  },
+  {
+    "port": 20000,
+    "name": "dnp",
+    "desc": "DNP"
+  },
+  {
+    "port": 3998,
+    "name": "dnx",
+    "desc": "Distributed Nagios Executor Service"
+  },
+  {
+    "port": 10002,
+    "name": "documentum",
+    "desc": "EMC-Documentum Content Server Product"
+  },
+  {
+    "port": 5718,
+    "name": "dpm",
+    "desc": "DPM Communication Server"
+  },
+  {
+    "port": 2875,
+    "name": "dxmessagebase2",
+    "desc": "DX Message Base Transport Protocol"
+  },
+  {
+    "port": 8873,
+    "name": "dxspider",
+    "desc": "dxspider linking protocol"
+  },
+  {
+    "port": 9002,
+    "name": "dynamid",
+    "desc": "DynamID authentication"
+  },
+  {
+    "port": 1148,
+    "name": "elfiq-repl",
+    "desc": "Elfiq Replication Service"
+  },
+  {
+    "port": 3031,
+    "name": "eppc",
+    "desc": "Remote AppleEvents/PPC Toolbox"
+  },
+  {
+    "port": 3017,
+    "name": "event-listener",
+    "desc": "Event Listener"
+  },
+  {
+    "port": 2399,
+    "name": "fmpro-fdal",
+    "desc": "FileMaker, Inc. - Data Access Layer"
+  },
+  {
+    "port": 16001,
+    "name": "fmsascon",
+    "desc": "Administration Server Connector"
+  },
+  {
+    "port": 1045,
+    "name": "fpitp",
+    "desc": "Fingerprint Image Transfer Protocol"
+  },
+  {
+    "port": 9080,
+    "name": "glrpc",
+    "desc": "Groove GLRPC"
+  },
+  {
+    "port": 1070,
+    "name": "gmrupdateserv",
+    "desc": "GMRUpdateSERV"
+  },
+  {
+    "port": 2135,
+    "name": "gris",
+    "desc": "Grid Resource Information Server"
+  },
+  {
+    "port": 2492,
+    "name": "groove",
+    "desc": "GROOVE"
+  },
+  {
+    "port": 2811,
+    "name": "gsiftp",
+    "desc": "GSI FTP"
+  },
+  {
+    "port": 2119,
+    "name": "gsigatekeeper",
+    "desc": "GSIGATEKEEPER"
+  },
+  {
+    "port": 1718,
+    "name": "h323gatedisc",
+    "desc": "H.323 Multicast Gatekeeper Discover"
+  },
+  {
+    "port": 1310,
+    "name": "husky",
+    "desc": "Husky"
+  },
+  {
+    "port": 3801,
+    "name": "ibm-mgr",
+    "desc": "ibm manager service"
+  },
+  {
+    "port": 1077,
+    "name": "imgames",
+    "desc": "IMGames"
+  },
+  {
+    "port": 8181,
+    "name": "intermapper",
+    "desc": "Intermapper network management system"
+  },
+  {
+    "port": 7778,
+    "name": "interwise",
+    "desc": "Interwise"
+  },
+  {
+    "port": 20222,
+    "name": "ipulse-ics",
+    "desc": "iPulse-ICS"
+  },
+  {
+    "port": 9500,
+    "name": "ismserver",
+    "desc": "ismserver"
+  },
+  {
+    "port": 1106,
+    "name": "isoipsigport-1",
+    "desc": "ISOIPSIGPORT-1"
+  },
+  {
+    "port": 1107,
+    "name": "isoipsigport-2",
+    "desc": "ISOIPSIGPORT-2"
+  },
+  {
+    "port": 9900,
+    "name": "iua",
+    "desc": "IUA"
+  },
+  {
+    "port": 6901,
+    "name": "jetstream",
+    "desc": "Novell Jetstream messaging protocol"
+  },
+  {
+    "port": 1061,
+    "name": "kiosk",
+    "desc": "KIOSK"
+  },
+  {
+    "port": 1063,
+    "name": "kyoceranetdev",
+    "desc": "KyoceraNetDev"
+  },
+  {
+    "port": 2144,
+    "name": "lv-ffx",
+    "desc": "Live Vault Fast Object Transfer"
+  },
+  {
+    "port": 1100,
+    "name": "mctp",
+    "desc": "MCTP"
+  },
+  {
+    "port": 3580,
+    "name": "nati-svrloc",
+    "desc": "NATI-ServiceLocator"
+  },
+  {
+    "port": 30000,
+    "name": "ndmps",
+    "desc": "Secure Network Data Management Protocol"
+  },
+  {
+    "port": 3827,
+    "name": "netmpi",
+    "desc": "Netadmin Systems MPI service"
+  },
+  {
+    "port": 1840,
+    "name": "netopia-vo2",
+    "desc": "netopia-vo2"
+  },
+  {
+    "port": 1687,
+    "name": "nsjtp-ctrl",
+    "desc": "nsjtp-ctrl"
+  },
+  {
+    "port": 4129,
+    "name": "nuauth",
+    "desc": "NuFW authentication protocol"
+  },
+  {
+    "port": 15002,
+    "name": "onep-tls",
+    "desc": "Open Network Environment TLS"
+  },
+  {
+    "port": 6580,
+    "name": "parsec-master",
+    "desc": "Parsec Masterserver"
+  },
+  {
+    "port": 2718,
+    "name": "pn-requester2",
+    "desc": "PN REQUESTER 2"
+  },
+  {
+    "port": 4449,
+    "name": "privatewire",
+    "desc": "PrivateWire"
+  },
+  {
+    "port": 1093,
+    "name": "proofd",
+    "desc": "PROOFD"
+  },
+  {
+    "port": 1081,
+    "name": "pvuniwien",
+    "desc": "PVUNIWIEN"
+  },
+  {
+    "port": 4003,
+    "name": "pxc-splr-ft",
+    "desc": "pxc-splr-ft"
+  },
+  {
+    "port": 1108,
+    "name": "ratio-adp",
+    "desc": "ratio-adp"
+  },
+  {
+    "port": 1075,
+    "name": "rdrmshc",
+    "desc": "RDRMSHC"
+  },
+  {
+    "port": 1098,
+    "name": "rmiactivation",
+    "desc": "RMI Activation"
+  },
+  {
+    "port": 1099,
+    "name": "rmiregistry",
+    "desc": "RMI Registry"
+  },
+  {
+    "port": 1094,
+    "name": "rootd",
+    "desc": "ROOTD"
+  },
+  {
+    "port": 3367,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 14000,
+    "name": "scotty-ft",
+    "desc": "SCOTTY High-Speed Filetransfer"
+  },
+  {
+    "port": 7741,
+    "name": "scriptview",
+    "desc": "ScriptView Network"
+  },
+  {
+    "port": 9010,
+    "name": "sdr",
+    "desc": "Secure Data Replicator Protocol"
+  },
+  {
+    "port": 1947,
+    "name": "sentinelsrm",
+    "desc": "SentinelSRM"
+  },
+  {
+    "port": 11110,
+    "name": "sgi-soap",
+    "desc": "Data migration facility (DMF) SOAP is a web server protocol to support remote access to DMF"
+  },
+  {
+    "port": 8087,
+    "name": "simplifymedia",
+    "desc": "Simplify Media SPP Protocol"
+  },
+  {
+    "port": 3766,
+    "name": "sitewatch-s",
+    "desc": "SSL e-watch sitewatch server"
+  },
+  {
+    "port": 6788,
+    "name": "smc-http",
+    "desc": "SMC-HTTP"
+  },
+  {
+    "port": 7627,
+    "name": "soap-http",
+    "desc": "SOAP Service Port"
+  },
+  {
+    "port": 1057,
+    "name": "startron",
+    "desc": "STARTRON"
+  },
+  {
+    "port": 5414,
+    "name": "statusd",
+    "desc": "StatusD"
+  },
+  {
+    "port": 5030,
+    "name": "surfpass",
+    "desc": "SurfPass"
+  },
+  {
+    "port": 11967,
+    "name": "sysinfo-sp",
+    "desc": "SysInfo Service Protocol"
+  },
+  {
+    "port": 2190,
+    "name": "tivoconnect",
+    "desc": "TiVoConnect Beacon"
+  },
+  {
+    "port": 1169,
+    "name": "tripwire",
+    "desc": "TRIPWIRE"
+  },
+  {
+    "port": 10012,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10024,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10025,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10566,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10616,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10617,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10621,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10626,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10628,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10629,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 13456,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 14442,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 15003,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 16016,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 16018,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1783,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 17988,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 19101,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 19801,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 19842,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 20031,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 20221,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 21571,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 22939,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 24800,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 25734,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 27715,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 28201,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 30718,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 31038,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32781,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32782,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3301,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 33899,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3404,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 34571,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 34572,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 34573,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 40193,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 48080,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49158,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49159,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49160,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 50003,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 50006,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 50800,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 57294,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 58080,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5810,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5825,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5877,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5925,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5959,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5960,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5961,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5962,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 60020,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6129,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6156,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 63331,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 65129,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7106,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7625,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7911,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8222,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8649,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8994,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9220,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9290,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9485,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9502,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9503,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9968,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5988,
+    "name": "wbem-http",
+    "desc": "WBEM CIM-XML (HTTP)"
+  },
+  {
+    "port": 5989,
+    "name": "wbem-https",
+    "desc": "WBEM CIM-XML (HTTPS)"
+  },
+  {
+    "port": 5987,
+    "name": "wbem-rmi",
+    "desc": "WBEM RMI"
+  },
+  {
+    "port": 1085,
+    "name": "webobjects",
+    "desc": "Web Objects"
+  },
+  {
+    "port": 1046,
+    "name": "wfremotertm",
+    "desc": "WebFilter Remote Monitor"
+  },
+  {
+    "port": 5222,
+    "name": "xmpp-client",
+    "desc": "XMPP Client Connection"
+  },
+  {
+    "port": 5269,
+    "name": "xmpp-server",
+    "desc": "XMPP Server Connection"
+  },
+  {
+    "port": 1104,
+    "name": "xrl",
+    "desc": "XRL"
+  },
+  {
+    "port": 691,
+    "name": "msexch-routing",
+    "desc": "MS Exchange Routing"
+  },
+  {
+    "port": 89,
+    "name": "su-mit-tg",
+    "desc": "SU/MIT Telnet Gateway"
+  },
+  {
+    "port": 212,
+    "name": "anet",
+    "desc": "ATEXSSTR"
+  },
+  {
+    "port": 32776,
+    "name": "filenet-peior",
+    "desc": "FileNET BPM IOR"
+  },
+  {
+    "port": 1999,
+    "name": "tcp-id-port",
+    "desc": "cisco identification port"
+  },
+  {
+    "port": 1001,
+    "name": "webpush",
+    "desc": "HTTP Web Push"
+  },
+  {
+    "port": 2020,
+    "name": "xinupageserver",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7002,
+    "name": "afs3-prserver",
+    "desc": "users & groups database"
+  },
+  {
+    "port": 50002,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2998,
+    "name": "realsecure",
+    "desc": "Real Secure"
+  },
+  {
+    "port": 6003,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2033,
+    "name": "glogger",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3372,
+    "name": "tip2",
+    "desc": "TIP 2"
+  },
+  {
+    "port": 5510,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 898,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32,
+    "name": "(Unknown)",
+    "desc": "Unassigned"
+  },
+  {
+    "port": 425,
+    "name": "icad-el",
+    "desc": "ICAD"
+  },
+  {
+    "port": 749,
+    "name": "kerberos-adm",
+    "desc": "kerberos administration"
+  },
+  {
+    "port": 99,
+    "name": "metagram",
+    "desc": "Metagram Relay"
+  },
+  {
+    "port": 5903,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7007,
+    "name": "afs3-bos",
+    "desc": "basic overseer process"
+  },
+  {
+    "port": 458,
+    "name": "appleqtc",
+    "desc": "apple quick time"
+  },
+  {
+    "port": 6106,
+    "name": "mpsserver",
+    "desc": "MPS Server"
+  },
+  {
+    "port": 13722,
+    "name": "bpjava-msvc",
+    "desc": "BP Java MSVC Protocol"
+  },
+  {
+    "port": 6502,
+    "name": "boks-servm",
+    "desc": "BoKS Servm"
+  },
+  {
+    "port": 5405,
+    "name": "netsupport",
+    "desc": "NetSupport"
+  },
+  {
+    "port": 43,
+    "name": "nicname",
+    "desc": "Who Is"
+  },
+  {
+    "port": 3030,
+    "name": "arepa-cas",
+    "desc": "Arepa Cas"
+  },
+  {
+    "port": 3871,
+    "name": "avocent-adsap",
+    "desc": "Avocent DS Authorization"
+  },
+  {
+    "port": 1087,
+    "name": "cplscrambler-in",
+    "desc": "CPL Scrambler Internal"
+  },
+  {
+    "port": 2251,
+    "name": "dif-port",
+    "desc": "Distributed Framework Port"
+  },
+  {
+    "port": 9998,
+    "name": "distinct32",
+    "desc": "Distinct32"
+  },
+  {
+    "port": 1296,
+    "name": "dproxy",
+    "desc": "dproxy"
+  },
+  {
+    "port": 10004,
+    "name": "emcrmirccd",
+    "desc": "EMC Replication Manager Client"
+  },
+  {
+    "port": 1089,
+    "name": "ff-annunc",
+    "desc": "FF Annunciation"
+  },
+  {
+    "port": 8500,
+    "name": "fmtp",
+    "desc": "Flight Message Transfer Protocol"
+  },
+  {
+    "port": 1782,
+    "name": "hp-hcip",
+    "desc": "hp-hcip"
+  },
+  {
+    "port": 1124,
+    "name": "hpvmmcontrol",
+    "desc": "HP VMM Control"
+  },
+  {
+    "port": 3880,
+    "name": "igrs",
+    "desc": "IGRS"
+  },
+  {
+    "port": 5963,
+    "name": "indy",
+    "desc": "Indy Application Server"
+  },
+  {
+    "port": 62078,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3995,
+    "name": "iss-mgmt-ssl",
+    "desc": "ISS Management Svcs SSL"
+  },
+  {
+    "port": 19315,
+    "name": "keyshadow",
+    "desc": "Key Shadow for SASSAFRAS"
+  },
+  {
+    "port": 19283,
+    "name": "keysrvr",
+    "desc": "Key Server for SASSAFRAS"
+  },
+  {
+    "port": 1183,
+    "name": "llsurfup-http",
+    "desc": "LL Surfup HTTP"
+  },
+  {
+    "port": 1186,
+    "name": "mysql-cluster",
+    "desc": "MySQL Cluster Manager"
+  },
+  {
+    "port": 4446,
+    "name": "n1-fwp",
+    "desc": "N1-FWP"
+  },
+  {
+    "port": 3828,
+    "name": "neteh",
+    "desc": "Netadmin Systems Event Handler"
+  },
+  {
+    "port": 3493,
+    "name": "nut",
+    "desc": "Network UPS Tools"
+  },
+  {
+    "port": 8090,
+    "name": "opsmessaging",
+    "desc": "Vehicle to station messaging"
+  },
+  {
+    "port": 7443,
+    "name": "oracleas-https",
+    "desc": "Oracle Application Server HTTPS"
+  },
+  {
+    "port": 3077,
+    "name": "orbix-loc-ssl",
+    "desc": "Orbix 2000 Locator SSL"
+  },
+  {
+    "port": 2126,
+    "name": "pktcable-cops",
+    "desc": "PktCable-COPS"
+  },
+  {
+    "port": 3918,
+    "name": "pktcablemmcops",
+    "desc": "PacketCableMultimediaCOPS"
+  },
+  {
+    "port": 5298,
+    "name": "presence",
+    "desc": "XMPP Link-Local Messaging"
+  },
+  {
+    "port": 4006,
+    "name": "pxc-spvr",
+    "desc": "pxc-spvr"
+  },
+  {
+    "port": 5054,
+    "name": "rlm-admin",
+    "desc": "RLM administrative interface"
+  },
+  {
+    "port": 7402,
+    "name": "rtps-dd-mt",
+    "desc": "RTPS Data-Distribution Meta-Traffic"
+  },
+  {
+    "port": 3369,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3370,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3371,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3851,
+    "name": "spectraport",
+    "desc": "SpectraTalk Port"
+  },
+  {
+    "port": 5200,
+    "name": "targus-getdata",
+    "desc": "TARGUS GetData"
+  },
+  {
+    "port": 1580,
+    "name": "tn-tl-r1",
+    "desc": "tn-tl-r1"
+  },
+  {
+    "port": 3011,
+    "name": "trusted-web",
+    "desc": "Trusted Web"
+  },
+  {
+    "port": 2191,
+    "name": "tvbus",
+    "desc": "TvBus Messaging"
+  },
+  {
+    "port": 10778,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 15742,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 16012,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 18988,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 19780,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 24444,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 27352,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 27353,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 27355,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32784,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3546,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49163,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49165,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49175,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 50389,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 50636,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 51493,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 55055,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 56738,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5822,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5904,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5915,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5922,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 61532,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 61900,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7103,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7435,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7512,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8011,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8180,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8254,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8654,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9110,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9877,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9943,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9944,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1247,
+    "name": "visionpyramid",
+    "desc": "VisionPyramid"
+  },
+  {
+    "port": 2179,
+    "name": "vmrdp",
+    "desc": "Microsoft RDP for virtual machines"
+  },
+  {
+    "port": 5859,
+    "name": "wherehoo",
+    "desc": "WHEREHOO"
+  },
+  {
+    "port": 2522,
+    "name": "windb",
+    "desc": "WinDb"
+  },
+  {
+    "port": 1152,
+    "name": "winpoplanmess",
+    "desc": "Winpopup LAN Messenger"
+  },
+  {
+    "port": 3261,
+    "name": "winshadow",
+    "desc": "winShadow"
+  },
+  {
+    "port": 1334,
+    "name": "writesrv",
+    "desc": "writesrv"
+  },
+  {
+    "port": 4111,
+    "name": "xgrid",
+    "desc": "Xgrid"
+  },
+  {
+    "port": 9091,
+    "name": "xmltec-xmlmail",
+    "desc": "xmltec-xmlmail"
+  },
+  {
+    "port": 5280,
+    "name": "xmpp-bosh",
+    "desc": "Bidirectional-streams Over Synchronous HTTP (BOSH)"
+  },
+  {
+    "port": 3737,
+    "name": "xpanel",
+    "desc": "XPanel Daemon"
+  },
+  {
+    "port": 8100,
+    "name": "xprint-server",
+    "desc": "Xprint Server"
+  },
+  {
+    "port": 9666,
+    "name": "zoomcp",
+    "desc": "Zoom Control Panel Game Server Management"
+  },
+  {
+    "port": 1021,
+    "name": "exp1",
+    "desc": "RFC3692-style Experiment 1"
+  },
+  {
+    "port": 32777,
+    "name": "filenet-obrok",
+    "desc": "FileNet BPM CORBA"
+  },
+  {
+    "port": 32779,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9040,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 666,
+    "name": "mdqs",
+    "desc": "Reserved"
+  },
+  {
+    "port": 700,
+    "name": "epp",
+    "desc": "Extensible Provisioning Protocol"
+  },
+  {
+    "port": 616,
+    "name": "sco-sysmgr",
+    "desc": "SCO System Administration Server"
+  },
+  {
+    "port": 2021,
+    "name": "servexec",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32778,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49400,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 84,
+    "name": "ctf",
+    "desc": "Common Trace Facility"
+  },
+  {
+    "port": 545,
+    "name": "appleqtcsrvr",
+    "desc": "appleqtcsrvr"
+  },
+  {
+    "port": 1524,
+    "name": "ingreslock",
+    "desc": "ingres"
+  },
+  {
+    "port": 2040,
+    "name": "lam",
+    "desc": "Reserved"
+  },
+  {
+    "port": 38292,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1112,
+    "name": "icp",
+    "desc": "Intelligent Communication Protocol"
+  },
+  {
+    "port": 4321,
+    "name": "rwhois",
+    "desc": "Remote Who Is"
+  },
+  {
+    "port": 5802,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1084,
+    "name": "ansoft-lm-2",
+    "desc": "Anasoft License Manager"
+  },
+  {
+    "port": 3006,
+    "name": "ii-admin",
+    "desc": "Instant Internet Admin"
+  },
+  {
+    "port": 2048,
+    "name": "dls-monitor",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1600,
+    "name": "issd",
+    "desc": "issd"
+  },
+  {
+    "port": 2111,
+    "name": "dsatp",
+    "desc": "OPNET Dynamic Sampling Agent Transaction Protocol"
+  },
+  {
+    "port": 32780,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9111,
+    "name": "hexxorecore",
+    "desc": "Multiple Purpose, Distributed Message Bus"
+  },
+  {
+    "port": 6699,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 16080,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6547,
+    "name": "apc-6547",
+    "desc": "APC 6547"
+  },
+  {
+    "port": 2638,
+    "name": "sybaseanywhere",
+    "desc": "Sybase Anywhere"
+  },
+  {
+    "port": 801,
+    "name": "device",
+    "desc": "Reserved"
+  },
+  {
+    "port": 667,
+    "name": "disclose",
+    "desc": "campaign contribution disclosures - SDR Technologies"
+  },
+  {
+    "port": 555,
+    "name": "dsf",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2106,
+    "name": "mzap",
+    "desc": "MZAP"
+  },
+  {
+    "port": 1443,
+    "name": "ies-lm",
+    "desc": "Integrated Engineering Software"
+  },
+  {
+    "port": 5560,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2034,
+    "name": "scoremgr",
+    "desc": "Reserved"
+  },
+  {
+    "port": 720,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1533,
+    "name": "virtual-places",
+    "desc": "Virtual Places Software"
+  },
+  {
+    "port": 6007,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2323,
+    "name": "3d-nfsd",
+    "desc": "3d-nfsd"
+  },
+  {
+    "port": 5221,
+    "name": "3exmp",
+    "desc": "3eTI Extensible Management Protocol for OAMP"
+  },
+  {
+    "port": 3517,
+    "name": "802-11-iapp",
+    "desc": "IEEE 802.11 WLANs WG IAPP"
+  },
+  {
+    "port": 3322,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3324,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3809,
+    "name": "apocd",
+    "desc": "Java Desktop System Configuration Agent"
+  },
+  {
+    "port": 4848,
+    "name": "appserv-http",
+    "desc": "App Server - Admin HTTP"
+  },
+  {
+    "port": 1117,
+    "name": "ardus-mtrns",
+    "desc": "ARDUS Multicast Transfer"
+  },
+  {
+    "port": 7800,
+    "name": "asr",
+    "desc": "Apple Software Restore"
+  },
+  {
+    "port": 1122,
+    "name": "availant-mgr",
+    "desc": "availant-mgr"
+  },
+  {
+    "port": 3527,
+    "name": "beserver-msg-q",
+    "desc": "VERITAS Backup Exec Server"
+  },
+  {
+    "port": 5087,
+    "name": "biotic",
+    "desc": "BIOTIC - Binary Internet of Things Interoperable Communication"
+  },
+  {
+    "port": 8292,
+    "name": "blp3",
+    "desc": "Bloomberg professional"
+  },
+  {
+    "port": 1119,
+    "name": "bnetgame",
+    "desc": "Battle.net Chat/Game Protocol"
+  },
+  {
+    "port": 1131,
+    "name": "caspssl",
+    "desc": "CAC App Service Protocol Encripted"
+  },
+  {
+    "port": 3003,
+    "name": "cgms",
+    "desc": "CGMS"
+  },
+  {
+    "port": 9081,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3889,
+    "name": "dandv-tester",
+    "desc": "D and V Tester Control Port"
+  },
+  {
+    "port": 1199,
+    "name": "dmidi",
+    "desc": "DMIDI"
+  },
+  {
+    "port": 10003,
+    "name": "documentum-s",
+    "desc": "EMC-Documentum Content Server Product"
+  },
+  {
+    "port": 1175,
+    "name": "dossier",
+    "desc": "Dossier Server"
+  },
+  {
+    "port": 3390,
+    "name": "dsc",
+    "desc": "Distributed Service Coordinator"
+  },
+  {
+    "port": 3945,
+    "name": "emcads",
+    "desc": "EMCADS Server Port"
+  },
+  {
+    "port": 1138,
+    "name": "encrypted-admin",
+    "desc": "encrypted admin requests"
+  },
+  {
+    "port": 6567,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3920,
+    "name": "exasoftport1",
+    "desc": "Exasoft IP Port"
+  },
+  {
+    "port": 1271,
+    "name": "excw",
+    "desc": "eXcW"
+  },
+  {
+    "port": 1090,
+    "name": "ff-fms",
+    "desc": "FF Fieldbus Message Specification"
+  },
+  {
+    "port": 1091,
+    "name": "ff-sm",
+    "desc": "FF System Management"
+  },
+  {
+    "port": 16000,
+    "name": "fmsas",
+    "desc": "Administration Server Access"
+  },
+  {
+    "port": 3878,
+    "name": "fotogcad",
+    "desc": "FotoG CAD interface"
+  },
+  {
+    "port": 8042,
+    "name": "fs-agent",
+    "desc": "FireScope Agent"
+  },
+  {
+    "port": 2909,
+    "name": "funk-dialout",
+    "desc": "Funk Dialout"
+  },
+  {
+    "port": 4550,
+    "name": "gds-adppiw-db",
+    "desc": "Perman I Interbase Server"
+  },
+  {
+    "port": 9418,
+    "name": "git",
+    "desc": "git pack transfer service"
+  },
+  {
+    "port": 4900,
+    "name": "hfcs",
+    "desc": "HFSQL Client/Server Database Engine"
+  },
+  {
+    "port": 7676,
+    "name": "imqbrokerd",
+    "desc": "iMQ Broker Rendezvous"
+  },
+  {
+    "port": 7999,
+    "name": "irdmi2",
+    "desc": "iRDMI2"
+  },
+  {
+    "port": 5033,
+    "name": "jtnetd-server",
+    "desc": "Janstor Secure Data"
+  },
+  {
+    "port": 9878,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3971,
+    "name": "lanrevserver",
+    "desc": "LANrev Server"
+  },
+  {
+    "port": 3914,
+    "name": "listcrt-port-2",
+    "desc": "ListCREATOR Port 2"
+  },
+  {
+    "port": 8383,
+    "name": "m2mservices",
+    "desc": "M2m Services"
+  },
+  {
+    "port": 6510,
+    "name": "mcer-port",
+    "desc": "MCER Port"
+  },
+  {
+    "port": 1114,
+    "name": "mini-sql",
+    "desc": "Mini SQL"
+  },
+  {
+    "port": 9898,
+    "name": "monkeycom",
+    "desc": "MonkeyCom"
+  },
+  {
+    "port": 2393,
+    "name": "ms-olap1",
+    "desc": "MS OLAP 1"
+  },
+  {
+    "port": 2394,
+    "name": "ms-olap2",
+    "desc": "MS OLAP 2"
+  },
+  {
+    "port": 2725,
+    "name": "msolap-ptp2",
+    "desc": "MSOLAP PTP2"
+  },
+  {
+    "port": 3905,
+    "name": "mupdate",
+    "desc": "Mailbox Update (MUPDATE) protocol"
+  },
+  {
+    "port": 1862,
+    "name": "mysql-cm-agent",
+    "desc": "MySQL Cluster Manager Agent"
+  },
+  {
+    "port": 3814,
+    "name": "neto-dcs",
+    "desc": "netO DCS"
+  },
+  {
+    "port": 1201,
+    "name": "nucleus-sand",
+    "desc": "Nucleus Sand Database Server"
+  },
+  {
+    "port": 8022,
+    "name": "oa-system",
+    "desc": "oa-system"
+  },
+  {
+    "port": 5080,
+    "name": "onscreen",
+    "desc": "OnScreen Data Collection Service"
+  },
+  {
+    "port": 3869,
+    "name": "ovsam-mgmt",
+    "desc": "hp OVSAM MgmtServer Disco"
+  },
+  {
+    "port": 3168,
+    "name": "poweronnud",
+    "desc": "Now Up-to-Date Public Server"
+  },
+  {
+    "port": 3800,
+    "name": "pwgpsi",
+    "desc": "Print Services Interface"
+  },
+  {
+    "port": 4005,
+    "name": "pxc-pin",
+    "desc": "pxc-pin"
+  },
+  {
+    "port": 4004,
+    "name": "pxc-roid",
+    "desc": "pxc-roid"
+  },
+  {
+    "port": 5678,
+    "name": "rrac",
+    "desc": "Remote Replication Agent Connection"
+  },
+  {
+    "port": 6566,
+    "name": "sane-port",
+    "desc": "SANE Control Port"
+  },
+  {
+    "port": 5061,
+    "name": "sips",
+    "desc": "SIP-TLS"
+  },
+  {
+    "port": 8800,
+    "name": "sunwebadmin",
+    "desc": "Sun Web Server Admin Service"
+  },
+  {
+    "port": 10009,
+    "name": "swdtp-sv",
+    "desc": "Systemwalker Desktop Patrol"
+  },
+  {
+    "port": 6100,
+    "name": "synchronet-db",
+    "desc": "SynchroNet-db"
+  },
+  {
+    "port": 8300,
+    "name": "tmi",
+    "desc": "Transport Management Interface"
+  },
+  {
+    "port": 4567,
+    "name": "tram",
+    "desc": "TRAM"
+  },
+  {
+    "port": 8200,
+    "name": "trivnet1",
+    "desc": "TRIVNET"
+  },
+  {
+    "port": 6689,
+    "name": "tsa",
+    "desc": "Tofino Security Appliance"
+  },
+  {
+    "port": 5730,
+    "name": "unieng",
+    "desc": "Steltor's calendar access"
+  },
+  {
+    "port": 1151,
+    "name": "unizensus",
+    "desc": "Unizensus Login Server"
+  },
+  {
+    "port": 10180,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10215,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 12174,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 12265,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 14441,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 15004,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 16113,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 17877,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 18040,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 18101,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 19350,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 25735,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 26214,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 27356,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 30951,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32783,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 32785,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 40911,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 41511,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 44176,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 44501,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49161,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49167,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 49176,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 50300,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 50500,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 52673,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 52848,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 54045,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 54328,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5440,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 55056,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5544,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 56737,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 57797,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5811,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5815,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5850,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5862,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5906,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5907,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5950,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5952,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 60443,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6565,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6692,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6779,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6792,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6839,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7496,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7920,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7921,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8045,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8093,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8099,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8290,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9003,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9099,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9575,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9917,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 4445,
+    "name": "upnotifyp",
+    "desc": "UPNOTIFYP"
+  },
+  {
+    "port": 11111,
+    "name": "vce",
+    "desc": "Viral Computing Environment (VCE)"
+  },
+  {
+    "port": 7025,
+    "name": "vmsvc-2",
+    "desc": "Vormetric Service II"
+  },
+  {
+    "port": 4279,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2608,
+    "name": "wag-service",
+    "desc": "Wag Service"
+  },
+  {
+    "port": 9200,
+    "name": "wap-wsp",
+    "desc": "WAP connectionless session service"
+  },
+  {
+    "port": 3826,
+    "name": "warmux",
+    "desc": "WarMUX game server"
+  },
+  {
+    "port": 6025,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3221,
+    "name": "xnm-clear-text",
+    "desc": "XML NM over TCP"
+  },
+  {
+    "port": 2022,
+    "name": "down",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6346,
+    "name": "gnutella-svc",
+    "desc": "gnutella-svc"
+  },
+  {
+    "port": 70,
+    "name": "gopher",
+    "desc": "Gopher"
+  },
+  {
+    "port": 714,
+    "name": "iris-xpcs",
+    "desc": "IRIS over XPCS"
+  },
+  {
+    "port": 4998,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 777,
+    "name": "multiling-http",
+    "desc": "Multiling HTTP"
+  },
+  {
+    "port": 417,
+    "name": "onmux",
+    "desc": "Onmux"
+  },
+  {
+    "port": 617,
+    "name": "sco-dtmgr",
+    "desc": "SCO Desktop Administration Server"
+  },
+  {
+    "port": 1009,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 722,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 981,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 4224,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 10082,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2041,
+    "name": "interbase",
+    "desc": "Reserved"
+  },
+  {
+    "port": 668,
+    "name": "mecomm",
+    "desc": "MeComm"
+  },
+  {
+    "port": 5999,
+    "name": "cvsup",
+    "desc": "CVSup"
+  },
+  {
+    "port": 524,
+    "name": "ncp",
+    "desc": "NCP"
+  },
+  {
+    "port": 1076,
+    "name": "dab-sti-c",
+    "desc": "DAB STI-C"
+  },
+  {
+    "port": 301,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 765,
+    "name": "webster",
+    "desc": "Reserved"
+  },
+  {
+    "port": 7004,
+    "name": "afs3-kaserver",
+    "desc": "AFS/Kerberos authentication service"
+  },
+  {
+    "port": 2068,
+    "name": "avauthsrvprtcl",
+    "desc": "Avocent AuthSrv Protocol"
+  },
+  {
+    "port": 1984,
+    "name": "bb",
+    "desc": "BB"
+  },
+  {
+    "port": 44443,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 259,
+    "name": "esro-gen",
+    "desc": "Efficient Short Remote Operations"
+  },
+  {
+    "port": 1434,
+    "name": "ms-sql-m",
+    "desc": "Microsoft-SQL-Monitor"
+  },
+  {
+    "port": 2038,
+    "name": "objectmanager",
+    "desc": "Reserved"
+  },
+  {
+    "port": 416,
+    "name": "silverplatter",
+    "desc": "Silverplatter"
+  },
+  {
+    "port": 1417,
+    "name": "timbuktu-srv1",
+    "desc": "Timbuktu Service 1 Port"
+  },
+  {
+    "port": 4343,
+    "name": "unicall",
+    "desc": "UNICALL"
+  },
+  {
+    "port": 1007,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6009,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 687,
+    "name": "asipregistry",
+    "desc": "asipregistry"
+  },
+  {
+    "port": 7201,
+    "name": "dlip",
+    "desc": "DLIP"
+  },
+  {
+    "port": 1461,
+    "name": "ibm-wrless-lan",
+    "desc": "IBM Wireless LAN"
+  },
+  {
+    "port": 2035,
+    "name": "imsldoc",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9103,
+    "name": "bacula-sd",
+    "desc": "Bacula Storage Daemon"
+  },
+  {
+    "port": 109,
+    "name": "pop2",
+    "desc": "Post Office Protocol - Version 2"
+  },
+  {
+    "port": 4125,
+    "name": "opsview-envoy",
+    "desc": "Opsview Envoy"
+  },
+  {
+    "port": 2046,
+    "name": "sdfunc",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1010,
+    "name": "surf",
+    "desc": "surf"
+  },
+  {
+    "port": 726,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6006,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 911,
+    "name": "xact-backup",
+    "desc": "xact-backup"
+  },
+  {
+    "port": 683,
+    "name": "corba-iiop",
+    "desc": "CORBA IIOP"
+  },
+  {
+    "port": 2047,
+    "name": "dls",
+    "desc": "Reserved"
+  },
+  {
+    "port": 481,
+    "name": "ph",
+    "desc": "Ph service"
+  },
+  {
+    "port": 1455,
+    "name": "esl-lm",
+    "desc": "ESL License Manager"
+  },
+  {
+    "port": 6668,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 6669,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2043,
+    "name": "isis-bcast",
+    "desc": "isis-bcast"
+  },
+  {
+    "port": 903,
+    "name": "ideafarm-panic",
+    "desc": "self documenting Telnet Panic Door"
+  },
+  {
+    "port": 125,
+    "name": "locus-map",
+    "desc": "Locus PC-Interface Net Map Ser"
+  },
+  {
+    "port": 2013,
+    "name": "raid-am",
+    "desc": "Reserved"
+  },
+  {
+    "port": 1011,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2045,
+    "name": "cdfunc",
+    "desc": "Reserved"
+  },
+  {
+    "port": 44442,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 31337,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 256,
+    "name": "rap",
+    "desc": "RAP"
+  },
+  {
+    "port": 406,
+    "name": "imsp",
+    "desc": "Interactive Mail Support Protocol"
+  },
+  {
+    "port": 2042,
+    "name": "isis",
+    "desc": "isis"
+  },
+  {
+    "port": 5998,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 9929,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 783,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 843,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 2800,
+    "name": "acc-raid",
+    "desc": "ACC RAID"
+  },
+  {
+    "port": 3824,
+    "name": "acp-policy",
+    "desc": "Compute Pool Policy"
+  },
+  {
+    "port": 1102,
+    "name": "adobeserver-1",
+    "desc": "ADOBE SERVER 1"
+  },
+  {
+    "port": 8016,
+    "name": "ads-s",
+    "desc": "Beckhoff Automation Device Specification"
+  },
+  {
+    "port": 5074,
+    "name": "alesquery",
+    "desc": "ALES Query"
+  },
+  {
+    "port": 1187,
+    "name": "alias",
+    "desc": "Alias Service"
+  },
+  {
+    "port": 8766,
+    "name": "amcs",
+    "desc": "Agilent Connectivity Service"
+  },
+  {
+    "port": 3846,
+    "name": "an-pcp",
+    "desc": "Astare Network PCP"
+  },
+  {
+    "port": 3863,
+    "name": "asap-tcp",
+    "desc": "asap tcp port"
+  },
+  {
+    "port": 8294,
+    "name": "blp4",
+    "desc": "Bloomberg intelligent client"
+  },
+  {
+    "port": 6500,
+    "name": "boks",
+    "desc": "BoKS Master"
+  },
+  {
+    "port": 4096,
+    "name": "bre",
+    "desc": "BRE (Bridge Relay Element)"
+  },
+  {
+    "port": 3993,
+    "name": "bv-agent",
+    "desc": "BindView-Agent"
+  },
+  {
+    "port": 3990,
+    "name": "bv-is",
+    "desc": "BindView-IS"
+  },
+  {
+    "port": 1236,
+    "name": "bvcontrol",
+    "desc": "bvcontrol"
+  },
+  {
+    "port": 1149,
+    "name": "bvtsonar",
+    "desc": "BlueView Sonar Service"
+  },
+  {
+    "port": 1721,
+    "name": "caicci",
+    "desc": "caicci"
+  },
+  {
+    "port": 1192,
+    "name": "caids-sensor",
+    "desc": "caids sensors channel"
+  },
+  {
+    "port": 1198,
+    "name": "cajo-discovery",
+    "desc": "cajo reference discovery"
+  },
+  {
+    "port": 1147,
+    "name": "capioverlan",
+    "desc": "CAPIoverLAN"
+  },
+  {
+    "port": 1130,
+    "name": "casp",
+    "desc": "CAC App Service Protocol"
+  },
+  {
+    "port": 1185,
+    "name": "catchpole",
+    "desc": "Catchpole port"
+  },
+  {
+    "port": 3376,
+    "name": "cdbroker",
+    "desc": "CD Broker"
+  },
+  {
+    "port": 10023,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 8015,
+    "name": "cfg-cloud",
+    "desc": "Configuration Cloud Service"
+  },
+  {
+    "port": 4009,
+    "name": "chimera-hwm",
+    "desc": "Chimera HWM"
+  },
+  {
+    "port": 1301,
+    "name": "ci3-software-1",
+    "desc": "CI3-Software-1"
+  },
+  {
+    "port": 3888,
+    "name": "ciphire-serv",
+    "desc": "Ciphire Services"
+  },
+  {
+    "port": 20002,
+    "name": "commtact-http",
+    "desc": "Commtact HTTP"
+  },
+  {
+    "port": 3400,
+    "name": "csms2",
+    "desc": "CSMS2"
+  },
+  {
+    "port": 5063,
+    "name": "csrpc",
+    "desc": "centrify secure RPC"
+  },
+  {
+    "port": 3119,
+    "name": "d2000kernel",
+    "desc": "D2000 Kernel Port"
+  },
+  {
+    "port": 12006,
+    "name": "dbisamserver2",
+    "desc": "DBISAM Database Server - Admin"
+  },
+  {
+    "port": 8889,
+    "name": "ddi-tcp-2",
+    "desc": "Desktop Data TCP 1"
+  },
+  {
+    "port": 31727,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 5868,
+    "name": "diameters",
+    "desc": "Diameter over TLS/TCP"
+  },
+  {
+    "port": 1974,
+    "name": "drp",
+    "desc": "DRP"
+  },
+  {
+    "port": 22222,
+    "name": "easyengine",
+    "desc": "EasyEngine is CLI tool to manage WordPress Sites on Nginx server"
+  },
+  {
+    "port": 1914,
+    "name": "elm-momentum",
+    "desc": "Elm-Momentum"
+  },
+  {
+    "port": 7080,
+    "name": "empowerid",
+    "desc": "EmpowerID Communication"
+  },
+  {
+    "port": 1805,
+    "name": "enl-name",
+    "desc": "ENL-Name"
+  },
+  {
+    "port": 2968,
+    "name": "enpp",
+    "desc": "ENPP"
+  },
+  {
+    "port": 5151,
+    "name": "esri-sde",
+    "desc": "ESRI SDE Instance"
+  },
+  {
+    "port": 1216,
+    "name": "etebac5",
+    "desc": "ETEBAC 5"
+  },
+  {
+    "port": 1328,
+    "name": "ewall",
+    "desc": "EWALL"
+  },
+  {
+    "port": 2170,
+    "name": "eyetv",
+    "desc": "EyeTV Server Port"
+  },
+  {
+    "port": 3684,
+    "name": "faxstfx-port",
+    "desc": "FAXstfX"
+  },
+  {
+    "port": 5501,
+    "name": "fcp-addr-srvr2",
+    "desc": "fcp-addr-srvr2"
+  },
+  {
+    "port": 6550,
+    "name": "fg-sysupdate",
+    "desc": "fg-sysupdate"
+  },
+  {
+    "port": 1174,
+    "name": "fnet-remote-ui",
+    "desc": "FlashNet Remote Admin"
+  },
+  {
+    "port": 1105,
+    "name": "ftranhc",
+    "desc": "FTRANHC"
+  },
+  {
+    "port": 3050,
+    "name": "gds-db",
+    "desc": "gds_db"
+  },
+  {
+    "port": 3013,
+    "name": "gilatskysurfer",
+    "desc": "Gilat Sky Surfer"
+  },
+  {
+    "port": 6068,
+    "name": "gsmp-ancp",
+    "desc": "GSMP/ANCP"
+  },
+  {
+    "port": 2099,
+    "name": "h2250-annex-g",
+    "desc": "H.225.0 Annex G Signalling"
+  },
+  {
+    "port": 1719,
+    "name": "h323gatestat",
+    "desc": "H.323 Unicast Gatekeeper Signaling"
+  },
+  {
+    "port": 1300,
+    "name": "h323hostcallsc",
+    "desc": "H.323 Secure Call Control Signalling"
+  },
+  {
+    "port": 8293,
+    "name": "hiperscan-id",
+    "desc": "Hiperscan Identification Service"
+  },
+  {
+    "port": 3941,
+    "name": "homeportal-web",
+    "desc": "Home Portal Web Server"
+  },
+  {
+    "port": 1217,
+    "name": "hpss-ndapi",
+    "desc": "HPSS NonDCE Gateway"
+  },
+  {
+    "port": 5223,
+    "name": "hpvirtgrp",
+    "desc": "HP Virtual Machine Group Management"
+  },
+  {
+    "port": 1126,
+    "name": "hpvmmdata",
+    "desc": "HP VMM Agent"
+  },
+  {
+    "port": 3968,
+    "name": "ianywhere-dbns",
+    "desc": "iAnywhere DBNS"
+  },
+  {
+    "port": 2200,
+    "name": "(Unknown)",
+    "desc": "Reserved"
+  },
+  {
+    "port": 3972,
+    "name": "iconp",
+    "desc": "ict-control Protocol"
+  },
+  {
+    "port": 3907,
+    "name": "imoguia-port",
+    "desc": "Imoguia Port"
+  },
+  {
+    "port": 1972,
+    "name": "intersys-cache",
+    "desc": "Cache"
+  },
+  {
+    "port": 1641,
+    "name": "invision",
+    "desc": "InVision"
+  },
+  {
+    "port": 1244,
+    "name": "isbconference1",
+    "desc": "isbconference1"
+  }
+]

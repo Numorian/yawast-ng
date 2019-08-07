@@ -70,6 +70,9 @@ def build_parser():
         "--subdomains", action="store_true", help="Search for Common Subdomains"
     )
     parser_scan.add_argument("--nodns", action="store_true", help="Disable DNS checks")
+    parser_scan.add_argument(
+        "--ports", action="store_true", help="Scan common TCP ports"
+    )
     parser_scan.add_argument("--output", type=str, help="Output JSON file")
     parser_scan.add_argument(
         "--user",

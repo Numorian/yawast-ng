@@ -85,7 +85,11 @@ def scan(session: Session):
     # get files, and add those to the link list
     links += _file_search(session, links)
 
-    _check_password_reset(session)
+    if (
+        session.args.pass_reset_page is not None
+        and len(session.args.pass_reset_page) > 0
+    ):
+        _check_password_reset(session)
 
     with Spinner():
         res = http_basic.check_local_ip_disclosure(session)

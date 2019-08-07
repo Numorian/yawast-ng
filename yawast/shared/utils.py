@@ -178,16 +178,19 @@ def extract_url(url):
     return urlunparse(parsed)
 
 
-def exit_message(message):
+def exit_message(message: str):
     print(message, file=sys.stderr)
     sys.exit(-1)
 
 
-def prompt(msg):
-    _input_lock.acquire()
-    sys.stdin.flush()
-    time.sleep(0.1)
-    ret = input(msg)
-    _input_lock.release()
+def prompt(msg: str) -> str:
+    ret = ""
+
+    if sys.stdout.isatty():
+        _input_lock.acquire()
+        sys.stdin.flush()
+        time.sleep(0.1)
+        ret = input(msg)
+        _input_lock.release()
 
     return ret

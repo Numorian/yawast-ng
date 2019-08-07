@@ -1,4 +1,6 @@
-from typing import List, Union
+from typing import List, Union, Optional
+
+from selenium.common.exceptions import WebDriverException
 
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
@@ -14,11 +16,15 @@ from yawast.scanner.plugins.http import (
     file_search,
     error_checker,
 )
+from yawast.scanner.plugins.http.applications import password_reset
 from yawast.scanner.plugins.http.applications import wordpress
+from yawast.scanner.plugins.http.applications.password_reset import (
+    PasswordResetElementNotFound,
+)
 from yawast.scanner.plugins.http.servers import apache_httpd, apache_tomcat, nginx, iis
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
-from yawast.shared import network, output
+from yawast.shared import network, output, utils
 
 
 def scan(session: Session):
@@ -78,6 +84,8 @@ def scan(session: Session):
 
     # get files, and add those to the link list
     links += _file_search(session, links)
+
+    _check_password_reset(session)
 
     with Spinner():
         res = http_basic.check_local_ip_disclosure(session)
@@ -242,3 +250,40 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
                 output.empty()
 
     return new_files
+
+
+def _check_password_reset(session: Session, element_name: Optional[str] = None):
+    user = session.args.user
+    if user is None:
+        user = utils.prompt("What is a valid user? ")
+
+    try:
+        with Spinner():
+            res = password_reset.check_resp_user_enum(session, user, element_name)
+
+        if len(res) > 0:
+            reporter.display_results(res, "\t")
+    except WebDriverException as e:
+        output.error("Selenium error encountered: " + e.msg)
+    except PasswordResetElementNotFound as e:
+        if element_name is not None:
+            # we failed to find the element, and we had one specified - this isn't going to work
+            output.error(
+                "Unable to find a matching element to perform the User Enumeration via Password Reset: "
+                + str(e)
+            )
+        else:
+            # we failed, because we don't have the element - so we prompt for it.
+            print(
+                "Unable to find a known element to enter the user name. Please identify the proper element."
+            )
+            print(
+                "If this element seems to be common, please request that it be added: https://github.com/adamcaudill/yawast/issues"
+            )
+            name = utils.prompt("What is the user/email entry element name? ")
+
+            _check_password_reset(session, name)
+    except Exception as e:
+        output.error(
+            "Failed to execute Password Reset Page User Enumeration: " + str(e)
+        )

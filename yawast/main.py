@@ -5,6 +5,7 @@ import ssl
 import sys
 import threading
 import time
+import warnings
 from datetime import datetime
 from multiprocessing import current_process, active_children
 from typing import cast
@@ -20,7 +21,7 @@ from yawast.external.get_char import getchar
 from yawast.external.memory_size import Size
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
-from yawast.shared import output, network
+from yawast.shared import output, network, utils
 
 _start_time = datetime.now()
 _monitor = None
@@ -31,6 +32,8 @@ def main():
     global _start_time, _monitor
 
     signal.signal(signal.SIGINT, signal_handler)
+
+    warnings.simplefilter("ignore")
 
     parser = command_line.build_parser()
     args, urls = parser.parse_known_args()
@@ -147,8 +150,8 @@ def _shutdown():
     output.norm(f"Completed (Elapsed: {str(elapsed)} - Peak Memory: {mem_res})")
 
     if reporter.get_output_file() != "":
-        with Spinner():
-            reporter.save_output()
+        with Spinner() as spinner:
+            reporter.save_output(spinner)
 
 
 def _get_locale() -> str:
@@ -231,7 +234,8 @@ class _KeyMonitor:
         if sys.stdout.isatty():
             while self.busy:
                 try:
-                    key = getchar()
+                    with utils._input_lock:
+                        key = getchar()
 
                     if key != "":
                         output.debug(f"Received from keyboard: {key}")
@@ -253,6 +257,8 @@ class _KeyMonitor:
     def __enter__(self):
         self.busy = True
         threading.Thread(target=self.wait_task).start()
+
+        return self
 
     def __exit__(self, exception, value, tb):
         self.busy = False

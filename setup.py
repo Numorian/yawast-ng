@@ -116,6 +116,7 @@ setup(
         "psutil",
         "pipenv",
         "requests-mock",
+        "selenium",
     ],
     include_package_data=True,
     package_data={"yawast": ["resources/*"]},

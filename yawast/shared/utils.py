@@ -1,6 +1,8 @@
 import ipaddress
 import re
 import sys
+import threading
+import time
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
@@ -9,7 +11,7 @@ from validator_collection import checkers
 from yawast.shared import output
 from yawast.shared.exec_timer import ExecutionTimer
 
-
+_input_lock = threading.Lock()
 _ansi_strip = re.compile(r"\x1B\[[0-?]*[ -/]*[@-~]")
 
 
@@ -179,3 +181,13 @@ def extract_url(url):
 def exit_message(message):
     print(message, file=sys.stderr)
     sys.exit(-1)
+
+
+def prompt(msg):
+    _input_lock.acquire()
+    sys.stdin.flush()
+    time.sleep(0.1)
+    ret = input(msg)
+    _input_lock.release()
+
+    return ret

@@ -202,6 +202,12 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     HTTP_OPTIONS_PUBLIC = VulnerabilityInfo.create(
         "Http_Option_Public", Severity.INFO, ""
     )
+    HTTP_USER_ENUMERATION = VulnerabilityInfo.create(
+        "Http_User_Enum_Responses", Severity.MEDIUM, ""
+    )
+    HTTP_USER_ENUMERATION_TIMING = VulnerabilityInfo.create(
+        "Http_User_Enum_Timing", Severity.MEDIUM, ""
+    )
 
     TLS_CBC_CIPHER_SUITE = VulnerabilityInfo.create(
         "Tls_CBC_Cipher_Suite", Severity.BEST_PRACTICE, ""

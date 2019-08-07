@@ -10,7 +10,12 @@ def getchar():
             # for Windows-based systems
             import msvcrt  # If successful, we are on Windows
 
-            getchar._func = msvcrt.getch
+            def _winread():
+                if msvcrt.kbhit():
+                    return chr(msvcrt.getch()[0])
+                return ""
+
+            getchar._func = _winread
 
         except ImportError:
             # for POSIX-based systems (with termios & tty support)

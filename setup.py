@@ -17,10 +17,6 @@ else:
 # I'm not sure about the *version.py files, but this hack works.
 build_exe_options = {
     "packages": ["os", "dns"],
-    "include_files": [
-        "yawast\_static_version.py",
-        ("yawast\_version.py", "lib/validator_collection/_version.py"),
-    ],
     "includes": [
         "six",
         "appdirs",

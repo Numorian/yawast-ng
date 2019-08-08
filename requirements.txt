@@ -20,7 +20,7 @@ psutil==5.6.3
 publicsuffixlist==0.6.9
 pycparser==2.19
 pyparsing==2.4.1.1
-pyrsistent==0.15.3
+pyrsistent==0.15.4
 requests==2.22.0
 requests-mock==1.6.0
 selenium==3.141.0

@@ -205,30 +205,33 @@ cmdclass = dict(sdist=_sdist, build_py=_build_py)
 # Hacks to deal with the Windows build
 try:
     from cx_Freeze.dist import build_exe as _build_exe
+
     class cmd_build_exe(_build_exe):
         def run(self):
-			# Start by running the normal stuff
+            # Start by running the normal stuff
             _build_exe.run(self)
-			
-			# Now overwrite the static version file with our actual version
-            _write_version(os.path.join(self.build_exe, STATIC_VERSION_FILE))
-			
-			# The validator_collection library incorrectly accesses its own _version.py file (using __file__, which is not cx_Freeze compatible)
 
-			# Delete any existing _version.py file for the validator_collection library
-            destination = os.path.join(self.build_exe, "lib", "validator_collection", "_version.py")
+            # Now overwrite the static version file with our actual version
+            _write_version(os.path.join(self.build_exe, STATIC_VERSION_FILE))
+
+            # The validator_collection library incorrectly accesses its
+            #  own _version.py file (using __file__, which is not cx_Freeze compatible)
+
+            # Delete any existing _version.py file for the validator_collection library
+            destination = os.path.join(
+                self.build_exe, "lib", "validator_collection", "_version.py"
+            )
             try:
                 os.remove(destination)
-            except:
+            except Exception:
                 pass
 
-			# Create a dummy _version.py file (which is actually our own version number, not validator_collection's -- doesn't matter)
+            # Create a dummy _version.py file (which is actually our own
+            #  version number, not validator_collection's -- doesn't matter)
             with open(destination, "w") as f:
-                    f.write(
-                        "__version__ = '{}'\n".format(__version__)
-                    )
+                f.write("__version__ = '{}'\n".format(__version__))
 
-	# Add this derived class to cmdclass
+    # Add this derived class to cmdclass
     cmdclass["build_exe"] = cmd_build_exe
-except:
+except Exception:
     pass

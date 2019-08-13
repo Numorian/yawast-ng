@@ -7,6 +7,7 @@ verify_ssl = true
 mypy = "*"
 coverage = "*"
 cx_Freeze = "*"
+wheel = "*"
 
 [packages]
 yawast = {editable = true,path = "."}

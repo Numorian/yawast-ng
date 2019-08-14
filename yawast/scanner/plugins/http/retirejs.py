@@ -1,3 +1,7 @@
+#  Copyright (c) 2013 - 2019 Adam Caudill and Contributors.
+#  This file is part of YAWAST which is released under the MIT license.
+#  See the LICENSE file or go to https://yawast.org/license/ for full license details.
+
 import json
 from typing import List, Dict, Tuple, Any, Union
 from urllib.parse import urljoin, urlparse

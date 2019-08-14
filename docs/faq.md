@@ -26,6 +26,12 @@ When this project was started, the original name was "Yet Another Web Applicatio
 
 In the unlikely event that you see traffic originating from `yawast.dev`, that is a server used by the YAWAST core contributors for testing the application. If you see traffic from this server, it is likely in response to a bug report.
 
+### Why did YAWAST change from Ruby to Python?
+
+YAWAST was started in 2013, and at the time Ruby was a preferred language in the security community, at least in part due to Metasploit Framework being written in Ruby. Fast forward six years, and Ruby has fallen out of favor in the community. In a poll of those in the community that are likely to contribute to a project like YAWAST, we found that the vast majority where more likely to contribute if the application was written in Python; in fact, Ruby scored as the language least likely to lead people to contribute.
+
+Based on the popularity of Python and the poll indicating that being written in Python would make contributions more likely, the decision was made to completely rewrite YAWAST. With the rewrite, we believe that it will lead to more participation, and provide a healthier future for the project.
+
 ### Does YAWAST receive financial support?
 
 No. While the core contributors employer has allowed some time to be used to improve YAWAST, YAWAST does not receive financial support from any company or from donations. The majority of work on YAWAST is performed on personal time, and all expenses are covered by the core contributors personally.

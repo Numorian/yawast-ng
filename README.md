@@ -1,6 +1,6 @@
 ## YAWAST [![Build Status](https://travis-ci.org/adamcaudill/yawast.svg?branch=master)](https://travis-ci.org/adamcaudill/yawast) [![Code Climate](https://codeclimate.com/github/adamcaudill/yawast/badges/gpa.svg)](https://codeclimate.com/github/adamcaudill/yawast) [![PyPI version](https://badge.fury.io/py/yawast.svg)](https://badge.fury.io/py/yawast) [![Docker Pulls](https://img.shields.io/docker/pulls/adamcaudill/yawast.svg)](https://hub.docker.com/r/adamcaudill/yawast/) [![Twitter Follow](https://img.shields.io/twitter/follow/adamcaudill.svg?style=social)](https://twitter.com/intent/user?screen_name=adamcaudill)
 
-![YAWAST](yawast_logo_v1.svg)
+![YAWAST](https://github.com/adamcaudill/yawast/raw/master/yawast_logo_v1.svg?sanitize=true)
 
 **The YAWAST Antecedent Web Application Security Toolkit**
 
@@ -34,9 +34,11 @@ The most common usage scenario is as simple as:
 
 Detailed [usage information](https://yawast.org/usage/) is available on the YAWAST web site.
 
-### Sample
+### Contributing
 
-Sample output for a [scan](https://yawast.org/sample/) and [TLS-specific](https://yawast.org/tls/) checks are on the YAWAST web site.
+Contributions, in the form of feature requests and pull requests are both welcome and encouraged. YAWAST will only evolve if users are willing and able to give back, and work too make YAWAST better for everyone.
+
+Information on development standards, and guidelines for issues are available in our [CONTRIBUTING](https://github.com/adamcaudill/yawast/blob/master/CONTRIBUTING.md) document.
 
 ### Special Thanks
 

@@ -30,7 +30,7 @@ As a Python package: `pip3 install yawast` (YAWAST requires Python 3.7)
 
 `docker pull adamcaudill/yawast`
 
-It's strongly recommended that you review the [installation](/installation/) documentation, to make sure you have the proper dependencies.
+It's strongly recommended that you review the [installation](/installation/) page, to ensure you have the proper dependencies.
 
 ## Documentation
 
@@ -42,6 +42,7 @@ Details about YAWAST and how to use it can be found below:
   * [OpenSSL & 3DES Compatibility](/openssl/)
 * [Sample Output](/sample/)
 * [FAQ](/faq/)
+* [Change Log](https://github.com/adamcaudill/yawast/blob/master/CHANGELOG.md)
 
 ## Recent Blog Posts
 

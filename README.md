@@ -36,6 +36,12 @@ Detailed [usage information](https://yawast.org/usage/) is available on the YAWA
 
 ### Contributing
 
+1. Fork it (https://github.com/adamcaudill/yawast/fork)
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
 Contributions, in the form of feature requests and pull requests are both welcome and encouraged. YAWAST will only evolve if users are willing and able to give back, and work too make YAWAST better for everyone.
 
 Information on development standards, and guidelines for issues are available in our [CONTRIBUTING](https://github.com/adamcaudill/yawast/blob/master/CONTRIBUTING.md) document.

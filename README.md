@@ -42,6 +42,8 @@ Detailed [usage information](https://yawast.org/usage/) is available on the YAWA
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
+Issues that are labeled as [beginner](https://github.com/adamcaudill/yawast/issues?q=is%3Aopen+is%3Aissue+label%3Abeginner) are great starting points for new contributors. These are less complex issues that will help make you familiar with working on YAWAST.
+
 Contributions, in the form of feature requests and pull requests are both welcome and encouraged. YAWAST will only evolve if users are willing and able to give back, and work too make YAWAST better for everyone.
 
 Information on development standards, and guidelines for issues are available in our [CONTRIBUTING](https://github.com/adamcaudill/yawast/blob/master/CONTRIBUTING.md) document.

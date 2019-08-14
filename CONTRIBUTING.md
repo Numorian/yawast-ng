@@ -80,6 +80,9 @@ Important Labels:
 * bug - This is for a flaw in the YAWAST code, or a dependency issue that YAWAST needs to work around.
 * enhancement - These are requests or suggestions for new or improved features. These will be considered for a future version, and will be addressed as time allows.
 * help wanted - These are issues that are not currently being worked on, and are available for anyone that would like to help. If there's an issue with this status that you would like to work on, just reply and let us know. We will update the status of the issue so we don't run into duplicated effort.
+* beginner - These are issues that are less complex, and great for becoming familiar with working on YAWAST.
+* blocked - These are issues that are blocked by some other issue, and can't be addressed until the other is handled.
+* blocker - These are issues that are preventing others from being addressed.
 
 #### Milestones
 

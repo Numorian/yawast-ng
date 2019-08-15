@@ -37,15 +37,14 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     warnings.simplefilter("ignore")
-    
+
     try:
-        if sys.stdout.encoding != 'utf-8':
+        if str(sys.stdout.encoding).lower() != "utf-8":
             print(f"Output encoding is {sys.stdout.encoding}: changing to UTF-8")
-        sys.stdout.reconfigure(encoding='utf-8')
+
+            sys.stdout.reconfigure(encoding="utf-8")
     except Exception as error:
-        print(
-            f"Unable to set UTF-8 encoding: {str(error)}"
-        )
+        print(f"Unable to set UTF-8 encoding: {str(error)}")
 
     parser = command_line.build_parser()
     args, urls = parser.parse_known_args()

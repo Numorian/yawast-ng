@@ -6,7 +6,7 @@ permalink: /installation/
 
 ### Installing
 
-The simplest method on most platforms is to install is to use the Pip installer (for Windows, see below):
+The simplest installation method on most platforms is to use the Pip installer (for Windows, see below):
 
 `pip3 install yawast`
 
@@ -24,7 +24,7 @@ YAWAST can be run inside a docker container.
 docker pull adamcaudill/yawast && docker run --rm -it adamcaudill/yawast scan <url> ...
 ```
 
-If you would like to capture the JSON output via the `--output=` option, you will need to use a slightly different command. The following example is for macOS, Linux, etc., for Windows, you will need to modify the command. The following mounts the current directory to the Docker image, so that it can write the JSON file: 
+If you would like to capture the JSON output via the `--output=` option, you will need to use a slightly different command. The following example is for macOS, Linux, etc.; for Windows, you will need to modify the command. The following mounts the current directory to the Docker image, so that it can write the JSON file: 
 
 ```
 $ docker pull adamcaudill/yawast && docker run -v `pwd`/:/data/output/ --rm -it adamcaudill/yawast scan <url> --output=./output/
@@ -59,9 +59,13 @@ pip3 install yawast
 
 #### Windows
 
-There are two ways to use YAWAST on Windows, the easiest is to use the compiled EXE available on the [releases](https://github.com/adamcaudill/yawast/releases) page. This allows you to avoid installing Python and dealing with dependencies.
+There are two ways to use YAWAST on Windows; the easiest is to use the compiled EXE available on the [releases](https://github.com/adamcaudill/yawast/releases) page. This allows you to avoid installing Python and dealing with dependencies.
 
-The other option is to install Python and use Pip; this option is somewhat complex on Windows due to the fact that some of the dependencies will need to be compiled. Due to these complexities, we generally recommend using the compiled version.
+The other option is to install Python 3.x 64-bit and use Pip via:
+
+```
+pip install yawast
+```
 
 ### Enhanced Vulnerability Scanner
 
@@ -81,7 +85,7 @@ brew cask install chromedriver
 
 #### Linux
 
-ChromeDriver for Linux can be install using the following commands; please make sure that you are using the latest stable release from the [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) web site.
+ChromeDriver for Linux can be installed using the following commands; please make sure that you are using the latest stable release from the [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/) web site.
 
 ```
 wget https://chromedriver.storage.googleapis.com/73.0.3683.68/chromedriver_linux64.zip
@@ -98,3 +102,5 @@ You can easily install ChromeDriver on Windows via a package manager such as [Ch
 ```
 choco install chromedriver
 ```
+
+Alternatively, you can download the appropriate ChromeDriver executable and place it in a predictable directory, then update your PATH environment variable to include that directory.

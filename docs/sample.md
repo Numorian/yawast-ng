@@ -4,7 +4,7 @@ title: Sample Output
 permalink: /sample/
 ---
 
-Below is an example of the output from a typical `scan` with YAWAST - using `scan` - the normal go-to option, here's what you get when scanning my website:
+Below is an example of the output from a typical `scan` with YAWAST - using `scan` - the normal go-to option. Here's what you get when scanning my website:
 
 ```
 $ yawast scan https://adamcaudill.com --tdessessioncount --dir --files --srv --subdomains

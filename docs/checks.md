@@ -4,6 +4,8 @@ title: Checks Performed
 permalink: /checks/
 ---
 
+### Checks Performed
+
 The following checks are performed:
 
 * *(Generic)* User Enumeration via Password Reset Form Response Differences

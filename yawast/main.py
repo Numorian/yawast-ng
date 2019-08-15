@@ -38,6 +38,14 @@ def main():
 
     warnings.simplefilter("ignore")
 
+    try:
+        if str(sys.stdout.encoding).lower() != "utf-8":
+            print(f"Output encoding is {sys.stdout.encoding}: changing to UTF-8")
+
+            sys.stdout.reconfigure(encoding="utf-8")
+    except Exception as error:
+        print(f"Unable to set UTF-8 encoding: {str(error)}")
+
     parser = command_line.build_parser()
     args, urls = parser.parse_known_args()
 
@@ -104,7 +112,7 @@ def print_header():
         f" Python {''.join(sys.version.splitlines())} ({platform.python_implementation()})"
     )
     print(f" {ssl.OPENSSL_VERSION}")
-    print(f" Platform: {platform.platform()} ({_get_locale()})")
+    print(f" Platform: {platform.platform()} ({_get_locale()} / {sys.stdout.encoding})")
     print(
         f" CPU(s): {psutil.cpu_count()}@{cpu_max}MHz - RAM: {mem_total} ({mem_avail} Available)"
     )
@@ -162,7 +170,6 @@ def _get_locale() -> str:
     try:
         locale.setlocale(locale.LC_ALL, "")
         lcl = locale.getdefaultlocale()
-
     except Exception as error:
         print(
             f"Unable to get Locale: {str(error)} - attempting to force locale to en_US.utf8"

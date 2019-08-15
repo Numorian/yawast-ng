@@ -14,11 +14,7 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1><a href="{{ "/" | absolute_url }}">YAWAST</a></h1>
-
-        {% if site.logo %}
-          <img src="{{site.logo | relative_url}}" alt="Logo" width="270px" />
-        {% endif %}
+        <h1><a href="{{ "/" | absolute_url }}"><img src="{{site.logo | relative_url}}" alt="YAWAST" width="270px" /></a></h1>
 
         <p>{{ site.description | default: site.github.project_tagline }}</p>
 

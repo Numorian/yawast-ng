@@ -12,7 +12,7 @@ YAWAST uses the following commands to perform different functions:
 * `dns` - Provides information on the target's DNS environment, with options to search for subdomains and SRV records.
 * `ssl` - Performs a scan of the target's TLS / SSL configuration, using either SSL Labs or sslyze (bundled).
 
-For detailed information, just call `yawast -h` to see the help page. To see information for a specific command, call `yawast <command> -h` for full details. 
+For detailed information, just enter `yawast -h` to see the help information. To see information for a specific command, use `yawast <command> -h` for full details. 
 
 #### Scan Command
 
@@ -53,7 +53,7 @@ optional arguments:
 
 ### Using with Zap / Burp Suite
 
-By default, Burp Suite's proxy listens on localhost at port 8080, to use YAWAST with Burp Suite (or any proxy for that matter), just add this to the command line:
+By default, Burp Suite's proxy listens on localhost at port 8080. To use YAWAST with Burp Suite (or any proxy for that matter), just add this to the command line:
 
 `--proxy 'localhost:8080'`
 
@@ -63,13 +63,13 @@ For authenticated testing, YAWAST allows you to specify a cookie to be passed vi
 
 `--cookie='SESSIONID=1234567890'`
 
-### About The Output
+### About the Output
 
-You'll notice that most lines begin with a letter in a bracket, this is to tell you how to interpret the result at a glance. There are four possible values:
+You'll notice that most lines begin with a letter in a bracket; this is to tell you how to interpret the result at a glance. There are four possible values:
 
 * `[Info]` - This indicates that the line is informational, and doesn't necessarily indicate a security issue.
 * `[Warn]` - This is a Warning, which means that it could be an issue, or could expose useful information. These need to be evaluated on a case-by-case basis to determine the impact.
-* `[Vuln]` - This is a Vulnerability, it indicates an issue that is known to be an issue, and needs to be addressed.
-* `[Error]` - This indicates that an error occurred, sometimes these are serious and indicate an issue with your environment, the target server, or the application. In other cases, they may just be informational to let you know that something didn't go as planned.
+* `[Vuln]` - This is a Vulnerability, indicating something that is known to be an issue, and needs to be addressed.
+* `[Error]` - This indicates that an error occurred; sometimes these are serious and indicate an issue with your environment, the target server, or the application. In other cases, they may just be informational to let you know that something didn't go as planned.
 
-The indicator used may change over time based on new research or better detection techniques. In all cases, results should be carefully evaluated within the context of the application, how it's used, and what threats apply. The indicator is guidance, a hint if you will, it's up to you to determine the real impact.
+The indicator used may change over time based on new research or better detection techniques. In all cases, results should be carefully evaluated within the context of the application, how it's used, and what threats apply. The indicator is guidance -- a hint, if you will -- and it's up to you to determine the real impact.

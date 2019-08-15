@@ -10,7 +10,7 @@ YAWAST is an application meant to simplify initial analysis and information gath
 * Common Vulnerabilities
 * Missing Security Headers
 
-This is meant to provide a easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests. It is especially useful when used in conjunction with Burp Suite (via the `--proxy` parameter).
+This is meant to provide an easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests. It is especially useful when used in conjunction with Burp Suite (via the `--proxy` parameter).
 
 ## Getting Started
 
@@ -30,7 +30,7 @@ As a Python package: `pip3 install yawast` (YAWAST requires Python 3.7)
 
 `docker pull adamcaudill/yawast`
 
-It's strongly recommended that you review the [installation](/installation/) page, to ensure you have the proper dependencies.
+It's strongly recommended that you review the [installation](/installation/) page to ensure you have the proper dependencies.
 
 ## Documentation
 

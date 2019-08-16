@@ -37,7 +37,7 @@ Detailed [usage information](https://yawast.org/usage/) is available on the YAWA
 ### Contributing
 
 1. Fork it (https://github.com/adamcaudill/yawast/fork)
-2. Create your feature branch (`git checkout -b my-new-feature`)
+2. Create your feature branch (`git checkout -b my-new-feature origin/develop`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request

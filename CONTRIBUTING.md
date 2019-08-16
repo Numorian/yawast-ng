@@ -25,6 +25,15 @@ Here are some key points to keep in mind when it comes to contributing code. If 
 * Care should be taken to avoid violating the plugins abstraction layer - plugins should not directly interact with a UI of any type.
 * You should include a change to the [CONTRIBUTORS.md](https://github.com/adamcaudill/yawast/blob/master/CONTRIBUTORS.md) file to add your name.
 
+#### Git Branches
+
+YAWAST uses two main branches, `master` and `develop`, which are defined as follows:
+
+* `develop` - This is where the bulk of the work goes on. Changes are made to this branch via Pull Requests. When a change is deemed as production ready, a pull request is made to add the code to `master`.
+* `master` - This is where releases are built, and the source for our Docker image (which is updated with every commit). Code in this branch MUST never be broken. Do not open a Pull Request against `master`, all Pull Requests must be against `develop`.
+
+To ensure that `master` remains usable, we use a simplified form of [gitflow](https://nvie.com/posts/a-successful-git-branching-model/).
+
 #### New Dependencies
 
 All dependencies must be released under an OSI approved license. Any change that adds code without an [OSI approved](https://opensource.org/licenses/alphabetical) license (except for code explicit placed into the public domain) will be rejected.

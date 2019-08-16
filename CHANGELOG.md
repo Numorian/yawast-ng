@@ -1,4 +1,4 @@
-## 0.8.2 - In Development
+## 0.8.2 - 2019-08-16
 
 * [#229](https://github.com/adamcaudill/yawast/issues/229) - Bug: No attribute 'is_absolute' on DNS information collection
 

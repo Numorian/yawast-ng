@@ -28,14 +28,14 @@ $ yawast scan https://adamcaudill.com
    |`-' /     ...where a pentest starts
     '..'
 
-The YAWAST Antecedent Web Application Security Toolkit (v0.8.0b6.dev24+g586a677.dirty)
+The YAWAST Antecedent Web Application Security Toolkit (v0.8.2)
  Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com> and Contributors
  Support & Documentation: https://yawast.org
  Python 3.7.3 (default, May 18 2019, 17:17:19) [Clang 10.0.1 (clang-1001.0.46.4)] (CPython)
  OpenSSL 1.0.2r  26 Feb 2019
  Platform: Darwin-18.6.0-x86_64-i386-64bit (en_US.UTF-8 / UTF-8)
  CPU(s): 8@2900MHz - RAM: 16.00GB (5.99GB Available)
- Supported Version: 0.8.0b6 - You are on a pre-release version. Take care.
+ Supported Version: 0.8.2 - You are on a pre-release version. Take care.
 
  Started at 2019-08-15 17:33:40 EDT (-0400)
 

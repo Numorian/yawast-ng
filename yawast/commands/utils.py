@@ -14,7 +14,7 @@ def check_redirect(session: Session):
         try:
             # check for TLS redirect
             tls_redirect = network.check_ssl_redirect(session.url)
-            if tls_redirect != session.url:
+            if tls_redirect is not None and tls_redirect != session.url:
                 print(f"Server redirects to TLS: Scanning: {tls_redirect}")
 
                 session.update_url(tls_redirect)

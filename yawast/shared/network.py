@@ -296,10 +296,10 @@ def check_ssl_redirect(url):
                 parsed = parsed._replace(scheme=parsed_location.scheme)
 
                 return urlunparse(parsed)
-        except ValueError:
+        except Exception:
             return url
-    else:
-        return url
+
+    return url
 
 
 def check_www_redirect(url):

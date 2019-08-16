@@ -21,22 +21,36 @@ Here are some key points to keep in mind when it comes to contributing code. If 
 * All changes must work properly on the latest version of macOS, Windows, and Kali Linux. New *features* that only work on one platform will not be considered; however, fixes or improvements that are platform specific are fine.
 * Code is formatted using [Black](https://github.com/psf/black); while not required, we do request that you format the code with Black before opening your pull request.
 * The use of [pipenv](https://docs.pipenv.org/en/latest/) to build and maintain a clean environment is strongly recommended.
-* The core contributors use [PyCharm](https://www.jetbrains.com/pycharm/) as our IDE of choice, it's the best option we have found for working with this code.
+* The core contributors use [PyCharm](https://www.jetbrains.com/pycharm/) as our IDE of choice; it's the best option we have found for working with this code.
 * Care should be taken to avoid violating the plugins abstraction layer - plugins should not directly interact with a UI of any type.
 * You should include a change to the [CONTRIBUTORS.md](https://github.com/adamcaudill/yawast/blob/master/CONTRIBUTORS.md) file to add your name.
+
+### Building Windows Executable
+
+In order to build an executable version on Windows, first ensure you have installed cx_Freeze 6.x+. As of this writing, you can do this via:
+
+```
+pip install --upgrade git+https://github.com/anthony-tuininga/cx_Freeze.git@master
+```
+
+You can then build the executable with:
+
+```
+python setup.py build_exe
+```
 
 #### Git Branches
 
 YAWAST uses two main branches, `master` and `develop`, which are defined as follows:
 
 * `develop` - This is where the bulk of the work goes on. Changes are made to this branch via Pull Requests. When a change is deemed as production ready, a pull request is made to add the code to `master`.
-* `master` - This is where releases are built, and the source for our Docker image (which is updated with every commit). Code in this branch MUST never be broken. Do not open a Pull Request against `master`, all Pull Requests must be against `develop`.
+* `master` - This is where releases are built, and the source for our Docker image (which is updated with every commit). Code in this branch MUST never be broken. Do not open a Pull Request against `master`; all Pull Requests must be against `develop`.
 
 To ensure that `master` remains usable, we use a simplified form of [gitflow](https://nvie.com/posts/a-successful-git-branching-model/).
 
 #### New Dependencies
 
-All dependencies must be released under an OSI approved license. Any change that adds code without an [OSI approved](https://opensource.org/licenses/alphabetical) license (except for code explicit placed into the public domain) will be rejected.
+All dependencies must be released under an OSI approved license. Any change that adds code without an [OSI approved](https://opensource.org/licenses/alphabetical) license (except for code explicitly placed into the public domain) will be rejected.
 
 Due to the cross platform nature of YAWAST, adding a new dependency can present unexpected complications. This is especially true for Windows, as we release an EXE build of YAWAST, and not all Python libraries handle that well. While not automatically rejected, please understand that this leads to additional testing and work by the core contributors.
 
@@ -54,7 +68,7 @@ Please note that the core contributors have final authority over the blog and ma
 
 #### Copyright
 
-It is not required you to assign the copyright of your contributions; you retain the copyright. However, it is required that you make your contributions available under the MIT license in order for it be included.
+It is not required of you to assign the copyright of your contributions; you retain the copyright. However, it is required that you make your contributions available under the MIT license in order for it be included.
 
 All Python files (except those in the `yawast\external` directory) should include the following header:
 
@@ -66,7 +80,7 @@ All Python files (except those in the `yawast\external` directory) should includ
 
 ### Opening Issues
 
-Here is a high-level guide to opening issues, to save everyone time and make the process as effective as possible. Github issues are used to manage the project, from discussing changes to maintaining a list of planned and desired work. In general, issues are what drives everything.
+Here is a high-level guide to opening issues, to save everyone time and make the process as effective as possible. Github issues are used to manage the project, from discussing changes to maintaining a list of planned and desired work. In general, issues are what drive everything.
 
 #### Feature Requests
 
@@ -101,9 +115,9 @@ If an issue will be addressed with a code change, it will be assigned to a miles
 * Next Version
 * Future (no specific version)
 
-Assigning an issue to a milestone is an indication that we would like to address it, and an indication of when we think it might happen - but it is not a commitment. As this project is ran on a volunteer basis, there may or may not be time to complete the work planned during a release window. As such, an issue may be moved (more than once) to the next version's milestone.
+Assigning an issue to a milestone is an indication that we would like to address it, and an indication of when we think it might happen - but it is not a commitment. As this project is run on a volunteer basis, there may or may not be time to complete the work planned during a release window. As such, an issue may be moved (more than once) to the next version's milestone.
 
-If you would like to see an issue addressed more quickly, feel free to open a pull request that addresses it - this is the fastest way for something to dealt with.
+If you would like to see an issue addressed more quickly, feel free to open a pull request that addresses it - this is the fastest way for something to be dealt with.
 
 ### Releases & Versions
 
@@ -113,7 +127,7 @@ YAWAST uses the following versioning scheme:
 
 For example, a version of `0.8.2` means that it is the 2nd bug release of the 8th major release. The leading digit is currently fixed at `0` and will remain fixed for the foreseeable future. 
 
-The planned release cycle is to release a major version (i.e. `0.8.2` to `0.9.0`) at the last day of each month. While this is the current planned release cycle, it depends on completion of any large changes and the time available by the core contributors. Release of a minor version (i.e. `0.8.2` to `0.8.3`) will contain all new features and changes up to that point in time (it will not be limited to only including the bug fix), as such, a minor release may reset the schedule for the next major release, pushing it to the end of the next month.
+The planned release cycle is to release a major version (i.e. `0.8.2` to `0.9.0`) at the last day of each month. While this is the current planned release cycle, it depends on completion of any large changes and the time available by the core contributors. Release of a minor version (i.e. `0.8.2` to `0.8.3`) will contain all new features and changes up to that point in time (it will not be limited to only including the bug fix); as such, a minor release may reset the schedule for the next major release, pushing it to the end of the next month.
 
 Breaking interface changes will be avoided as much as possible, though if necessary, will only occur with a major version change (i.e. `0.8.0` to `0.9.0`).
 

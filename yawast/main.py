@@ -106,7 +106,9 @@ def print_header():
     print(r"    '..'                                   ")
     print()
     print(f"The YAWAST Antecedent Web Application Security Toolkit (v{get_version()})")
-    print(" Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com>")
+    print(
+        " Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com> and Contributors"
+    )
     print(" Support & Documentation: https://yawast.org")
     print(
         f" Python {''.join(sys.version.splitlines())} ({platform.python_implementation()})"

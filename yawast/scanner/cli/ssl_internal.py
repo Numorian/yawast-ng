@@ -300,6 +300,10 @@ def scan(session: Session):
 
             output.error(f"\tConnection failed ({str(error)})")
             output.empty()
+        except Exception as error:
+            output.debug_exception()
+
+            output.error(f"Error performing TLS scan: #{str(error)}")
 
 
 def _get_leaf_cert_info(cert: x509.Certificate):

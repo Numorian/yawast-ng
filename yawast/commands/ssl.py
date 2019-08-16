@@ -37,8 +37,11 @@ def start(session: Session):
             or utils.is_ip(session.domain)
             or utils.get_port(session.url) != 443
         ):
-            # use internal scanner
-            ssl_internal.scan(session)
+            # use SSLyze
+            try:
+                ssl_internal.scan(session)
+            except Exception as error:
+                output.error(f"Error running scan with SSLyze: {str(error)}")
         else:
             try:
                 ssl_labs.scan(session)
@@ -48,7 +51,10 @@ def start(session: Session):
                 output.error(f"Error running scan with SSL Labs: {str(error)}")
                 output.norm("Switching to internal SSL scanner...")
 
-                ssl_internal.scan(session)
+                try:
+                    ssl_internal.scan(session)
+                except Exception as error:
+                    output.error(f"Error running scan with SSLyze: {str(error)}")
 
         if session.args.tdessessioncount:
             ssl_sweet32.scan(session)

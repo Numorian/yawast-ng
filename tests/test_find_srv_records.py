@@ -2,9 +2,10 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
-from unittest import TestCase
-from yawast.scanner.plugins.dns import srv
 import os
+from unittest import TestCase
+
+from yawast.scanner.plugins.dns import srv
 
 
 class TestFindSrvRecords(TestCase):

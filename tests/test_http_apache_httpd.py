@@ -3,6 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from unittest import TestCase
+
 from yawast.scanner.plugins.http.servers import apache_httpd
 
 

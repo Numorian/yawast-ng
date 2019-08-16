@@ -3,6 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from unittest import TestCase
+
 from yawast.scanner.plugins.ssl import cert_info
 from yawast.scanner.plugins.ssl.cert_info import _get_ct_log_data
 

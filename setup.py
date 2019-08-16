@@ -3,8 +3,9 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 import sys
-from setuptools import find_packages
 from os import path
+
+from setuptools import find_packages
 
 if "build_exe" in sys.argv:
     from cx_Freeze import setup, Executable

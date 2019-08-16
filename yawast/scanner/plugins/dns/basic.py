@@ -3,6 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from dns import resolver, exception, reversename
+
 from yawast.shared import output
 
 

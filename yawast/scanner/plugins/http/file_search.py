@@ -6,7 +6,7 @@ import os
 import time
 from multiprocessing import Manager, active_children
 from multiprocessing.dummy import Pool
-from typing import List, Optional, Tuple, Any
+from typing import List, Optional, Tuple
 from urllib.parse import urljoin
 
 import pkg_resources

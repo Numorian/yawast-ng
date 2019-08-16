@@ -4,8 +4,8 @@
 
 import base64
 import typing
+from typing import List, Dict
 
-from typing import List, Dict, Any
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes

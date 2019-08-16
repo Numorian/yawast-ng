@@ -3,7 +3,6 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 import typing
-from argparse import Namespace
 from typing import List
 
 from cryptography import x509

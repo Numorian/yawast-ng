@@ -3,7 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 import copy
-from typing import Union, Dict, List, Tuple
+from typing import Union, Dict, List
 
 from dns import resolver, exception
 from dns.resolver import Resolver

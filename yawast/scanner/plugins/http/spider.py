@@ -5,7 +5,7 @@
 import time
 from multiprocessing import Manager, Lock
 from multiprocessing.dummy import Pool
-from typing import List, Tuple, Any
+from typing import List, Tuple
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup

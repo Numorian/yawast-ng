@@ -4,7 +4,6 @@
 
 import ipaddress
 import socket
-from argparse import Namespace
 from typing import Tuple
 
 from publicsuffixlist import PublicSuffixList

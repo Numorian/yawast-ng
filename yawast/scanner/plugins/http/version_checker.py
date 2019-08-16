@@ -2,9 +2,11 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
-from yawast.shared import network, output
-from packaging import version
 from typing import Union, Dict
+
+from packaging import version
+
+from yawast.shared import network, output
 
 _versions: Union[Dict[str, Dict[str, str]], None] = {}
 

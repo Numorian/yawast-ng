@@ -4,6 +4,7 @@
 
 import pkg_resources
 from dns import resolver, exception
+
 from yawast.shared import output
 
 

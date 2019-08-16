@@ -3,8 +3,9 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from unittest import TestCase
-from yawast import command_line
+
 from tests import utils
+from yawast import command_line
 
 
 class TestBuildParser(TestCase):

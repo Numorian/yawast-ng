@@ -8,8 +8,6 @@ from typing import NamedTuple
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
-from yawast.shared import output
-
 
 class Severity(str, Enum):
     CRITICAL = "critical"

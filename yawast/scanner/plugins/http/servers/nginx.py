@@ -2,13 +2,13 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
-from typing import List, cast, Any
+from typing import List, cast
 from urllib.parse import urljoin
 
 from packaging import version
 
-from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network
 

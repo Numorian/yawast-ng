@@ -6,10 +6,10 @@ import argparse
 import sys
 from typing import List
 
-from yawast.scanner.session import Session
-from yawast.shared import utils
 from yawast.commands import scan, dns, ssl
 from yawast.reporting import reporter
+from yawast.scanner.session import Session
+from yawast.shared import utils
 
 
 def build_parser():

@@ -5,7 +5,12 @@ date:   2019-08-16 12:52:00 -0400
 author: 'Brandon Wilson'
 ---
 
-YAWAST version 0.8 has been released; months of work has gone into this release and has required a substantial investment of time and effort. The new version of YAWAST is a complete re-write of the application – everything has been rebuilt. This version includes a number of improvements and quite a few new checks. Here is a brief overview of the changes:
+YAWAST version 0.8 has been released; months of work has gone into this release and has required a substantial investment of time and effort. The new version of YAWAST is a complete re-write of the application – everything has been rebuilt in Python instead of Ruby.
+At the time YAWAST was first created, Ruby was a preferred language in the security community, at least in part due to Metasploit Framework being written in Ruby. These days, Ruby has fallen out of favor in the community. In a poll of those in the community that are likely to contribute to a project like YAWAST, we found that the vast majority were more likely to contribute if the application was written in Python; in fact, Ruby scored as the language least likely to lead people to contribute.
+
+Based on the popularity of Python and the poll indicating that being written in Python would make contributions more likely, the decision was made to completely rewrite YAWAST. With the rewrite, we believe that it will lead to more participation and provide a healthier future for the project.
+
+That being said, this new version includes a number of improvements and quite a few new checks. Here is a brief overview of the changes:
 
 * YAWAST requires Python 3.7 – The prior version of YAWAST was written in Ruby, the new version is written in Python. This opens the doors to new integrations, and we hope will encourage more community involvement.
 * YAWAST now integrates SSLyze instead of using a custom internal TLS scanner.
@@ -28,5 +33,3 @@ Sample output: https://yawast.org/sample/
 List of checks performed: https://yawast.org/checks/ 
 
 If you have any issues, please open a ticket on Github (https://github.com/adamcaudill/yawast/issues) (with all sensitive information redacted of course).
-
-It’s recommended that YAWAST be used on all web application / web service penetration tests, to ensure that certain things are checked for, and to save you time by eliminating some manual tasks. Please make sure you upgrade to 0.8 – we will no longer be working on the older Ruby version.

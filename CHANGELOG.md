@@ -1,9 +1,13 @@
-## 0.8.1 - 2019--08-15
+## 0.8.2 - In Development
+
+* [#229](https://github.com/adamcaudill/yawast/issues/229) - Bug: No attribute 'is_absolute' on DNS information collection
+
+## 0.8.1 - 2019-08-15
 
 * [#226](https://github.com/adamcaudill/yawast/issues/226) - Bug: TLS Redirect Failure
 * [#227](https://github.com/adamcaudill/yawast/issues/227) - Bug: Improperly Handled SSL Labs Error
 
-## 0.8.0 - 2019--08-15
+## 0.8.0 - 2019-08-15
 
 YAWAST has been completely written, and has moved from Ruby to Python.
 

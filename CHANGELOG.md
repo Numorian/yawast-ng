@@ -1,4 +1,4 @@
-## 0.8.0 - In Development
+## 0.8.0 - 2019--08-15
 
 YAWAST has been completely written, and has moved from Ruby to Python.
 

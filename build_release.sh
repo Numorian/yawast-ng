@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-python3 setup.py sdist bdist_wheel
-python3 -m twine upload dist/*
+pipenv run python setup.py sdist bdist_wheel
+pipenv run twine upload dist/*
 rm -rf build
 rm -rf dist
 rm -rf *.egg-info

@@ -47,13 +47,13 @@ def _replacement_match(regex, data):
     return None
 
 
-def _scanhash(hash, definitions):
+def _scanhash(hsh, definitions):
     for component in definitions:
         hashes = definitions[component].get("extractors", None).get("hashes", None)
         if not is_defined(hashes):
             continue
         for i in hashes:
-            if i == hash:
+            if i == hsh:
                 return [
                     {"version": hashes[i], "component": component, "detection": "hash"}
                 ]
@@ -135,8 +135,8 @@ def _to_comparable(n):
     return n
 
 
-def _replace_version(jsRepoJsonAsText):
-    return re.sub(r"[.0-9]*", "[0-9][0-9.a-z_\-]+", jsRepoJsonAsText)
+def _replace_version(js_repo_json_as_text):
+    return re.sub(r"[.0-9]*", "[0-9][0-9.a-z_\-]+", js_repo_json_as_text)
 
 
 def is_vulnerable(results):
@@ -153,8 +153,8 @@ def scan_uri(uri, definitions):
     return check(result, definitions)
 
 
-def scan_filename(fileName, definitions):
-    result = scan(fileName, "filename", definitions=definitions)
+def scan_filename(file_name, definitions):
+    result = scan(file_name, "filename", definitions=definitions)
     return check(result, definitions)
 
 

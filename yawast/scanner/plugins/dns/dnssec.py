@@ -24,6 +24,5 @@ def get_dnskey(domain):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return records

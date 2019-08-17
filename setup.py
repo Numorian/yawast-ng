@@ -14,7 +14,9 @@ else:
     from setuptools import setup
 
     # fake Executable class to avoid cx_Freeze on non-Windows
+    # noinspection Mypy
     class Executable:
+        # noinspection PyUnusedLocal
         def __init__(self, script=None, base=None):
             pass
 

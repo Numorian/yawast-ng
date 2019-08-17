@@ -13,7 +13,7 @@ class TestProcessUrls(TestCase):
         parser = command_line.build_parser()
         args, urls = parser.parse_known_args(["scan"])
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 command_line.process_urls(urls)
 
@@ -34,7 +34,7 @@ class TestProcessUrls(TestCase):
         parser = command_line.build_parser()
         args, urls = parser.parse_known_args(["scan", "erty://adamcaudill.com"])
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 command_line.process_urls(urls)
 
@@ -44,7 +44,7 @@ class TestProcessUrls(TestCase):
         parser = command_line.build_parser()
         args, urls = parser.parse_known_args(["scan", "wss://adamcaudill.com"])
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 command_line.process_urls(urls)
 
@@ -54,7 +54,7 @@ class TestProcessUrls(TestCase):
         parser = command_line.build_parser()
         args, urls = parser.parse_known_args(["scan", "shttp://adamcaudill.com"])
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 command_line.process_urls(urls)
 
@@ -64,7 +64,7 @@ class TestProcessUrls(TestCase):
         parser = command_line.build_parser()
         args, urls = parser.parse_known_args(["scan", "ftp://adamcaudill.com"])
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 command_line.process_urls(urls)
 
@@ -74,7 +74,7 @@ class TestProcessUrls(TestCase):
         parser = command_line.build_parser()
         args, urls = parser.parse_known_args(["scan", "http://adamcaudill.com:99999"])
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 command_line.process_urls(urls)
 

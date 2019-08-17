@@ -15,7 +15,7 @@ from sslyze import server_connectivity_tester
 from sslyze.utils import ssl_connection_configurator, http_response_parser
 from sslyze.utils.ssl_connection import SslConnection
 
-from yawast.reporting.enums import Vulnerabilities as v
+from yawast.reporting.enums import Vulnerabilities as Vln
 from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.http.servers import apache_httpd, php, iis, nginx, python
@@ -23,7 +23,7 @@ from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import network, utils, output
 
-_checked_cookies: Dict[v, List[str]] = {}
+_checked_cookies: Dict[Vln, List[str]] = {}
 
 
 def reset():
@@ -43,7 +43,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f'X-Powered-By Header Present: {headers["X-Powered-By"]} ({url})',
-                    v.HTTP_HEADER_X_POWERED_BY,
+                    Vln.HTTP_HEADER_X_POWERED_BY,
                 )
             )
 
@@ -57,7 +57,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                     Result.from_evidence(
                         Evidence.from_response(res),
                         f"X-XSS-Protection Disabled Header Present ({url})",
-                        v.HTTP_HEADER_X_XSS_PROTECTION_DISABLED,
+                        Vln.HTTP_HEADER_X_XSS_PROTECTION_DISABLED,
                     )
                 )
         else:
@@ -65,7 +65,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"X-XSS-Protection Header Not Present ({url})",
-                    v.HTTP_HEADER_X_XSS_PROTECTION_MISSING,
+                    Vln.HTTP_HEADER_X_XSS_PROTECTION_MISSING,
                 )
             )
 
@@ -74,7 +74,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"X-Runtime Header Present; likely indicates a RoR application ({url})",
-                    v.HTTP_HEADER_X_RUNTIME,
+                    Vln.HTTP_HEADER_X_RUNTIME,
                 )
             )
 
@@ -83,7 +83,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f'X-Backend-Server Header Present: {headers["X-Backend-Server"]} ({url})',
-                    v.HTTP_HEADER_X_BACKEND_SERVER,
+                    Vln.HTTP_HEADER_X_BACKEND_SERVER,
                 )
             )
 
@@ -92,7 +92,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f'Via Header Present: #{headers["Via"]} ({url})',
-                    v.HTTP_HEADER_VIA,
+                    Vln.HTTP_HEADER_VIA,
                 )
             )
 
@@ -102,7 +102,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                     Result.from_evidence(
                         Evidence.from_response(res),
                         f'X-Frame-Options Header: {headers["X-Frame-Options"]} ({url})',
-                        v.HTTP_HEADER_X_FRAME_OPTIONS_ALLOW,
+                        Vln.HTTP_HEADER_X_FRAME_OPTIONS_ALLOW,
                     )
                 )
         else:
@@ -110,7 +110,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"X-Frame-Options Header Not Present ({url})",
-                    v.HTTP_HEADER_X_FRAME_OPTIONS_MISSING,
+                    Vln.HTTP_HEADER_X_FRAME_OPTIONS_MISSING,
                 )
             )
 
@@ -119,7 +119,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"X-Content-Type-Options Header Not Present ({url})",
-                    v.HTTP_HEADER_X_CONTENT_TYPE_OPTIONS_MISSING,
+                    Vln.HTTP_HEADER_X_CONTENT_TYPE_OPTIONS_MISSING,
                 )
             )
 
@@ -128,7 +128,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"Content-Security-Policy Header Not Present ({url})",
-                    v.HTTP_HEADER_CONTENT_SECURITY_POLICY_MISSING,
+                    Vln.HTTP_HEADER_CONTENT_SECURITY_POLICY_MISSING,
                 )
             )
 
@@ -137,7 +137,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"Referrer-Policy Header Not Present ({url})",
-                    v.HTTP_HEADER_REFERRER_POLICY_MISSING,
+                    Vln.HTTP_HEADER_REFERRER_POLICY_MISSING,
                 )
             )
 
@@ -146,7 +146,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"Feature-Policy Header Not Present ({url})",
-                    v.HTTP_HEADER_FEATURE_POLICY_MISSING,
+                    Vln.HTTP_HEADER_FEATURE_POLICY_MISSING,
                 )
             )
 
@@ -156,7 +156,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                     Result.from_evidence(
                         Evidence.from_response(res),
                         f"Access-Control-Allow-Origin: Unrestricted ({url})",
-                        v.HTTP_HEADER_CORS_ACAO_UNRESTRICTED,
+                        Vln.HTTP_HEADER_CORS_ACAO_UNRESTRICTED,
                     )
                 )
 
@@ -165,7 +165,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     f"Strict-Transport-Security Header Not Present ({url})",
-                    v.HTTP_HEADER_HSTS_MISSING,
+                    Vln.HTTP_HEADER_HSTS_MISSING,
                 )
             )
 
@@ -202,7 +202,7 @@ def check_propfind(url: str) -> List[Result]:
                 Result.from_evidence(
                     Evidence.from_response(res),
                     "Possible Info Disclosure: PROPFIND Enabled",
-                    v.HTTP_PROPFIND_ENABLED,
+                    Vln.HTTP_PROPFIND_ENABLED,
                 )
             )
 
@@ -220,7 +220,9 @@ def check_trace(url: str) -> List[Result]:
     if res.status_code == 200 and "TRACE / HTTP/1.1" in body:
         results.append(
             Result.from_evidence(
-                Evidence.from_response(res), "HTTP TRACE Enabled", v.HTTP_TRACE_ENABLED
+                Evidence.from_response(res),
+                "HTTP TRACE Enabled",
+                Vln.HTTP_TRACE_ENABLED,
             )
         )
 
@@ -239,7 +241,7 @@ def check_options(url: str) -> List[Result]:
             Result.from_evidence(
                 Evidence.from_response(res),
                 f"Allow HTTP Verbs (OPTIONS): {res.headers['Allow']}",
-                v.HTTP_OPTIONS_ALLOW,
+                Vln.HTTP_OPTIONS_ALLOW,
             )
         )
 
@@ -248,7 +250,7 @@ def check_options(url: str) -> List[Result]:
             Result.from_evidence(
                 Evidence.from_response(res),
                 f"Public HTTP Verbs (OPTIONS): {res.headers['Public']}",
-                v.HTTP_OPTIONS_PUBLIC,
+                Vln.HTTP_OPTIONS_PUBLIC,
             )
         )
 
@@ -283,8 +285,8 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
     def _resp_to_str(res: HTTPResponse) -> str:
         ver = "1.1" if res.version == 11 else "1.0"
         body = f"HTTP/{ver} {res.code} {res.reason}\r\n"
-        for k, v in res.headers.items():
-            body += f"{k}: {v}\r\n"
+        for k, val in res.headers.items():
+            body += f"{k}: {val}\r\n"
 
         return body
 
@@ -312,7 +314,7 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
             results.append(
                 Result(
                     f"Private IP Found: {ip} via HTTP 1.0 Redirect",
-                    v.SERVER_INT_IP_EXP_HTTP10,
+                    Vln.SERVER_INT_IP_EXP_HTTP10,
                     session.url,
                     {
                         "request": req,
@@ -374,20 +376,20 @@ def _get_cookie_issues(cookies: List[str], url: str, res: Response) -> List[Resu
     global _checked_cookies
 
     # setup the checked list
-    if v.COOKIE_MISSING_SECURE_FLAG not in _checked_cookies:
-        _checked_cookies[v.COOKIE_MISSING_SECURE_FLAG] = []
-    if v.COOKIE_INVALID_SECURE_FLAG not in _checked_cookies:
-        _checked_cookies[v.COOKIE_INVALID_SECURE_FLAG] = []
-    if v.COOKIE_MISSING_HTTPONLY_FLAG not in _checked_cookies:
-        _checked_cookies[v.COOKIE_MISSING_HTTPONLY_FLAG] = []
-    if v.COOKIE_MISSING_SAMESITE_FLAG not in _checked_cookies:
-        _checked_cookies[v.COOKIE_MISSING_SAMESITE_FLAG] = []
-    if v.COOKIE_WITH_SAMESITE_NONE_FLAG not in _checked_cookies:
-        _checked_cookies[v.COOKIE_WITH_SAMESITE_NONE_FLAG] = []
-    if v.COOKIE_INVALID_SAMESITE_NONE_FLAG not in _checked_cookies:
-        _checked_cookies[v.COOKIE_INVALID_SAMESITE_NONE_FLAG] = []
-    if v.COOKIE_BIGIP_IP_DISCLOSURE not in _checked_cookies:
-        _checked_cookies[v.COOKIE_BIGIP_IP_DISCLOSURE] = []
+    if Vln.COOKIE_MISSING_SECURE_FLAG not in _checked_cookies:
+        _checked_cookies[Vln.COOKIE_MISSING_SECURE_FLAG] = []
+    if Vln.COOKIE_INVALID_SECURE_FLAG not in _checked_cookies:
+        _checked_cookies[Vln.COOKIE_INVALID_SECURE_FLAG] = []
+    if Vln.COOKIE_MISSING_HTTPONLY_FLAG not in _checked_cookies:
+        _checked_cookies[Vln.COOKIE_MISSING_HTTPONLY_FLAG] = []
+    if Vln.COOKIE_MISSING_SAMESITE_FLAG not in _checked_cookies:
+        _checked_cookies[Vln.COOKIE_MISSING_SAMESITE_FLAG] = []
+    if Vln.COOKIE_WITH_SAMESITE_NONE_FLAG not in _checked_cookies:
+        _checked_cookies[Vln.COOKIE_WITH_SAMESITE_NONE_FLAG] = []
+    if Vln.COOKIE_INVALID_SAMESITE_NONE_FLAG not in _checked_cookies:
+        _checked_cookies[Vln.COOKIE_INVALID_SAMESITE_NONE_FLAG] = []
+    if Vln.COOKIE_BIGIP_IP_DISCLOSURE not in _checked_cookies:
+        _checked_cookies[Vln.COOKIE_BIGIP_IP_DISCLOSURE] = []
 
     results: List[Result] = []
 
@@ -411,8 +413,8 @@ def _get_cookie_issues(cookies: List[str], url: str, res: Response) -> List[Resu
 
             # check for BigIP IP Disclosure
             if "BIGip" in name:
-                if name not in _checked_cookies[v.COOKIE_BIGIP_IP_DISCLOSURE]:
-                    _checked_cookies[v.COOKIE_BIGIP_IP_DISCLOSURE].append(name)
+                if name not in _checked_cookies[Vln.COOKIE_BIGIP_IP_DISCLOSURE]:
+                    _checked_cookies[Vln.COOKIE_BIGIP_IP_DISCLOSURE].append(name)
                     decoded = _decode_big_ip_cookie(value)
 
                     if decoded is not None:
@@ -420,47 +422,47 @@ def _get_cookie_issues(cookies: List[str], url: str, res: Response) -> List[Resu
                             Result.from_evidence(
                                 Evidence.from_response(res, {"cookie": name}),
                                 f"Big-IP Internal IP Address Disclosure: {name}: {decoded}",
-                                v.COOKIE_BIGIP_IP_DISCLOSURE,
+                                Vln.COOKIE_BIGIP_IP_DISCLOSURE,
                             )
                         )
 
             # check Secure flag
             if "secure" not in comp and parsed.scheme == "https":
-                if name not in _checked_cookies[v.COOKIE_MISSING_SECURE_FLAG]:
+                if name not in _checked_cookies[Vln.COOKIE_MISSING_SECURE_FLAG]:
                     results.append(
                         Result.from_evidence(
                             Evidence.from_response(res, {"cookie": name}),
                             f"Cookie Missing Secure Flag: {cookie}",
-                            v.COOKIE_MISSING_SECURE_FLAG,
+                            Vln.COOKIE_MISSING_SECURE_FLAG,
                         )
                     )
 
-                    _checked_cookies[v.COOKIE_MISSING_SECURE_FLAG].append(name)
+                    _checked_cookies[Vln.COOKIE_MISSING_SECURE_FLAG].append(name)
             elif "secure" in comp and parsed.scheme == "http":
                 # secure flag over HTTP is invalid
-                if name not in _checked_cookies[v.COOKIE_INVALID_SECURE_FLAG]:
+                if name not in _checked_cookies[Vln.COOKIE_INVALID_SECURE_FLAG]:
                     results.append(
                         Result.from_evidence(
                             Evidence.from_response(res, {"cookie": name}),
                             f"Cookie Secure Flag Invalid (over HTTP): {cookie}",
-                            v.COOKIE_INVALID_SECURE_FLAG,
+                            Vln.COOKIE_INVALID_SECURE_FLAG,
                         )
                     )
 
-                    _checked_cookies[v.COOKIE_INVALID_SECURE_FLAG].append(name)
+                    _checked_cookies[Vln.COOKIE_INVALID_SECURE_FLAG].append(name)
 
             # check HttpOnly flag
             if "httponly" not in comp:
-                if name not in _checked_cookies[v.COOKIE_MISSING_HTTPONLY_FLAG]:
+                if name not in _checked_cookies[Vln.COOKIE_MISSING_HTTPONLY_FLAG]:
                     results.append(
                         Result.from_evidence(
                             Evidence.from_response(res, {"cookie": name}),
                             f"Cookie Missing HttpOnly Flag: {cookie}",
-                            v.COOKIE_MISSING_HTTPONLY_FLAG,
+                            Vln.COOKIE_MISSING_HTTPONLY_FLAG,
                         )
                     )
 
-                    _checked_cookies[v.COOKIE_MISSING_HTTPONLY_FLAG].append(name)
+                    _checked_cookies[Vln.COOKIE_MISSING_HTTPONLY_FLAG].append(name)
 
             # check SameSite flag
             if (
@@ -468,44 +470,46 @@ def _get_cookie_issues(cookies: List[str], url: str, res: Response) -> List[Resu
                 and "samesite=strict" not in comp
                 and "samesite=none" not in comp
             ):
-                if name not in _checked_cookies[v.COOKIE_MISSING_SAMESITE_FLAG]:
+                if name not in _checked_cookies[Vln.COOKIE_MISSING_SAMESITE_FLAG]:
                     results.append(
                         Result.from_evidence(
                             Evidence.from_response(res, {"cookie": name}),
                             f"Cookie Missing SameSite Flag: {cookie}",
-                            v.COOKIE_MISSING_SAMESITE_FLAG,
+                            Vln.COOKIE_MISSING_SAMESITE_FLAG,
                         )
                     )
 
-                    _checked_cookies[v.COOKIE_MISSING_SAMESITE_FLAG].append(name)
+                    _checked_cookies[Vln.COOKIE_MISSING_SAMESITE_FLAG].append(name)
 
             # check SameSite=None flag
             if "samesite=none" in comp:
                 if "secure" in comp:
-                    if name not in _checked_cookies[v.COOKIE_WITH_SAMESITE_NONE_FLAG]:
+                    if name not in _checked_cookies[Vln.COOKIE_WITH_SAMESITE_NONE_FLAG]:
                         results.append(
                             Result.from_evidence(
                                 Evidence.from_response(res, {"cookie": name}),
                                 f"Cookie With SameSite=None Flag: {cookie}",
-                                v.COOKIE_WITH_SAMESITE_NONE_FLAG,
+                                Vln.COOKIE_WITH_SAMESITE_NONE_FLAG,
                             )
                         )
 
-                        _checked_cookies[v.COOKIE_WITH_SAMESITE_NONE_FLAG].append(name)
+                        _checked_cookies[Vln.COOKIE_WITH_SAMESITE_NONE_FLAG].append(
+                            name
+                        )
                 else:
                     if (
                         name
-                        not in _checked_cookies[v.COOKIE_INVALID_SAMESITE_NONE_FLAG]
+                        not in _checked_cookies[Vln.COOKIE_INVALID_SAMESITE_NONE_FLAG]
                     ):
                         results.append(
                             Result.from_evidence(
                                 Evidence.from_response(res, {"cookie": name}),
                                 f"Cookie SameSite=None Flag Invalid (without Secure flag): {cookie}",
-                                v.COOKIE_INVALID_SAMESITE_NONE_FLAG,
+                                Vln.COOKIE_INVALID_SAMESITE_NONE_FLAG,
                             )
                         )
 
-                        _checked_cookies[v.COOKIE_INVALID_SAMESITE_NONE_FLAG].append(
+                        _checked_cookies[Vln.COOKIE_INVALID_SAMESITE_NONE_FLAG].append(
                             name
                         )
     except Exception:

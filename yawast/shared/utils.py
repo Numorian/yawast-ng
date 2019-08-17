@@ -15,7 +15,7 @@ from validator_collection import checkers
 from yawast.shared import output
 from yawast.shared.exec_timer import ExecutionTimer
 
-_input_lock = threading.Lock()
+INPUT_LOCK = threading.Lock()
 _ansi_strip = re.compile(r"\x1B\[[0-?]*[ -/]*[@-~]")
 
 
@@ -191,10 +191,10 @@ def prompt(msg: str) -> str:
     ret = ""
 
     if sys.stdout.isatty():
-        _input_lock.acquire()
+        INPUT_LOCK.acquire()
         sys.stdin.flush()
         time.sleep(0.1)
         ret = input(msg)
-        _input_lock.release()
+        INPUT_LOCK.release()
 
     return ret

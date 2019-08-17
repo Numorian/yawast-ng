@@ -15,7 +15,7 @@ class TestBuildParser(TestCase):
         # make sure we got something back
         self.assertIsNotNone(parser)
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 parser.parse_known_args([""])
 

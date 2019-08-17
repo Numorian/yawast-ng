@@ -11,8 +11,9 @@ wheel = "*"
 
 [packages]
 yawast = {editable = true,path = "."}
-sslyze = "*"
+sslyze = "==2.1.3"
 requests-mock = "*"
+jsonschema = "~=2.6"
 
 [requires]
 python_version = "3.7"

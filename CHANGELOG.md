@@ -1,5 +1,6 @@
 ## 0.9.0 - In Development
 
+* [#235](https://github.com/adamcaudill/yawast/issues/235) - WordPress Plugin Local Path Disclosure
 
 ## 0.8.2 - 2019-08-16
 

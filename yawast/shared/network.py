@@ -314,6 +314,9 @@ def check_www_redirect(url):
         if location is None:
             return url
 
+        if str(location).startswith("/"):
+            return url
+
         try:
             parsed_location = urlparse(location)
             location_domain = utils.get_domain(parsed_location.netloc)

@@ -13,7 +13,7 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.scanner.plugins.result import Result
-from yawast.shared import network
+from yawast.shared import network, output
 
 
 def identify(url: str) -> Tuple[Union[str, None], List[Result]]:
@@ -114,20 +114,19 @@ def check_path_disclosure(wp_url: str) -> List[Result]:
             # we have some kind of response that could be useful
             if "<b>Fatal error</b>:" in resp.text:
                 # we have an error
-                pattern = r"<b>\/.*.php<\/b>"
+                pattern = r"<b>((\/|[A-Z]:\\).*.php)<\/b>"
                 if re.search(pattern, resp.text):
-                    path = (
-                        re.findall(pattern, resp.text)[0]
-                        .replace("<b>", "")
-                        .replace("</b>", "")
-                    )
-                    results.append(
-                        Result.from_evidence(
-                            Evidence.from_response(resp, {"path": path}),
-                            f"WordPress File Path Disclosure: {target} ({path})",
-                            Vulnerabilities.APP_WORDPRESS_PATH_DISCLOSURE,
+                    try:
+                        path = re.findall(pattern, resp.text)[0][0]
+                        results.append(
+                            Result.from_evidence(
+                                Evidence.from_response(resp, {"path": path}),
+                                f"WordPress File Path Disclosure: {target} ({path})",
+                                Vulnerabilities.APP_WORDPRESS_PATH_DISCLOSURE,
+                            )
                         )
-                    )
+                    except Exception:
+                        output.debug_exception()
 
         results += response_scanner.check_response(target, resp)
 

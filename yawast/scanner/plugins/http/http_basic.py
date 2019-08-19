@@ -342,9 +342,9 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
             should_use_legacy_openssl=False,
         )
 
-        conn.connect()
-
         try:
+            conn.connect()
+
             _get_result(conn, utils.get_port(session.url))
         except Exception:
             output.debug_exception()

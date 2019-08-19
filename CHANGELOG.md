@@ -1,5 +1,6 @@
 ## 0.9.0 - In Development
 
+* [#237](https://github.com/adamcaudill/yawast/issues/237) - Bug: Connection error in check_local_ip_disclosure
 
 ## 0.8.2 - 2019-08-16
 

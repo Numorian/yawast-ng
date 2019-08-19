@@ -1,3 +1,7 @@
+## 0.8.3 - 2019-08-19
+
+* [#238](https://github.com/adamcaudill/yawast/issues/238) - Bug: Error with WWW Redirect Detection
+
 ## 0.8.2 - 2019-08-16
 
 * [#229](https://github.com/adamcaudill/yawast/issues/229) - Bug: No attribute 'is_absolute' on DNS information collection

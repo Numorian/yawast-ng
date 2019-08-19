@@ -110,6 +110,7 @@ def print_header():
         " Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com> and Contributors"
     )
     print(" Support & Documentation: https://yawast.org")
+    print(" News & Updates: https://twitter.com/yawast")
     print(
         f" Python {''.join(sys.version.splitlines())} ({platform.python_implementation()})"
     )

@@ -11,9 +11,9 @@ from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
-from yawast.scanner.plugins.http import version_checker
+from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.scanner.plugins.result import Result
-from yawast.shared import network
+from yawast.shared import network, output
 
 
 def identify(url: str) -> Tuple[Union[str, None], List[Result]]:
@@ -72,6 +72,65 @@ def identify(url: str) -> Tuple[Union[str, None], List[Result]]:
         return path, results
     else:
         return None, []
+
+
+def check_path_disclosure(wp_url: str) -> List[Result]:
+    # this is a list of files that are known to throw a fatal error when accessed directly
+    # this is from a manual review of all plugins with at least 1M installs
+    urls = [
+        "wp-content/plugins/hello.php",
+        "wp-content/plugins/akismet/akismet.php",
+        "wp-content/plugins/contact-form-7/includes/capabilities.php",
+        "wp-content/plugins/wordpress-seo/admin/views/partial-alerts-errors.php",
+        "wp-content/plugins/jetpack/load-jetpack.php",
+        "wp-content/plugins/jetpack/uninstall.php",
+        "wp-content/plugins/duplicate-post/duplicate-post-admin.php",
+        "wp-content/plugins/wpforms-lite/includes/admin/class-welcome.php",
+        "wp-content/plugins/wp-google-maps/base/includes/welcome.php",
+        "wp-content/plugins/wp-super-cache/wp-cache.php",
+        "wp-content/plugins/mailchimp-for-wp/integrations/wpforms/bootstrap.php",
+        "wp-content/plugins/mailchimp-for-wp/integrations/bootstrap.php",
+        "wp-content/plugins/regenerate-thumbnails/regenerate-thumbnails.php",
+        "wp-content/plugins/advanced-custom-fields/includes/deprecated.php",
+        "wp-content/plugins/redirection/redirection.php",
+        "wp-content/plugins/wpforms-lite/includes/admin/importers/class-ninja-forms.php",
+        "wp-content/plugins/ninja-forms/includes/deprecated.php",
+        "wp-content/plugins/so-widgets-bundle/so-widgets-bundle.php",
+        "wp-content/plugins/wp-fastest-cache/templates/preload.php",
+        "wp-content/plugins/duplicate-page/duplicatepage.php",
+        "wp-content/plugins/better-wp-security/better-wp-security.php",
+        "wp-content/plugins/all-in-one-wp-security-and-firewall/other-includes/wp-security-unlock-request.php",
+        "wp-content/plugins/related-posts/views/settings.php",
+        "wp-content/plugins/wpcontentguard/views/settings.php",
+        "wp-content/plugins/simple-social-icons/simple-social-icons.php",
+    ]
+    results: List[Result] = []
+
+    for url in urls:
+        target = urljoin(wp_url, url)
+
+        resp = network.http_get(target, False)
+        if resp.status_code < 300 or resp.status_code >= 500:
+            # we have some kind of response that could be useful
+            if "<b>Fatal error</b>:" in resp.text:
+                # we have an error
+                pattern = r"<b>((\/|[A-Z]:\\).*.php)<\/b>"
+                if re.search(pattern, resp.text):
+                    try:
+                        path = re.findall(pattern, resp.text)[0][0]
+                        results.append(
+                            Result.from_evidence(
+                                Evidence.from_response(resp, {"path": path}),
+                                f"WordPress File Path Disclosure: {target} ({path})",
+                                Vulnerabilities.APP_WORDPRESS_PATH_DISCLOSURE,
+                            )
+                        )
+                    except Exception:
+                        output.debug_exception()
+
+        results += response_scanner.check_response(target, resp)
+
+    return results
 
 
 def check_json_user_enum(url: str) -> List[Result]:

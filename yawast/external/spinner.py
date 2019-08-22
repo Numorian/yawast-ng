@@ -3,8 +3,8 @@
 # Copyright: Victor Moyseenko
 
 import sys
-import time
 import threading
+import time
 
 
 class Spinner:

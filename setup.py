@@ -3,8 +3,10 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 import sys
-from setuptools import find_packages
 from os import path
+
+from requirementslib import Lockfile
+from setuptools import find_packages
 
 if "build_exe" in sys.argv:
     from cx_Freeze import setup, Executable
@@ -12,7 +14,9 @@ else:
     from setuptools import setup
 
     # fake Executable class to avoid cx_Freeze on non-Windows
+    # noinspection Mypy
     class Executable:
+        # noinspection PyUnusedLocal
         def __init__(self, script=None, base=None):
             pass
 
@@ -81,6 +85,16 @@ def get_long_description():
     return long_description
 
 
+def get_install_reqs():
+    try:
+        lf = Lockfile.load(root_path)
+
+        return lf.requirements_list
+    except AttributeError:
+        # if it fails, return an empty list - lock file likely missing
+        return []
+
+
 setup(
     name="yawast",
     version=version,
@@ -101,27 +115,11 @@ setup(
     executables=[Executable("bin/yawast", base=None)],
     packages=find_packages(exclude=["tests"]),
     scripts=["bin/yawast"],
-    install_requires=[
-        "validator-collection",
-        "requests",
-        "publicsuffixlist",
-        "dnspython",
-        "urllib3",
-        "colorama",
-        "sslyze==2.1.3",
-        "nassl",
-        "cryptography==2.5",
-        "packaging",
-        "beautifulsoup4",
-        "psutil",
-        "pipenv",
-        "requests-mock",
-        "selenium",
-    ],
+    install_requires=get_install_reqs(),
     include_package_data=True,
     package_data={"yawast": ["resources/*"]},
     zip_safe=False,
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     keywords="security tls ssl dns http scan vulnerability",
     classifiers=[
         "Development Status :: 4 - Beta",

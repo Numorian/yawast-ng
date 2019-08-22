@@ -3,8 +3,10 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from unittest import TestCase
-from yawast.scanner.plugins.dns.caa import _get_caa_records
+
 from dns import resolver
+
+from yawast.scanner.plugins.dns.caa import _get_caa_records
 
 
 class TestGetCaaRecords(TestCase):

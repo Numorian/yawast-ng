@@ -6,8 +6,8 @@ import os
 from unittest import TestCase
 
 from tests import utils
-from yawast.scanner.plugins.network import port_scan
 from yawast.scanner.cli.network import _check_open_ports
+from yawast.scanner.plugins.network import port_scan
 from yawast.shared import output
 
 

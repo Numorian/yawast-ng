@@ -143,6 +143,7 @@ def scan(session: Session):
     if wp_path is not None:
         with Spinner():
             res = wordpress.check_json_user_enum(wp_path)
+            res += wordpress.check_path_disclosure(wp_path)
         if len(res) > 0:
             reporter.display_results(res, "\t")
 

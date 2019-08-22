@@ -2,7 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
-from typing import List, Tuple, Any
+from typing import List, Tuple
 from urllib.parse import urljoin
 
 from yawast.reporting.enums import Vulnerabilities

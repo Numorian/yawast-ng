@@ -3,10 +3,11 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from typing import List, cast
+
 from packaging import version
 
-from yawast.scanner.plugins.http import version_checker
 from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.http import version_checker
 from yawast.scanner.plugins.result import Result
 
 

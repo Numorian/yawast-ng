@@ -3,13 +3,13 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 import re
-from typing import Union, List, cast, Any
+from typing import Union, List, cast
+
+from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.result import Result
-from requests import Response
-
 from yawast.shared import network, output
 
 

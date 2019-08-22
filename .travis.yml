@@ -15,9 +15,8 @@ before_script:
   - ./cc-test-reporter before-build
 
 install:
-  - pip install -r requirements.txt --ignore-requires-python
-  - pip install coverage
-  - pip install wheel
+  - pip install -r requirements-dev.txt
+  - pip install -r requirements.txt
 
 script:
   - coverage run -m unittest discover

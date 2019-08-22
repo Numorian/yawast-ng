@@ -66,7 +66,6 @@ def _get_records_for_domain(host: str, queue):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     try:
         answers = res.query(host, "A", lifetime=3, raise_on_no_answer=False)
@@ -77,7 +76,6 @@ def _get_records_for_domain(host: str, queue):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     try:
         answers = res.query(host, "AAAA", lifetime=3, raise_on_no_answer=False)
@@ -88,6 +86,5 @@ def _get_records_for_domain(host: str, queue):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     queue.put(records)

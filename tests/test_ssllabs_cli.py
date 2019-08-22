@@ -25,7 +25,7 @@ class TestSslLabsCLI(TestCase):
 
         try:
             for ep in body["endpoints"]:
-                with utils.capture_sys_output() as (stdout, stderr):
+                with utils.capture_sys_output():
                     _get_cert_info(body, ep, "http://adamcaudill.com")
         except Exception as error:
             print(error)
@@ -40,7 +40,7 @@ class TestSslLabsCLI(TestCase):
 
         try:
             for ep in body["endpoints"]:
-                with utils.capture_sys_output() as (stdout, stderr):
+                with utils.capture_sys_output():
                     _get_protocol_info(ep, "http://adamcaudill.com")
         except Exception as error:
             print(error)
@@ -55,7 +55,7 @@ class TestSslLabsCLI(TestCase):
 
         try:
             for ep in body["endpoints"]:
-                with utils.capture_sys_output() as (stdout, stderr):
+                with utils.capture_sys_output():
                     _get_vulnerability_info(ep, "http://adamcaudill.com")
         except Exception as error:
             print(error)

@@ -110,6 +110,7 @@ def print_header():
         " Copyright (c) 2013-2019 Adam Caudill <adam@adamcaudill.com> and Contributors"
     )
     print(" Support & Documentation: https://yawast.org")
+    print(" News & Updates: https://twitter.com/yawast")
     print(
         f" Python {''.join(sys.version.splitlines())} ({platform.python_implementation()})"
     )
@@ -129,6 +130,7 @@ def print_header():
     print()
 
 
+# noinspection PyUnusedLocal
 def signal_handler(sig, frame):
     if sig == signal.SIGINT:
         # check to see if we are a worker, or the main process
@@ -139,7 +141,7 @@ def signal_handler(sig, frame):
 
         try:
             active_children()
-        except:
+        except Exception:
             # we don't care if this fails
             pass
 
@@ -246,7 +248,7 @@ class _KeyMonitor:
         if sys.stdout.isatty():
             while self.busy:
                 try:
-                    with utils._input_lock:
+                    with utils.INPUT_LOCK:
                         key = getchar()
 
                     if key != "":
@@ -260,8 +262,6 @@ class _KeyMonitor:
                     output.debug_exception()
 
                     self.busy = False
-
-                    pass
         else:
             # if this isn't a TTY, no point in doing any of this
             self.busy = False
@@ -308,8 +308,6 @@ class _ProcessMonitor:
                     output.debug_exception()
 
                     self.busy = False
-
-                    pass
         else:
             # if this isn't a TTY, no point in doing any of this
             self.busy = False

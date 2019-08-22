@@ -4,21 +4,20 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
-# This file is part of 'miniver': https://github.com/jbweston/miniver
-#
-from collections import namedtuple
 import os
-import shutil
 import subprocess
 import sys
 
+# This file is part of 'miniver': https://github.com/jbweston/miniver
+#
+from collections import namedtuple
 from distutils.command.build_py import build_py as build_py_orig
+
 from setuptools.command.sdist import sdist as sdist_orig
 
 Version = namedtuple("Version", ("release", "dev", "labels"))
 
-# No public API
-__all__ = []
+__all__ = ["get_version"]
 
 if getattr(sys, "frozen", False):
     # frozen
@@ -161,9 +160,9 @@ def get_version_from_git_archive(version_info):
         # variables not expanded during 'git archive'
         return None
 
-    VTAG = "tag: v"
+    vtag = "tag: v"
     refs = set(r.strip() for r in refnames.split(","))
-    version_tags = set(r[len(VTAG) :] for r in refs if r.startswith(VTAG))
+    version_tags = set(r[len(vtag) :] for r in refs if r.startswith(vtag))
     if version_tags:
         release, *_ = sorted(version_tags)  # prefer e.g. "2.0" over "2.0rc1"
         return Version(release, dev=None, labels=None)
@@ -193,25 +192,25 @@ def _write_version(fname):
         )
 
 
-class _build_py(build_py_orig):
+class _BuildPy(build_py_orig):
     def run(self):
         super().run()
         _write_version(os.path.join(self.build_lib, package_name, STATIC_VERSION_FILE))
 
 
-class _sdist(sdist_orig):
+class _SDist(sdist_orig):
     def make_release_tree(self, base_dir, files):
         super().make_release_tree(base_dir, files)
         _write_version(os.path.join(base_dir, package_name, STATIC_VERSION_FILE))
 
 
-cmdclass = dict(sdist=_sdist, build_py=_build_py)
+cmdclass = dict(sdist=_SDist, build_py=_BuildPy)
 
 # Hacks to deal with the Windows build
 try:
     from cx_Freeze.dist import build_exe as _build_exe
 
-    class cmd_build_exe(_build_exe):
+    class CmdBuildExe(_build_exe):
         def run(self):
             # Start by running the normal stuff
             _build_exe.run(self)
@@ -237,6 +236,6 @@ try:
                 f.write("__version__ = '{}'\n".format(__version__))
 
     # Add this derived class to cmdclass
-    cmdclass["build_exe"] = cmd_build_exe
+    cmdclass["build_exe"] = CmdBuildExe
 except Exception:
     pass

@@ -3,9 +3,10 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from unittest import TestCase
+
+from tests import utils
 from yawast import main
 from yawast._version import get_version
-from tests import utils
 from yawast.shared import output
 
 

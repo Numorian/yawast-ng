@@ -6,7 +6,6 @@ from typing import Dict, Any
 
 from yawast.shared import network, output
 
-
 _failure = False
 _cache: Dict[Any, Any] = {}
 

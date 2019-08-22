@@ -3,6 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from dns import resolver, exception, dnssec
+
 from yawast.shared import output
 
 
@@ -23,6 +24,5 @@ def get_dnskey(domain):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return records

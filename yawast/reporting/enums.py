@@ -8,8 +8,6 @@ from typing import NamedTuple
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
-from yawast.shared import output
-
 
 class Severity(str, Enum):
     CRITICAL = "critical"
@@ -55,6 +53,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     )
     APP_WORDPRESS_USER_FOUND = VulnerabilityInfo.create(
         "App_WordPress_User_Found", Severity.LOW, "", True
+    )
+    APP_WORDPRESS_PATH_DISCLOSURE = VulnerabilityInfo.create(
+        "App_WordPress_Path_Disclosure", Severity.LOW, "", True
     )
 
     COOKIE_MISSING_SECURE_FLAG = VulnerabilityInfo.create(

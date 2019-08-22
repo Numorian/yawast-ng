@@ -3,8 +3,9 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from unittest import TestCase
-from yawast import command_line
+
 from tests import utils
+from yawast import command_line
 
 
 class TestBuildParser(TestCase):
@@ -14,7 +15,7 @@ class TestBuildParser(TestCase):
         # make sure we got something back
         self.assertIsNotNone(parser)
 
-        with self.assertRaises(SystemExit) as cm:
+        with self.assertRaises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 parser.parse_known_args([""])
 

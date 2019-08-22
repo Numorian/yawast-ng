@@ -367,7 +367,6 @@ def _get_cert_info(body, ep, url):
 
             # in practice, it seems there is only only per path, but just in case
             for trust in path["trust"]:
-                trust_line = None
 
                 if trust["isTrusted"]:
                     trust_line = f'{trust["rootStore"]} (trusted)'

@@ -3,6 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 from dns import resolver, exception, reversename
+
 from yawast.shared import output
 
 
@@ -18,7 +19,6 @@ def get_ips(domain: str):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     try:
         answers_v6 = resolver.query(domain, "AAAA")
@@ -28,7 +28,6 @@ def get_ips(domain: str):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return ips
 
@@ -45,7 +44,6 @@ def get_text(domain):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return records
 
@@ -62,7 +60,6 @@ def get_mx(domain):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return records
 
@@ -79,7 +76,6 @@ def get_ns(domain):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return records
 
@@ -94,6 +90,5 @@ def get_host(ip):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return name

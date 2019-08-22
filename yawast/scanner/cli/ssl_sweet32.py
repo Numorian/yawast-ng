@@ -68,7 +68,7 @@ def scan(session: Session):
             print(f"(using {name})", end="", flush=True)
             for i in range(0, 10000):
                 conn.ssl_client.write(req)
-                resp = http_response_parser.HttpResponseParser.parse_from_ssl_connection(
+                http_response_parser.HttpResponseParser.parse_from_ssl_connection(
                     conn.ssl_client
                 )
                 count += 1

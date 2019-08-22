@@ -2,9 +2,9 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
-from contextlib import contextmanager
 import io
 import sys
+from contextlib import contextmanager
 
 
 @contextmanager

@@ -3,7 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 import copy
-from typing import Union, Dict, List, Tuple
+from typing import Union, Dict, List
 
 from dns import resolver, exception
 from dns.resolver import Resolver
@@ -74,7 +74,6 @@ def _get_caa_records(domain: str, resv: Resolver) -> List[str]:
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return records
 
@@ -91,6 +90,5 @@ def _get_cname(domain: str, resv: Resolver) -> Union[str, None]:
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
         output.debug_exception()
-        pass
 
     return name

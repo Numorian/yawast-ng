@@ -5,7 +5,7 @@
 import time
 from multiprocessing import Manager, Lock
 from multiprocessing.dummy import Pool
-from typing import List, Tuple, Any
+from typing import List, Tuple
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
@@ -187,7 +187,7 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                     redirect = urljoin(base_url, redirect)
 
                 # make sure that we aren't redirected out of scope
-                if base_url in redirect:
+                if str(redirect).startswith(base_url):
                     to_process.append(redirect)
 
             if len(to_process) > 0:

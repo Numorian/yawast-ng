@@ -4,6 +4,7 @@
 
 import pkg_resources
 from dns import resolver, exception
+
 from yawast.shared import output
 
 
@@ -37,6 +38,5 @@ def find_srv_records(domain, path=None):
                 output.debug(f"SRV: {host} received error: {str(error)}")
             except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):
                 output.debug_exception()
-                pass
 
     return records

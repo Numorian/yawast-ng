@@ -1,5 +1,6 @@
 ## 0.9.0 - In Development
 
+* [#235](https://github.com/adamcaudill/yawast/issues/235) - WordPress Plugin Local Path Disclosure
 * [#237](https://github.com/adamcaudill/yawast/issues/237) - Bug: Connection error in check_local_ip_disclosure
 
 ## 0.8.3 - 2019-08-19

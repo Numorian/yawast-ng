@@ -81,6 +81,7 @@ The following checks are performed:
 * *(WordPress)* Version detection
 * *(WordPress)* WP-JSON User Enumeration
 * *(WordPress)* Outdated version
+* *(WordPress)* WordPress Plugin Local Path Disclosure
 
 ### TLS/SSL Information
 

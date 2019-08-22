@@ -8,6 +8,7 @@ import requests
 import requests_mock
 
 from yawast.scanner.plugins.http import http_basic, response_scanner
+from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
 from yawast.scanner.plugins.http.servers import rails, python, nginx
 from yawast.shared import network
@@ -501,3 +502,58 @@ class TestHttpBasic(TestCase):
         res = nginx.check_banner("nginx/1.0.0", "head_data", "http://example.com")
 
         self.assertTrue(any("Nginx Outdated" in r.message for r in res))
+
+    def test_wp_path_disc_nix(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(
+                requests_mock.ANY,
+                text="<b>Fatal error</b>:  x y() in <b>/home/akismet.php</b> on line <b>32</b><br />",
+            )
+
+            res = wordpress.check_path_disclosure(url)
+
+        self.assertTrue(any("WordPress File Path Disclosure" in r.message for r in res))
+        self.assertTrue(any("/home/akismet.php" in r.message for r in res))
+
+    def test_wp_path_disc_win(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(
+                requests_mock.ANY,
+                text="<b>Fatal error</b>:  x y() in <b>C:\\home\\akismet.php</b> on line <b>32</b><br />",
+            )
+
+            res = wordpress.check_path_disclosure(url)
+
+        self.assertTrue(any("WordPress File Path Disclosure" in r.message for r in res))
+        self.assertTrue(any("C:\\home\\akismet.php" in r.message for r in res))
+
+    def test_wp_path_disc_none_err(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(
+                requests_mock.ANY,
+                text="<b>Fatal error</b>:  x y() in /home/akismet.php on line 32",
+            )
+
+            res = wordpress.check_path_disclosure(url)
+
+        self.assertFalse(
+            any("WordPress File Path Disclosure" in r.message for r in res)
+        )
+
+    def test_wp_path_disc_none(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(requests_mock.ANY, text="hello world")
+
+            res = wordpress.check_path_disclosure(url)
+
+        self.assertFalse(
+            any("WordPress File Path Disclosure" in r.message for r in res)
+        )

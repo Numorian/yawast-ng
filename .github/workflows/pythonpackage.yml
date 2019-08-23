@@ -42,3 +42,7 @@ jobs:
       run: |
         python setup.py sdist
         python setup.py bdist_wheel
+    - name: Build Windows EXE
+      if: runner.os == 'Windows'
+      run: |
+        python setup.py build_exe

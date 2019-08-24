@@ -400,6 +400,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     SERVER_PHP_OUTDATED = VulnerabilityInfo.create(
         "Server_PHP_Outdated", Severity.MEDIUM, ""
     )
+    SERVER_PHP_PHPINFO = VulnerabilityInfo.create(
+        "Server_PHP_PHPInfo", Severity.LOW, ""
+    )
     SERVER_IIS_OUTDATED = VulnerabilityInfo.create(
         "Server_IIS_Outdated", Severity.MEDIUM, ""
     )

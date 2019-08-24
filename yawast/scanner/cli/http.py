@@ -25,7 +25,13 @@ from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.applications.password_reset import (
     PasswordResetElementNotFound,
 )
-from yawast.scanner.plugins.http.servers import apache_httpd, apache_tomcat, nginx, iis
+from yawast.scanner.plugins.http.servers import (
+    apache_httpd,
+    apache_tomcat,
+    nginx,
+    iis,
+    php,
+)
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import network, output, utils
@@ -132,6 +138,11 @@ def scan(session: Session):
 
     with Spinner():
         res = http_basic.check_options(session.url)
+    if len(res) > 0:
+        reporter.display_results(res, "\t")
+
+    with Spinner():
+        res = php.find_phpinfo(session, links)
     if len(res) > 0:
         reporter.display_results(res, "\t")
 

@@ -10,7 +10,8 @@ import requests_mock
 from yawast.scanner.plugins.http import http_basic, response_scanner
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
-from yawast.scanner.plugins.http.servers import rails, python, nginx
+from yawast.scanner.plugins.http.servers import rails, python, nginx, php
+from yawast.scanner.session import Session
 from yawast.shared import network
 
 
@@ -553,6 +554,20 @@ class TestHttpBasic(TestCase):
             m.get(requests_mock.ANY, text="hello world")
 
             res = wordpress.check_path_disclosure(url)
+
+        self.assertFalse(
+            any("WordPress File Path Disclosure" in r.message for r in res)
+        )
+
+    def test_php_find_info(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(requests_mock.ANY, text='</a><h1 class="p">PHP Version 4.4.1</h1>')
+
+            session = Session(None, url)
+
+            res = php.find_phpinfo(session, ["/"])
 
         self.assertFalse(
             any("WordPress File Path Disclosure" in r.message for r in res)

@@ -569,6 +569,16 @@ class TestHttpBasic(TestCase):
 
             res = php.find_phpinfo(session, ["/"])
 
-        self.assertFalse(
-            any("WordPress File Path Disclosure" in r.message for r in res)
-        )
+        self.assertTrue(any("PHP Info Found" in r.message for r in res))
+
+    def test_php_find_info_none(self):
+        url = "http://example.com/"
+
+        with requests_mock.Mocker() as m:
+            m.get(requests_mock.ANY, text="</a><h1>PHP Version 4.4.1</h1>")
+
+            session = Session(None, url)
+
+            res = php.find_phpinfo(session, ["/"])
+
+        self.assertFalse(any("PHP Info Found" in r.message for r in res))

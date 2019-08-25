@@ -6,7 +6,7 @@ import os
 import time
 from multiprocessing import Manager, active_children
 from multiprocessing.dummy import Pool
-from typing import List, Optional, Tuple, Any
+from typing import List, Optional, Tuple
 from urllib.parse import urljoin, urlparse
 
 import pkg_resources
@@ -15,7 +15,6 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.result import Result
-from yawast.scanner.session import Session
 from yawast.shared import network, output
 
 _files: List[str] = []

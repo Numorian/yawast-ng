@@ -36,6 +36,7 @@ The following checks are performed:
 * *(Generic)* Missing cookie flags (Secure, HttpOnly, and SameSite)
 * *(Generic)* Cookies with SameSite=None flag
 * *(Generic)* Search for 14,405 common files (via `--files`) & 21,332 common directories (via `--dir`)
+* *(Generic)* Common backup files
 * *(Generic)* CAA DNS records missing
 * *(Generic)* DNSSEC not enabled
 * *(Generic)* Detailed error messages

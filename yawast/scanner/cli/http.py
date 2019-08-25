@@ -203,7 +203,7 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
         if len(results) > 0:
             reporter.display_results(results, "\t")
 
-            new_files += links
+        new_files += links
 
         if session.args.files:
             output.empty()
@@ -230,13 +230,22 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
 
                 output.empty()
 
+        # check for common backup files
+        all_links = orig_links + new_files
+        with Spinner():
+            backups, res = file_search.find_backups(all_links)
+        if len(res) > 0:
+            reporter.display_results(res, "\t")
+        if len(backups):
+            new_files += backups
+
     if path_good:
         links, results = special_files.check_special_paths(session.url)
 
         if len(results) > 0:
             reporter.display_results(results, "\t")
 
-            new_files += links
+        new_files += links
 
         if session.args.dir:
             output.empty()

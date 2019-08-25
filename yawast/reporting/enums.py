@@ -216,6 +216,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     HTTP_USER_ENUMERATION_TIMING = VulnerabilityInfo.create(
         "Http_User_Enum_Timing", Severity.MEDIUM, ""
     )
+    HTTP_BACKUP_FILE = VulnerabilityInfo.create(
+        "Http_Backup_File", Severity.BEST_PRACTICE, "", True
+    )
 
     TLS_CBC_CIPHER_SUITE = VulnerabilityInfo.create(
         "Tls_CBC_Cipher_Suite", Severity.BEST_PRACTICE, ""

@@ -6,13 +6,16 @@ import os
 import time
 from multiprocessing import Manager, active_children
 from multiprocessing.dummy import Pool
-from typing import List, Optional, Tuple
-from urllib.parse import urljoin
+from typing import List, Optional, Tuple, Any
+from urllib.parse import urljoin, urlparse
 
 import pkg_resources
 
+from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.result import Result
+from yawast.scanner.session import Session
 from yawast.shared import network, output
 
 _files: List[str] = []
@@ -43,6 +46,55 @@ def find_directories(
         file_path = path
 
     return _find_files(url, file_path, follow_redirections, True, recursive)
+
+
+def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
+    def _extract_name(url: str) -> str:
+        try:
+            u = urlparse(url)
+            return os.path.basename(u.path)
+        except Exception:
+            return ""
+
+    new_links = []
+    results: List[Result] = []
+
+    extensions = [
+        "~",
+        ".bak",
+        ".back",
+        ".backup",
+        ".1",
+        ".old",
+        ".orig",
+        ".gz",
+        ".tar.gz",
+        ".tmp",
+        ".swp",
+    ]
+
+    for link in links:
+        if not link.endswith("/"):
+            if "." in _extract_name(link):
+                for ext in extensions:
+                    target = f"{link}{ext}"
+
+                    resp = network.http_get(target, False)
+                    if resp.status_code == 200:
+                        # we found something!
+                        new_links.append(target)
+
+                        results.append(
+                            Result.from_evidence(
+                                Evidence.from_response(resp, {"original_url": link}),
+                                f"Found backup file: {target}",
+                                Vulnerabilities.HTTP_BACKUP_FILE,
+                            )
+                        )
+
+                    results += response_scanner.check_response(target, resp)
+
+    return new_links, results
 
 
 def reset():

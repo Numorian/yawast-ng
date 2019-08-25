@@ -52,14 +52,14 @@ def scan(session: Session):
     output.empty()
 
     res = http_basic.get_header_issues(head, raw, session.url)
-    if len(res) > 0:
+    if res:
         output.norm("Header Issues:")
 
         reporter.display_results(res, "\t")
         output.empty()
 
     res = http_basic.get_cookie_issues(head, session.url)
-    if len(res) > 0:
+    if res:
         output.norm("Cookie Issues:")
 
         reporter.display_results(res, "\t")
@@ -67,7 +67,7 @@ def scan(session: Session):
 
     # check for WAF signatures
     res = waf.get_waf(head.headers, raw, session.url)
-    if len(res) > 0:
+    if res:
         output.norm("WAF Detection:")
 
         reporter.display_results(res, "\t")
@@ -86,7 +86,7 @@ def scan(session: Session):
     output.norm(f"Identified {len(links) + 1} pages.")
     output.empty()
 
-    if len(res) > 0:
+    if res:
         output.norm("Issues Detected:")
 
         reporter.display_results(res, "\t")
@@ -103,59 +103,59 @@ def scan(session: Session):
 
     with Spinner():
         res = http_basic.check_local_ip_disclosure(session)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = apache_httpd.check_all(session.url)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = apache_tomcat.check_all(session.url, links)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = nginx.check_all(session.url)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = iis.check_all(session.url)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = http_basic.check_propfind(session.url)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = http_basic.check_trace(session.url)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = http_basic.check_options(session.url)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         res = php.find_phpinfo(session, links)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     with Spinner():
         wp_path, res = wordpress.identify(session.url)
-    if len(res) > 0:
+    if res:
         reporter.display_results(res, "\t")
 
     if wp_path is not None:
         with Spinner():
             res = wordpress.check_json_user_enum(wp_path)
             res += wordpress.check_path_disclosure(wp_path)
-        if len(res) > 0:
+        if res:
             reporter.display_results(res, "\t")
 
 
@@ -200,10 +200,10 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
 
     if file_good:
         links, results = special_files.check_special_files(session.url)
-        if len(results) > 0:
+        if results:
             reporter.display_results(results, "\t")
 
-            new_files += links
+        new_files += links
 
         if session.args.files:
             output.empty()
@@ -218,10 +218,10 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
                     results = None
                     links = None
 
-            if results is not None and len(results) > 0:
+            if results is not None and results:
                 reporter.display_results(results, "\t")
 
-            if links is not None and len(links) > 0:
+            if links is not None and links:
                 new_files += links
 
                 for l in links:
@@ -230,13 +230,22 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
 
                 output.empty()
 
+        # check for common backup files
+        all_links = orig_links + new_files
+        with Spinner():
+            backups, res = file_search.find_backups(all_links)
+        if res:
+            reporter.display_results(res, "\t")
+        if backups:
+            new_files += backups
+
     if path_good:
         links, results = special_files.check_special_paths(session.url)
 
-        if len(results) > 0:
+        if results:
             reporter.display_results(results, "\t")
 
-            new_files += links
+        new_files += links
 
         if session.args.dir:
             output.empty()
@@ -257,10 +266,10 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
                     results = None
                     links = None
 
-            if results is not None and len(results) > 0:
+            if results is not None and results:
                 reporter.display_results(results, "\t")
 
-            if links is not None and len(links) > 0:
+            if links is not None and links:
                 new_files += links
 
                 for l in links:
@@ -281,7 +290,7 @@ def _check_password_reset(session: Session, element_name: Optional[str] = None):
         with Spinner():
             res = password_reset.check_resp_user_enum(session, user, element_name)
 
-        if len(res) > 0:
+        if res:
             reporter.display_results(res, "\t")
     except WebDriverException as e:
         output.error("Selenium error encountered: " + e.msg)

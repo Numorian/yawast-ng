@@ -1,5 +1,6 @@
 ## 0.9.0 - In Development
 
+* [#20](https://github.com/adamcaudill/yawast/issues/20) - Check for common backup files
 * [#235](https://github.com/adamcaudill/yawast/issues/235) - WordPress Plugin Local Path Disclosure
 * [#244](https://github.com/adamcaudill/yawast/issues/244) - Check for common files with phpinfo()
 * [#237](https://github.com/adamcaudill/yawast/issues/237) - Bug: Connection error in check_local_ip_disclosure

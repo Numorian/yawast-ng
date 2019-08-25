@@ -626,7 +626,9 @@ class TestHttpBasic(TestCase):
         with utils.capture_sys_output() as (stdout, stderr):
             try:
                 http.reset()
-                _, _ = file_search.find_backups([url, f"{url}readme.html"])
+                _, _ = file_search.find_backups(
+                    [url, f"{url}readme.html", f"{url}#test"]
+                )
             except Exception as error:
                 self.assertIsNone(error)
 

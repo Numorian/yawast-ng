@@ -93,13 +93,24 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
     compressed = [".zip", ".tar.gz", ".gz", ".7z", ".tgz", ".rar"]
 
     for link in links:
+        # clean link of any junk
+        parsed = urlparse(link)
+        link = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+
         # check for add-on extensions
         if not link.endswith("/"):
             if "." in _extract_name(link):
                 for ext in extensions:
+                    # add-on extension
                     target = f"{link}{ext}"
-
                     if target not in checked:
+                        checked.append(target)
+                        resp = network.http_get(target, False)
+                        _log_result()
+
+                    # replacement extension
+                    target = f"{link[: link.rfind('.')]}{ext}"
+                    if target not in checked and target != link:
                         checked.append(target)
                         resp = network.http_get(target, False)
                         _log_result()

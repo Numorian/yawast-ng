@@ -7,12 +7,13 @@ from unittest import TestCase
 import requests
 import requests_mock
 
+from tests import utils
 from yawast.scanner.plugins.http import http_basic, response_scanner
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
 from yawast.scanner.plugins.http.servers import rails, python, nginx, php
 from yawast.scanner.session import Session
-from yawast.shared import network
+from yawast.shared import network, output
 
 
 class TestHttpBasic(TestCase):
@@ -582,3 +583,33 @@ class TestHttpBasic(TestCase):
             res = php.find_phpinfo(session, ["/"])
 
         self.assertFalse(any("PHP Info Found" in r.message for r in res))
+
+    def test_wp_ident(self):
+        url = "https://adamcaudill.com/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            try:
+                _, res = wordpress.identify(url)
+            except Exception as error:
+                self.assertIsNone(error)
+
+            self.assertNotIn("Exception", stderr.getvalue())
+            self.assertNotIn("Error", stderr.getvalue())
+            self.assertTrue(any("Found WordPress" in r.message for r in res))
+
+    def test_wp_json_user_enum(self):
+        url = "https://adamcaudill.com/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            try:
+                res = wordpress.check_json_user_enum(url)
+            except Exception as error:
+                self.assertIsNone(error)
+
+            self.assertNotIn("Exception", stderr.getvalue())
+            self.assertNotIn("Error", stderr.getvalue())
+            self.assertTrue(
+                any("WordPress WP-JSON User Enumeration" in r.message for r in res)
+            )

@@ -6,10 +6,11 @@ import os
 import time
 from multiprocessing import Manager, active_children
 from multiprocessing.dummy import Pool
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Any
 from urllib.parse import urljoin, urlparse
 
 import pkg_resources
+from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
@@ -55,8 +56,26 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
         except Exception:
             return ""
 
-    new_links = []
+    def _log_result():
+        nonlocal resp, results, new_links, target
+
+        if resp.status_code == 200:
+            # we found something!
+            new_links.append(target)
+
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(resp, {"original_url": link}),
+                    f"Found backup file: {target}",
+                    Vulnerabilities.HTTP_BACKUP_FILE,
+                )
+            )
+
+        results += response_scanner.check_response(target, resp)
+
+    new_links: List[str] = []
     results: List[Result] = []
+    checked: List[str] = []
 
     extensions = [
         "~",
@@ -71,27 +90,32 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
         ".tmp",
         ".swp",
     ]
+    compressed = [".zip", ".tar.gz", ".gz", ".7z", ".tgz", ".rar"]
 
     for link in links:
+        # check for add-on extensions
         if not link.endswith("/"):
             if "." in _extract_name(link):
                 for ext in extensions:
                     target = f"{link}{ext}"
 
-                    resp = network.http_get(target, False)
-                    if resp.status_code == 200:
-                        # we found something!
-                        new_links.append(target)
+                    if target not in checked:
+                        checked.append(target)
+                        resp = network.http_get(target, False)
+                        _log_result()
 
-                        results.append(
-                            Result.from_evidence(
-                                Evidence.from_response(resp, {"original_url": link}),
-                                f"Found backup file: {target}",
-                                Vulnerabilities.HTTP_BACKUP_FILE,
-                            )
-                        )
+        # checked for compressed directories
+        dir_url = link[: link.rfind("/")]
+        parsed_url = urlparse(dir_url)
+        if len(parsed_url.path) > 0:
+            # make sure we aren't at the root
+            for cmp in compressed:
+                target = f"{link}{cmp}"
 
-                    results += response_scanner.check_response(target, resp)
+                if target not in checked:
+                    checked.append(target)
+                    resp = network.http_head(target, False)
+                    _log_result()
 
     return new_links, results
 

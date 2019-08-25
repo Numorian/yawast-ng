@@ -632,3 +632,23 @@ class TestHttpBasic(TestCase):
 
             self.assertNotIn("Exception", stderr.getvalue())
             self.assertNotIn("Error", stderr.getvalue())
+
+    def test_find_backup_ext_all(self):
+        network.init("", "")
+        url = "https://adamcaudill.com/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            with requests_mock.Mocker() as m:
+                m.get(requests_mock.ANY, text="body", status_code=200)
+                m.head(requests_mock.ANY, status_code=200)
+
+                try:
+                    http.reset()
+                    _, res = file_search.find_backups([url, f"{url}test/readme.html"])
+                except Exception as error:
+                    self.assertIsNone(error)
+
+            self.assertNotIn("Exception", stderr.getvalue())
+            self.assertNotIn("Error", stderr.getvalue())
+            self.assertTrue(any("Found backup file" in r.message for r in res))

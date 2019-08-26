@@ -142,7 +142,7 @@ def scan(session: Session):
         reporter.display_results(res, "\t")
 
     with Spinner():
-        res = php.find_phpinfo(session, links)
+        res = php.find_phpinfo(links)
     if res:
         reporter.display_results(res, "\t")
 

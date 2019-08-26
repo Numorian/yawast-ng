@@ -56,9 +56,10 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
         except Exception:
             return ""
 
-    def _log_result():
-        nonlocal resp, results, new_links, target
+    def _process():
+        nonlocal results, new_links, target
 
+        resp = network.http_head(target, False)
         if resp.status_code == 200:
             # we found something!
             new_links.append(target)
@@ -75,7 +76,7 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
 
     new_links: List[str] = []
     results: List[Result] = []
-    checked: List[str] = []
+    process_queue: List[str] = []
 
     extensions = [
         "~",
@@ -103,17 +104,13 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
                 for ext in extensions:
                     # add-on extension
                     target = f"{link}{ext}"
-                    if target not in checked:
-                        checked.append(target)
-                        resp = network.http_get(target, False)
-                        _log_result()
+                    if target not in process_queue:
+                        process_queue.append(target)
 
                     # replacement extension
                     target = f"{link[: link.rfind('.')]}{ext}"
-                    if target not in checked and target != link:
-                        checked.append(target)
-                        resp = network.http_get(target, False)
-                        _log_result()
+                    if target not in process_queue and target != link:
+                        process_queue.append(target)
 
         # checked for compressed directories
         dir_url = link[: link.rfind("/")]
@@ -121,12 +118,13 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
         if len(parsed_url.path) > 0:
             # make sure we aren't at the root
             for cmp in compressed:
-                target = f"{link}{cmp}"
+                target = f"{dir_url}{cmp}"
 
-                if target not in checked:
-                    checked.append(target)
-                    resp = network.http_head(target, False)
-                    _log_result()
+                if target not in process_queue:
+                    process_queue.append(target)
+
+    for target in process_queue:
+        _process()
 
     return new_links, results
 

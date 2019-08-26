@@ -570,7 +570,7 @@ class TestHttpBasic(TestCase):
 
             session = Session(None, url)
 
-            res = php.find_phpinfo(["/"])
+            res = php.find_phpinfo([url])
 
         self.assertTrue(any("PHP Info Found" in r.message for r in res))
 
@@ -582,7 +582,7 @@ class TestHttpBasic(TestCase):
 
             session = Session(None, url)
 
-            res = php.find_phpinfo(["/"])
+            res = php.find_phpinfo([url])
 
         self.assertFalse(any("PHP Info Found" in r.message for r in res))
 

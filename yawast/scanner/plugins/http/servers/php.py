@@ -11,7 +11,6 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import version_checker
 from yawast.scanner.plugins.result import Result
-from yawast.scanner.session import Session
 from yawast.shared import network
 
 
@@ -48,7 +47,7 @@ def check_version(banner: str, raw: str, url: str) -> List[Result]:
     return results
 
 
-def find_phpinfo(session: Session, links: List[str]) -> List[Result]:
+def find_phpinfo(links: List[str]) -> List[Result]:
     results = []
 
     targets = ["phpinfo.php", "info.php", "version.php", "x.php"]
@@ -56,7 +55,7 @@ def find_phpinfo(session: Session, links: List[str]) -> List[Result]:
     for link in links:
         if link.endswith("/"):
             for target in targets:
-                turl = urljoin(session.url, target)
+                turl = urljoin(link, target)
                 res = network.http_get(turl, False)
 
                 if res.status_code == 200 and '<h1 class="p">PHP Version' in res.text:

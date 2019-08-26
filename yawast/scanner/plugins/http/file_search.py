@@ -6,11 +6,14 @@ import os
 import time
 from multiprocessing import Manager, active_children
 from multiprocessing.dummy import Pool
-from typing import List, Optional, Tuple
-from urllib.parse import urljoin
+from typing import List, Optional, Tuple, Any
+from urllib.parse import urljoin, urlparse
 
 import pkg_resources
+from requests import Response
 
+from yawast.reporting.enums import Vulnerabilities
+from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
@@ -43,6 +46,87 @@ def find_directories(
         file_path = path
 
     return _find_files(url, file_path, follow_redirections, True, recursive)
+
+
+def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
+    def _extract_name(url: str) -> str:
+        try:
+            u = urlparse(url)
+            return os.path.basename(u.path)
+        except Exception:
+            return ""
+
+    def _process():
+        nonlocal results, new_links, target
+
+        resp = network.http_head(target, False)
+        if resp.status_code == 200:
+            # we found something!
+            new_links.append(target)
+
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(resp, {"original_url": link}),
+                    f"Found backup file: {target}",
+                    Vulnerabilities.HTTP_BACKUP_FILE,
+                )
+            )
+
+        results += response_scanner.check_response(target, resp)
+
+    new_links: List[str] = []
+    results: List[Result] = []
+    process_queue: List[str] = []
+
+    extensions = [
+        "~",
+        ".bak",
+        ".back",
+        ".backup",
+        ".1",
+        ".old",
+        ".orig",
+        ".gz",
+        ".tar.gz",
+        ".tmp",
+        ".swp",
+    ]
+    compressed = [".zip", ".tar.gz", ".gz", ".7z", ".tgz", ".rar"]
+
+    for link in links:
+        # clean link of any junk
+        parsed = urlparse(link)
+        link = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+
+        # check for add-on extensions
+        if not link.endswith("/"):
+            if "." in _extract_name(link):
+                for ext in extensions:
+                    # add-on extension
+                    target = f"{link}{ext}"
+                    if target not in process_queue:
+                        process_queue.append(target)
+
+                    # replacement extension
+                    target = f"{link[: link.rfind('.')]}{ext}"
+                    if target not in process_queue and target != link:
+                        process_queue.append(target)
+
+        # checked for compressed directories
+        dir_url = link[: link.rfind("/")]
+        parsed_url = urlparse(dir_url)
+        if len(parsed_url.path) > 0:
+            # make sure we aren't at the root
+            for cmp in compressed:
+                target = f"{dir_url}{cmp}"
+
+                if target not in process_queue:
+                    process_queue.append(target)
+
+    for target in process_queue:
+        _process()
+
+    return new_links, results
 
 
 def reset():

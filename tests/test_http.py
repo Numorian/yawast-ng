@@ -8,7 +8,8 @@ import requests
 import requests_mock
 
 from tests import utils
-from yawast.scanner.plugins.http import http_basic, response_scanner
+from yawast.scanner.cli import http
+from yawast.scanner.plugins.http import http_basic, response_scanner, file_search
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
 from yawast.scanner.plugins.http.servers import rails, python, nginx, php
@@ -445,6 +446,7 @@ class TestHttpBasic(TestCase):
         url = "https://adamcaudill.com/"
         resp = network.http_get(url)
 
+        http.reset()
         res = response_scanner.check_response(url, resp)
 
         self.assertTrue(any("External JavaScript File" in r.message for r in res))
@@ -568,7 +570,7 @@ class TestHttpBasic(TestCase):
 
             session = Session(None, url)
 
-            res = php.find_phpinfo(session, ["/"])
+            res = php.find_phpinfo([url])
 
         self.assertTrue(any("PHP Info Found" in r.message for r in res))
 
@@ -580,11 +582,12 @@ class TestHttpBasic(TestCase):
 
             session = Session(None, url)
 
-            res = php.find_phpinfo(session, ["/"])
+            res = php.find_phpinfo([url])
 
         self.assertFalse(any("PHP Info Found" in r.message for r in res))
 
     def test_wp_ident(self):
+        network.init("", "")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)
@@ -599,6 +602,7 @@ class TestHttpBasic(TestCase):
             self.assertTrue(any("Found WordPress" in r.message for r in res))
 
     def test_wp_json_user_enum(self):
+        network.init("", "")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)
@@ -613,3 +617,40 @@ class TestHttpBasic(TestCase):
             self.assertTrue(
                 any("WordPress WP-JSON User Enumeration" in r.message for r in res)
             )
+
+    def test_find_backup_ext(self):
+        network.init("", "")
+        url = "https://adamcaudill.com/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            try:
+                http.reset()
+                _, _ = file_search.find_backups(
+                    [url, f"{url}readme.html", f"{url}#test"]
+                )
+            except Exception as error:
+                self.assertIsNone(error)
+
+            self.assertNotIn("Exception", stderr.getvalue())
+            self.assertNotIn("Error", stderr.getvalue())
+
+    def test_find_backup_ext_all(self):
+        network.init("", "")
+        url = "https://adamcaudill.com/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            with requests_mock.Mocker() as m:
+                m.get(requests_mock.ANY, text="body", status_code=200)
+                m.head(requests_mock.ANY, status_code=200)
+
+                try:
+                    http.reset()
+                    _, res = file_search.find_backups([url, f"{url}test/readme.html"])
+                except Exception as error:
+                    self.assertIsNone(error)
+
+            self.assertNotIn("Exception", stderr.getvalue())
+            self.assertNotIn("Error", stderr.getvalue())
+            self.assertTrue(any("Found backup file" in r.message for r in res))

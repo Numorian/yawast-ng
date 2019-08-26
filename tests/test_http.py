@@ -568,8 +568,6 @@ class TestHttpBasic(TestCase):
         with requests_mock.Mocker() as m:
             m.get(requests_mock.ANY, text='</a><h1 class="p">PHP Version 4.4.1</h1>')
 
-            session = Session(None, url)
-
             res = php.find_phpinfo([url])
 
         self.assertTrue(any("PHP Info Found" in r.message for r in res))
@@ -579,8 +577,6 @@ class TestHttpBasic(TestCase):
 
         with requests_mock.Mocker() as m:
             m.get(requests_mock.ANY, text="</a><h1>PHP Version 4.4.1</h1>")
-
-            session = Session(None, url)
 
             res = php.find_phpinfo([url])
 

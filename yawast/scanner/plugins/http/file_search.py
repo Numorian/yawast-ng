@@ -4,9 +4,11 @@
 
 import os
 import time
+from concurrent.futures import as_completed
+from concurrent.futures.thread import ThreadPoolExecutor
 from multiprocessing import Manager, active_children
 from multiprocessing.dummy import Pool
-from typing import List, Optional, Tuple, Any
+from typing import List, Optional, Tuple
 from urllib.parse import urljoin, urlparse
 
 import pkg_resources
@@ -49,6 +51,10 @@ def find_directories(
 
 
 def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
+    new_links: List[str] = []
+    results: List[Result] = []
+    process_queue: List[str] = []
+
     def _extract_name(url: str) -> str:
         try:
             u = urlparse(url)
@@ -56,27 +62,25 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
         except Exception:
             return ""
 
-    def _process():
-        nonlocal results, new_links, target
+    def _get_resp(url: str) -> Response:
+        return network.http_head(url, False)
 
-        resp = network.http_head(target, False)
-        if resp.status_code == 200:
+    def _process(url: str, res: Response):
+        nonlocal results, new_links
+
+        if res.status_code == 200:
             # we found something!
-            new_links.append(target)
+            new_links.append(url)
 
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(resp, {"original_url": link}),
-                    f"Found backup file: {target}",
+                    Evidence.from_response(res),
+                    f"Found backup file: {url}",
                     Vulnerabilities.HTTP_BACKUP_FILE,
                 )
             )
 
-        results += response_scanner.check_response(target, resp)
-
-    new_links: List[str] = []
-    results: List[Result] = []
-    process_queue: List[str] = []
+        results += response_scanner.check_response(target, res)
 
     extensions = [
         "~",
@@ -123,8 +127,12 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
                 if target not in process_queue:
                     process_queue.append(target)
 
-    for target in process_queue:
-        _process()
+    with ThreadPoolExecutor() as executor:
+        f = {executor.submit(_get_resp, url): url for url in process_queue}
+        for future in as_completed(f):
+            url = f[future]
+            resp = future.result()
+            _process(url, resp)
 
     return new_links, results
 

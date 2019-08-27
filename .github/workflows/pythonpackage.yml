@@ -71,6 +71,7 @@ jobs:
     - name: Setup Selenium (macOS)
       if: runner.os == 'macOS'
       run: |
+        brew update
         brew tap homebrew/cask
         brew cask install chromedriver
         brew cask install google-chrome

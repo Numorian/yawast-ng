@@ -1,4 +1,4 @@
-## 0.9.0 - In Development
+## 0.9.0 - 2019-09-01
 
 * [#20](https://github.com/adamcaudill/yawast/issues/20) - Check for common backup files
 * [#235](https://github.com/adamcaudill/yawast/issues/235) - WordPress Plugin Local Path Disclosure

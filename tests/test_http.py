@@ -13,7 +13,6 @@ from yawast.scanner.plugins.http import http_basic, response_scanner, file_searc
 from yawast.scanner.plugins.http.applications import wordpress
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
 from yawast.scanner.plugins.http.servers import rails, python, nginx, php
-from yawast.scanner.session import Session
 from yawast.shared import network, output
 
 
@@ -581,6 +580,41 @@ class TestHttpBasic(TestCase):
             res = php.find_phpinfo([url])
 
         self.assertFalse(any("PHP Info Found" in r.message for r in res))
+
+    def test_check_404(self):
+        network.init("", "")
+        url = "https://adamcaudill.com/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            with requests_mock.Mocker() as m:
+                m.get(requests_mock.ANY, text="body", status_code=200)
+
+                try:
+                    file, _, _, _ = network.check_404_response(url)
+                except Exception as error:
+                    self.assertIsNone(error)
+
+            self.assertNotIn("Exception", stderr.getvalue())
+            self.assertNotIn("Error", stderr.getvalue())
+
+    def test_check_put(self):
+        network.init("", "")
+        url = "https://adamcaudill.com/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            with requests_mock.Mocker() as m:
+                m.put(requests_mock.ANY, text="body", status_code=200)
+
+                try:
+                    res = network.http_put(url, "data")
+                except Exception as error:
+                    self.assertIsNone(error)
+
+            self.assertNotIn("Exception", stderr.getvalue())
+            self.assertNotIn("Error", stderr.getvalue())
+            self.assertIsNotNone(res)
 
     def test_wp_ident(self):
         network.init("", "")

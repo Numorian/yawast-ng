@@ -55,7 +55,8 @@ def main():
 
     proxy = args.proxy if "proxy" in args else None
     cookie = args.cookie if "cookie" in args else None
-    network.init(proxy, cookie)
+    header = args.header if "header" in args else None
+    network.init(proxy, cookie, header)
 
     # if we made it this far, it means that the parsing worked.
     urls = command_line.process_urls(urls)

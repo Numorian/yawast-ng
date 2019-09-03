@@ -77,6 +77,11 @@ def build_parser():
         "--proxy", type=str, help="HTTP Proxy Server (such as Burp Suite)"
     )
     parser_scan.add_argument("--cookie", type=str, help="Session cookie")
+    parser_scan.add_argument(
+        "--header",
+        type=str,
+        help="HTTP header (such as Authorization) sent with each request ('name=value')",
+    )
     parser_scan.add_argument("--output", type=str, help="Output JSON file")
     parser_scan.add_argument(
         "--user",

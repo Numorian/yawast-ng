@@ -35,7 +35,7 @@ class _BlockCookiesSet(cookiejar.DefaultCookiePolicy):
 _requester = requests.Session()
 
 
-def init(proxy: str, cookie: str) -> None:
+def init(proxy: str, cookie: str, header: str) -> None:
     global _requester
 
     _requester.cookies.set_policy(_BlockCookiesSet())
@@ -69,6 +69,11 @@ def init(proxy: str, cookie: str) -> None:
         c = requests.cookies.create_cookie(name=name, value=val)
 
         _requester.cookies.set_cookie(c)
+
+    if header is not None and len(header) > 0:
+        name = header.split("=")[0]
+        val = header.split("=")[1]
+        _requester.headers.update({name: val})
 
 
 def http_head(

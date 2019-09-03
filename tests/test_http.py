@@ -441,7 +441,7 @@ class TestHttpBasic(TestCase):
         )
 
     def test_response_scanner(self):
-        network.init("", "")
+        network.init("", "", "")
         url = "https://adamcaudill.com/"
         resp = network.http_get(url)
 
@@ -582,7 +582,7 @@ class TestHttpBasic(TestCase):
         self.assertFalse(any("PHP Info Found" in r.message for r in res))
 
     def test_check_404(self):
-        network.init("", "")
+        network.init("", "", "X-Test=123")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)
@@ -599,7 +599,7 @@ class TestHttpBasic(TestCase):
             self.assertNotIn("Error", stderr.getvalue())
 
     def test_check_put(self):
-        network.init("", "")
+        network.init("", "", "")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)
@@ -617,7 +617,7 @@ class TestHttpBasic(TestCase):
             self.assertIsNotNone(res)
 
     def test_wp_ident(self):
-        network.init("", "")
+        network.init("", "", "")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)
@@ -632,7 +632,7 @@ class TestHttpBasic(TestCase):
             self.assertTrue(any("Found WordPress" in r.message for r in res))
 
     def test_wp_json_user_enum(self):
-        network.init("", "")
+        network.init("", "", "")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)
@@ -649,7 +649,7 @@ class TestHttpBasic(TestCase):
             )
 
     def test_find_backup_ext(self):
-        network.init("", "")
+        network.init("", "", "")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)
@@ -666,7 +666,7 @@ class TestHttpBasic(TestCase):
             self.assertNotIn("Error", stderr.getvalue())
 
     def test_find_backup_ext_all(self):
-        network.init("", "")
+        network.init("", "", "")
         url = "https://adamcaudill.com/"
 
         output.setup(False, False, False)

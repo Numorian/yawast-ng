@@ -67,11 +67,7 @@ build_exe_options = {
         "configparser",
     ],
     "excludes": ["tkinter", "distutils"],
-    "include_files": [
-        (distutils_path, "distutils"),
-        path.join(install_path, "DLLs", "libcrypto-1_1-x64.dll"),
-        path.join(install_path, "DLLs", "libssl-1_1-x64.dll"),
-    ],
+    "include_files": [(distutils_path, "distutils")],
 }
 bdist_msi_options = {"add_to_path": True}
 

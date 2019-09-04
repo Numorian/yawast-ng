@@ -4,9 +4,10 @@
 
 import distutils
 import opcode
-import os
 import sys
 from os import path
+from pathlib import Path
+from typing import List, Union, Tuple
 
 from requirementslib import Lockfile
 from setuptools import find_packages
@@ -29,14 +30,23 @@ else:
 _ = distutils.__version__
 distutils_path = path.join(path.dirname(opcode.__file__), "distutils")
 
-install_path = path.dirname(path.dirname(os.__file__))
-
 if getattr(sys, "frozen", False):
     # frozen
     root_path = path.dirname(sys.executable)
 else:
     # unfrozen
     root_path = path.dirname(path.realpath(__file__))
+
+# search for DLL files needed for SSL support
+win_include_files: List[Union[str, Tuple[Union[bytes, str], str]]] = []
+for dll in Path(sys.base_prefix).glob("**/libcrypto-*.dll"):
+    win_include_files.append(str(dll))
+    break
+for dll in Path(sys.base_prefix).glob("**/libssl-*.dll"):
+    win_include_files.append(str(dll))
+    break
+
+win_include_files.append((distutils_path, "distutils"))
 
 # Dependencies are automatically detected.
 # I'm not sure about the *version.py files, but this hack works.
@@ -67,12 +77,7 @@ build_exe_options = {
         "configparser",
     ],
     "excludes": ["tkinter", "distutils"],
-    "include_files": [
-        (distutils_path, "distutils"),
-        # TODO: This isn't great. As these files could be in different places, should perform a real search
-        path.join(install_path, "Scripts", "libcrypto-1_1-x64.dll"),
-        path.join(install_path, "Scripts", "libssl-1_1-x64.dll"),
-    ],
+    "include_files": win_include_files,
 }
 bdist_msi_options = {"add_to_path": True}
 

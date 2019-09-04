@@ -40,10 +40,10 @@ else:
 # search for DLL files needed for SSL support
 win_include_files: List[Union[str, Tuple[Union[bytes, str], str]]] = []
 for dll in Path(sys.base_prefix).glob("**/libcrypto-*.dll"):
-    win_include_files.append(str(dll))
+    win_include_files.append(str(dll.resolve(True)))
     break
 for dll in Path(sys.base_prefix).glob("**/libssl-*.dll"):
-    win_include_files.append(str(dll))
+    win_include_files.append(str(dll.resolve(True)))
     break
 
 win_include_files.append((distutils_path, "distutils"))

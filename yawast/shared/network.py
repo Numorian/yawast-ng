@@ -64,15 +64,15 @@ def init(proxy: str, cookie: str, header: str) -> None:
         _requester.proxies.update(proxies)
 
     if cookie is not None and len(cookie) > 0:
-        name = cookie.split("=")[0]
-        val = cookie.split("=")[1]
+        name = cookie.split("=", 1)[0]
+        val = cookie.split("=", 1)[1]
         c = requests.cookies.create_cookie(name=name, value=val)
 
         _requester.cookies.set_cookie(c)
 
     if header is not None and len(header) > 0:
-        name = header.split("=")[0]
-        val = header.split("=")[1]
+        name = header.split("=", 1)[0]
+        val = header.split("=", 1)[1]
         _requester.headers.update({name: val})
 
 

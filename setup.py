@@ -61,6 +61,7 @@ build_exe_options = {
         "sslyze",
         "bs4",
         "selenium",
+        "configparser",
     ],
     "excludes": ["tkinter", "distutils"],
     "include_files": [(distutils_path, "distutils")],

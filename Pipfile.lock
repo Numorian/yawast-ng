@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "07dc83b1da9204024029786b588813908b99c4f4394bb53669b6ee6b22b66e85"
+            "sha256": "cb909537ea6a21a4fd1e28e757a8bed6120b7eefd33adc3cf683e5f913256f65"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -210,11 +210,11 @@
         },
         "requests-mock": {
             "hashes": [
-                "sha256:12e17c7ad1397fd1df5ead7727eb3f1bdc9fe1c18293b0492e0e01b57997e38d",
-                "sha256:dc9e416a095ee7c3360056990d52e5611fb94469352fc1c2dc85be1ff2189146"
+                "sha256:510df890afe08d36eca5bb16b4aa6308a6f85e3159ad3013bac8b9de7bd5a010",
+                "sha256:88d3402dd8b3c69a9e4f9d3a73ad11b15920c6efd36bc27bf1f701cf4a8e4646"
             ],
             "index": "pypi",
-            "version": "==1.6.0"
+            "version": "==1.7.0"
         },
         "selenium": {
             "hashes": [
@@ -261,10 +261,10 @@
         },
         "validator-collection": {
             "hashes": [
-                "sha256:12a7415f623478c1ee087d206b36a0965155eacc4aa8a8594d4ab7b38f8211eb"
+                "sha256:a3df71eeca9e3ae614fc06ccb71193352c1c33f9bee616bedd4c468149d307b2"
             ],
             "index": "pypi",
-            "version": "==1.3.5"
+            "version": "==1.3.6"
         },
         "yawast": {
             "editable": true,
@@ -376,7 +376,7 @@
         },
         "cx-freeze": {
             "git": "https://github.com/anthony-tuininga/cx_Freeze.git",
-            "ref": "7f0ceefa89ab48896bb28c8f57c0e550b338d9d8"
+            "ref": "6d43fad1ad382b1e491baa944864d3663fabdb1d"
         },
         "distlib": {
             "hashes": [
@@ -400,10 +400,10 @@
         },
         "importlib-metadata": {
             "hashes": [
-                "sha256:23d3d873e008a513952355379d93cbcab874c58f4f034ff657c7a87422fa64e8",
-                "sha256:80d2de76188eabfbfcf27e6a37342c2827801e59c4cc14b0371c56fed43820e3"
+                "sha256:9ff1b1c5a354142de080b8a4e9803e5d0d59283c93aed808617c787d16768375",
+                "sha256:b7143592e374e50584564794fcb8aaf00a23025f9db866627f89a21491847a8d"
             ],
-            "version": "==0.19"
+            "version": "==0.20"
         },
         "more-itertools": {
             "hashes": [

@@ -6,6 +6,7 @@ import argparse
 import sys
 from typing import List
 
+from yawast._version import get_version
 from yawast.commands import scan, dns, ssl
 from yawast.reporting import reporter
 from yawast.scanner.session import Session
@@ -27,6 +28,11 @@ def build_parser():
     )
 
     parser = argparse.ArgumentParser(prog="yawast")
+    parser.description = "YAWAST ...where a pentest starts. A tool for web-based application security testing."
+    parser.epilog = "For more information, see https://yawast.org"
+    parser.add_argument(
+        "-v", "--version", action="version", version=f"{parser.prog} v{get_version()}"
+    )
 
     subparsers = parser.add_subparsers()
     subparsers.required = True
@@ -124,6 +130,15 @@ def build_parser():
     parser_ssl.add_argument("--output", type=str, help="Output JSON file")
     parser_ssl.set_defaults(func=command_ssl)
 
+    # create the parser for the "version" command
+    parser_version = subparsers.add_parser(
+        "version",
+        help="Displays information about YAWAST and the current environment",
+        parents=[parent_parser],
+    )
+    parser_version.add_argument("--output", type=str, help="Output JSON file")
+    parser_version.set_defaults(func=command_version)
+
     return parser
 
 
@@ -181,3 +196,7 @@ def command_ssl(args, urls):
         session = Session(args, url)
 
         ssl.start(session)
+
+
+def command_version(args, urls):
+    pass

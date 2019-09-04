@@ -59,7 +59,11 @@ def main():
     network.init(proxy, cookie, header)
 
     # if we made it this far, it means that the parsing worked.
-    urls = command_line.process_urls(urls)
+    # version doesn't require any URLs, so it gets special handing
+    if args.command != "version":
+        urls = command_line.process_urls(urls)
+    else:
+        urls = []
 
     # we are good to keep going
     print_header()

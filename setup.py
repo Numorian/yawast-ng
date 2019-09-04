@@ -2,8 +2,12 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
+import distutils
+import opcode
 import sys
 from os import path
+from pathlib import Path
+from typing import List, Union, Tuple
 
 from requirementslib import Lockfile
 from setuptools import find_packages
@@ -20,6 +24,35 @@ else:
         def __init__(self, script=None, base=None):
             pass
 
+
+# effectively a NOP, to keep the import
+# we are doing this as a hack, to fix a cx_Freeze issue.
+_ = distutils.__version__
+distutils_path = path.join(path.dirname(opcode.__file__), "distutils")
+
+if getattr(sys, "frozen", False):
+    # frozen
+    root_path = path.dirname(sys.executable)
+else:
+    # unfrozen
+    root_path = path.dirname(path.realpath(__file__))
+
+# search for DLL files needed for SSL support
+if hasattr(sys, "real_prefix"):
+    win_search_path = sys.real_prefix
+else:
+    win_search_path = sys.base_prefix
+
+win_search_pattern = ["**/libcrypto-*.dll", "**/libssl-*.dll"]
+win_include_files: List[Union[str, Tuple[Union[bytes, str], str]]] = []
+for srch in win_search_pattern:
+    for dll in Path(win_search_path).glob(srch):
+        full_path = str(dll.resolve(True))
+        target_name = path.join("lib", path.basename(full_path))
+        win_include_files.append((full_path, target_name))
+        break
+
+win_include_files.append((distutils_path, "distutils"))
 
 # Dependencies are automatically detected.
 # I'm not sure about the *version.py files, but this hack works.
@@ -47,17 +80,12 @@ build_exe_options = {
         "sslyze",
         "bs4",
         "selenium",
+        "configparser",
     ],
-    "excludes": ["tkinter"],
+    "excludes": ["tkinter", "distutils"],
+    "include_files": win_include_files,
 }
 bdist_msi_options = {"add_to_path": True}
-
-if getattr(sys, "frozen", False):
-    # frozen
-    root_path = path.dirname(sys.executable)
-else:
-    # unfrozen
-    root_path = path.dirname(path.realpath(__file__))
 
 
 def get_version_and_cmdclass(package_path):

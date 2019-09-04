@@ -63,7 +63,7 @@ build_exe_options = {
         "selenium",
     ],
     "excludes": ["tkinter"],
-    "include_files": [(distutils_path, "distutils")],
+    "zip_includes": [(distutils_path, "distutils")],
 }
 bdist_msi_options = {"add_to_path": True}
 

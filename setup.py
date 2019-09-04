@@ -62,8 +62,8 @@ build_exe_options = {
         "bs4",
         "selenium",
     ],
-    "excludes": ["tkinter"],
-    "zip_includes": [(distutils_path, "distutils")],
+    "excludes": ["tkinter", "distutils"],
+    "include_files": [(distutils_path, "distutils")],
 }
 bdist_msi_options = {"add_to_path": True}
 

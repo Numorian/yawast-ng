@@ -97,7 +97,8 @@ jobs:
 
     - name: Run version (all)
       run: |
-        pipenv run ./bin/yawast version
+        pipenv run python ./bin/yawast version
+      shell: bash {0}
 
     - name: Build Windows EXE
       if: runner.os == 'Windows'
@@ -108,6 +109,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         .\build\exe.win-amd64-3.7\yawast.exe version
+      shell: bash {0}
 
   build-docker:
     runs-on: ubuntu-latest

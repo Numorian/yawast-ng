@@ -67,7 +67,12 @@ build_exe_options = {
         "configparser",
     ],
     "excludes": ["tkinter", "distutils"],
-    "include_files": [(distutils_path, "distutils")],
+    "include_files": [
+        (distutils_path, "distutils"),
+        # TODO: This isn't great. As these files could be in different places, should perform a real search
+        path.join(install_path, "Scripts", "libcrypto-1_1-x64.dll"),
+        path.join(install_path, "Scripts", "libssl-1_1-x64.dll"),
+    ],
 }
 bdist_msi_options = {"add_to_path": True}
 

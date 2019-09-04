@@ -47,7 +47,9 @@ win_search_pattern = ["**/libcrypto-*.dll", "**/libssl-*.dll"]
 win_include_files: List[Union[str, Tuple[Union[bytes, str], str]]] = []
 for srch in win_search_pattern:
     for dll in Path(win_search_path).glob(srch):
-        win_include_files.append(str(dll.resolve(True)))
+        full_path = str(dll.resolve(True))
+        target_name = path.join("lib", path.basename(full_path))
+        win_include_files.append((full_path, target_name))
         break
 
 win_include_files.append((distutils_path, "distutils"))

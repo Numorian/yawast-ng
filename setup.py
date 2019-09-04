@@ -24,7 +24,7 @@ else:
 # Dependencies are automatically detected.
 # I'm not sure about the *version.py files, but this hack works.
 build_exe_options = {
-    "packages": ["os", "dns", "distutils"],
+    "packages": ["os", "dns"],
     "includes": [
         "six",
         "appdirs",

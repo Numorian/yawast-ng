@@ -28,6 +28,7 @@ packaging = "*"
 beautifulsoup4 = "*"
 psutil = "*"
 selenium = "*"
+setuptools = "*"
 
 [requires]
 python_version = "3.7"

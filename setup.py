@@ -38,13 +38,17 @@ else:
     root_path = path.dirname(path.realpath(__file__))
 
 # search for DLL files needed for SSL support
+if hasattr(sys, "real_prefix"):
+    win_search_path = sys.real_prefix
+else:
+    win_search_path = sys.base_prefix
+
+win_search_pattern = ["**/libcrypto-*.dll", "**/libssl-*.dll"]
 win_include_files: List[Union[str, Tuple[Union[bytes, str], str]]] = []
-for dll in Path(sys.base_prefix).glob("**/libcrypto-*.dll"):
-    win_include_files.append(str(dll.resolve(True)))
-    break
-for dll in Path(sys.base_prefix).glob("**/libssl-*.dll"):
-    win_include_files.append(str(dll.resolve(True)))
-    break
+for srch in win_search_pattern:
+    for dll in Path(win_search_path).glob(srch):
+        win_include_files.append(str(dll.resolve(True)))
+        break
 
 win_include_files.append((distutils_path, "distutils"))
 

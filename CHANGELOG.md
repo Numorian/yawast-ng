@@ -1,9 +1,10 @@
-## 0.9.0 - 2019-09-03
+## 0.9.0 - 2019-09-04
 
 * [#20](https://github.com/adamcaudill/yawast/issues/20) - Check for common backup files
 * [#207](https://github.com/adamcaudill/yawast/issues/207) - Specify JWT Similar To Cookie
 * [#235](https://github.com/adamcaudill/yawast/issues/235) - WordPress Plugin Local Path Disclosure
 * [#244](https://github.com/adamcaudill/yawast/issues/244) - Check for common files with phpinfo()
+* [#264](https://github.com/adamcaudill/yawast/issues/264) - Add new version command
 * [#237](https://github.com/adamcaudill/yawast/issues/237) - Bug: Connection error in check_local_ip_disclosure
 
 ## 0.8.3 - 2019-08-19

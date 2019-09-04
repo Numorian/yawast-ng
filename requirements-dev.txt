@@ -10,9 +10,9 @@ colorama==0.4.1
 coverage==4.5.4
 distlib==0.2.9.post0
 first==2.0.2
-git+https://github.com/anthony-tuininga/cx_Freeze.git@7f0ceefa89ab48896bb28c8f57c0e550b338d9d8#egg=cx-freeze
+git+https://github.com/anthony-tuininga/cx_Freeze.git@6d43fad1ad382b1e491baa944864d3663fabdb1d#egg=cx-freeze
 idna==2.8
-importlib-metadata==0.19
+importlib-metadata==0.20
 more-itertools==7.2.0
 mypy-extensions==0.4.1
 mypy==0.720

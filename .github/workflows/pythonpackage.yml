@@ -104,6 +104,9 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         pipenv run python setup.py build_exe
+        ls -ltra ./build/exe.win-amd64-3.7
+        ls -ltra ./build/exe.win-amd64-3.7/lib
+      shell: bash {0}
 
     - name: Run version (Windows)
       if: runner.os == 'Windows'

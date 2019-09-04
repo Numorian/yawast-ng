@@ -95,10 +95,19 @@ jobs:
         pipenv run python setup.py sdist
         pipenv run python setup.py bdist_wheel
 
+    - name: Run version (all)
+      run: |
+        pipenv run ./bin/yawast version
+
     - name: Build Windows EXE
       if: runner.os == 'Windows'
       run: |
         pipenv run python setup.py build_exe
+
+    - name: Run version (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        .\build\exe.win-amd64-3.7\yawast.exe version
 
   build-docker:
     runs-on: ubuntu-latest

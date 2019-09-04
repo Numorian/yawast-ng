@@ -108,6 +108,7 @@ jobs:
     - name: Run version (Windows)
       if: runner.os == 'Windows'
       run: |
+        ls -ltra ./build/exe.win-amd64-3.7/
         ./build/exe.win-amd64-3.7/yawast.exe version
       shell: bash {0}
 

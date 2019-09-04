@@ -2,6 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
+import distutils
 import sys
 from os import path
 
@@ -20,6 +21,19 @@ else:
         def __init__(self, script=None, base=None):
             pass
 
+
+# effectively a NOP, to keep the import
+# we are doing this as a hack, to fix a cx_Freeze issue.
+_ = distutils.__version__
+
+if getattr(sys, "frozen", False):
+    # frozen
+    root_path = path.dirname(sys.executable)
+    distutils_path = path.join(path.dirname(sys.executable), "distutils")
+else:
+    # unfrozen
+    root_path = path.dirname(path.realpath(__file__))
+    distutils_path = path.join(path.dirname(path.realpath(__file__)), "distutils")
 
 # Dependencies are automatically detected.
 # I'm not sure about the *version.py files, but this hack works.
@@ -49,15 +63,9 @@ build_exe_options = {
         "selenium",
     ],
     "excludes": ["tkinter"],
+    "include_files": [(distutils_path, "distutils")],
 }
 bdist_msi_options = {"add_to_path": True}
-
-if getattr(sys, "frozen", False):
-    # frozen
-    root_path = path.dirname(sys.executable)
-else:
-    # unfrozen
-    root_path = path.dirname(path.realpath(__file__))
 
 
 def get_version_and_cmdclass(package_path):

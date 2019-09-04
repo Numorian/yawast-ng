@@ -56,24 +56,50 @@ def init(proxy: str, cookie: str, header: str) -> None:
 
     if proxy is not None and len(proxy) > 0:
         # we have a proxy, set it
-        if not proxy.startswith("http"):
+        if not proxy.startswith("http") and "://" not in proxy:
             proxy = f"http://{proxy}"
 
-        proxies = {"http": proxy, "https": proxy}
+        if proxy.startswith("http"):
+            proxies = {"http": proxy, "https": proxy}
 
-        _requester.proxies.update(proxies)
+            _requester.proxies.update(proxies)
+        else:
+            output.error(
+                f"Invalid proxy server specified ({proxy}) - only HTTP proxy servers are supported. Proxy ignored."
+            )
 
     if cookie is not None and len(cookie) > 0:
-        name = cookie.split("=", 1)[0]
-        val = cookie.split("=", 1)[1]
-        c = requests.cookies.create_cookie(name=name, value=val)
+        if "=" in cookie:
+            name = cookie.split("=", 1)[0]
+            val = cookie.split("=", 1)[1]
+            c = requests.cookies.create_cookie(name=name, value=val)
 
-        _requester.cookies.set_cookie(c)
+            _requester.cookies.set_cookie(c)
+        else:
+            output.error(
+                f"Invalid cookie specified ({cookie}) - cookie must be in NAME=VALUE format. Ignored."
+            )
 
     if header is not None and len(header) > 0:
-        name = header.split("=", 1)[0]
-        val = header.split("=", 1)[1]
-        _requester.headers.update({name: val})
+        if "=" in header:
+            name = header.split("=", 1)[0]
+            val = header.split("=", 1)[1]
+            _requester.headers.update({name: val})
+        elif ": " in header:
+            # in case they use the wire format - not officially supported, but, meh
+            name = header.split(": ", 1)[0]
+            val = header.split(": ", 1)[1]
+            _requester.headers.update({name: val})
+        else:
+            output.error(
+                f"Invalid header specified ({header}) - header must be in NAME=VALUE format. Ignored."
+            )
+
+
+def reset():
+    global _requester
+
+    _requester = requests.Session()
 
 
 def http_head(

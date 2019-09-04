@@ -3,6 +3,7 @@
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
 
 import distutils
+import opcode
 import sys
 from os import path
 
@@ -25,15 +26,14 @@ else:
 # effectively a NOP, to keep the import
 # we are doing this as a hack, to fix a cx_Freeze issue.
 _ = distutils.__version__
+distutils_path = path.join(path.dirname(opcode.__file__), "distutils")
 
 if getattr(sys, "frozen", False):
     # frozen
     root_path = path.dirname(sys.executable)
-    distutils_path = path.join(path.dirname(sys.executable), "distutils")
 else:
     # unfrozen
     root_path = path.dirname(path.realpath(__file__))
-    distutils_path = path.join(path.dirname(path.realpath(__file__)), "distutils")
 
 # Dependencies are automatically detected.
 # I'm not sure about the *version.py files, but this hack works.

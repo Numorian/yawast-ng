@@ -4,8 +4,9 @@
 
 import distutils
 import opcode
+import os
 import sys
-from os import path, os
+from os import path
 
 from requirementslib import Lockfile
 from setuptools import find_packages

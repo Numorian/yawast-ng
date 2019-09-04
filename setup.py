@@ -5,7 +5,7 @@
 import distutils
 import opcode
 import sys
-from os import path
+from os import path, os
 
 from requirementslib import Lockfile
 from setuptools import find_packages
@@ -27,6 +27,8 @@ else:
 # we are doing this as a hack, to fix a cx_Freeze issue.
 _ = distutils.__version__
 distutils_path = path.join(path.dirname(opcode.__file__), "distutils")
+
+install_path = path.dirname(path.dirname(os.__file__))
 
 if getattr(sys, "frozen", False):
     # frozen
@@ -64,7 +66,11 @@ build_exe_options = {
         "configparser",
     ],
     "excludes": ["tkinter", "distutils"],
-    "include_files": [(distutils_path, "distutils")],
+    "include_files": [
+        (distutils_path, "distutils"),
+        path.join(install_path, "DLLs", "libcrypto-1_1-x64.dll"),
+        path.join(install_path, "DLLs", "libssl-1_1-x64.dll"),
+    ],
 }
 bdist_msi_options = {"add_to_path": True}
 

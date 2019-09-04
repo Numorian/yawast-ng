@@ -13,7 +13,7 @@ requirementslib = "*"
 
 [packages]
 yawast = {editable = true,path = "."}
-sslyze = "==2.1.3"
+sslyze = "==2.1.4"
 requests-mock = "*"
 jsonschema = "~=2.6"
 validator-collection = "*"

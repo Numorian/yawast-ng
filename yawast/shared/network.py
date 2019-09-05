@@ -19,8 +19,8 @@ from yawast.reporting import reporter
 from yawast.shared import output, utils
 
 YAWAST_UA = (
-    f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) "
-    f"YAWAST/{get_version()}/PY Chrome/74.0.3729.169 Safari/537.36"
+    f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) "
+    f"YAWAST/{get_version()}/PY Chrome/77.0.3865.65 Safari/537.36"
 )
 
 SERVICE_UA = f"YAWAST/{get_version()}/PY"

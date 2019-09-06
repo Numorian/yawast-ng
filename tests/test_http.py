@@ -684,3 +684,155 @@ class TestHttpBasic(TestCase):
             self.assertNotIn("Exception", stderr.getvalue())
             self.assertNotIn("Error", stderr.getvalue())
             self.assertTrue(any("Found backup file" in r.message for r in res))
+
+    def test_net_init_empty(self):
+        try:
+            network.init("", "", "")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+
+        network.reset()
+
+    def test_net_init_none(self):
+        try:
+            network.init(None, None, None)
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+
+        network.reset()
+
+    def test_net_init_valid_proxy(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("http://127.0.0.1:1234", "", "")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertNotIn("Invalid proxy server specified", stdout.getvalue())
+
+        network.reset()
+
+    def test_net_init_valid_proxy_alt(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("127.0.0.1:1234", "", "")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertNotIn("Invalid proxy server specified", stdout.getvalue())
+
+        network.reset()
+
+    def test_net_init_invalid_proxy_ftp(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("ftp://127.0.0.1:1234", "", "")
+
+                _ = network.http_get("http://example.com")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertIn("Error", stdout.getvalue())
+        self.assertIn("Invalid proxy server specified", stdout.getvalue())
+
+        network.reset()
+
+    def test_net_init_valid_cookie(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("", "SESSION=123", "")
+
+                _ = network.http_get("http://example.com")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertNotIn("cookie must be in NAME=VALUE format", stdout.getvalue())
+
+        network.reset()
+
+    def test_net_init_invalid_cookie(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("", "SESSION123", "")
+
+                _ = network.http_get("http://example.com")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertIn("Error", stdout.getvalue())
+        self.assertIn("cookie must be in NAME=VALUE format", stdout.getvalue())
+
+        network.reset()
+
+    def test_net_init_valid_header(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("", "", "AUTH=123")
+
+                _ = network.http_get("http://example.com")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertNotIn("header must be in NAME=VALUE format", stdout.getvalue())
+
+        network.reset()
+
+    def test_net_init_valid_header_alt(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("", "", "AUTH: 123")
+
+                _ = network.http_get("http://example.com")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertNotIn("header must be in NAME=VALUE format", stdout.getvalue())
+
+        network.reset()
+
+    def test_net_init_invalid_header(self):
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                network.init("", "", "AUTH123")
+
+                _ = network.http_get("http://example.com")
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(network._requester)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertIn("Error", stdout.getvalue())
+        self.assertIn("header must be in NAME=VALUE format", stdout.getvalue())
+
+        network.reset()

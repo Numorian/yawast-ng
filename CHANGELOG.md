@@ -1,3 +1,7 @@
+## 0.10.0 - In Development
+
+* [#261](https://github.com/adamcaudill/yawast/issues/261) - Bump sslyze from 2.1.3 to 2.1.4
+
 ## 0.9.0 - 2019-09-04
 
 * [#20](https://github.com/adamcaudill/yawast/issues/20) - Check for common backup files

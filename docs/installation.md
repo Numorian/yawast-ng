@@ -6,11 +6,16 @@ permalink: /installation/
 
 ### Installing
 
-The simplest installation method on most platforms is to use the Pip installer (for Windows, see below):
+The simplest installation method on most platforms is to use the [pipx](https://pipxproject.github.io/pipx/) installer (for Windows, see below):
 
-`pip3 install yawast`
+```
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+pipx install --python python3.7 yawast
+```
 
-This allows for simple updates (`pip3 install -U yawast`) and makes it easy to ensure that you are always using the latest version.
+
+This allows for simple updates (`pipx upgrade yawast`) and makes it easy to ensure that you are always using the latest version.
 
 YAWAST requires Python 3.7, and is tested on Mac OSX, Linux, and Windows.
 
@@ -32,20 +37,26 @@ $ docker pull adamcaudill/yawast && docker run -v `pwd`/:/data/output/ --rm -it 
 
 #### Kali Rolling
 
-To install on Kali, just run:
+To install on Kali, run:
 
 ```
-pip3 install -U nassl
-pip3 install yawast
+sudo apt-get install python3-venv
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+source ~/.profile
+pipx install yawast
 ```
 
 #### Ubuntu
 
-To install YAWAST, you first need to install a couple packages via `apt-get`:
+Installing YAWAST on Ubuntu (19.04) is very easy:
 
 ```
-sudo apt-get install python3.7
-sudo pip3 install yawast
+sudo apt-get install python3-pip python3-venv
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+source ~/.profile
+pipx install yawast
 ```
 
 #### macOS
@@ -54,17 +65,19 @@ The version of Python shipped with macOS is too old, so the recommended solution
 
 ```
 brew install python
-pip3 install yawast
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+pipx install yawast
 ```
 
 #### Windows
 
 There are two ways to use YAWAST on Windows; the easiest is to use the compiled EXE available on the [releases](https://github.com/adamcaudill/yawast/releases) page. This allows you to avoid installing Python and dealing with dependencies.
 
-The other option is to install Python 3.x 64-bit and use Pip via:
+The other option is to install Python 3.7 64-bit and use pipx via:
 
 ```
-pip install yawast
+pipx install yawast
 ```
 
 ### Enhanced Vulnerability Scanner

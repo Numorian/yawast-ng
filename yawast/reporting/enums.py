@@ -57,6 +57,10 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     APP_WORDPRESS_PATH_DISCLOSURE = VulnerabilityInfo.create(
         "App_WordPress_Path_Disclosure", Severity.LOW, "", True
     )
+    APP_JIRA_FOUND = VulnerabilityInfo.create("App_Jira_Found", Severity.INFO, "")
+    APP_JIRA_USER_REG_ENABLED = VulnerabilityInfo.create(
+        "App_Jira_User_Reg_Enabled", Severity.LOW, ""
+    )
 
     COOKIE_MISSING_SECURE_FLAG = VulnerabilityInfo.create(
         "Cookie_Missing_Secure_Flag", Severity.MEDIUM, "", True

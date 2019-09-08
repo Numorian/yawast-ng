@@ -21,7 +21,7 @@ from yawast.scanner.plugins.http import (
     error_checker,
 )
 from yawast.scanner.plugins.http.applications.generic import password_reset
-from yawast.scanner.plugins.http.applications import wordpress
+from yawast.scanner.plugins.http.applications import wordpress, jira
 from yawast.scanner.plugins.http.applications.generic.password_reset import (
     PasswordResetElementNotFound,
 )
@@ -145,6 +145,17 @@ def scan(session: Session):
         res = php.find_phpinfo(links)
     if res:
         reporter.display_results(res, "\t")
+
+    with Spinner():
+        res, jira_path = jira.check_for_jira(session)
+    if res:
+        reporter.display_results(res, "\t")
+
+    if jira_path is not None:
+        with Spinner():
+            res = jira.check_jira_user_registration(jira_path)
+        if res:
+            reporter.display_results(res, "\t")
 
     with Spinner():
         wp_path, res = wordpress.identify(session.url)

@@ -1,7 +1,8 @@
 #  Copyright (c) 2013 - 2019 Adam Caudill and Contributors.
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file or go to https://yawast.org/license/ for full license details.
-
+import os
+from pathlib import Path
 from unittest import TestCase
 
 import requests
@@ -10,9 +11,10 @@ import requests_mock
 from tests import utils
 from yawast.scanner.cli import http
 from yawast.scanner.plugins.http import http_basic, response_scanner, file_search
-from yawast.scanner.plugins.http.applications import wordpress
+from yawast.scanner.plugins.http.applications import wordpress, jira
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
 from yawast.scanner.plugins.http.servers import rails, python, nginx, php
+from yawast.scanner.session import Session
 from yawast.shared import network, output
 
 
@@ -834,5 +836,69 @@ class TestHttpBasic(TestCase):
         self.assertNotIn("Exception", stderr.getvalue())
         self.assertIn("Error", stdout.getvalue())
         self.assertIn("header must be in NAME=VALUE format", stdout.getvalue())
+
+        network.reset()
+
+    def test_jira_found(self):
+        url = "https://www.example.org/"
+
+        target_dir = os.path.dirname(os.path.realpath("__file__"))
+        path = os.path.join(target_dir, "tests/test_data/jira_dashboard.txt")
+        contents = Path(path).read_text()
+
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                with requests_mock.Mocker() as m:
+                    m.get(url, text="body", status_code=200)
+                    m.get(f"{url}secure/Dashboard.jspa", text=contents, status_code=200)
+                    m.get(
+                        f"{url}jira/secure/Dashboard.jspa", text="body", status_code=404
+                    )
+
+                    session = Session(None, url)
+
+                    results, jira_url = jira.check_for_jira(session)
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(jira_url)
+        self.assertIsNotNone(results)
+        self.assertTrue(len(results) > 0)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertTrue(any("Jira Installation Found" in r.message for r in results))
+        self.assertTrue(any("v8.1.0-801000" in r.message for r in results))
+
+        network.reset()
+
+    def test_jira_user_reg(self):
+        url = "https://www.example.org/secure/Dashboard.jspa"
+
+        target_dir = os.path.dirname(os.path.realpath("__file__"))
+        path = os.path.join(target_dir, "tests/test_data/jira_registration.txt")
+        contents = Path(path).read_text()
+
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                with requests_mock.Mocker() as m:
+                    m.get(
+                        "https://www.example.org/secure/Signup!default.jspa",
+                        text=contents,
+                        status_code=200,
+                    )
+
+                    results = jira.check_jira_user_registration(url)
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(results)
+        self.assertTrue(len(results) > 0)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertTrue(
+            any("Jira User Registration Enabled" in r.message for r in results)
+        )
 
         network.reset()

@@ -20,9 +20,9 @@ from yawast.scanner.plugins.http import (
     file_search,
     error_checker,
 )
-from yawast.scanner.plugins.http.applications import password_reset
+from yawast.scanner.plugins.http.applications.generic import password_reset
 from yawast.scanner.plugins.http.applications import wordpress
-from yawast.scanner.plugins.http.applications.password_reset import (
+from yawast.scanner.plugins.http.applications.generic.password_reset import (
     PasswordResetElementNotFound,
 )
 from yawast.scanner.plugins.http.servers import (

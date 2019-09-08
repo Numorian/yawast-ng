@@ -78,6 +78,7 @@ The following checks are performed:
 * *(PHP)* Info Disclosure: PHP version
 * *(PHP)* Outdated version
 * *(PHP)* Common files calling `phpinfo()`
+* *(Jira)* Version Installed
 * *(Rails)* File Content Disclosure: CVE-2019-5418
 * *(Rails)* Presence of X-Runtime header
 * *(WordPress)* Version detection

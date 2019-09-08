@@ -9,7 +9,7 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from tests import utils
 from yawast import command_line
-from yawast.scanner.plugins.http.applications.password_reset import (
+from yawast.scanner.plugins.http.applications.generic.password_reset import (
     _get_driver,
     _find_user_field,
 )

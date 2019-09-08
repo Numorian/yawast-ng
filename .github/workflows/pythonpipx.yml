@@ -28,10 +28,12 @@ jobs:
 
     - name: Install with pipx
       run: |
+        source ~/.profile
         pipx install --python python3.7 yawast --verbose
       shell: bash {0}
 
     - name: Run version
       run: |
+        source ~/.profile
         yawast version
       shell: bash {0}

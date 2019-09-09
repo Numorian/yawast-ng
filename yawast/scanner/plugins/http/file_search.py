@@ -137,6 +137,41 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
     return new_links, results
 
 
+def find_ds_store(links: List[str]) -> List[Result]:
+    results = []
+    queue = []
+
+    def _get_resp(url: str) -> Response:
+        return network.http_get(url, False)
+
+    def _process(url: str, res: Response):
+        nonlocal results
+
+        if res.status_code == 200 and res.content.startswith(b"\0\0\0\1Bud1\0"):
+            results.append(
+                Result.from_evidence(
+                    Evidence.from_response(res),
+                    f".DS_Store File Found: {url}",
+                    Vulnerabilities.HTTP_DS_STORE_FILE,
+                )
+            )
+
+    for link in links:
+        if link.endswith("/"):
+            turl = urljoin(link, ".DS_Store")
+
+            queue.append(turl)
+
+    with ThreadPoolExecutor() as executor:
+        f = {executor.submit(_get_resp, url): url for url in queue}
+        for future in as_completed(f):
+            url = f[future]
+            resp = future.result()
+            _process(url, resp)
+
+    return results
+
+
 def reset():
     global _files, _depth
 

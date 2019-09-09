@@ -289,6 +289,13 @@ def _file_search(session: Session, orig_links: List[str]) -> List[str]:
 
                 output.empty()
 
+    # check for .DS_Store files
+    if file_good:
+        res = file_search.find_ds_store(new_files)
+
+        if res:
+            reporter.display_results(res, "\t")
+
     return new_files
 
 

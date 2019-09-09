@@ -196,6 +196,7 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     HTTP_HEADER_PRAGMA_NO_CACHE_MISSING = VulnerabilityInfo.create(
         "Http_Header_Pragma_No_Cache_Missing", Severity.LOW, ""
     )
+
     HTTP_ERROR_MESSAGE = VulnerabilityInfo.create(
         "Http_Error_Message", Severity.MEDIUM, "", True
     )
@@ -222,6 +223,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     )
     HTTP_BACKUP_FILE = VulnerabilityInfo.create(
         "Http_Backup_File", Severity.BEST_PRACTICE, "", True
+    )
+    HTTP_DS_STORE_FILE = VulnerabilityInfo.create(
+        "Http_DS_Store_File", Severity.INFO, "", True
     )
 
     TLS_CBC_CIPHER_SUITE = VulnerabilityInfo.create(

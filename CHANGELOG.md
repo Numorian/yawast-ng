@@ -2,6 +2,7 @@
 
 * [#261](https://github.com/adamcaudill/yawast/issues/261) - Bump sslyze from 2.1.3 to 2.1.4
 * [#272](https://github.com/adamcaudill/yawast/issues/272) - Basic Jira Detection
+* [#274](https://github.com/adamcaudill/yawast/issues/274) - Check for .DS_Store Files
 
 ## 0.9.0 - 2019-09-04
 

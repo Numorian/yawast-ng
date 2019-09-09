@@ -37,6 +37,7 @@ The following checks are performed:
 * *(Generic)* Cookies with SameSite=None flag
 * *(Generic)* Search for 14,405 common files (via `--files`) & 21,332 common directories (via `--dir`)
 * *(Generic)* Common backup files
+* *(Generic)* Presence of .DS_Store files
 * *(Generic)* CAA DNS records missing
 * *(Generic)* DNSSEC not enabled
 * *(Generic)* Detailed error messages

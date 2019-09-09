@@ -902,3 +902,24 @@ class TestHttpBasic(TestCase):
         )
 
         network.reset()
+
+    def test_ds_store(self):
+        url = "https://www.example.org/"
+
+        try:
+            output.setup(False, True, True)
+            with utils.capture_sys_output() as (stdout, stderr):
+                with requests_mock.Mocker() as m:
+                    m.get(requests_mock.ANY, content=b"\0\0\0\1Bud1\0", status_code=200)
+
+                    results = file_search.find_ds_store([url])
+        except Exception as error:
+            self.assertIsNone(error)
+
+        self.assertIsNotNone(results)
+        self.assertTrue(len(results) > 0)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stdout.getvalue())
+        self.assertTrue(any(".DS_Store File Found" in r.message for r in results))
+
+        network.reset()

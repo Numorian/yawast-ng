@@ -13,6 +13,7 @@ import urllib3
 from requests.adapters import HTTPAdapter
 from requests.models import Response, Request, PreparedRequest
 from requests_mock.request import _RequestObjectProxy
+from validator_collection import checkers
 
 from yawast._version import get_version
 from yawast.reporting import reporter
@@ -379,7 +380,13 @@ def check_ipv4_connection() -> str:
     prefix = "IPv4 -> Internet:"
     url = "https://ipv4.icanhazip.com/"
 
-    res = _check_connection(url)
+    try:
+        res = _check_connection(url)
+
+        if not checkers.is_ipv4(res):
+            res = "(Unavailable)"
+    except Exception:
+        res = "(Unavailable)"
 
     reporter.register_info("ipv4", res)
 
@@ -390,7 +397,13 @@ def check_ipv6_connection() -> str:
     prefix = "IPv6 -> Internet:"
     url = "https://ipv6.icanhazip.com/"
 
-    res = _check_connection(url)
+    try:
+        res = _check_connection(url)
+
+        if not checkers.is_ipv6(res):
+            res = "(Unavailable)"
+    except Exception:
+        res = "(Unavailable)"
 
     reporter.register_info("ipv6", res)
 

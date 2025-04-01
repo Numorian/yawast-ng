@@ -13,9 +13,6 @@ import pkg_resources
 from nassl.ssl_client import OpenSslVersionEnum
 from publicsuffixlist import PublicSuffixList
 from requests.models import Response
-from sslyze import server_connectivity_tester
-from sslyze.utils import ssl_connection_configurator, http_response_parser
-from sslyze.utils.ssl_connection import SslConnection
 from validator_collection import checkers
 
 from yawast.reporting.enums import Vulnerabilities as Vln
@@ -412,20 +409,28 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
 
     results: List[Result] = []
 
+    # TODO: Replace this with the real thing, instead of a dummy class
+    class ServerConnectivityTester:
+        def __init__(self, hostname: str, port: int):
+            self.hostname = hostname
+            self.port = port
+
+        def perform(self) -> None:
+            raise NotImplementedError("This is a dummy class")
+        
+    def get_connection():
+        raise NotImplementedError("This is a dummy function")
+        
+    # end TODO
+
     if session.url_parsed.scheme == "https":
-        conn_tester = server_connectivity_tester.ServerConnectivityTester(
+        conn_tester = ServerConnectivityTester(
             hostname=session.domain, port=utils.get_port(session.url)
         )
 
         server_info = conn_tester.perform()
 
-        conn = ssl_connection_configurator.SslConnectionConfigurator.get_connection(
-            ssl_version=OpenSslVersionEnum.SSLV23,
-            server_info=server_info,
-            should_ignore_client_auth=True,
-            ssl_verify_locations=None,
-            should_use_legacy_openssl=False,
-        )
+        conn = get_connection()
 
         try:
             conn.connect()

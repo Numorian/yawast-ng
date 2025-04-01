@@ -5,7 +5,7 @@
 import hashlib
 import re
 
-from yawast.shared import network
+from ..shared import network, output
 
 
 def is_defined(o):
@@ -36,9 +36,16 @@ def _simple_match(regex, data):
 def _replacement_match(regex, data):
     group_parts_of_regex = r"^\/(.*[^\\])\/([^\/]+)\/$"
     ar = re.search(group_parts_of_regex, regex)
-    search_for_regex = "(" + ar.group(1) + ")"
-    cmp = re.compile(search_for_regex.encode("utf-8").decode("unicode_escape"))
-    match = cmp.search(data)
+    search_for_regex = ar.group(1)
+
+    try:
+        match = re.search(search_for_regex, data)
+    except Exception as e:
+        output.debug("retirejs regex error: " + str(e))
+        output.debug("  regex: " + regex)
+        output.debug("  search_for_regex: " + search_for_regex)
+
+        raise e
 
     if match:
         ver = re.sub(ar.group(1), ar.group(2), match.group(0))
@@ -91,19 +98,7 @@ def check(results, definitions):
 
 
 def unique(ar):
-    seen = set()
-    new_ar = []
-    for d in ar:
-        # we have to convert any lists to tuples
-        dt = {key: tuple(lst) for key, lst in d.items()}
-
-        # filter out duplicates
-        t = tuple(sorted(dt.items()))
-        if t not in seen:
-            seen.add(t)
-            new_ar.append(d)
-
-    return new_ar
+    return list(set(ar))
 
 
 def _is_at_or_above(version1, version2):
@@ -135,8 +130,8 @@ def _to_comparable(n):
     return n
 
 
-def _replace_version(js_repo_json_as_text):
-    return re.sub(r"[.0-9]*", "[0-9][0-9.a-z_\-]+", js_repo_json_as_text)
+def _replace_version(jsRepoJsonAsText):
+    return re.sub(r"[.0-9]*", r"[0-9][0-9.a-z_\-]+", jsRepoJsonAsText)
 
 
 def is_vulnerable(results):
@@ -153,8 +148,8 @@ def scan_uri(uri, definitions):
     return check(result, definitions)
 
 
-def scan_filename(file_name, definitions):
-    result = scan(file_name, "filename", definitions=definitions)
+def scan_filename(fileName, definitions):
+    result = scan(fileName, "filename", definitions=definitions)
     return check(result, definitions)
 
 

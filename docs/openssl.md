@@ -14,4 +14,4 @@ YAWAST, starting with 0.8, uses an embedded copy of sslyze and leverages it for 
 
 The SWEET32 test relies on being able to send requests using a 3DES cipher suite, which when OpenSSL is compiled without 3DES support, this test fails. As most modern releases of OpenSSL have this cipher suite disabled at build time, this creates a problem for this test.
 
-At the moment, the easiest work around for this issue is to use the [docker container](https://github.com/adamcaudill/yawast/wiki/Installation#docker) which includes a version of OpenSSL that's properly configured.
+At the moment, the easiest work around for this issue is to use the docker container which includes a version of OpenSSL that's properly configured.

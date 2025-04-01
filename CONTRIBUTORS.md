@@ -6,9 +6,9 @@ To retrieve the full list of contributors from source control, the following com
 
 ```git log --pretty="* %an <%ae>%n* %cn <%ce>" | sort | uniq```
 
-Copyright (c) 2013 - 2020 Adam Caudill and Contributors.
+Copyright (c) 2013 - 2025 Adam Caudill and Contributors.
 
-* Adam Caudill <adam@adamcaudill.com>
+* Adam Caudill <a@cac.sh>
 * Brandon Wilson <brandonlw@gmail.com>
 * Nick Santamaria <nick@nicksantamaria.net>
 * Ryan Borden <ryan.borden@bsigroup.com>

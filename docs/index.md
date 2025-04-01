@@ -14,11 +14,11 @@ This is meant to provide an easy way to perform initial analysis and information
 
 ## Getting Started
 
-YAWAST is packaged as a Python [package](https://pypi.org/project/yawast/), Docker container, and as a Windows EXE to make installing it as easy as possible. Details are available on the [installation page](/installation/).
+YAWAST is packaged as a Python package, Docker container, and as a Windows EXE to make installing it as easy as possible. Details are available on the [installation page](/installation/).
 
 #### Windows
 
-The simplest option for Windows users is to [download](https://github.com/adamcaudill/yawast/releases) the compiled executable, as Windows requires certain dependencies to be compile.
+The simplest option for Windows users is to [download](https://github.com/Numorian/yawast-ng/releases) the compiled executable, as Windows requires certain dependencies to be compile.
 
 #### macOS, Linux, etc.
 
@@ -42,7 +42,7 @@ Details about YAWAST and how to use it can be found below:
   * [OpenSSL & 3DES Compatibility](/openssl/)
 * [Sample Output](/sample/)
 * [FAQ](/faq/)
-* [Change Log](https://github.com/adamcaudill/yawast/blob/master/CHANGELOG.md)
+* [Change Log](https://github.com/Numorian/yawast-ng/blob/master/CHANGELOG.md)
 
 ## Recent Blog Posts
 

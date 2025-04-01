@@ -18,11 +18,10 @@ email: adam@adamcaudill.com
 description: >- # this means to ignore newlines until "baseurl:"
   YAWAST is an application meant to simplify initial analysis and information gathering
   for penetration testers and security auditors.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://yawast.org" # the base hostname & protocol for your site, e.g. http://example.com
-logo: "https://github.com/adamcaudill/yawast/raw/master/yawast_logo_v1.svg?sanitize=true"
-twitter_username: adamcaudill
-github_username:  adamcaudill
+baseurl: "/yawast-ng" # the subpath of your site, e.g. /blog
+url: "https://numorian.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+logo: "https://github.com/Numorian/yawast-ng/raw/master/yawast_logo_v1.svg?sanitize=true"
+github_username:  Numorian
 author: 'Adam Caudill'
 
 # Build settings

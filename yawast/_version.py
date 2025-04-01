@@ -25,6 +25,7 @@ if getattr(sys, "frozen", False):
 else:
     # unfrozen
     package_root = os.path.dirname(os.path.realpath(__file__))
+
 package_name = os.path.basename(package_root)
 distr_root = os.path.dirname(package_root)
 
@@ -39,7 +40,7 @@ def get_version(version_file=STATIC_VERSION_FILE):
         if not version:
             version = get_version_from_git_archive(version_info)
         if not version:
-            version = Version("unknown", None, None)
+            version = Version("0.0.0", None, None)
         return pep440_format(version)
     else:
         return version
@@ -122,7 +123,7 @@ def get_version_from_git():
     except ValueError:  # No tags, only the git hash
         # prepend 'g' to match with format returned by 'git describe'
         git = "g{}".format(*description)
-        release = "unknown"
+        release = "0.0.0"
         dev = None
 
     labels = []
@@ -167,7 +168,7 @@ def get_version_from_git_archive(version_info):
         release, *_ = sorted(version_tags)  # prefer e.g. "2.0" over "2.0rc1"
         return Version(release, dev=None, labels=None)
     else:
-        return Version("unknown", dev=None, labels=["g{}".format(git_hash)])
+        return Version("0.0.0", dev=None, labels=["g{}".format(git_hash)])
 
 
 __version__ = get_version()
@@ -205,37 +206,3 @@ class _SDist(sdist_orig):
 
 
 cmdclass = dict(sdist=_SDist, build_py=_BuildPy)
-
-# Hacks to deal with the Windows build
-try:
-    from cx_Freeze.dist import build_exe as _build_exe
-
-    class CmdBuildExe(_build_exe):
-        def run(self):
-            # Start by running the normal stuff
-            _build_exe.run(self)
-
-            # Now overwrite the static version file with our actual version
-            _write_version(os.path.join(self.build_exe, STATIC_VERSION_FILE))
-
-            # The validator_collection library incorrectly accesses its
-            #  own _version.py file (using __file__, which is not cx_Freeze compatible)
-
-            # Delete any existing _version.py file for the validator_collection library
-            destination = os.path.join(
-                self.build_exe, "lib", "validator_collection", "_version.py"
-            )
-            try:
-                os.remove(destination)
-            except Exception:
-                pass
-
-            # Create a dummy _version.py file (which is actually our own
-            #  version number, not validator_collection's -- doesn't matter)
-            with open(destination, "w") as f:
-                f.write("__version__ = '{}'\n".format(__version__))
-
-    # Add this derived class to cmdclass
-    cmdclass["build_exe"] = CmdBuildExe
-except Exception:
-    pass

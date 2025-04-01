@@ -6,9 +6,6 @@ First of all, thanks for your interest in contributing to YAWAST! This document 
 
 * [Adam Caudill](https://github.com/adamcaudill)
   * Project Maintainer
-  * macOS & Linux Build Maintainer
-* [Brandon Wilson](https://github.com/brandonlw)
-  * Windows Build Maintainer
 
 ### Code Changes & Pull Requests
 
@@ -23,7 +20,7 @@ Here are some key points to keep in mind when it comes to contributing code. If 
 * The use of [pipenv](https://docs.pipenv.org/en/latest/) to build and maintain a clean environment is strongly recommended.
 * The core contributors use [PyCharm](https://www.jetbrains.com/pycharm/) as our IDE of choice; it's the best option we have found for working with this code.
 * Care should be taken to avoid violating the plugins abstraction layer - plugins should not directly interact with a UI of any type.
-* You should include a change to the [CONTRIBUTORS.md](https://github.com/adamcaudill/yawast/blob/master/CONTRIBUTORS.md) file to add your name.
+* You should include a change to the [CONTRIBUTORS.md](https://github.com/Numorian/yawast-ng/blob/main/CONTRIBUTORS.md) file to add your name.
 
 ### Building Windows Executable
 
@@ -58,7 +55,7 @@ Changes that require a new library be included may be rejected if the library do
 
 #### Documentation Updates
 
-All documentation is housed on the [YAWAST.org](https://yawast.org/) web site, which is hosted via Github Pages and stored in the `/docs` directory of the `master` branch. Corrections, improvements, and updates to the YAWAST documentation are very welcome.
+All documentation is housed on the [YAWAST.org](https://yawast.org/) web site, which is hosted via Github Pages and stored in the `/docs` directory of the `main` branch. Corrections, improvements, and updates to the YAWAST documentation are very welcome.
 
 #### Guest Blog Posts
 
@@ -73,7 +70,7 @@ It is not required of you to assign the copyright of your contributions; you ret
 All Python files (except those in the `yawast\external` directory) should include the following header:
 
 ```
-# Copyright (c) 2013 - 2020 Adam Caudill and Contributors.
+# Copyright (c) 2013 - 2025 Adam Caudill and Contributors.
 # This file is part of YAWAST which is released under the MIT license.
 # See the LICENSE file or go to https://yawast.org/license/ for full license details.
 ```
@@ -90,7 +87,7 @@ Before opening an issue for a feature request, please check to see if one alread
 
 #### Bug Reports
 
-If you find a bug, please do open an issue so that we can address it. Please include all of the console output, as it contains important information (feel free to redact target information). If possible, run YAWAST with the `--output` option to generate a JSON file - this file contains debug output, which can help track the issue down. You can send this file privately to `bugs@yawast.org` for review.
+If you find a bug, please do open an issue so that we can address it. Please include all of the console output, as it contains important information (feel free to redact target information). If possible, run YAWAST with the `--output` option to generate a JSON file - this file contains debug output, which can help track the issue down. You can send this file privately to `adam@adamcaudill.com` for review.
 
 Bug reports are given the highest priority, and whenever possible will be addressed in the next release.
 

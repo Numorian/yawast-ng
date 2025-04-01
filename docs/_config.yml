@@ -20,7 +20,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   for penetration testers and security auditors.
 baseurl: "/yawast-ng" # the subpath of your site, e.g. /blog
 url: "https://numorian.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-logo: "https://github.com/Numorian/yawast-ng/raw/master/yawast_logo_v1.svg?sanitize=true"
+logo: "https://github.com/Numorian/yawast-ng/raw/main/yawast_logo_v1.svg?sanitize=true"
 github_username:  Numorian
 author: 'Adam Caudill'
 

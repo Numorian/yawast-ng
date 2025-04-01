@@ -1,6 +1,6 @@
 ## yawast-ng
 
-![YAWAST](https://github.com/Numorian/yawast-ng/raw/master/yawast_logo_v1.svg?sanitize=true)
+![YAWAST](https://github.com/Numorian/yawast-ng/raw/main/yawast_logo_v1.svg?sanitize=true)
 
 ### The YAWAST Antecedent Web Application Security Toolkit - _Next Generation_
 

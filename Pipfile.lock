@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f5f34ddab9230033863d225b66783f2b6fe8dc75da481bd21ef473ab8964113c"
+            "sha256": "1e1a87993763280fc31cffb298b3a9341a53b02d174fce9bfec2f033996375c3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -40,14 +40,6 @@
             "index": "pypi",
             "markers": "python_full_version >= '3.7.0'",
             "version": "==4.13.3"
-        },
-        "cerberus": {
-            "hashes": [
-                "sha256:180e7d1fa1a5765cbff7b5c716e52fddddfab859dc8f625b0d563ace4b7a7ab3",
-                "sha256:ecf249665400a0b7a9d5e4ee1ffc234fd5d003186d3e1904f70bc14038642c13"
-            ],
-            "markers": "python_version >= '3.7'",
-            "version": "==1.3.7"
         },
         "certifi": {
             "hashes": [
@@ -276,13 +268,6 @@
             "markers": "python_version >= '3.7'",
             "version": "==42.0.8"
         },
-        "distlib": {
-            "hashes": [
-                "sha256:47f8c22fd27c27e25a65601af709b38e4f0a45ea4fc2e710f65755fa8caaaf87",
-                "sha256:a60f20dea646b8a33f3e7772f74dc0b2d0772d2837ee1342a00645c81edf9403"
-            ],
-            "version": "==0.3.9"
-        },
         "dnspython": {
             "hashes": [
                 "sha256:b4c34b7d10b51bcc3a5071e7b8dee77939f1e878477eeecc965e9835f63c6c86",
@@ -386,41 +371,6 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==24.2"
-        },
-        "pep517": {
-            "hashes": [
-                "sha256:1b2fa2ffd3938bb4beffe5d6146cbcb2bda996a5a4da9f31abffd8b24e07b317",
-                "sha256:31b206f67165b3536dd577c5c3f1518e8fbaf38cbc57efff8369a392feff1721"
-            ],
-            "markers": "python_version >= '3.6'",
-            "version": "==0.13.1"
-        },
-        "pip": {
-            "hashes": [
-                "sha256:88f96547ea48b940a3a385494e181e29fb8637898f88d88737c5049780f196ea",
-                "sha256:c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==25.0.1"
-        },
-        "platformdirs": {
-            "hashes": [
-                "sha256:a03875334331946f13c549dbd8f4bac7a13a50a895a0eb1e8c6a8ace80d40a94",
-                "sha256:eb437d586b6a0986388f0d6f74aa0cde27b48d0e3d66843640bfb6bdcdb6e351"
-            ],
-            "markers": "python_version >= '3.9'",
-            "version": "==4.3.7"
-        },
-        "plette": {
-            "extras": [
-                "validation"
-            ],
-            "hashes": [
-                "sha256:0e9898513eacbcf06c6b05e9e042a7733cfb2030335532044b9b3ff84431821c",
-                "sha256:65cea1259d69339e518481c9f59130cea2a6f712117bee340bc4c1c10e47f9e7"
-            ],
-            "markers": "python_version >= '3.7'",
-            "version": "==2.1.0"
         },
         "psutil": {
             "hashes": [
@@ -592,15 +542,6 @@
             "index": "pypi",
             "markers": "python_version >= '3.5'",
             "version": "==1.12.1"
-        },
-        "requirementslib": {
-            "hashes": [
-                "sha256:28f8e0b1c38b34ae06de68ef115b03bbcdcdb99f9e9393333ff06ded443e3f24",
-                "sha256:67b42903d7c32f89c7047d1020c619d37cb515c475a4ae6f4e5683e1c56d7bf7"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.7'",
-            "version": "==3.0.0"
         },
         "rpds-py": {
             "hashes": [
@@ -785,14 +726,6 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==2.0.1"
-        },
-        "tomlkit": {
-            "hashes": [
-                "sha256:7a974427f6e119197f670fbbbeae7bef749a6c14e793db934baefc1b5f03efde",
-                "sha256:fff5fe59a87295b278abd31bec92c15d9bc4a06885ab12bcea52c71119392e79"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==0.13.2"
         },
         "trio": {
             "hashes": [

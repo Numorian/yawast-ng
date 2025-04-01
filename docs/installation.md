@@ -72,7 +72,7 @@ pipx install yawast
 
 #### Windows
 
-There are two ways to use YAWAST on Windows; the easiest is to use the compiled EXE available on the [releases](https://github.com/adamcaudill/yawast/releases) page. This allows you to avoid installing Python and dealing with dependencies.
+There are two ways to use YAWAST on Windows; the easiest is to use the compiled EXE available on the [releases](https://github.com/Numorian/yawast-ng/releases) page. This allows you to avoid installing Python and dealing with dependencies.
 
 The other option is to install Python 3.7 64-bit and use pipx via:
 

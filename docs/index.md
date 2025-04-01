@@ -30,18 +30,18 @@ As a Python package: `pip3 install yawast` (YAWAST requires Python 3.7)
 
 `docker pull adamcaudill/yawast`
 
-It's strongly recommended that you review the [installation](/installation/) page to ensure you have the proper dependencies.
+It's strongly recommended that you review the [installation](https://numorian.github.io/yawast-ng/installation/) page to ensure you have the proper dependencies.
 
 ## Documentation
 
 Details about YAWAST and how to use it can be found below:
 
-* [Installation](/installation/)
-* [Usage & Parameters](/usage/)
-* [Scanning TLS/SSL](/tls/)
-  * [OpenSSL & 3DES Compatibility](/openssl/)
-* [Sample Output](/sample/)
-* [FAQ](/faq/)
+* [Installation](https://numorian.github.io/yawast-ng/installation/)
+* [Usage & Parameters](https://numorian.github.io/yawast-ng/usage/)
+* [Scanning TLS/SSL](https://numorian.github.io/yawast-ng/tls/)
+  * [OpenSSL & 3DES Compatibility](https://numorian.github.io/yawast-ng/openssl/)
+* [Sample Output](https://numorian.github.io/yawast-ng/sample/)
+* [FAQ](https://numorian.github.io/yawast-ng/faq/)
 * [Change Log](https://github.com/Numorian/yawast-ng/blob/master/CHANGELOG.md)
 
 ## Recent Blog Posts

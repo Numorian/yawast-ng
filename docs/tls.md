@@ -16,7 +16,7 @@ The [SWEET32](https://adamcaudill.com/2016/09/15/testing-sweet32-yawast/) test w
 
 ### Tests Performed
 
-Via either SSL Labs or sslyze, YAWAST performs a large number of checks, including some custom things that neither of these scanners currently offer. For the most up-to-date list of what they check for, please see the [Checks Performed](/checks/) page.
+Via either SSL Labs or sslyze, YAWAST performs a large number of checks, including some custom things that neither of these scanners currently offer. For the most up-to-date list of what they check for, please see the [Checks Performed](https://numorian.github.io/yawast-ng/checks/) page.
 
 ## SSL Labs Mode
 

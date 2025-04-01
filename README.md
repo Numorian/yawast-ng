@@ -28,7 +28,7 @@ This project is a continuation of YAWAST, as yawast-ng, to continue the project 
 * [Sample Output](https://numorian.github.io/yawast-ng/sample/)
 * [FAQ](https://numorian.github.io/yawast-ng/faq/)
 
-Please see [yawast.org](https://numorian.github.io/yawast-ng/) for full documentation.
+Please see [the project website](https://numorian.github.io/yawast-ng/) for full documentation.
 
 ### Usage
 

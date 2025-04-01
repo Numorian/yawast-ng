@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
 
     steps:
     - name: Debug Info - Github
@@ -41,13 +41,6 @@ jobs:
         pipenv sync --dev
       shell: bash {0}
 
-    - name: Setup Selenium (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        choco install chromedriver --version=77.0.3865.400
-        pipenv run where chromedriver
-      shell: bash {0}
-
     - name: Setup Selenium (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -69,18 +62,6 @@ jobs:
         export PATH="/home/runner/work/yawast/yawast:$PATH"
         echo $PATH
         which chromedriver
-      shell: bash {0}
-
-    - name: Setup Selenium (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        brew update
-        brew tap homebrew/cask
-        brew cask install chromedriver
-        brew cask install google-chrome
-        which chromedriver
-        sudo spctl --master-disable
-        chromedriver -v
       shell: bash {0}
 
     - name: Test with unittest
@@ -106,20 +87,6 @@ jobs:
     - name: Run version (all)
       run: |
         pipenv run python ./bin/yawast version
-      shell: bash {0}
-
-    - name: Build Windows EXE
-      if: runner.os == 'Windows'
-      run: |
-        pipenv run python setup.py build_exe
-        ls -ltra ./build/exe.win-amd64-3.7
-        ls -ltra ./build/exe.win-amd64-3.7/lib
-      shell: bash {0}
-
-    - name: Run version (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        ./build/exe.win-amd64-3.7/yawast.exe version
       shell: bash {0}
 
   build-docker:

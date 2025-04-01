@@ -19,20 +19,18 @@
         <p>{{ site.description | default: site.github.project_tagline }}</p>
 
         <ul>
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/installation/">Installation</a></li>
-          <li><a href="/usage/">Usage &amp; Parameters</a></li>
-          <li><a href="/checks/">Checks Performed</a></li>
-          <li><a href="/tls/">Scanning TLS / SSL</a></li>
-          <li><a href="/about/">About</a></li>
-          <li><a href="/faq/">FAQs</a></li>
+          <li><a href="https://numorian.github.io/yawast-ng/blog/">Blog</a></li>
+          <li><a href="https://numorian.github.io/yawast-ng/installation/">Installation</a></li>
+          <li><a href="https://numorian.github.io/yawast-ng/usage/">Usage &amp; Parameters</a></li>
+          <li><a href="https://numorian.github.io/yawast-ng/checks/">Checks Performed</a></li>
+          <li><a href="https://numorian.github.io/yawast-ng/tls/">Scanning TLS / SSL</a></li>
+          <li><a href="https://numorian.github.io/yawast-ng/about/">About</a></li>
+          <li><a href="https://numorian.github.io/yawast-ng/faq/">FAQs</a></li>
         </ul>
 
         {% if site.github.is_project_page %}
         <p class="view"><a href="{{ site.github.repository_url }}">View the Project on GitHub <small>{{ site.github.repository_nwo }}</small></a></p>
         {% endif %}
-
-        <a href="https://twitter.com/yawast?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @yawast</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </header>
       <section>
 
@@ -44,15 +42,5 @@
       </footer>
     </div>
     <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
-    {% if site.google_analytics %}
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', '{{ site.google_analytics }}', 'auto');
-      ga('send', 'pageview');
-    </script>
-    {% endif %}
   </body>
 </html>

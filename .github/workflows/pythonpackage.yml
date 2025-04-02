@@ -1,16 +1,17 @@
 name: Python package
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   build:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
     - name: Debug Info - Github
@@ -27,12 +28,12 @@ jobs:
         RUNNER_CONTEXT: ${{ toJson(runner) }}
       run: echo "$RUNNER_CONTEXT"
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.7
+        python-version: '3.12'
 
     - name: Install dependencies
       run: |
@@ -69,14 +70,19 @@ jobs:
           pipenv run python -m unittest discover
       shell: bash {0}
 
-    - name: Run code coverage
+    - name: Run unit tests
       if: runner.os == 'Linux'
       run: |
         pipenv install codecov
         pipenv run coverage run -m unittest discover
         pipenv run coverage xml
-        pipenv run codecov --token=93cd29e0-7aad-482c-9aee-2573c403e4e9
+        pipenv run codecov
       shell: bash {0}
+
+    - name: Upload results to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Build packages
       run: |
@@ -94,8 +100,8 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
 
     - name: Build the Docker image
-      if: github.ref != 'refs/heads/master'
+      if: github.ref != 'refs/heads/main'
       run: docker build . --file Dockerfile --tag yawast-ci:$(date +%s)

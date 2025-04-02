@@ -727,7 +727,7 @@ class TestHttpBasic(TestCase):
 
     def test_wp_ident(self):
         network.init("", "", "")
-        url = "https://adamcaudill.com/"
+        url = "https://underscores.me/wp/"
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -742,7 +742,7 @@ class TestHttpBasic(TestCase):
 
     def test_wp_json_user_enum(self):
         network.init("", "", "")
-        url = "https://adamcaudill.com/"
+        url = "https://underscores.me/"
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):

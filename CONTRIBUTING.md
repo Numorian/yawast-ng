@@ -4,7 +4,7 @@ First of all, thanks for your interest in contributing to YAWAST! This document 
 
 ### Core Contributors
 
-* [Adam Caudill](https://github.com/adamcaudill)
+* [Adam Caudill](https://github.com/adcaudill)
   * Project Maintainer
 
 ### Code Changes & Pull Requests
@@ -55,7 +55,7 @@ Changes that require a new library be included may be rejected if the library do
 
 #### Documentation Updates
 
-All documentation is housed on the [YAWAST.org](https://yawast.org/) web site, which is hosted via Github Pages and stored in the `/docs` directory of the `main` branch. Corrections, improvements, and updates to the YAWAST documentation are very welcome.
+All documentation is housed on the [project web site](https://numorian.github.io/yawast-ng/), which is hosted via Github Pages and stored in the `/docs` directory of the `main` branch. Corrections, improvements, and updates to the YAWAST documentation are very welcome.
 
 #### Guest Blog Posts
 
@@ -72,7 +72,7 @@ All Python files (except those in the `yawast\external` directory) should includ
 ```
 # Copyright (c) 2013 - 2025 Adam Caudill and Contributors.
 # This file is part of YAWAST which is released under the MIT license.
-# See the LICENSE file or go to https://yawast.org/license/ for full license details.
+# See the LICENSE file for full license details.
 ```
 
 ### Opening Issues

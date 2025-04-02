@@ -45,19 +45,6 @@ jobs:
     - name: Setup Selenium (Linux)
       if: runner.os == 'Linux'
       run: |
-        CHROME_STRING=$(/usr/bin/google-chrome-stable --version) \
-          && CHROME_VERSION_STRING=$(echo "${CHROME_STRING}" | grep -oP "\d+\.\d+\.\d+\.\d+") \
-          && CHROME_MAJOR_VERSION=$(echo "${CHROME_VERSION_STRING%%.*}") \
-          && wget --no-verbose -O ./LATEST_RELEASE "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}" \
-          && CD_VERSION=$(cat "./LATEST_RELEASE") \
-          && rm ./LATEST_RELEASE \
-          && CHROME_DRIVER_VERSION="${CD_VERSION}" \
-          && echo "Using chromedriver version: "$CD_VERSION \
-          && echo "Using Chrome version:       "$CHROME_VERSION_STRING \
-          && wget --no-verbose -O ./chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CD_VERSION/chromedriver_linux64.zip \
-          && unzip ./chromedriver_linux64.zip -d ./ \
-          && rm ./chromedriver_linux64.zip \
-          && chmod +x ./chromedriver
         echo 'export PATH="/home/runner/work/yawast/yawast:$PATH"' >> ~/.bashrc
         echo PATH=/home/runner/work/yawast/yawast:$PATH >> .env
         export PATH="/home/runner/work/yawast/yawast:$PATH"
@@ -71,7 +58,7 @@ jobs:
       shell: bash {0}
 
     - name: Run unit tests
-      if: runner.os == 'Linux'
+      if: always()
       run: |
         pipenv install codecov
         pipenv run coverage run -m unittest discover
@@ -80,17 +67,20 @@ jobs:
       shell: bash {0}
 
     - name: Upload results to Codecov
+      if: always()
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Build packages
+      if: always()
       run: |
         pipenv run python setup.py sdist
         pipenv run python setup.py bdist_wheel
       shell: bash {0}
 
     - name: Run version (all)
+      if: always()
       run: |
         pipenv run python ./bin/yawast version
       shell: bash {0}
@@ -99,7 +89,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
     - uses: actions/checkout@v4
 
     - name: Build the Docker image

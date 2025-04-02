@@ -9,6 +9,8 @@ from typing import List, Optional, Dict, Union, Tuple
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.evidence import Evidence
@@ -124,20 +126,16 @@ def _get_driver(session: Session, uri: str) -> WebDriver:
     options.add_argument("disable-dev-shm-usage")
     options.add_argument("no-sandbox")
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    options.accept_insecure_certs = True
 
     # if we have a proxy set, use that
     if session.args.proxy:
         proxy = webdriver.Proxy()
         proxy.http_proxy = f"http://#{session.args.proxy}"
         proxy.ssl_proxy = f"http://#{session.args.proxy}"
-        caps = webdriver.DesiredCapabilities.CHROME.copy()
-        caps["acceptInsecureCerts"] = True
-        caps["proxy"] = proxy
-    else:
-        caps = webdriver.DesiredCapabilities.CHROME.copy()
-        caps["acceptInsecureCerts"] = True
+        options.proxy = proxy
 
-    driver = webdriver.Chrome(chrome_options=options, desired_capabilities=caps)
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     driver.get(uri)
 
     return driver

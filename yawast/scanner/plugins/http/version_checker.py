@@ -44,7 +44,7 @@ def get_latest_version(
 def _get_version_data() -> None:
     global _versions
     data: Union[Dict[str, Dict[str, Dict[str, str]]], None] = None
-    data_url = "https://raw.githubusercontent.com/adamcaudill/current_versions/master/current_versions.json"
+    data_url = "https://raw.githubusercontent.com/adcaudill/current_versions/master/current_versions.json"
 
     try:
         data, _ = network.http_json(data_url)

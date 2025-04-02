@@ -1,6 +1,6 @@
-#  Copyright (c) 2013 - 2020 Adam Caudill and Contributors.
+#  Copyright (c) 2013 - 2025 Adam Caudill and Contributors.
 #  This file is part of YAWAST which is released under the MIT license.
-#  See the LICENSE file or go to https://yawast.org/license/ for full license details.
+#  See the LICENSE file for full license details.
 
 import gc
 import locale
@@ -102,23 +102,24 @@ def print_header():
         # in this case, we don't have a real max, so go with current
         cpu_max = int(cpu_freq.current)
 
-    print(r" .-.          .-                           ")
-    print(r"  \ \        / /                       _   ")
-    print(r"   \ \      / /                       | |  ")
-    print(r"    \ \    / /  __ ___      ____ _ ___| |_ ")
-    print(r"     \ \  / /  / _` \ \ /\ / / _` / __| __|")
-    print(r"      \ `  /  | (_| |\ V  V / (_| \__ \ |_ ")
-    print(r"       \  /    \__,_| \_/\_/ \__,_|___/\__|")
-    print(r"       / /                                 ")
-    print(r"   |`-' /     ...where a pentest starts    ")
-    print(r"    '..'                                   ")
+    print()
+    print(r"                               _                    ")
+    print(r" _   _  __ ___      ____ _ ___| |_      _ __   __ _ ")
+    print(r"| | | |/ _` \ \ /\ / / _` / __| __|____| '_ \ / _` |")
+    print(r"| |_| | (_| |\ V  V / (_| \__ \ ||_____| | | | (_| |")
+    print(r" \__, |\__,_| \_/\_/ \__,_|___/\__|    |_| |_|\__, |")
+    print(r" |___/                                        |___/ ")
+    print(r"                           ...where a pentest starts")
+
     print()
     print(f"The YAWAST Antecedent Web Application Security Toolkit (v{get_version()})")
+    print("                                    The Next Generation")
+    print()
     print(
-        " Copyright (c) 2013 - 2020 Adam Caudill <adam@adamcaudill.com> and Contributors"
+        " Copyright (c) 2013 - 2025 Adam Caudill <adam@adamcaudill.com> and Contributors"
     )
-    print(" Support & Documentation: https://yawast.org")
-    print(" News & Updates: https://twitter.com/yawast")
+    print(" Support & Documentation: https://numorian.github.io/yawast-ng/")
+    print()
     print(
         f" Python {''.join(sys.version.splitlines())} ({platform.python_implementation()})"
     )

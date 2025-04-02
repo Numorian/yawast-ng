@@ -24,11 +24,11 @@ from yawast.shared import output, utils
 from yawast.shared.exec_timer import ExecutionTimer
 
 YAWAST_UA = (
-    f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) "
-    f"YAWAST/{get_version()}/PY Chrome/77.0.3865.65 Safari/537.36"
+    f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
+    f"yawast-ng/{get_version()}/PY Chrome/135.0.0.0 Safari/537.36"
 )
 
-SERVICE_UA = f"YAWAST/{get_version()}/PY"
+SERVICE_UA = f"yawast-ng/{get_version()}/PY"
 _lock = Lock()
 
 

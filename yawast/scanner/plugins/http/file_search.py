@@ -104,6 +104,10 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
         parsed = urlparse(link)
         link = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
 
+        # check for "cdn-cgi" in the path, it's a CloudFlare thing and false positive
+        if "cdn-cgi" in link:
+            continue
+
         # check for add-on extensions
         if not link.endswith("/"):
             if "." in _extract_name(link):

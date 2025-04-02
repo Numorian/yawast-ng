@@ -6,8 +6,6 @@ from typing import Optional, Any, Dict
 
 from requests import Response
 
-from yawast.shared import network
-
 
 class Evidence(Dict[str, Any]):
     url: str
@@ -33,6 +31,8 @@ class Evidence(Dict[str, Any]):
 
     @classmethod
     def from_response(cls, response: Response, custom: Optional[Dict[str, Any]] = None):
+        from yawast.shared import network
+        
         ev = cls(
             response.request.url,
             network.http_build_raw_request(response.request),

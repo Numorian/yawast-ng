@@ -134,8 +134,12 @@ def print_header():
     print("")
 
     print("Connection Status:")
-    print(f" {network.check_ipv4_connection()}")
-    print(f" {network.check_ipv6_connection()}")
+    ipv4 = network.check_ipv4_connection()
+    reporter.register_info("ipv4", ipv4)
+    ipv6 = network.check_ipv6_connection()
+    reporter.register_info("ipv6", ipv6)
+    print(f" {ipv4}")
+    print(f" {ipv6}")
     print()
 
 

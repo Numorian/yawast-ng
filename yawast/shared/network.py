@@ -19,7 +19,6 @@ from requests_mock.request import _RequestObjectProxy
 from validator_collection import checkers
 
 from yawast._version import get_version
-from yawast.reporting import reporter
 from yawast.shared import output, utils
 from yawast.shared.exec_timer import ExecutionTimer
 
@@ -579,8 +578,6 @@ def check_ipv4_connection() -> str:
     except Exception:
         res = "(Unavailable)"
 
-    reporter.register_info("ipv4", res)
-
     return f"{prefix} {res}"
 
 
@@ -595,8 +592,6 @@ def check_ipv6_connection() -> str:
             res = "(Unavailable)"
     except Exception:
         res = "(Unavailable)"
-
-    reporter.register_info("ipv6", res)
 
     return f"{prefix} {res}"
 

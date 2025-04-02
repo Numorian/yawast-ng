@@ -2,10 +2,12 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
+import warnings
+
 from datetime import datetime
 from typing import List, Union
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 from dateutil import tz
 from dateutil.parser import parse
 from requests.models import Response
@@ -33,7 +35,8 @@ def check_response(
         body = res.text
 
         if soup is None:
-            soup = BeautifulSoup(body, "html.parser")
+            warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
+            soup = BeautifulSoup(body, features="html.parser")
 
         # check for things thar require parsed HTML
         results += retirejs.get_results(soup, url, res)

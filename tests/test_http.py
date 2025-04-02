@@ -80,8 +80,8 @@ class TestHttpBasic(TestCase):
         network.init("", "", "")
         output.setup(False, False, False)
 
-        # we are using www.python.org as they return multiple Via headers
-        url = "https://www.python.org"
+        # we are using www.tumblr.com as they return multiple vary header
+        url = "https://www.tumblr.com"
 
         output.setup(False, True, True)
         with utils.capture_sys_output() as (stdout, stderr):

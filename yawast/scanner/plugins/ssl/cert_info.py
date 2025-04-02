@@ -217,10 +217,15 @@ def _get_ct_log_data():
     ct_log_info: Dict[str, str] = {}
 
     data, _ = network.http_json(
-        "https://www.gstatic.com/ct/log_list/all_logs_list.json"
+        "https://www.gstatic.com/ct/log_list/v3/all_logs_list.json"
     )
 
-    for log in data["logs"]:
+    # merge the "logs" from the "operators" into one list
+    logs = []
+    for operator in data["operators"]:
+        logs.extend(operator["logs"])
+ 
+    for log in logs:
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
         digest.update(base64.b64decode(log["key"]))
         final = digest.finalize()

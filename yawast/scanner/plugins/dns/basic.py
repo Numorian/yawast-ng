@@ -11,7 +11,7 @@ def get_ips(domain: str):
     ips = []
 
     try:
-        answers_v4 = resolver.query(domain, "A")
+        answers_v4 = resolver.resolve(domain, "A")
 
         for data in answers_v4:
             ips.append(str(data))
@@ -21,7 +21,7 @@ def get_ips(domain: str):
         output.debug_exception()
 
     try:
-        answers_v6 = resolver.query(domain, "AAAA")
+        answers_v6 = resolver.resolve(domain, "AAAA")
         for data in answers_v6:
             ips.append(str(data))
     except (resolver.NoAnswer, resolver.NXDOMAIN, exception.Timeout):
@@ -36,7 +36,7 @@ def get_text(domain):
     records = []
 
     try:
-        answers = resolver.query(domain, "TXT")
+        answers = resolver.resolve(domain, "TXT")
 
         for data in answers:
             records.append(str(data))
@@ -52,7 +52,7 @@ def get_mx(domain):
     records = []
 
     try:
-        answers = resolver.query(domain, "MX")
+        answers = resolver.resolve(domain, "MX")
 
         for data in answers:
             records.append([str(data.exchange), str(data.preference)])
@@ -68,7 +68,7 @@ def get_ns(domain):
     records = []
 
     try:
-        answers = resolver.query(domain, "NS")
+        answers = resolver.resolve(domain, "NS")
 
         for data in answers:
             records.append(str(data))
@@ -85,7 +85,7 @@ def get_host(ip):
 
     try:
         rev_name = reversename.from_address(str(ip))
-        name = str(resolver.query(rev_name, "PTR", lifetime=3)[0])[:-1]
+        name = str(resolver.resolve(rev_name, "PTR", lifetime=3)[0])[:-1]
     except (resolver.NoAnswer, resolver.NXDOMAIN, exception.Timeout):
         pass
     except (resolver.NoNameservers, resolver.NotAbsolute, resolver.NoRootSOA):

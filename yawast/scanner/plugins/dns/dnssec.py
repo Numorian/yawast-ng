@@ -11,7 +11,7 @@ def get_dnskey(domain):
     records = []
 
     try:
-        answers = resolver.query(domain, "DNSKEY")
+        answers = resolver.resolve(domain, "DNSKEY")
 
         for data in answers:
             flags = format(data.flags, "016b")

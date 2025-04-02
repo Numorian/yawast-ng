@@ -66,7 +66,7 @@ def _get_caa_records(domain: str, resv: Resolver) -> List[str]:
     records: List[str] = []
 
     try:
-        answers = resv.query(domain, "CAA", lifetime=3)
+        answers = resv.resolve(domain, "CAA", lifetime=3)
 
         for data in answers:
             records.append(data.to_text())
@@ -82,7 +82,7 @@ def _get_cname(domain: str, resv: Resolver) -> Union[str, None]:
     name = None
 
     try:
-        answers = resv.query(domain, "CNAME", lifetime=3)
+        answers = resv.resolve(domain, "CNAME", lifetime=3)
 
         for data in answers:
             name = str(data.target)

@@ -58,7 +58,7 @@ def _get_records_for_domain(host: str, queue):
         host = host + "."
 
     try:
-        answers = res.query(host, "CNAME", lifetime=3, raise_on_no_answer=False)
+        answers = res.resolve(host, "CNAME", lifetime=3, raise_on_no_answer=False)
 
         for data in answers:
             records.append(["CNAME", host, str(data.target)])
@@ -68,7 +68,7 @@ def _get_records_for_domain(host: str, queue):
         output.debug_exception()
 
     try:
-        answers = res.query(host, "A", lifetime=3, raise_on_no_answer=False)
+        answers = res.resolve(host, "A", lifetime=3, raise_on_no_answer=False)
 
         for data in answers:
             records.append(["A", host, str(data)])
@@ -78,7 +78,7 @@ def _get_records_for_domain(host: str, queue):
         output.debug_exception()
 
     try:
-        answers = res.query(host, "AAAA", lifetime=3, raise_on_no_answer=False)
+        answers = res.resolve(host, "AAAA", lifetime=3, raise_on_no_answer=False)
 
         for data in answers:
             records.append(["AAAA", host, str(data)])

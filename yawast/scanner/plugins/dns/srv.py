@@ -27,7 +27,7 @@ def find_srv_records(domain, path=None):
             host = line.strip() + "." + domain + "."
 
             try:
-                answers = res.query(host, "SRV", lifetime=3, raise_on_no_answer=False)
+                answers = res.resolve(host, "SRV", lifetime=3, raise_on_no_answer=False)
 
                 for data in answers:
                     target = data.target.to_text()

@@ -4,17 +4,18 @@
 
 import re
 import socket
+import ssl
 import struct
 from http.client import HTTPResponse
 from typing import List, Dict, Union, Tuple, Optional
 from urllib.parse import urlparse
 
 import pkg_resources
-from nassl.ssl_client import OpenSslVersionEnum
 from publicsuffixlist import PublicSuffixList
 from requests.models import Response
 from validator_collection import checkers
 
+from yawast.external.http_response_from_socket import HttpResponseParser
 from yawast.reporting.enums import Vulnerabilities as Vln
 from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
@@ -343,7 +344,7 @@ def check_hsts_preload(url: str) -> List[dict]:
 
 def check_local_ip_disclosure(session: Session) -> List[Result]:
     def _send_http_10_get(
-        con: Union[SslConnection, socket.socket]
+        con: Union[ssl.SSLSocket, socket.socket]
     ) -> Tuple[str, HTTPResponse]:
         req = (
             "HEAD / HTTP/1.0\r\n"
@@ -351,16 +352,9 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
             "Accept: */*\r\n\r\n".format(user_agent=network.YAWAST_UA)
         )
 
-        if isinstance(con, SslConnection):
-            con.ssl_client.write(req.encode("utf_8"))
+        con.sendall(req.encode("utf_8"))
 
-            res = http_response_parser.HttpResponseParser.parse_from_ssl_connection(
-                con.ssl_client
-            )
-        else:
-            con.sendall(req.encode("utf_8"))
-
-            res = http_response_parser.HttpResponseParser.parse_from_socket(con)
+        res = HttpResponseParser.parse_from_socket(con)
 
         return req, res
 
@@ -409,35 +403,22 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
 
     results: List[Result] = []
 
-    # TODO: Replace this with the real thing, instead of a dummy class
-    class ServerConnectivityTester:
-        def __init__(self, hostname: str, port: int):
-            self.hostname = hostname
-            self.port = port
-
-        def perform(self) -> None:
-            raise NotImplementedError("This is a dummy class")
-        
-    def get_connection():
-        raise NotImplementedError("This is a dummy function")
-        
-    # end TODO
-
     if session.url_parsed.scheme == "https":
-        conn_tester = ServerConnectivityTester(
-            hostname=session.domain, port=utils.get_port(session.url)
-        )
+        url = session.url
+        port = utils.get_port(url)
+        hostname = utils.get_domain(url)
+        context = ssl.create_default_context()
 
-        server_info = conn_tester.perform()
+        # disable cert verification - we don't care about the cert
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
 
-        conn = get_connection()
-
-        try:
-            conn.connect()
-
-            _get_result(conn, utils.get_port(session.url))
-        except Exception:
-            output.debug_exception()
+        with socket.create_connection((hostname, port)) as sock:
+            with context.wrap_socket(sock, server_hostname=hostname) as conn:
+                try:
+                    _get_result(conn, port)
+                except Exception:
+                    output.debug_exception()
 
     if session.supports_http:
         url = session.get_http_url()

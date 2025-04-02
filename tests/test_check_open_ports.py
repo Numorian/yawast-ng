@@ -17,7 +17,7 @@ class TestCheckOpenPorts(TestCase):
         path = os.path.join(target_dir, "tests/test_data/common_ports.json")
 
         recs = port_scan.check_open_ports(
-            "https://adamcaudill.com", "104.28.26.55", path
+            "https://adamcaudill.com", "104.21.15.2", path
         )
 
         self.assertTrue(len(recs) > 0)

@@ -52,18 +52,12 @@ jobs:
         which chromedriver
       shell: bash {0}
 
-    - name: Test with unittest
-      run: |
-          pipenv run python -m unittest discover
-      shell: bash {0}
-
     - name: Run unit tests
       if: always()
       run: |
         pipenv install codecov
         pipenv run coverage run -m unittest discover
         pipenv run coverage xml
-        pipenv run codecov
       shell: bash {0}
 
     - name: Upload results to Codecov

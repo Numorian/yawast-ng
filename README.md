@@ -1,4 +1,5 @@
 ## yawast-ng
+[![codecov](https://codecov.io/github/Numorian/yawast-ng/branch/main/graph/badge.svg?token=LPEIB8NOE3)](https://codecov.io/github/Numorian/yawast-ng)
 
 ![YAWAST](https://github.com/Numorian/yawast-ng/raw/main/yawast_logo_v1.svg?sanitize=true)
 

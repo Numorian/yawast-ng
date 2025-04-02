@@ -318,15 +318,29 @@ def http_file_exists(
 
                     # both are text, so we need to compare to see how similar they are
                     with ExecutionTimer() as tm:
-                        ratio = SequenceMatcher(None, file_res.text, get.text).ratio()
+                        # split the text into lines, so that the matcher will go line -by-line
+                        # this is much faster than comparing character-by-character (in theory)
+                        # note that this does no good if the response in minimised; so we will
+                        # only do this if the response is over 25 lines long
+                        file_lines = file_res.text.splitlines()
+                        get_lines = get.text.splitlines()
+ 
+                        # use fuzzy matching to compare the two responses
+                        if len(file_lines) > 25 and len(get_lines) > 25:
+                            matcher = SequenceMatcher(None, file_lines, get_lines)
+                        else:
+                            matcher = SequenceMatcher(None, file_res.text, get.text)
+ 
+                        ratio = matcher.quick_ratio()
 
                     output.debug(
                         f"Fuzzy Matching used. Text from known 404 and '{get.url}' compared in {tm.to_ms()}ms"
+                        f" (similarity: {ratio})"
                     )
 
                     # check to see if we have an alignment of less than 90% between the known 404, and this response
                     # if it's less than 90%, we will assume that the response is different, and we have a hit
-                    # this is somewhat error prone, as it depends on details of how the application works, though
+                    # this is somewhat error-prone, as it depends on details of how the application works, though
                     # most errors should be very similar, so the false positive rate should be low.
                     if ratio < 0.9:
                         output.debug(
@@ -336,6 +350,12 @@ def http_file_exists(
 
                         return True, get
                     else:
+                        # if we get here, it's actually a 404
+                        output.debug(
+                            f"Fuzzy Matching used. Text from known 404 and '{get.url}' have a "
+                            f"similarity of {ratio} - assuming 404."
+                        )
+
                         return False, get
                 else:
                     # if file_res is text, and this isn't, safe to call this a valid hit

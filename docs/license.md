@@ -1,5 +1,5 @@
 ---
 title: License
 permalink: /license/
-redirect_to: https://github.com/adamcaudill/yawast/blob/master/LICENSE
+redirect_to: https://github.com/Numorian/yawast-ng/blob/main/LICENSE
 ---

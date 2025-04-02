@@ -2,7 +2,7 @@
 layout: default
 ---
 
-YAWAST is an application meant to simplify initial analysis and information gathering for penetration testers and security auditors. It performs basic checks in these categories:
+yawast-ng is an application meant to simplify initial analysis and information gathering for penetration testers and security auditors. It performs basic checks in these categories:
 
 * TLS/SSL - Versions and cipher suites supported; common issues.
 * Information Disclosure - Checks for common information leaks.

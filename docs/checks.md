@@ -6,7 +6,7 @@ permalink: /checks/
 
 ### Checks Performed
 
-The following checks are performed; please note, this may not include all checks performed by YAWAST, but is an overview.
+The following checks are performed; please note, this may not include all checks performed by yawast-ng, but is an overview.
 
 * *(Generic)* User Enumeration via Password Reset Form Response Differences
 * *(Generic)* User Enumeration via Password Reset Form Timing Differences
@@ -97,9 +97,9 @@ The following checks are performed; please note, this may not include all checks
 
 ### TLS/SSL Information
 
-By default, YAWAST uses SSL Labs to gather information and issues related to TLS. This includes the full list of issues reported by SSL Labs, with some additional information and issues captured. When a scan is performed against a target that SSL Labs would not be able to scan (such as a private IP address), YAWAST will use SSLyze to perform this analysis.
+By default, yawast-ng uses SSL Labs to gather information and issues related to TLS. This includes the full list of issues reported by SSL Labs, with some additional information and issues captured. When a scan is performed against a target that SSL Labs would not be able to scan (such as a private IP address), yawast-ng will use SSLyze to perform this analysis.
 
-By using SSL Labs and SSLyze, YAWAST is able to capture a significant number of TLS issues; the full list is too long (and updated too often) to display here.
+By using SSL Labs and SSLyze, yawast-ng is able to capture a significant number of TLS issues; the full list is too long (and updated too often) to display here.
 
 * Certificate details
 * Certificate chain
@@ -148,7 +148,7 @@ Checks for the following SSL issues are performed (the exact list depends on whi
 
 #### SWEET32
 
-YAWAST is unique among the tools available, in that it provides the only implementation of a test for SWEET32 that does more than check for cipher suites with a 64-bit block size. This allows YAWAST to provide the most accurate assessment of this issue available.
+yawast-ng is unique among the tools available, in that it provides the only implementation of a test for SWEET32 that does more than check for cipher suites with a 64-bit block size. This allows yawast-ng to provide the most accurate assessment of this issue available.
 
 See [here](https://adamcaudill.com/2016/09/15/testing-sweet32-yawast/) for more information.
 

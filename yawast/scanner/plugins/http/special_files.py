@@ -62,7 +62,7 @@ def _check_url(url: str, targets: List[str]) -> Tuple[List[str], List[Result]]:
 
         results += response_scanner.check_response(target_url, res)
 
-        if res.status_code < 300:
+        if found:
             files.append(target_url)
             results.append(
                 Result.from_evidence(

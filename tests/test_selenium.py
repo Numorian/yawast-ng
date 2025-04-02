@@ -38,7 +38,7 @@ class TestSeleniumIntegration(TestCase):
             self.assertNotIn("Error", stderr.getvalue())
 
     def test_pwd_rst_find_field(self):
-        url = "https://underhandedcrypto.com/wp-login.php?action=lostpassword"
+        url = "https://www.starbucks.com/account/forgot-password"
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -54,7 +54,7 @@ class TestSeleniumIntegration(TestCase):
 
             self.assertIsInstance(driver, WebDriver)
             self.assertIsInstance(element, WebElement)
-            self.assertIn("Username or Email Address", driver.page_source)
+            self.assertIn("Just need to confirm your email", driver.page_source)
             self.assertNotIn("Exception", stderr.getvalue())
             self.assertNotIn("Error", stderr.getvalue())
-            self.assertEqual("user_login", element.get_attribute("id"))
+            self.assertEqual("emailAddress", element.get_attribute("id"))

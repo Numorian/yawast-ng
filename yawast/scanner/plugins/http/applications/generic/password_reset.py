@@ -191,6 +191,10 @@ def _find_user_field(driver: webdriver, name: Optional[str] = None) -> WebElemen
     element = _find_element(driver, "email")
     if element:
         return element
+    
+    element = _find_element(driver, "emailAddress")
+    if element:
+        return element
 
     element = _find_element(driver, "email_address")
     if element:
@@ -216,14 +220,14 @@ def _find_element(driver: webdriver, name: str) -> Union[None, WebElement]:
 
     # first, check by name
     try:
-        ret = driver.find_element_by_name(name)
+        ret = driver.find_element("name", name)
     except Exception:
         pass
 
     if not ret:
         # next, maybe it's id instead of name
         try:
-            ret = driver.find_element_by_id(name)
+            ret = driver.find_element("name", name)
         except Exception:
             pass
 

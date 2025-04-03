@@ -1,5 +1,5 @@
 ## yawast-ng
-[![codecov](https://codecov.io/github/Numorian/yawast-ng/branch/main/graph/badge.svg?token=LPEIB8NOE3)](https://codecov.io/github/Numorian/yawast-ng)
+![unit-tests](https://github.com/Numorian/yawast-ng/workflows/unit-tests/badge.svg)[![codecov](https://codecov.io/github/Numorian/yawast-ng/branch/main/graph/badge.svg?token=LPEIB8NOE3)](https://codecov.io/github/Numorian/yawast-ng)
 
 ![YAWAST](https://github.com/Numorian/yawast-ng/raw/main/yawast_logo_v1.svg?sanitize=true)
 
@@ -35,9 +35,9 @@ Please see [the project website](https://numorian.github.io/yawast-ng/) for full
 
 The most common usage scenario is as simple as:
 
-`yawast scan <url1> <url2>`
+`yawast-ng scan <url1>`
 
-Detailed [usage information](https://numorian.github.io/yawast-ng/usage/) is available on the YAWAST web site.
+Detailed [usage information](https://numorian.github.io/yawast-ng/usage/) is available on the project web site.
 
 ### Contributing
 
@@ -47,11 +47,11 @@ Detailed [usage information](https://numorian.github.io/yawast-ng/usage/) is ava
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
-Issues that are labeled as [beginner](/issues?q=is%3Aopen+is%3Aissue+label%3Abeginner) are great starting points for new contributors. These are less complex issues that will help make you familiar with working on YAWAST.
+Issues that are labeled as [good first issue](https://github.com/Numorian/yawast-ng/labels/good%20first%20issue) are great starting points for new contributors. These are less complex issues that will help make you familiar with working on yawast-ng.
 
-Contributions, in the form of feature requests and pull requests are both welcome and encouraged. YAWAST will only evolve if users are willing and able to give back, and work too make YAWAST better for everyone.
+Contributions, in the form of feature requests and pull requests are both welcome and encouraged. yawast-ng will only evolve if users are willing and able to give back, and work too make yawast-ng better for everyone.
 
-Information on development standards, and guidelines for issues are available in our [CONTRIBUTING](/blob/main/CONTRIBUTING.md) document.
+Information on development standards, and guidelines for issues are available in our [CONTRIBUTING](/CONTRIBUTING.md) document.
 
 ### Special Thanks
 

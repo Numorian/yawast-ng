@@ -313,6 +313,7 @@ def check_http_methods(
 
     with open(file_path) as file:
         for line in file:
+            line = line.strip()
             res = network.http_custom(line, url)
 
             if res.status_code < 405:
@@ -327,17 +328,22 @@ def check_hsts_preload(url: str) -> List[dict]:
     hsts_service = "https://hstspreload.com/api/v1/status/"
     results: List[dict] = []
 
-    domain = utils.get_domain(url)
+    try:
+        domain = utils.get_domain(url)
 
-    if not checkers.is_ip_address(domain):
-        while domain.count(".") > 0:
-            # get the HSTS preload status for the domain
-            res, _ = network.http_json(f"{hsts_service}{domain}")
-            results.append(res)
+        if not checkers.is_ip_address(domain):
+            while domain.count(".") > 0:
+                # get the HSTS preload status for the domain
+                res, _ = network.http_json(f"{hsts_service}{domain}")
+                results.append(res)
 
-            domain = domain.split(".", 1)[-1]
-            if PublicSuffixList().is_public(domain):
-                break
+                domain = domain.split(".", 1)[-1]
+                if PublicSuffixList().is_public(domain):
+                    break
+    except Exception:
+        output.debug_exception()
+        # if we fail, just return an empty list
+        return []
 
     return results
 

@@ -94,7 +94,7 @@ def scan(session: Session):
     if len(methods) == 0:
         output.norm("Server responds to invalid HTTP methods - check skipped.")
     else:
-        reporter.register_data({"http_methods_supported": methods})
+        reporter.register_data("http_methods_supported", methods)
 
         output.norm("Supported HTTP methods:")
 

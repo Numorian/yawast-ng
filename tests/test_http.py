@@ -516,7 +516,17 @@ class TestHttpBasic(TestCase):
             any("Cache-Control: no-store Not Found" in r.message for r in res)
         )
 
-    def test_response_scanner(self):
+    def test_response_scanner_vuln(self):
+        network.init("", "", "")
+        url = "https://erlend.oftedal.no/blog/retire/"
+        resp = network.http_get(url)
+
+        http.reset()
+        res = response_scanner.check_response(url, resp)
+
+        self.assertTrue(any("Vulnerable JavaScript" in r.message for r in res))
+
+    def test_response_scanner_ext(self):
         network.init("", "", "")
         url = "https://adamcaudill.com/"
         resp = network.http_get(url)
@@ -525,7 +535,6 @@ class TestHttpBasic(TestCase):
         res = response_scanner.check_response(url, resp)
 
         self.assertTrue(any("External JavaScript File" in r.message for r in res))
-        self.assertTrue(any("Vulnerable JavaScript" in r.message for r in res))
 
     def test_rails_cve_2019_5418_none(self):
         url = "http://example.com/"

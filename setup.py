@@ -41,7 +41,7 @@ def get_install_reqs():
 
 
 setup(
-    name="yawast",
+    name="yawast-ng",
     version=version,
     cmdclass=cmdclass,
     description="The YAWAST Antecedent Web Application Security Toolkit",
@@ -60,7 +60,7 @@ setup(
     entry_points={"console_scripts": ["yawast = yawast.__main__:main"]},
     install_requires=get_install_reqs(),
     include_package_data=True,
-    package_data={"yawast": ["resources/*"]},
+    package_data={"yawast.resources": ["resources/*"]},
     zip_safe=False,
     python_requires=">=3.9",
     keywords="security tls ssl dns http scan vulnerability",

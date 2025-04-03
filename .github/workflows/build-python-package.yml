@@ -76,7 +76,7 @@ jobs:
     - name: Run version (all)
       if: always()
       run: |
-        pipenv run python ./bin/yawast version
+        pipenv run python ./bin/yawast-ng version
       shell: bash {0}
 
   build-docker:

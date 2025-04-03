@@ -122,7 +122,7 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
 
                     if href is not None:
                         # check to see if this link is in scope
-                        if base_url in href and href not in _links:
+                        if href.startswith(base_url) and href not in _links:
                             if "." in href.split("/")[-1]:
                                 file_ext = href.split("/")[-1].split(".")[-1]
                             else:

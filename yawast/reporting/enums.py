@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 from enum import Enum
-from typing import NamedTuple
+from typing import NamedTuple, List
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -18,11 +18,17 @@ class Severity(str, Enum):
     INFO = "info"
 
 
+class VulnerabilityReference(NamedTuple):
+    name: str
+    url: str
+
+
 class VulnerabilityInfo(NamedTuple):
     name: str
     severity: Severity
     description: str
     display_all: bool = False
+    references: List[VulnerabilityReference] = []
     id: str = "(Invalid)"  # must be the last item
 
     @classmethod
@@ -34,7 +40,7 @@ class VulnerabilityInfo(NamedTuple):
         d = digest.finalize().hex()
         id_val = f"Y{d}"
 
-        return cls.__new__(cls, name, severity, description, display_all, id_val)
+        return cls.__new__(cls, name, severity, description, display_all, [], id_val)
 
 
 class VulnerabilityInfoEnum(VulnerabilityInfo, Enum):
@@ -405,9 +411,16 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     SERVER_TOMCAT_MANAGER_WEAK_PASSWORD = VulnerabilityInfo.create(
         "Server_Tomcat_Manager_Weak_Password", Severity.CRITICAL, "", True
     )
+
     SERVER_TOMCAT_CVE_2017_12615 = VulnerabilityInfo.create(
         "Server_Tomcat_CVE_2017_12615", Severity.CRITICAL, ""
     )
+    SERVER_TOMCAT_CVE_2017_12615.references.append(
+         VulnerabilityReference(
+             "CVE-2017-12615", "https://nvd.nist.gov/vuln/detail/CVE-2017-12615"
+         )
+     )
+
     SERVER_TOMCAT_CVE_2019_0232 = VulnerabilityInfo.create(
         "Server_Tomcat_CVE_2019_0232", Severity.CRITICAL, ""
     )

@@ -1,3 +1,7 @@
+## 0.13.0 - In Development
+
+* Assorted maintenance.
+
 ## 0.12.0 - 2025-04-03
 
 YAWAST has become yawast-ng, and been substantially updated.

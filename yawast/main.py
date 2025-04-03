@@ -113,7 +113,7 @@ def print_header():
 
     print()
     print(f"The YAWAST Antecedent Web Application Security Toolkit (v{get_version()})")
-    print("                                    The Next Generation")
+    print("                                   The Next Generation")
     print()
     print(
         " Copyright (c) 2013 - 2025 Adam Caudill <adam@adamcaudill.com> and Contributors"

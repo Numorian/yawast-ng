@@ -1,4 +1,4 @@
-## 0.12.0 - In Development
+## 0.12.0 - 2025-04-03
 
 YAWAST has become yawast-ng, and been substantially updated.
 

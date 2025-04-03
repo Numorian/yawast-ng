@@ -232,7 +232,7 @@ def _set_basic_info():
 
 def _get_version_info() -> str:
     try:
-        data, code = network.http_json("https://pypi.org/pypi/yawast/json")
+        data, code = network.http_json("https://pypi.org/pypi/yawast-ng/json")
     except Exception:
         output.debug_exception()
 

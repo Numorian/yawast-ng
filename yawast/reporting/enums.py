@@ -41,6 +41,10 @@ class VulnerabilityInfo(NamedTuple):
         id_val = f"Y{d}"
 
         return cls.__new__(cls, name, severity, description, display_all, [], id_val)
+    
+    @classmethod
+    def __hash__(self):
+        return hash(self.id)
 
 
 class VulnerabilityInfoEnum(VulnerabilityInfo, Enum):

@@ -518,7 +518,7 @@ class TestHttpBasic(TestCase):
 
     def test_response_scanner_vuln(self):
         network.init("", "", "")
-        url = "https://erlend.oftedal.no/blog/retire/"
+        url = "https://adamcaudill.com/files/EchoLoginForm"
         resp = network.http_get(url)
 
         http.reset()

@@ -1585,7 +1585,7 @@ class TestHttpBasic(TestCase):
             self.assertNotIn("Exception", stderr.getvalue())
             self.assertNotIn("Error", stderr.getvalue())
 
-    def test_hsts_preload_status(self):
+    def test_hsts_preload_status_false(self):
         network.init("", "", "")
         url = "https://www.google.com/"
 
@@ -1596,6 +1596,21 @@ class TestHttpBasic(TestCase):
             except Exception as error:
                 self.assertIsNone(error)
 
-        self.assertTrue(len(res) == 2)
+        self.assertTrue(len(res) == 1)
+        self.assertNotIn("Exception", stderr.getvalue())
+        self.assertNotIn("Error", stderr.getvalue())
+
+    def test_hsts_preload_status_true(self):
+        network.init("", "", "")
+        url = "https://garron.net/"
+
+        output.setup(False, False, False)
+        with utils.capture_sys_output() as (stdout, stderr):
+            try:
+                res = http_basic.check_hsts_preload(url)
+            except Exception as error:
+                self.assertIsNone(error)
+
+        self.assertTrue(len(res) == 1)
         self.assertNotIn("Exception", stderr.getvalue())
         self.assertNotIn("Error", stderr.getvalue())

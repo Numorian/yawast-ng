@@ -325,21 +325,17 @@ def check_http_methods(
 
 
 def check_hsts_preload(url: str) -> List[dict]:
-    hsts_service = "https://hstspreload.com/api/v1/status/"
+    hsts_service = "https://hstspreload.org/api/v2/status?domain="
     results: List[dict] = []
 
     try:
         domain = utils.get_domain(url)
 
         if not checkers.is_ip_address(domain):
-            while domain.count(".") > 0:
-                # get the HSTS preload status for the domain
-                res, _ = network.http_json(f"{hsts_service}{domain}")
-                results.append(res)
-
-                domain = domain.split(".", 1)[-1]
-                if PublicSuffixList().is_public(domain):
-                    break
+            # get the HSTS preload status for the domain
+            # (we don't need to walk up the domain, as the service will do that for us)
+            res, _ = network.http_json(f"{hsts_service}{domain}")
+            results.append(res)
     except Exception:
         output.debug_exception()
         # if we fail, just return an empty list

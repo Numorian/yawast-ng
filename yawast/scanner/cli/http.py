@@ -79,14 +79,10 @@ def scan(session: Session):
     if len(results) > 0:
         reporter.register_data("hsts_preload_status", results)
 
-        output.norm("HSTS Preload Status:")
+        output.norm("HSTS Preload Status (Chromium):")
         for result in results:
-            chrome = result["chrome"] is not None
-            firefox = result["firefox"] is not None
-            tor = result["tor"] is not None
-
             output.norm(
-                f"\t({result['domain']}) Chrome: {chrome}\tFirefox: {firefox}\t\tTor: {tor}"
+                f"\t({result['name']}) Status: {result['status']}; Preloaded Domain: {result['preloadedDomain']}"
             )
         output.empty()
 

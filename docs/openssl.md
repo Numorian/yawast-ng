@@ -8,7 +8,7 @@ This page contains notes and important information about testing for SWEET32, 3D
 
 ### Versions 0.8 & up
 
-YAWAST, starting with 0.8, uses an embedded copy of sslyze and leverages it for access to a compiled version of OpenSSL that supports 3DES cipher suites. This is done to make it easy to maintain, and easy for users. This eliminates the majority of issues that users have experienced.
+yawast-ng, starting with 0.8, uses an embedded copy of sslyze and leverages it for access to a compiled version of OpenSSL that supports 3DES cipher suites. This is done to make it easy to maintain, and easy for users. This eliminates the majority of issues that users have experienced.
 
 ### Versions 0.7 & below
 

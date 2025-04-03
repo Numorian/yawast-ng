@@ -14,17 +14,13 @@ This is meant to provide an easy way to perform initial analysis and information
 
 ## Getting Started
 
-YAWAST is packaged as a Python package, Docker container, and as a Windows EXE to make installing it as easy as possible. Details are available on the [installation page](/installation/).
-
-#### Windows
-
-The simplest option for Windows users is to [download](https://github.com/Numorian/yawast-ng/releases) the compiled executable, as Windows requires certain dependencies to be compile.
+yawast-ng is packaged as a Python package and as a Docker container to make installing it as easy as possible. Details are available on the [installation page](/installation/).
 
 #### macOS, Linux, etc.
 
 The simplest options to install are:
 
-As a Python package: `pip3 install yawast` (YAWAST requires Python 3.7)
+As a Python package: `pip3 install yawast-ng` (yawast-ng Python 3.9+)
 
 #### Docker
 
@@ -34,7 +30,7 @@ It's strongly recommended that you review the [installation](https://numorian.gi
 
 ## Documentation
 
-Details about YAWAST and how to use it can be found below:
+Details about yawast-ng and how to use it can be found below:
 
 * [Installation](https://numorian.github.io/yawast-ng/installation/)
 * [Usage & Parameters](https://numorian.github.io/yawast-ng/usage/)

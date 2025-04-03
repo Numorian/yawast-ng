@@ -6,35 +6,33 @@ permalink: /usage/
 
 ### Commands & Parameters
 
-YAWAST uses the following commands to perform different functions:
+yawast-ng uses the following commands to perform different functions:
 
 * `scan` - Performs a full scan, and includes the functionality of the `dns` and `ssl` commands.
 * `dns` - Provides information on the target's DNS environment, with options to search for subdomains and SRV records.
 * `ssl` - Performs a scan of the target's TLS / SSL configuration, using either SSL Labs or sslyze (bundled).
 
-For detailed information, just enter `yawast -h` to see the help information. To see information for a specific command, use `yawast <command> -h` for full details. 
+For detailed information, just enter `yawast-ng -h` to see the help information. To see information for a specific command, use `yawast-ng <command> -h` for full details. 
 
 #### Scan Command
 
 ```
-usage: yawast scan [-h] [--debug] [--nocolors] [--nowrap] [--proxy PROXY]
-                   [--cookie COOKIE] [--nossl] [--internalssl]
-                   [--tdessessioncount] [--dir] [--dirrecursive]
-                   [--dirlistredir] [--files] [--srv] [--subdomains] [--nodns]
-                   [--output OUTPUT] [--user USER]
-                   [--pass_reset_page PASS_RESET_PAGE]
+usage: yawast scan [-h] [--debug] [--nocolors] [--nowrap] 
+                    [--nossl] [--internalssl] [--tdessessioncount] 
+                    [--dir] [--dirrecursive] [--dirlistredir] [--files] 
+                    [--srv] [--subdomains] [--nodns] [--ports] [--proxy PROXY] 
+                    [--cookie COOKIE] [--header HEADER] [--output OUTPUT] 
+                    [--user USER] [--pass_reset_page PASS_RESET_PAGE] 
+                    [--php_page PHP_PAGE]
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --debug               Displays debug output (very noisy)
   --nocolors            Disables the use of colors in output
   --nowrap              Disables the use of line wrapping in output
-  --proxy PROXY         HTTP Proxy Server (such as Burp Suite)
-  --cookie COOKIE       Session cookie
   --nossl               Disables SSL checks
   --internalssl         Disable SSL Labs integration
-  --tdessessioncount    Counts the number of messages that can be sent in a
-                        single session (SWEET32)
+  --tdessessioncount    Counts the number of messages that can be sent in a single session (SWEET32)
   --dir                 Enables directory search
   --dirrecursive        Recursive directory search (only with --dir)
   --dirlistredir        Show 301 redirects (only with --dir)
@@ -42,24 +40,28 @@ optional arguments:
   --srv                 Scan for known SRV DNS Records
   --subdomains          Search for Common Subdomains
   --nodns               Disable DNS checks
+  --ports               Scan common TCP ports
+  --proxy PROXY         HTTP Proxy Server (such as Burp Suite)
+  --cookie COOKIE       Session cookie
+  --header HEADER       HTTP header (such as Authorization) sent with each request ('name=value')
   --output OUTPUT       Output JSON file
-  --user USER           Valid username for the application (will prompt if not
-                        provided)
+  --user USER           Valid username for the application (will prompt if not provided)
   --pass_reset_page PASS_RESET_PAGE
                         Password reset page URL (will prompt if not provided)
+  --php_page PHP_PAGE   Relative path to PHP script (for additional tests)
 ```
 
-*A note on parameters and strings:* It's important to remember that the strings that would be passed to YAWAST may contain special characters that could be interpreted by your shell. In general, the best practice is to pass all string parameters wrapped in single-quotes to avoid this.
+*A note on parameters and strings:* It's important to remember that the strings that would be passed to yawast-ng may contain special characters that could be interpreted by your shell. In general, the best practice is to pass all string parameters wrapped in single-quotes to avoid this.
 
 ### Using with Zap / Burp Suite
 
-By default, Burp Suite's proxy listens on localhost at port 8080. To use YAWAST with Burp Suite (or any proxy for that matter), just add this to the command line:
+By default, Burp Suite's proxy listens on localhost at port 8080. To use yawast-ng with Burp Suite (or any proxy for that matter), just add this to the command line:
 
 `--proxy 'localhost:8080'`
 
 ### Authenticated Testing
 
-For authenticated testing, YAWAST allows you to specify a cookie to be passed via the `--cookie` parameter.
+For authenticated testing, yawast-ng allows you to specify a cookie to be passed via the `--cookie` parameter.
 
 `--cookie='SESSIONID=1234567890'`
 

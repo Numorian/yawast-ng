@@ -30,6 +30,10 @@ YAWAST was started in 2013, and at the time Ruby was a preferred language in the
 
 Based on the popularity of Python and the poll indicating that being written in Python would make contributions more likely, the decision was made to completely rewrite YAWAST. With the rewrite, the goal was to encourage lead more participation and provide a healthier future for the project.
 
+### Didn't YAWAST used to have a Windows version?
+
+Yes, though not anymore. Due to an increasingly complex chain of dependencies, and complications making certain features work on Windows, the platform is not currently supported.
+
 ### Does yawast-ng receive financial support?
 
 Yes; yawast-ng is directly supported by [Numorian](https://numorian.com), a security and AI consulting company.

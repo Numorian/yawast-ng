@@ -1,5 +1,5 @@
 ## yawast-ng
-![unit-tests](https://github.com/Numorian/yawast-ng/workflows/unit-tests/badge.svg) [![codecov](https://codecov.io/github/Numorian/yawast-ng/branch/main/graph/badge.svg?token=LPEIB8NOE3)](https://codecov.io/github/Numorian/yawast-ng)
+![unit-tests](https://github.com/Numorian/yawast-ng/workflows/unit-tests/badge.svg) [![codecov](https://codecov.io/github/Numorian/yawast-ng/branch/main/graph/badge.svg?token=LPEIB8NOE3)](https://codecov.io/github/Numorian/yawast-ng) [![PyPI version](https://img.shields.io/pypi/v/yawast-ng.svg)](https://pypi.org/project/yawast-ng/) [![Python version](https://img.shields.io/pypi/pyversions/yawast-ng.svg)](https://pypi.org/project/yawast-ng/)
 
 ![YAWAST](https://github.com/Numorian/yawast-ng/raw/main/yawast_logo_v1.svg?sanitize=true)
 

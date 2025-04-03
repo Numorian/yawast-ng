@@ -26,13 +26,13 @@ yawast-ng requires Python 3.9 or newer, and is tested on macOS and Linux.
 yawast-ng can be run inside a docker container.
 
 ```
-docker pull adamcaudill/yawast && docker run --rm -it adamcaudill/yawast scan <url> ...
+docker pull adcaudill/yawast-ng && docker run --rm -it adcaudill/yawast-ng scan <url> ...
 ```
 
 If you would like to capture the JSON output via the `--output=` option, you will need to use a slightly different command. The following example is for macOS, Linux, etc.; for Windows, you will need to modify the command. The following mounts the current directory to the Docker image, so that it can write the JSON file: 
 
 ```
-$ docker pull adamcaudill/yawast && docker run -v `pwd`/:/data/output/ --rm -it adamcaudill/yawast scan <url> --output=./output/
+$ docker pull adcaudill/yawast-ng && docker run -v `pwd`/:/data/output/ --rm -it adcaudill/yawast-ng scan <url> --output=./output/
 ```
 
 #### Kali Rolling

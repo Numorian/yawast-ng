@@ -5,7 +5,7 @@
 import socket
 
 from yawast.commands import utils as cutils
-from yawast.scanner.cli import ssl_labs
+from yawast.scanner.cli import ssl_internal, ssl_sweet32, ssl_labs
 from yawast.scanner.session import Session
 from yawast.shared import utils, output
 
@@ -39,11 +39,7 @@ def start(session: Session):
         ):
             # use SSLyze
             try:
-                # ssl_internal.scan(session)
-
-                raise NotImplementedError(
-                    "Internal SSL scanner is not implemented, temporarily."
-                )
+                ssl_internal.scan(session)
             except Exception as error:
                 output.error(f"Error running scan with SSLyze: {str(error)}")
         else:
@@ -64,7 +60,4 @@ def start(session: Session):
                     output.error(f"Error running scan with SSLyze: {str(error)}")
 
         if session.args.tdessessioncount:
-            # ssl_sweet32.scan(session)
-            raise NotImplementedError(
-                "Internal SSL scanner is not implemented, temporarily."
-            )
+            ssl_sweet32.scan(session)

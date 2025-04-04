@@ -6,9 +6,9 @@ permalink: /tls/
 
 ## Overview of TLS Scanning
 
-YAWAST includes two modes for performing checks against TLS configurations; one uses [SSL Labs](https://www.ssllabs.com/) (default), which includes a very detailed analysis of the system. For cases where SSL Labs can't be used, YAWAST will use a bundled copy of [sslyze](https://github.com/nabla-c0d3/sslyze) (`--internalssl`). 
+yawast-ng includes two modes for performing checks against TLS configurations; one uses [SSL Labs](https://www.ssllabs.com/) (default), which includes a very detailed analysis of the system. For cases where SSL Labs can't be used, yawast-ng will use a bundled copy of [sslyze](https://github.com/nabla-c0d3/sslyze) (`--internalssl`). 
 
-By default, YAWAST will use SSL Labs; if that fails or if it can't be used (scanning an IP address, or a port other than 443), YAWAST will automatically switch to using sslyze instead.
+By default, yawast-ng will use SSL Labs; if that fails or if it can't be used (scanning an IP address, or a port other than 443), yawast-ng will automatically switch to using sslyze instead.
 
 ### SWEET32 Testing
 
@@ -16,7 +16,7 @@ The [SWEET32](https://adamcaudill.com/2016/09/15/testing-sweet32-yawast/) test w
 
 ### Tests Performed
 
-Via either SSL Labs or sslyze, YAWAST performs a large number of checks, including some custom things that neither of these scanners currently offer. For the most up-to-date list of what they check for, please see the [Checks Performed](https://numorian.github.io/yawast-ng/checks/) page.
+Via either SSL Labs or sslyze, yawast-ng performs a large number of checks, including some custom things that neither of these scanners currently offer. For the most up-to-date list of what they check for, please see the [Checks Performed](https://numorian.github.io/yawast-ng/checks/) page.
 
 ## SSL Labs Mode
 

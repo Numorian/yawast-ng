@@ -11,13 +11,13 @@ The most important new feature is the addition of the `--header='name=value'` pa
 
 ### Change Log
 
-* [#20](https://github.com/adamcaudill/yawast/issues/20) - Check for common backup files
-* [#207](https://github.com/adamcaudill/yawast/issues/207) - Specify JWT Similar To Cookie
-* [#235](https://github.com/adamcaudill/yawast/issues/235) - WordPress Plugin Local Path Disclosure
-* [#244](https://github.com/adamcaudill/yawast/issues/244) - Check for common files with phpinfo()
-* [#264](https://github.com/adamcaudill/yawast/issues/264) - Add new version command
-* [#237](https://github.com/adamcaudill/yawast/issues/237) - Bug: Connection error in check_local_ip_disclosure
+* #20 - Check for common backup files
+* #207 - Specify JWT Similar To Cookie
+* #235 - WordPress Plugin Local Path Disclosure
+* #244 - Check for common files with phpinfo()
+* #264 - Add new version command
+* #237 - Bug: Connection error in check_local_ip_disclosure
 
 ### Feedback & Support
 
-As always, if you discover any issues or have a feature request, please open an [issue](https://github.com/adamcaudill/yawast/issues/new) and provide as much information as possible.
+As always, if you discover any issues or have a feature request, please open an issue](https://github.com/Numorian/yawast-ng/issues/new) and provide as much information as possible.

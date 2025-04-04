@@ -11,15 +11,15 @@ This version also includes a breaking change to the JSON file output; this chang
 
 ### Change Log
 
-* [#164](https://github.com/adamcaudill/yawast/issues/164) - Apache Tomcat Version Detection via 406 Not Acceptable
-* [#181](https://github.com/adamcaudill/yawast/issues/181) - HSTS Preload Checking (via HSTSPreload.com API) 
-* [#192](https://github.com/adamcaudill/yawast/issues/192) - Check for Missing Cache Control Headers 
-* [#306](https://github.com/adamcaudill/yawast/issues/306) - External JavaScript Lacks SRI
-* [#308](https://github.com/adamcaudill/yawast/issues/308) - Telerik UI for ASP.NET AJAX RadAsyncUpload Enabled
-* [#312](https://github.com/adamcaudill/yawast/issues/312) - Make JSON Storage More Efficient
-* [#313](https://github.com/adamcaudill/yawast/issues/313) - Improve File Search for Misconfigured Servers
-* [#319](https://github.com/adamcaudill/yawast/issues/319) - Enumerate HTTP Methods
+* #164 - Apache Tomcat Version Detection via 406 Not Acceptable
+* #181 - HSTS Preload Checking (via HSTSPreload.com API) 
+* #192 - Check for Missing Cache Control Headers 
+* #306 - External JavaScript Lacks SRI
+* #308 - Telerik UI for ASP.NET AJAX RadAsyncUpload Enabled
+* #312 - Make JSON Storage More Efficient
+* #313 - Improve File Search for Misconfigured Servers
+* #319 - Enumerate HTTP Methods
 
 ### Feedback & Support
 
-As always, if you discover any issues or have a feature request, please open an [issue](https://github.com/adamcaudill/yawast/issues/new) and provide as much information as possible.
+As always, if you discover any issues or have a feature request, please open an issue](https://github.com/Numorian/yawast-ng/issues/new) and provide as much information as possible.

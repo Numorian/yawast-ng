@@ -77,6 +77,6 @@ Starting in yawast-ng version 0.7.0, there is a new vulnerability scanner that p
 * Google Chrome
 * ChromeDriver
 
-When using this feature, yawast-ng will attempt to download the appropriate ChromeDriver for the version of Chrome you have installed.
+Storting in version 0.12.0, when using this feature, yawast-ng will attempt to download the appropriate ChromeDriver for the version of Chrome you have installed. Prior to 0.12.0, yawast-ng required ChromeDriver to be available on the PATH.
 
 Other browsers are not currently supported.

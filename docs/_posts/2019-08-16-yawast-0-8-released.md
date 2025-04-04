@@ -29,8 +29,8 @@ That being said, this new version includes a number of improvements and quite a 
 Command line parameters are still the same, most of the language is still the same – in general, this is a better YAWAST, but doesn’t break your expectations.
 
 Useful links:
-* [Installation information](https://yawast.org/installation/)
-* [Sample output](https://yawast.org/sample/)
-* [List of checks performed](https://yawast.org/checks/)
+* [Installation information](https://numorian.github.io/yawast-ng/installation/)
+* [Sample output](https://numorian.github.io/yawast-ng/sample/)
+* [List of checks performed](https://numorian.github.io/yawast-ng/checks/)
 
-If you have any issues, please open an [issue](https://github.com/adamcaudill/yawast/issues) on Github (with any sensitive information redacted of course).
+If you have any issues, please open an [issue](https://github.com/Numorian/yawast-ng/issues) on Github (with any sensitive information redacted of course).

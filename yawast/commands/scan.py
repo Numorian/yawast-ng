@@ -5,7 +5,7 @@
 import socket
 
 from yawast.commands import utils as cutils
-from yawast.scanner.cli import dns, ssl_labs, http, network
+from yawast.scanner.cli import dns, ssl_labs, ssl_internal, ssl_sweet32, http, network
 from yawast.scanner.session import Session
 from yawast.shared import utils, output
 
@@ -44,10 +44,7 @@ def start(session: Session):
             or utils.get_port(session.url) != 443
         ):
             # use internal scanner
-            # ssl_internal.scan(session)
-            raise NotImplementedError(
-                "Internal SSL scanner is not implemented, temporarily."
-            )
+            ssl_internal.scan(session)
         else:
             try:
                 ssl_labs.scan(session)
@@ -57,17 +54,13 @@ def start(session: Session):
                 output.error(f"Error running scan with SSL Labs: {str(error)}")
                 output.norm("Switching to internal SSL scanner...")
 
-                # ssl_internal.scan(session)
-                raise NotImplementedError(
-                    "Internal SSL scanner is not implemented, temporarily."
-                )
+                ssl_internal.scan(session)
 
         if session.args.tdessessioncount:
-            # ssl_sweet32.scan(session)
-
-            raise NotImplementedError(
-                "Internal SSL scanner is not implemented, temporarily."
+            output.error(
+                "The --tdessessioncount option is currently disabled. See https://github.com/Numorian/yawast-ng/issues/11"
             )
+            ssl_sweet32.scan(session)
 
     http.scan(session)
 

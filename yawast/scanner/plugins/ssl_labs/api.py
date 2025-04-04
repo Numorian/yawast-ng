@@ -46,8 +46,10 @@ def check_scan(domain: str) -> Tuple[str, Dict[str, Any]]:
 
 
 def _analyze(domain: str, new=False) -> Dict[str, Any]:
-    new_path = "host={target}&publish=off&startNew=on&all=done&ignoreMismatch=on".format(
-        target=domain
+    new_path = (
+        "host={target}&publish=off&startNew=on&all=done&ignoreMismatch=on".format(
+            target=domain
+        )
     )
     status_path = "host={target}&publish=off&all=done&ignoreMismatch=on".format(
         target=domain

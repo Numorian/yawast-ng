@@ -323,13 +323,13 @@ def http_file_exists(
                         # only do this if the response is over 25 lines long
                         file_lines = file_res.text.splitlines()
                         get_lines = get.text.splitlines()
- 
+
                         # use fuzzy matching to compare the two responses
                         if len(file_lines) > 25 and len(get_lines) > 25:
                             matcher = SequenceMatcher(None, file_lines, get_lines)
                         else:
                             matcher = SequenceMatcher(None, file_res.text, get.text)
- 
+
                         ratio = matcher.quick_ratio()
 
                     output.debug(
@@ -414,7 +414,7 @@ def http_build_raw_response(res: Response) -> str:
 
 
 def http_build_raw_request(
-    req: Union[Request, PreparedRequest, _RequestObjectProxy]
+    req: Union[Request, PreparedRequest, _RequestObjectProxy],
 ) -> str:
     if isinstance(req, _RequestObjectProxy):
         req = req._request

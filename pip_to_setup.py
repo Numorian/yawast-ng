@@ -7,9 +7,10 @@ try:
 except ImportError:
     import toml as tomllib  # pip install toml
 
+
 def main():
     pipfile_path = os.path.join(os.path.dirname(__file__), "Pipfile")
-    
+
     # Open and parse the Pipfile as TOML
     with open(pipfile_path, "rb") as f:
         pipfile_data = tomllib.load(f)
@@ -39,7 +40,11 @@ def main():
             else:
                 pkg_with_extras = pkg
 
-            req = pkg_with_extras if version.strip() == "*" or version.strip() == "" else f"{pkg_with_extras}{version}"
+            req = (
+                pkg_with_extras
+                if version.strip() == "*" or version.strip() == ""
+                else f"{pkg_with_extras}{version}"
+            )
             requirements.append(req)
         else:
             # Fallback: just include the package name.
@@ -52,6 +57,7 @@ def main():
     output += "]\n"
 
     print(output)
+
 
 if __name__ == "__main__":
     main()

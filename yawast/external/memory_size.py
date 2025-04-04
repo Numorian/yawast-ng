@@ -6,14 +6,14 @@ import math
 
 
 class Size(int):
-    """ define a size class to allow custom formatting
-        format specifiers supported :
-            em : formats the size as bits in IEC format i.e. 1024 bits (128 bytes) = 1Kib
-            eM : formats the size as Bytes in IEC format i.e. 1024 bytes = 1KiB
-            sm : formats the size as bits in SI format i.e. 1000 bits = 1kb
-            sM : formats the size as bytes in SI format i.e. 1000 bytes = 1KB
-            cm : format the size as bit in the common format i.e. 1024 bits (128 bytes) = 1Kb
-            cM : format the size as bytes in the common format i.e. 1024 bytes = 1KB
+    """define a size class to allow custom formatting
+    format specifiers supported :
+        em : formats the size as bits in IEC format i.e. 1024 bits (128 bytes) = 1Kib
+        eM : formats the size as Bytes in IEC format i.e. 1024 bytes = 1KiB
+        sm : formats the size as bits in SI format i.e. 1000 bits = 1kb
+        sM : formats the size as bytes in SI format i.e. 1000 bytes = 1KB
+        cm : format the size as bit in the common format i.e. 1024 bits (128 bytes) = 1Kb
+        cM : format the size as bytes in the common format i.e. 1024 bytes = 1KB
     """
 
     def __format__(self, fmt):

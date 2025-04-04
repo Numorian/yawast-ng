@@ -224,7 +224,7 @@ def _get_ct_log_data():
     logs = []
     for operator in data["operators"]:
         logs.extend(operator["logs"])
- 
+
     for log in logs:
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
         digest.update(base64.b64decode(log["key"]))

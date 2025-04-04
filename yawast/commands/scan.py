@@ -57,13 +57,13 @@ def start(session: Session):
                 output.error(f"Error running scan with SSL Labs: {str(error)}")
                 output.norm("Switching to internal SSL scanner...")
 
-                #ssl_internal.scan(session)
+                # ssl_internal.scan(session)
                 raise NotImplementedError(
                     "Internal SSL scanner is not implemented, temporarily."
                 )
 
         if session.args.tdessessioncount:
-            #ssl_sweet32.scan(session)
+            # ssl_sweet32.scan(session)
 
             raise NotImplementedError(
                 "Internal SSL scanner is not implemented, temporarily."

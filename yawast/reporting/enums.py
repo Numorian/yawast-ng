@@ -41,7 +41,7 @@ class VulnerabilityInfo(NamedTuple):
         id_val = f"Y{d}"
 
         return cls.__new__(cls, name, severity, description, display_all, [], id_val)
-    
+
     @classmethod
     def __hash__(self):
         return hash(self.id)
@@ -507,10 +507,10 @@ class Vulnerabilities(VulnerabilityInfoEnum):
         "Server_Tomcat_CVE_2017_12615", Severity.CRITICAL, ""
     )
     SERVER_TOMCAT_CVE_2017_12615.references.append(
-         VulnerabilityReference(
-             "CVE-2017-12615", "https://nvd.nist.gov/vuln/detail/CVE-2017-12615"
-         )
-     )
+        VulnerabilityReference(
+            "CVE-2017-12615", "https://nvd.nist.gov/vuln/detail/CVE-2017-12615"
+        )
+    )
 
     SERVER_TOMCAT_CVE_2019_0232 = VulnerabilityInfo.create(
         "Server_Tomcat_CVE_2019_0232", Severity.CRITICAL, ""

@@ -4,13 +4,14 @@
 
 from os import path
 
-#from requirementslib import Lockfile
+# from requirementslib import Lockfile
 from setuptools import find_packages
 
 from setuptools import setup
 
 
 root_path = path.dirname(path.realpath(__file__))
+
 
 def get_version_and_cmdclass(package_path):
     """Load version.py module without importing the whole package.
@@ -25,11 +26,12 @@ def get_version_and_cmdclass(package_path):
     spec.loader.exec_module(module)
     return module.__version__, module.cmdclass
 
+
 version, cmdclass = get_version_and_cmdclass("yawast")
 
+
 def get_long_description():
-    """Convert the README file into the long description.
-    """
+    """Convert the README file into the long description."""
     with open(path.join(root_path, "README.md"), encoding="utf-8") as f:
         long_description = f.read()
     return long_description
@@ -37,7 +39,7 @@ def get_long_description():
 
 def get_install_reqs():
     # TODO: Do something useful here.
-    return [] 
+    return []
 
 
 setup(

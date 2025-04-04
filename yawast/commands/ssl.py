@@ -39,7 +39,7 @@ def start(session: Session):
         ):
             # use SSLyze
             try:
-                #ssl_internal.scan(session)
+                # ssl_internal.scan(session)
 
                 raise NotImplementedError(
                     "Internal SSL scanner is not implemented, temporarily."
@@ -56,15 +56,15 @@ def start(session: Session):
                 output.norm("Switching to internal SSL scanner...")
 
                 try:
-                    #ssl_internal.scan(session)
+                    # ssl_internal.scan(session)
                     raise NotImplementedError(
                         "Internal SSL scanner is not implemented, temporarily."
-                )
+                    )
                 except Exception as error:
                     output.error(f"Error running scan with SSLyze: {str(error)}")
 
         if session.args.tdessessioncount:
-            #ssl_sweet32.scan(session)
+            # ssl_sweet32.scan(session)
             raise NotImplementedError(
                 "Internal SSL scanner is not implemented, temporarily."
             )

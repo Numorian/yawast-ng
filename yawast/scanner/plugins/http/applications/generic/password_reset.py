@@ -135,7 +135,9 @@ def _get_driver(session: Session, uri: str) -> WebDriver:
         proxy.ssl_proxy = f"http://#{session.args.proxy}"
         options.proxy = proxy
 
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(
+        service=ChromeService(ChromeDriverManager().install()), options=options
+    )
     driver.get(uri)
 
     return driver
@@ -189,7 +191,7 @@ def _find_user_field(driver: webdriver, name: Optional[str] = None) -> WebElemen
     element = _find_element(driver, "email")
     if element:
         return element
-    
+
     element = _find_element(driver, "emailAddress")
     if element:
         return element

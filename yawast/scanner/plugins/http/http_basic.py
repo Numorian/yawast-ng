@@ -346,7 +346,7 @@ def check_hsts_preload(url: str) -> List[dict]:
 
 def check_local_ip_disclosure(session: Session) -> List[Result]:
     def _send_http_10_get(
-        con: Union[ssl.SSLSocket, socket.socket]
+        con: Union[ssl.SSLSocket, socket.socket],
     ) -> Tuple[str, HTTPResponse]:
         req = (
             "HEAD / HTTP/1.0\r\n"

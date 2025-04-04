@@ -2,7 +2,8 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from typing import List, cast
+from datetime import datetime, timezone
+from typing import List
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
@@ -19,6 +20,8 @@ from sslyze import (
     CipherSuite,
     RobotScanResultEnum,
     TlsResumptionSupportEnum,
+    SslyzeOutputAsJson,
+    ServerScanResultAsJson,
 )
 
 from validator_collection import checkers
@@ -39,6 +42,7 @@ def scan(session: Session):
 
     ips = basic.get_ips(session.domain)
     port = utils.get_port(session.url)
+    all_results = []
 
     for ip in ips:
         try:
@@ -58,6 +62,8 @@ def scan(session: Session):
             output.norm(f"IP: {ip}:{port}")
 
             for result in scanner.get_results():
+                all_results.append(result)
+
                 if result.scan_status == ServerScanStatusEnum.ERROR_NO_CONNECTIVITY:
                     if checkers.is_ipv6(ip):
                         output.error(
@@ -458,6 +464,18 @@ def scan(session: Session):
             output.debug_exception()
 
             output.error(f"Error performing TLS scan: #{str(error)}")
+
+    if len(all_results) > 0:
+        # get the json data, and add it to the reporter
+        json_output = SslyzeOutputAsJson(
+            server_scan_results=[
+                ServerScanResultAsJson.model_validate(res) for res in all_results
+            ],
+            invalid_server_strings=[],
+            date_scans_started=datetime.now(timezone.utc),
+            date_scans_completed=datetime.now(timezone.utc),
+        )
+        reporter.register_data("sslyze_results", json_output)
 
 
 def _get_leaf_cert_info(cert: x509.Certificate):

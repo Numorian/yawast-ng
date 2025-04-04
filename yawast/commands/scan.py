@@ -57,6 +57,9 @@ def start(session: Session):
                 ssl_internal.scan(session)
 
         if session.args.tdessessioncount:
+            output.error(
+                "The --tdessessioncount option is currently disabled. See https://github.com/Numorian/yawast-ng/issues/11"
+            )
             ssl_sweet32.scan(session)
 
     http.scan(session)

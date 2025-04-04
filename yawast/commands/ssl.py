@@ -60,4 +60,7 @@ def start(session: Session):
                     output.error(f"Error running scan with SSLyze: {str(error)}")
 
         if session.args.tdessessioncount:
+            output.error(
+                "The --tdessessioncount option is currently disabled. See https://github.com/Numorian/yawast-ng/issues/11"
+            )
             ssl_sweet32.scan(session)

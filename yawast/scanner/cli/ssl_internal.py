@@ -6,19 +6,21 @@ from typing import List, cast
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
-from sslyze import server_connectivity_tester, synchronous_scanner, __version__
-from sslyze.plugins import (
-    certificate_info_plugin,
-    openssl_cipher_suites_plugin,
-    compression_plugin,
-    fallback_scsv_plugin,
-    heartbleed_plugin,
-    openssl_ccs_injection_plugin,
-    session_renegotiation_plugin,
-    session_resumption_plugin,
-    robot_plugin,
-    early_data_plugin,
+
+from sslyze import (
+    __version__,
+    Scanner,
+    ServerScanRequest,
+    ServerNetworkLocation,
+    ServerScanStatusEnum,
+    ScanCommandAttemptStatusEnum,
+    CertificateDeploymentAnalysisResult,
+    CipherSuitesScanResult,
+    CipherSuite,
+    RobotScanResultEnum,
+    TlsResumptionSupportEnum,
 )
+
 from validator_collection import checkers
 
 from yawast.reporting import reporter, issue
@@ -31,252 +33,426 @@ from yawast.shared import output, utils
 
 def scan(session: Session):
     output.norm(
-        f"Beginning SSL scan using sslyze {__version__} (this could take a minute or two)"
+        f"Beginning SSL scan using sslyze {__version__.__version__} (this could take a minute or two)"
     )
     output.empty()
 
     ips = basic.get_ips(session.domain)
+    port = utils.get_port(session.url)
 
     for ip in ips:
         try:
-            conn_tester = server_connectivity_tester.ServerConnectivityTester(
-                hostname=session.domain, port=utils.get_port(session.url), ip_address=ip
+            scanner = Scanner()
+            scanner.queue_scans(
+                [
+                    ServerScanRequest(
+                        server_location=ServerNetworkLocation(
+                            hostname=session.domain,
+                            port=port,
+                            ip_address=ip,
+                        )
+                    )
+                ]
             )
 
-            output.norm(f"IP: {conn_tester.ip_address}:{conn_tester.port}")
-            server_info = conn_tester.perform()
+            output.norm(f"IP: {ip}:{port}")
 
-            scanner = synchronous_scanner.SynchronousScanner()
+            for result in scanner.get_results():
+                if result.scan_status == ServerScanStatusEnum.ERROR_NO_CONNECTIVITY:
+                    if checkers.is_ipv6(ip):
+                        output.error(
+                            "\tError connecting to IPv6 IP. Please ensure that your system is configured properly."
+                        )
 
-            cinfo = scanner.run_scan_command(
-                server_info, certificate_info_plugin.CertificateInfoScanCommand()
-            )
-            cinfo = cast(certificate_info_plugin.CertificateInfoScanResult, cinfo)
+                    output.error(f"\tConnection failed ({str(error)})")
+                    output.empty()
 
-            # print info on the server cert
-            _get_leaf_cert_info(cinfo.verified_certificate_chain[0])
+                    continue
 
-            # get all but the first element
-            _get_cert_chain(cinfo.verified_certificate_chain[1:], session.url)
+                # if we're here, we have a result
+                certinfo_attempt = result.scan_result.certificate_info
+                if certinfo_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing certificate scan: {certinfo_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif certinfo_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    # we have certificate info
+                    certinfo_result = certinfo_attempt.result
 
-            # list the root stores this is trusted by
-            trust = ""
-            for t in _get_trusted_root_stores(cinfo):
-                trust += f"{t} (trusted) "
+                    for cert_deployment in certinfo_result.certificate_deployments:
+                        leaf_cert = cert_deployment.received_certificate_chain[0]
+                        cert_chain = cert_deployment.received_certificate_chain[1:]
 
-            output.norm(f"\tRoot Stores: {trust}")
+                        # print info on the server cert
+                        _get_leaf_cert_info(leaf_cert)
 
-            output.empty()
+                        # get all but the first element
+                        _get_cert_chain(cert_chain, session.url)
 
-            # get info for the various versions of SSL/TLS
-            output.norm("\tCipher Suite Support:")
+                        # list the root stores this is trusted by
+                        trust = ""
+                        for t in _get_trusted_root_stores(cert_deployment):
+                            trust += f"{t} (trusted) "
 
-            sslv2 = scanner.run_scan_command(
-                server_info, openssl_cipher_suites_plugin.Sslv20ScanCommand()
-            )
-            sslv2 = cast(openssl_cipher_suites_plugin.CipherSuiteScanResult, sslv2)
+                        output.norm(f"\tRoot Stores: {trust}")
 
-            _get_suite_info("SSLv2", sslv2, session.url)
+                        output.empty()
 
-            sslv3 = scanner.run_scan_command(
-                server_info, openssl_cipher_suites_plugin.Sslv30ScanCommand()
-            )
-            sslv3 = cast(openssl_cipher_suites_plugin.CipherSuiteScanResult, sslv3)
+                        if cert_deployment.ocsp_response is not None:
+                            output.norm("\tOCSP Stapling: Yes")
+                        else:
+                            reporter.display(
+                                "\tOCSP Stapling: No",
+                                issue.Issue(
+                                    Vulnerabilities.TLS_OCSP_STAPLE_MISSING,
+                                    session.url,
+                                    {},
+                                ),
+                            )
 
-            _get_suite_info("SSLv3", sslv3, session.url)
+                # get info for the various versions of SSL/TLS
+                output.norm("\tCipher Suite Support:")
 
-            tls10 = scanner.run_scan_command(
-                server_info, openssl_cipher_suites_plugin.Tlsv10ScanCommand()
-            )
-            tls10 = cast(openssl_cipher_suites_plugin.CipherSuiteScanResult, tls10)
+                # get info for sslv2
+                ssl2_attempt = result.scan_result.ssl_2_0_cipher_suites
+                if ssl2_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing SSLv2 scan: {ssl2_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif ssl2_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    ssl2_result = ssl2_attempt.result
 
-            _get_suite_info("TLSv1.0", tls10, session.url)
+                    _get_suite_info("SSLv2", ssl2_result, session.url)
 
-            tls11 = scanner.run_scan_command(
-                server_info, openssl_cipher_suites_plugin.Tlsv11ScanCommand()
-            )
-            tls11 = cast(openssl_cipher_suites_plugin.CipherSuiteScanResult, tls11)
+                # get info for sslv3
+                ssl3_attempt = result.scan_result.ssl_3_0_cipher_suites
+                if ssl3_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing SSLv3 scan: {ssl3_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif ssl3_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    ssl3_result = ssl3_attempt.result
+                    _get_suite_info("SSLv3", ssl3_result, session.url)
 
-            _get_suite_info("TLSv1.1", tls11, session.url)
+                # get info for tlsv1.0
+                tls10_attempt = result.scan_result.tls_1_0_cipher_suites
+                if tls10_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing TLSv1.0 scan: {tls10_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif tls10_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    tls10_result = tls10_attempt.result
+                    _get_suite_info("TLSv1.0", tls10_result, session.url)
 
-            tls12 = scanner.run_scan_command(
-                server_info, openssl_cipher_suites_plugin.Tlsv12ScanCommand()
-            )
-            tls12 = cast(openssl_cipher_suites_plugin.CipherSuiteScanResult, tls12)
+                # get info for tlsv1.1
+                tls11_attempt = result.scan_result.tls_1_1_cipher_suites
+                if tls11_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing TLSv1.1 scan: {tls11_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif tls11_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    tls11_result = tls11_attempt.result
+                    _get_suite_info("TLSv1.1", tls11_result, session.url)
 
-            _get_suite_info("TLSv1.2", tls12, session.url)
+                # get info for tlsv1.2
+                tls12_attempt = result.scan_result.tls_1_2_cipher_suites
+                if tls12_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing TLSv1.2 scan: {tls12_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif tls12_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    tls12_result = tls12_attempt.result
+                    _get_suite_info("TLSv1.2", tls12_result, session.url)
 
-            tls13 = scanner.run_scan_command(
-                server_info, openssl_cipher_suites_plugin.Tlsv13ScanCommand()
-            )
-            tls13 = cast(openssl_cipher_suites_plugin.CipherSuiteScanResult, tls13)
+                # get info for tlsv1.3
+                tls13_attempt = result.scan_result.tls_1_3_cipher_suites
+                if tls13_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing TLSv1.3 scan: {tls13_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif tls13_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    tls13_result = tls13_attempt.result
+                    _get_suite_info("TLSv1.3", tls13_result, session.url)
 
-            _get_suite_info("TLSv1.3", tls13, session.url)
+                output.empty()
 
-            output.empty()
+                # check compression
+                compression_attempt = result.scan_result.tls_compression
+                if compression_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing compression scan: {compression_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif (
+                    compression_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED
+                ):
+                    compression_result = compression_attempt.result
+                    if compression_result.supports_compression:
+                        reporter.display(
+                            f"\tCompression: Enabled",
+                            issue.Issue(
+                                Vulnerabilities.TLS_COMPRESSION_ENABLED, session.url, {}
+                            ),
+                        )
+                    else:
+                        output.norm("\tCompression: None")
+                else:
+                    output.error(
+                        f"\tError performing compression scan: {compression_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            # check compression
-            compression = scanner.run_scan_command(
-                server_info, compression_plugin.CompressionScanCommand()
-            )
-            compression = cast(compression_plugin.CompressionScanResult, compression)
+                # check TLS_FALLBACK_SCSV
+                fallback_attempt = result.scan_result.tls_fallback_scsv
+                if fallback_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing fallback scan: {fallback_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif fallback_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    fallback_result = fallback_attempt.result
+                    if fallback_result.supports_fallback_scsv:
+                        output.norm("\tDowngrade Prevention: Yes")
+                    else:
+                        reporter.display(
+                            "\tDowngrade Prevention: No",
+                            issue.Issue(
+                                Vulnerabilities.TLS_FALLBACK_SCSV_MISSING,
+                                session.url,
+                                {},
+                            ),
+                        )
+                else:
+                    output.error(
+                        f"\tError performing fallback scan: {fallback_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            if compression.compression_name is not None:
-                reporter.display(
-                    f"\tCompression: {compression.compression_name}",
-                    issue.Issue(
-                        Vulnerabilities.TLS_COMPRESSION_ENABLED, session.url, {}
-                    ),
-                )
-            else:
-                output.norm("\tCompression: None")
+                # check Heartbleed
+                heartbleed_attempt = result.scan_result.heartbleed
+                if heartbleed_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing Heartbleed scan: {heartbleed_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif (
+                    heartbleed_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED
+                ):
+                    heartbleed_result = heartbleed_attempt.result
+                    if heartbleed_result.is_vulnerable_to_heartbleed:
+                        reporter.display(
+                            "\tHeartbleed: Vulnerable",
+                            issue.Issue(
+                                Vulnerabilities.TLS_HEARTBLEED, session.url, {}
+                            ),
+                        )
+                    else:
+                        output.norm("\tHeartbleed: No")
+                else:
+                    output.error(
+                        f"\tError performing Heartbleed scan: {heartbleed_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            # check TLS_FALLBACK_SCSV
-            fallback = scanner.run_scan_command(
-                server_info, fallback_scsv_plugin.FallbackScsvScanCommand()
-            )
-            fallback = cast(fallback_scsv_plugin.FallbackScsvScanResult, fallback)
+                # check OpenSSL CCS injection vulnerability (CVE-2014-0224)
+                ccs_attempt = result.scan_result.openssl_ccs_injection
+                if ccs_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing OpenSSL CCS injection scan: {ccs_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif ccs_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    ccs_result = ccs_attempt.result
+                    if ccs_result.is_vulnerable_to_ccs_injection:
+                        reporter.display(
+                            "\tOpenSSL CCS (CVE-2014-0224): Vulnerable",
+                            issue.Issue(
+                                Vulnerabilities.TLS_OPENSSL_CVE_2014_0224,
+                                session.url,
+                                {},
+                            ),
+                        )
+                    else:
+                        output.norm("\tOpenSSL CCS (CVE-2014-0224): No")
+                else:
+                    output.error(
+                        f"\tError performing OpenSSL CCS injection scan: {ccs_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            if fallback.supports_fallback_scsv:
-                output.norm("\tDowngrade Prevention: Yes")
-            else:
-                reporter.display(
-                    "\tDowngrade Prevention: No",
-                    issue.Issue(
-                        Vulnerabilities.TLS_FALLBACK_SCSV_MISSING, session.url, {}
-                    ),
-                )
+                # check SessionRenegotiation
+                session_renegotiation_attempt = result.scan_result.session_renegotiation
+                if (
+                    session_renegotiation_attempt.status
+                    == ScanCommandAttemptStatusEnum.ERROR
+                ):
+                    output.error(
+                        f"\tError performing session renegotiation scan: {session_renegotiation_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif (
+                    session_renegotiation_attempt.status
+                    == ScanCommandAttemptStatusEnum.COMPLETED
+                ):
+                    session_renegotiation_result = session_renegotiation_attempt.result
+                    if (
+                        session_renegotiation_result.is_vulnerable_to_client_renegotiation_dos
+                    ):
+                        reporter.display(
+                            "\tSession Renegotiation: Vulnerable",
+                            issue.Issue(
+                                Vulnerabilities.TLS_SESSION_RENEGOTIATION,
+                                session.url,
+                                {},
+                            ),
+                        )
+                    else:
+                        output.norm("\tSession Renegotiation: No")
+                else:
+                    output.error(
+                        f"\tError performing session renegotiation scan: {session_renegotiation_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            # check Heartbleed
-            heartbleed = scanner.run_scan_command(
-                server_info, heartbleed_plugin.HeartbleedScanCommand()
-            )
-            heartbleed = cast(heartbleed_plugin.HeartbleedScanResult, heartbleed)
+                # check SessionResumption
+                session_resumption_attempt = result.scan_result.session_resumption
+                if (
+                    session_resumption_attempt.status
+                    == ScanCommandAttemptStatusEnum.ERROR
+                ):
+                    output.error(
+                        f"\tError performing session resumption scan: {session_resumption_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif (
+                    session_resumption_attempt.status
+                    == ScanCommandAttemptStatusEnum.COMPLETED
+                ):
+                    session_resumption_result = session_resumption_attempt.result
+                    if (
+                        session_resumption_result.session_id_resumption_result
+                        == TlsResumptionSupportEnum.FULLY_SUPPORTED
+                    ):
+                        reporter.display(
+                            "\tSession Resumption (Session ID): Enabled",
+                            issue.Issue(
+                                Vulnerabilities.TLS_SESSION_RESP_ENABLED,
+                                session.url,
+                                {},
+                            ),
+                        )
+                    elif (
+                        session_resumption_result.session_id_resumption_result
+                        == TlsResumptionSupportEnum.PARTIALLY_SUPPORTED
+                    ):
+                        reporter.display(
+                            "\tSession Resumption (Session ID): Partially Supported",
+                            issue.Issue(
+                                Vulnerabilities.TLS_SESSION_RESP_ENABLED,
+                                session.url,
+                                {},
+                            ),
+                        )
+                    else:
+                        output.norm("\tSession Resumption (Session ID): No")
 
-            if heartbleed.is_vulnerable_to_heartbleed:
-                reporter.display(
-                    "\tHeartbleed: Vulnerable",
-                    issue.Issue(Vulnerabilities.TLS_HEARTBLEED, session.url, {}),
-                )
-            else:
-                output.norm("\tHeartbleed: No")
+                    if (
+                        session_resumption_result.tls_ticket_resumption_result
+                        == TlsResumptionSupportEnum.FULLY_SUPPORTED
+                    ):
+                        reporter.display(
+                            "\tSession Resumption (TLS Ticket): Enabled",
+                            issue.Issue(
+                                Vulnerabilities.TLS_SESSION_RESP_ENABLED,
+                                session.url,
+                                {},
+                            ),
+                        )
+                    elif (
+                        session_resumption_result.tls_ticket_resumption_result
+                        == TlsResumptionSupportEnum.PARTIALLY_SUPPORTED
+                    ):
+                        reporter.display(
+                            "\tSession Resumption (TLS Ticket): Partially Supported",
+                            issue.Issue(
+                                Vulnerabilities.TLS_SESSION_RESP_ENABLED,
+                                session.url,
+                                {},
+                            ),
+                        )
+                    else:
+                        output.norm("\tSession Resumption (TLS Ticket)): No")
+                else:
+                    output.error(
+                        f"\tError performing session resumption scan: {session_resumption_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            # check OpenSSL CCS injection vulnerability (CVE-2014-0224)
-            openssl_ccs = scanner.run_scan_command(
-                server_info,
-                openssl_ccs_injection_plugin.OpenSslCcsInjectionScanCommand(),
-            )
-            openssl_ccs = cast(
-                openssl_ccs_injection_plugin.OpenSslCcsInjectionScanResult, openssl_ccs
-            )
+                # check ROBOT
+                robot_attempt = result.scan_result.robot
+                if robot_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing ROBOT scan: {robot_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif robot_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED:
+                    robot_result = robot_attempt.result
+                    if (
+                        robot_result.robot_result
+                        == RobotScanResultEnum.VULNERABLE_WEAK_ORACLE
+                    ):
+                        reporter.display(
+                            "\tROBOT: Vulnerable - Not Exploitable",
+                            issue.Issue(
+                                Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, session.url, {}
+                            ),
+                        )
+                    elif (
+                        robot_result.robot_result
+                        == RobotScanResultEnum.VULNERABLE_STRONG_ORACLE
+                    ):
+                        reporter.display(
+                            "\tROBOT: Vulnerable - Exploitable",
+                            issue.Issue(
+                                Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, session.url, {}
+                            ),
+                        )
+                    else:
+                        output.norm("\tROBOT: No")
+                else:
+                    output.error(
+                        f"\tError performing ROBOT scan: {robot_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            if openssl_ccs.is_vulnerable_to_ccs_injection:
-                reporter.display(
-                    "\tOpenSSL CCS (CVE-2014-0224): Vulnerable",
-                    issue.Issue(
-                        Vulnerabilities.TLS_OPENSSL_CVE_2014_0224, session.url, {}
-                    ),
-                )
-            else:
-                output.norm("\tOpenSSL CCS (CVE-2014-0224): No")
+                # check TLS 1.3 Early Data
+                early_data_attempt = result.scan_result.tls_1_3_early_data
+                if early_data_attempt.status == ScanCommandAttemptStatusEnum.ERROR:
+                    output.error(
+                        f"\tError performing TLS 1.3 early data scan: {early_data_attempt.error_reason}"
+                    )
+                    output.empty()
+                elif (
+                    early_data_attempt.status == ScanCommandAttemptStatusEnum.COMPLETED
+                ):
+                    early_data_result = early_data_attempt.result
+                    if early_data_result.supports_early_data:
+                        output.info("\tTLS 1.3 0-RTT Support: Yes")
+                    else:
+                        output.norm("\tTLS 1.3 0-RTT Support: No")
+                else:
+                    output.error(
+                        f"\tError performing TLS 1.3 early data scan: {early_data_attempt.error_reason}"
+                    )
+                    output.empty()
 
-            # check SessionRenegotiation
-            sr = scanner.run_scan_command(
-                server_info,
-                session_renegotiation_plugin.SessionRenegotiationScanCommand(),
-            )
-            sr = cast(session_renegotiation_plugin.SessionRenegotiationScanResult, sr)
-
-            if sr.accepts_client_renegotiation:
-                output.norm(
-                    "\tSecure Renegotiation: client-initiated renegotiation supported"
-                )
-
-            if sr.supports_secure_renegotiation:
-                output.norm("\tSecure Renegotiation: secure renegotiation supported")
-
-            # check SessionResumption
-            resump = scanner.run_scan_command(
-                server_info,
-                session_resumption_plugin.SessionResumptionSupportScanCommand(),
-            )
-            resump = cast(
-                session_resumption_plugin.SessionResumptionSupportScanResult, resump
-            )
-
-            output.norm(
-                f"\tSession Resumption Tickets Supported: {resump.is_ticket_resumption_supported}"
-            )
-
-            output.norm(
-                f"\tSession Resumption: {resump.successful_resumptions_nb} of "
-                f"{resump.attempted_resumptions_nb} successful"
-            )
-
-            # check ROBOT
-            robot = scanner.run_scan_command(
-                server_info, robot_plugin.RobotScanCommand()
-            )
-            robot = cast(robot_plugin.RobotScanResult, robot)
-
-            if (
-                robot.robot_result_enum
-                == robot_plugin.RobotScanResultEnum.VULNERABLE_WEAK_ORACLE
-            ):
-                reporter.display(
-                    "\tROBOT: Vulnerable - Not Exploitable",
-                    issue.Issue(Vulnerabilities.TLS_ROBOT_ORACLE_WEAK, session.url, {}),
-                )
-            elif (
-                robot.robot_result_enum
-                == robot_plugin.RobotScanResultEnum.VULNERABLE_STRONG_ORACLE
-            ):
-                reporter.display(
-                    "\tROBOT: Vulnerable - Exploitable",
-                    issue.Issue(
-                        Vulnerabilities.TLS_ROBOT_ORACLE_STRONG, session.url, {}
-                    ),
-                )
-            elif (
-                robot.robot_result_enum
-                == robot_plugin.RobotScanResultEnum.UNKNOWN_INCONSISTENT_RESULTS
-            ):
-                output.error("\tROBOT: Test Failed (Inconsistent Results)")
-            else:
-                output.norm("\tROBOT: No")
-
-            # check TLS 1.3 Early Data
-            ed = scanner.run_scan_command(
-                server_info, early_data_plugin.EarlyDataScanCommand()
-            )
-            ed = cast(early_data_plugin.EarlyDataScanResult, ed)
-
-            if ed.is_early_data_supported:
-                output.info("\tTLS 1.3 0-RTT Support: Yes")
-            else:
-                output.norm("\tTLS 1.3 0-RTT Support: No")
-
-            if cinfo.ocsp_response_status is not None:
-                output.norm("\tOCSP Stapling: Yes")
-            else:
-                reporter.display(
-                    "\tOCSP Stapling: No",
-                    issue.Issue(
-                        Vulnerabilities.TLS_OCSP_STAPLE_MISSING, session.url, {}
-                    ),
-                )
-
-            output.empty()
-
-        except server_connectivity_tester.ServerConnectivityError as error:
-            output.debug_exception()
-
-            if checkers.is_ipv6(ip):
-                output.error(
-                    "\tError connecting to IPv6 IP. Please ensure that your system is configured properly."
-                )
-
-            output.error(f"\tConnection failed ({str(error)})")
             output.empty()
         except Exception as error:
             output.debug_exception()
@@ -358,27 +534,24 @@ def _get_cert_chain(chain: List[x509.Certificate], url: str):
 
 
 def _get_trusted_root_stores(
-    result: certificate_info_plugin.CertificateInfoScanResult
+    result: CertificateDeploymentAnalysisResult,
 ) -> List[str]:
     trusted = []
 
-    for res in result.path_validation_result_list:
+    for res in result.path_validation_results:
         if res.was_validation_successful:
             trusted.append(res.trust_store.name)
 
     return trusted
 
 
-def _get_suite_info(
-    proto: str, result: openssl_cipher_suites_plugin.CipherSuiteScanResult, url: str
-):
+def _get_suite_info(proto: str, result: CipherSuitesScanResult, url: str):
     output.norm(f"\t\t{proto}:")
 
-    if len(result.accepted_cipher_list) > 0:
-        for suite in result.accepted_cipher_list:
-            name = openssl_cipher_suites_plugin.OPENSSL_TO_RFC_NAMES_MAPPING[
-                suite.ssl_version
-            ].get(suite.openssl_name, suite.openssl_name)
+    if len(result.accepted_cipher_suites) > 0:
+        for accounted_suite in result.accepted_cipher_suites:
+            suite = accounted_suite.cipher_suite
+            name = suite.name
 
             if _is_cipher_suite_secure(suite, name):
                 if "CBC" in name:
@@ -400,14 +573,14 @@ def _get_suite_info(
                     )
                 )
 
-        output.norm(f"\t\t  ({len(result.rejected_cipher_list)} suites rejected)")
+        output.norm(f"\t\t  ({len(result.rejected_cipher_suites)} suites rejected)")
     else:
-        output.norm(f"\t\t  (all suites ({len(result.rejected_cipher_list)}) rejected)")
+        output.norm(
+            f"\t\t  (all suites ({len(result.rejected_cipher_suites)}) rejected)"
+        )
 
 
-def _is_cipher_suite_secure(
-    suite: openssl_cipher_suites_plugin.AcceptedCipherSuite, name: str
-) -> bool:
+def _is_cipher_suite_secure(suite: CipherSuite, name: str) -> bool:
     ret = True
 
     if suite.is_anonymous:

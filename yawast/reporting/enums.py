@@ -424,6 +424,9 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     TLS_SESSION_RESP_ENABLED = VulnerabilityInfo.create(
         "Tls_Session_Resp_Enabled", Severity.BEST_PRACTICE, "", True
     )
+    TLS_SESSION_RENEGOTIATION = VulnerabilityInfo.create(
+        "Tls_Session_Renegotiation", Severity.BEST_PRACTICE, "", True
+    )
     TLS_SLEEPING_POODLE = VulnerabilityInfo.create(
         "Tls_Sleeping_Poodle", Severity.HIGH, "", True
     )

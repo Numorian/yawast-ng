@@ -299,6 +299,12 @@ class Vulnerabilities(VulnerabilityInfoEnum):
         "Tls_Fallback_SCSV_Missing", Severity.LOW, "", True
     )
     TLS_FREAK = VulnerabilityInfo.create("Tls_Freak", Severity.HIGH, "", True)
+    TLS_FREAK.references.append(
+        VulnerabilityReference(
+            "CVE-2015-0204", "https://nvd.nist.gov/vuln/detail/CVE-2015-0204"
+        )
+    )
+
     TLS_GOLDENDOODLE = VulnerabilityInfo.create(
         "Tls_Goldendoodle", Severity.HIGH, "", True
     )
@@ -308,9 +314,16 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     TLS_HEARTBEAT_ENABLED = VulnerabilityInfo.create(
         "Tls_Heartbeat_Enabled", Severity.BEST_PRACTICE, "", True
     )
+
     TLS_HEARTBLEED = VulnerabilityInfo.create(
         "Tls_Heartbleed", Severity.CRITICAL, "", True
     )
+    TLS_HEARTBLEED.references.append(
+        VulnerabilityReference(
+            "CVE-2014-0160", "https://nvd.nist.gov/vuln/detail/CVE-2014-0160"
+        )
+    )
+
     TLS_INSECURE_CIPHER_SUITE = VulnerabilityInfo(
         "Tls_Insecure_Cipher_Suite", Severity.MEDIUM, "", True
     )
@@ -326,7 +339,14 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     TLS_LIMITED_FORWARD_SECRECY = VulnerabilityInfo.create(
         "Tls_Limited_Forward_Secrecy", Severity.LOW, "", True
     )
+
     TLS_LOGJAM = VulnerabilityInfo.create("Tls_Logjam", Severity.HIGH, "", True)
+    TLS_LOGJAM.references.append(
+        VulnerabilityReference(
+            "CVE-2015-4000", "https://nvd.nist.gov/vuln/detail/CVE-2015-4000"
+        )
+    )
+
     TLS_NO_AEAD_SUPPORT = VulnerabilityInfo.create(
         "Tls_No_AEAD_Support", Severity.BEST_PRACTICE, "", True
     )
@@ -337,26 +357,70 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     TLS_OPENSSL_CVE_2014_0224 = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2014_0224", Severity.HIGH, "", True
     )
+    TLS_OPENSSL_CVE_2014_0224.references.append(
+        VulnerabilityReference(
+            "CVE-2014-0224", "https://nvd.nist.gov/vuln/detail/CVE-2014-0224"
+        )
+    )
     TLS_OPENSSL_CVE_2014_0224_NE = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2014_0224_NE", Severity.MEDIUM, "", True
     )
+    TLS_OPENSSL_CVE_2014_0224_NE.references.append(
+        VulnerabilityReference(
+            "CVE-2014-0224", "https://nvd.nist.gov/vuln/detail/CVE-2014-0224"
+        )
+    )
+
     TLS_OPENSSL_CVE_2016_2107 = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2016_2107", Severity.HIGH, "", True
     )
+    TLS_OPENSSL_CVE_2016_2107.references.append(
+        VulnerabilityReference(
+            "CVE-2016-2107", "https://nvd.nist.gov/vuln/detail/CVE-2016-2107"
+        )
+    )
+
     TLS_OPENSSL_CVE_2019_1559 = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2019_1559", Severity.HIGH, "", True
+    )
+    TLS_OPENSSL_CVE_2019_1559.references.append(
+        VulnerabilityReference(
+            "CVE-2019-1559", "https://nvd.nist.gov/vuln/detail/CVE-2019-1559"
+        )
     )
     TLS_OPENSSL_CVE_2019_1559_NE = VulnerabilityInfo.create(
         "Tls_OpenSSL_CVE_2019_1559_NE", Severity.MEDIUM, "", True
     )
+    TLS_OPENSSL_CVE_2019_1559_NE.references.append(
+        VulnerabilityReference(
+            "CVE-2019-1559", "https://nvd.nist.gov/vuln/detail/CVE-2019-1559"
+        )
+    )
 
     TLS_POODLE = VulnerabilityInfo.create("Tls_Poodle", Severity.HIGH, "", True)
+    TLS_POODLE.references.append(
+        VulnerabilityReference(
+            "CVE-2014-3566", "https://nvd.nist.gov/vuln/detail/CVE-2014-3566"
+        )
+    )
+
     TLS_ROBOT_ORACLE_STRONG = VulnerabilityInfo.create(
         "Tls_Robot_Oracle_Strong", Severity.MEDIUM, "", True
+    )
+    TLS_ROBOT_ORACLE_STRONG.references.append(
+        VulnerabilityReference(
+            "CVE-2017-13099", "https://nvd.nist.gov/vuln/detail/CVE-2017-13099"
+        )
     )
     TLS_ROBOT_ORACLE_WEAK = VulnerabilityInfo.create(
         "Tls_Robot_Oracle_Weak", Severity.LOW, "", True
     )
+    TLS_ROBOT_ORACLE_WEAK.references.append(
+        VulnerabilityReference(
+            "CVE-2017-13099", "https://nvd.nist.gov/vuln/detail/CVE-2017-13099"
+        )
+    )
+
     TLS_SESSION_RESP_ENABLED = VulnerabilityInfo.create(
         "Tls_Session_Resp_Enabled", Severity.BEST_PRACTICE, "", True
     )
@@ -366,12 +430,25 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     TLS_SLEEPING_POODLE_NE = VulnerabilityInfo.create(
         "Tls_Sleeping_Poodle_NE", Severity.MEDIUM, "", True
     )
+
     TLS_SWEET32 = VulnerabilityInfo.create("Tls_SWEET32", Severity.HIGH, "", True)
+    TLS_SWEET32.references.append(
+        VulnerabilityReference(
+            "CVE-2016-2183", "https://nvd.nist.gov/vuln/detail/CVE-2016-2183"
+        )
+    )
+
     TLS_SYMANTEC_ROOT = VulnerabilityInfo.create(
         "Tls_Symantec_Root", Severity.HIGH, "", True
     )
+
     TLS_TICKETBLEED = VulnerabilityInfo.create(
         "Tls_Ticketbleed", Severity.HIGH, "", True
+    )
+    TLS_TICKETBLEED.references.append(
+        VulnerabilityReference(
+            "CVE-2016-9244", "https://nvd.nist.gov/vuln/detail/CVE-2016-9244"
+        )
     )
 
     TLS_VERSION_1_0_ENABLED = VulnerabilityInfo.create(
@@ -387,8 +464,18 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     TLS_ZOMBIE_POODLE = VulnerabilityInfo.create(
         "Tls_Zombie_Poodle", Severity.HIGH, "", True
     )
+    TLS_ZOMBIE_POODLE.references.append(
+        VulnerabilityReference(
+            "CVE-2016-1000339", "https://nvd.nist.gov/vuln/detail/CVE-2016-1000339"
+        )
+    )
     TLS_ZOMBIE_POODLE_NE = VulnerabilityInfo.create(
         "Tls_Zombie_Poodle_NE", Severity.MEDIUM, "", True
+    )
+    TLS_ZOMBIE_POODLE_NE.references.append(
+        VulnerabilityReference(
+            "CVE-2016-1000339", "https://nvd.nist.gov/vuln/detail/CVE-2016-1000339"
+        )
     )
 
     SERVER_APACHE_OUTDATED = VulnerabilityInfo.create(
@@ -428,6 +515,12 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     SERVER_TOMCAT_CVE_2019_0232 = VulnerabilityInfo.create(
         "Server_Tomcat_CVE_2019_0232", Severity.CRITICAL, ""
     )
+    SERVER_TOMCAT_CVE_2019_0232.references.append(
+        VulnerabilityReference(
+            "CVE-2019-0232", "https://nvd.nist.gov/vuln/detail/CVE-2019-0232"
+        )
+    )
+
     SERVER_TOMCAT_STRUTS_SAMPLE = VulnerabilityInfo.create(
         "Server_Tomcat_Struts_Sample", Severity.LOW, "", True
     )
@@ -443,9 +536,16 @@ class Vulnerabilities(VulnerabilityInfoEnum):
     SERVER_PHP_PHPINFO = VulnerabilityInfo.create(
         "Server_PHP_PHPInfo", Severity.LOW, ""
     )
+
     SERVER_PHP_CVE_2019_11043 = VulnerabilityInfo.create(
         "Server_PHP_CVE_2019_11043", Severity.CRITICAL, ""
     )
+    SERVER_PHP_CVE_2019_11043.references.append(
+        VulnerabilityReference(
+            "CVE-2019-11043", "https://nvd.nist.gov/vuln/detail/CVE-2019-11043"
+        )
+    )
+
     SERVER_IIS_OUTDATED = VulnerabilityInfo.create(
         "Server_IIS_Outdated", Severity.MEDIUM, ""
     )

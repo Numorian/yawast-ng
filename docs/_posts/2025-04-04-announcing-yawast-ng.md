@@ -19,6 +19,10 @@ With a large number of [checks performed](https://numorian.github.io/yawast-ng/c
  
  Due to the importance of stable output, the one thing that we will commit to not introducing any breaking changes to the JSON output (via the `--output` parameter).
  
+## Why Now?
+
+[Numorian](https://numorian.com), a security and AI consulting company, has been generous enough to support the renewed development efforts, both to improve their own services and as a way of giving back to the community. Numorian and I both see the value of this project, both in the value it offers today, and the promise it holds for the future.
+ 
 ## Available Now
  
  The first stable release of yawast-ng, v0.12.1, is available now at the links above, and has been updated to support the recent versions of Python. Due to the somewhat complex set of requirements, and broad cross-platform support, the Docker image is likely the easiest option.

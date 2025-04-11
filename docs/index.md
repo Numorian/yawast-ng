@@ -10,7 +10,7 @@ yawast-ng is an application meant to simplify initial analysis and information g
 * Common Vulnerabilities
 * Missing Security Headers
 
-This is meant to provide an easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests. It is especially useful when used in conjunction with Burp Suite (via the `--proxy` parameter).
+This is meant to provide an easy way to perform initial analysis and information discovery. It's not a full testing suite, and it certainly isn't Metasploit. The idea is to provide a quick way to perform initial data collection, which can then be used to better target further tests. It is especially useful when used in conjunction with Burp Suite (via the `--proxy` parameter). For authenticated scanning, a cookie or header can be passed in (see [Usage](/usage/))
 
 ## Getting Started
 

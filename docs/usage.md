@@ -61,7 +61,7 @@ By default, Burp Suite's proxy listens on localhost at port 8080. To use yawast-
 
 ### Authenticated Testing
 
-For authenticated testing, yawast-ng allows you to specify a cookie to be passed via the `--cookie` parameter.
+For authenticated testing, yawast-ng allows you to specify a cookie to be passed via the `--cookie` parameter, or a header (i.e. `Authorization`) via the `--header` parameter.
 
 `--cookie='SESSIONID=1234567890'`
 

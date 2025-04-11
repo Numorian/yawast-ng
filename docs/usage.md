@@ -17,7 +17,7 @@ For detailed information, just enter `yawast-ng -h` to see the help information.
 #### Scan Command
 
 ```
-usage: yawast scan [-h] [--debug] [--nocolors] [--nowrap] 
+usage: yawast-ng scan [-h] [--debug] [--nocolors] [--nowrap] 
                     [--nossl] [--internalssl] [--tdessessioncount] 
                     [--dir] [--dirrecursive] [--dirlistredir] [--files] 
                     [--srv] [--subdomains] [--nodns] [--ports] [--proxy PROXY] 

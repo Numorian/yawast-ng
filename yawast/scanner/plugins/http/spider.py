@@ -7,6 +7,7 @@ from multiprocessing import Manager, Lock
 from multiprocessing.dummy import Pool
 from typing import List, Tuple
 from urllib.parse import urljoin
+import xml.etree.ElementTree as ET
 
 from bs4 import BeautifulSoup
 
@@ -32,7 +33,7 @@ def spider(url) -> Tuple[List[str], List[Result]]:
     mgr = Manager()
     queue = mgr.Queue()
 
-    asy = pool.apply_async(_get_links, (url, [url], queue, pool))
+    asy = pool.apply_async(_start_scan, (url, [url], queue, pool))
 
     with _lock:
         _tasks.append(asy)
@@ -82,6 +83,58 @@ def spider(url) -> Tuple[List[str], List[Result]]:
     _tasks = []
 
     return links, results
+
+
+def _start_scan(base_url: str, urls: List[str], queue, pool):
+    global _links, _insecure, _tasks, _lock
+
+    # check to see if there's a sitemap.xml file - if there is, we'll
+    # use that to get the list of URLs to scan - otherwise, we'll
+    # just start with the base URL
+    sitemap_url = urljoin(base_url, "sitemap.xml")
+    res = network.http_get(sitemap_url, False)
+    if res.status_code == 200:
+        # parse the sitemap.xml file and get the list of URLs
+        try:
+            tree = ET.ElementTree(ET.fromstring(res.text))
+            root = tree.getroot()
+            urls = []
+            for child in root:
+                for url in child:
+                    if url.tag.endswith("loc"):
+                        urls.append(url.text)
+
+            output.debug(f"Spider: Found {len(urls)} URLs in sitemap.xml.")
+
+            if len(urls) > 0:
+                # start the spider with the URLs from the sitemap
+                with _lock:
+                    # loop through the URLs and queue them for processing
+                    for url in urls:
+                        if url not in _links:
+                            asy = pool.apply_async(
+                                _get_links, (url, [url], queue, pool)
+                            )
+                            _tasks.append(asy)
+            else:
+                output.debug(f"Spider: No URLs found in sitemap.xml.")
+                asy = pool.apply_async(_get_links, (base_url, [base_url], queue, pool))
+
+                with _lock:
+                    _tasks.append(asy)
+        except Exception:
+            output.debug_exception()
+            urls = [base_url]
+    else:
+        urls = [base_url]
+        output.debug(
+            f"Spider: No sitemap found at {sitemap_url}. Starting with base URL."
+        )
+
+        asy = pool.apply_async(_get_links, (base_url, [base_url], queue, pool))
+
+        with _lock:
+            _tasks.append(asy)
 
 
 def _get_links(base_url: str, urls: List[str], queue, pool):

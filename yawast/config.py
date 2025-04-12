@@ -9,22 +9,26 @@ import json
 import os
 
 user_agent = None
+max_spider_pages = 10000
+
 
 def load_config():
     """
     Load the configuration from the config file.
     """
-    global user_agent
+    global user_agent, max_spider_pages
 
     # check if the config file exists
-    if os.path.exists('~/.yawast-ng.json'):
+    if os.path.exists("~/.yawast-ng.json"):
         # load the config file
         try:
-            with open('~/.yawast-ng.json', 'r') as f:
+            with open("~/.yawast-ng.json", "r") as f:
                 config = json.load(f)
 
                 if "user_agent" in config:
-                    user_agent = config.get('user_agent', None)
+                    user_agent = config.get("user_agent", None)
+                if "max_spider_pages" in config:
+                    max_spider_pages = config.get("max_spider_pages", 10000)
         except FileNotFoundError:
             pass
         except json.JSONDecodeError:

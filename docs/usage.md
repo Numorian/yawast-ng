@@ -130,3 +130,4 @@ During the startup process, yawast-ng will check for a JSON file called `~/.yawa
 The file is a JSON file, and should be formatted as such. The following keys are available:
 
 - `user_agent` - The user agent string to be used for all requests to the target(s). This is useful for testing, and can be set to a specific value. If missing, yawast-ng will use the default value.
+- `max_spider_pages` - The maximum number of pages to spider. This is useful for limiting the number of pages scanned, and can be set to a specific value. If missing, yawast-ng will use the default value.

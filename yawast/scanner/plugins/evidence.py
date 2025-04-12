@@ -30,9 +30,9 @@ class Evidence(Dict[str, Any]):
             res_id = hashlib.blake2b(res, digest_size=16).hexdigest()
             dict.update(self, {"response_id": res_id})
 
-    # if request_id or response_id is accessed, we will need to make sure
-    # that they are set, or set them instead just returning an error when accessed
     def __getitem__(self, key):
+        # if request_id or response_id is accessed, we will need to make sure
+        # that they are set, or set them instead just returning an error when accessed
         if key == "request_id":
             if not hasattr(self, "request_id") and super()["request"] is not None:
                 req = self.request.encode("utf-8")

@@ -20,7 +20,7 @@ ENV LANG=C.UTF-8
 ENV LANGUAGE=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
-RUN pip install -r requirements.txt
+RUN pip install -r docker-requirements.txt
 
 RUN cd /data/ && python -m unittest discover
 

@@ -105,4 +105,8 @@ venv.bak/
 
 # PyCharm
 .idea/
+
 .DS_Store
+
+# VS Code
+.vscode/

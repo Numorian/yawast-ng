@@ -3,16 +3,12 @@
 #  See the LICENSE file for full license details.
 
 from typing import Optional, Any, Dict
-
 from requests import Response
+
+import hashlib
 
 
 class Evidence(Dict[str, Any]):
-    url: str
-    request: Optional[str]
-    response: Optional[str]
-    custom: Optional[Dict[str, Any]]
-
     def __init__(
         self,
         url: str,
@@ -20,14 +16,77 @@ class Evidence(Dict[str, Any]):
         response: Optional[str],
         custom: Optional[Dict[str, Any]] = None,
     ):
-        self.url = url
-        self.request = request
-        self.response = response
-        self.custom = custom
-
-        dict.__init__(self, request=request, response=response)
+        dict.__init__(self, url=url, request=request, response=response)
         if custom is not None:
             dict.update(self, custom)
+
+        if request is not None:
+            req = request.encode("utf-8")
+            req_id = hashlib.blake2b(req, digest_size=16).hexdigest()
+            dict.update(self, {"request_id": req_id})
+
+        if response is not None:
+            res = response.encode("utf-8")
+            res_id = hashlib.blake2b(res, digest_size=16).hexdigest()
+            dict.update(self, {"response_id": res_id})
+
+    # if request_id or response_id is accessed, we will need to make sure
+    # that they are set, or set them instead just returning an error when accessed
+    def __getitem__(self, key):
+        if key == "request_id":
+            if not hasattr(self, "request_id") and super()["request"] is not None:
+                req = self.request.encode("utf-8")
+                req_id = hashlib.blake2b(req, digest_size=16).hexdigest()
+                self.request_id = req_id
+        elif key == "response_id":
+            if not hasattr(self, "response_id") and super()["response"] is not None:
+                res = self.response.encode("utf-8")
+                res_id = hashlib.blake2b(res, digest_size=16).hexdigest()
+                self.response_id = res_id
+
+        return super().__getitem__(key)
+
+    def __hash__(self):
+        if self.request_id is not None and self.response_id is not None:
+            # if we have both, we can use them
+            return hash((self.request_id, self.response_id))
+        elif self.request_id is not None:
+            # if we only have the request_id, use that
+            return hash(self.request_id)
+        elif self.response_id is not None:
+            # if we only have the response_id, use that
+            return hash(self.response_id)
+        else:
+            # if we have neither, just use the parent class hash
+            return super().__hash__()
+
+    @property
+    def request(self) -> Optional[str]:
+        return self.get("request")
+
+    @property
+    def response(self) -> Optional[str]:
+        return self.get("response")
+
+    @property
+    def url(self) -> str:
+        return self.get("url")
+
+    @property
+    def request_id(self) -> Optional[str]:
+        return self.get("request_id")
+
+    @property
+    def response_id(self) -> Optional[str]:
+        return self.get("response_id")
+
+    @property
+    def custom(self) -> Optional[Dict[str, Any]]:
+        return {
+            k: v
+            for k, v in self.items()
+            if k not in ["url", "request", "response", "request_id", "response_id"]
+        }
 
     @classmethod
     def from_response(cls, response: Response, custom: Optional[Dict[str, Any]] = None):

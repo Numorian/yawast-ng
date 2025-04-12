@@ -3,7 +3,6 @@
 #  See the LICENSE file for full license details.
 
 import gc
-import hashlib
 import json
 import os
 import time
@@ -187,8 +186,7 @@ def register(issue: Issue) -> None:
         _evidence[_domain] = {}
 
     if "request" in issue.evidence and issue.evidence["request"] is not None:
-        req = str(issue.evidence["request"]).encode("utf-8")
-        req_id = hashlib.blake2b(req, digest_size=16).hexdigest()
+        req_id = issue.evidence["request_id"]
 
         if req_id not in _evidence[_domain]:
             _evidence[_domain][req_id] = issue.evidence["request"]
@@ -196,8 +194,7 @@ def register(issue: Issue) -> None:
         issue.evidence["request"] = req_id
 
     if "response" in issue.evidence and issue.evidence["response"] is not None:
-        res = str(issue.evidence["response"]).encode("utf-8")
-        res_id = hashlib.blake2b(res, digest_size=16).hexdigest()
+        res_id = issue.evidence["response_id"]
 
         if res_id not in _evidence[_domain]:
             _evidence[_domain][res_id] = issue.evidence["response"]
@@ -218,6 +215,17 @@ def register(issue: Issue) -> None:
             output.debug(f"Duplicate Issue: {issue.id} (duplicate of {finding.id})")
 
             return
+
+    # if we aren't saving evidence, we can remove some things to save memory
+    if _output_file is None or len(_output_file) == 0:
+        if "request" in issue.evidence:
+            issue.evidence["request"] = ""
+        if "response" in issue.evidence:
+            issue.evidence["response"] = ""
+        if "request" in issue.evidence:
+            _evidence[_domain][issue.evidence["request_id"]] = ""
+        if "response" in issue.evidence:
+            _evidence[_domain][issue.evidence["response_id"]] = ""
 
     _issues[_domain][issue.vulnerability].append(issue)
 

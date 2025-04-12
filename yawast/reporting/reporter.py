@@ -77,23 +77,33 @@ def save_output(spinner=None):
     json_data = json.dumps(data, indent=4)
 
     try:
-        zf = zipfile.ZipFile(f"{_output_file}.zip", "x", zipfile.ZIP_BZIP2)
+        filename = _output_file
+
+        # check to see if the zip file already exists
+        if os.path.isfile(f"{filename}.zip"):
+            # if it does, let's modify the name we are going to use
+            original_file_name = os.path.basename(filename)
+            name = f"{original_file_name}_{int(time.time())}.json"
+
+            filename = os.path.join(os.path.dirname(_output_file), name)
+
+        zf = zipfile.ZipFile(f"{filename}.zip", "x", zipfile.ZIP_BZIP2)
 
         with ExecutionTimer() as tm:
             zf.writestr(
-                f"{os.path.basename(_output_file)}",
+                f"{os.path.basename(filename)}",
                 json_data.encode("utf_8", "backslashreplace"),
             )
 
         zf.close()
 
         orig = "{0:cM}".format(Size(len(json_data)))
-        comp = "{0:cM}".format(Size(os.path.getsize(f"{_output_file}.zip")))
+        comp = "{0:cM}".format(Size(os.path.getsize(f"{filename}.zip")))
 
         if spinner:
             spinner.stop()
         print(
-            f"Saved {_output_file}.zip (size reduced from {orig} to {comp} in {tm.to_ms()}ms)"
+            f"Saved {filename}.zip (size reduced from {orig} to {comp} in {tm.to_ms()}ms)"
         )
     except Exception as error:
         if spinner:

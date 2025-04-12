@@ -1,6 +1,7 @@
 ## 0.13.0 - In Development
 
 * Use `sitemap.xml` to establish initial spider URL list, when available.
+* Bug: Fix a failure to save the output file when an existing file already exists.
 
 ## 0.12.1 - 2025-04-04
 

@@ -26,6 +26,7 @@ from yawast.external.memory_size import Size
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
 from yawast.shared import output, network, utils
+from yawast import config
 
 _start_time = datetime.now()
 _monitor = None
@@ -65,6 +66,9 @@ def main():
         urls = command_line.process_urls(urls)
     else:
         urls = []
+
+    # load the config file
+    config.load_config()
 
     # we are good to keep going
     print_header()

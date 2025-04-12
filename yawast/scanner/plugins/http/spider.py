@@ -16,6 +16,7 @@ from yawast.scanner.plugins.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.plugins.result import Result
 from yawast.shared import network, output
+from yawast import config
 
 _links: List[str] = []
 _insecure: List[str] = []
@@ -143,7 +144,7 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
     results: List[Result] = []
 
     # fail-safe to make sure we don't go too crazy
-    if len(_links) > 10000:
+    if len(_links) > config.max_spider_pages:
         # if we have more than 10,000 URLs in our list, just stop
         output.debug(
             "Spider: Link list contains > 10,000 items. Stopped gathering more links."

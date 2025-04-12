@@ -17,6 +17,7 @@ from yawast.reporting.issue import Issue
 from yawast.scanner.plugins.result import Result
 from yawast.shared import output
 from yawast.shared.exec_timer import ExecutionTimer
+from yawast import config
 
 _issues: Dict[str, Dict[Vulnerabilities, List[Issue]]] = {}
 _info: Dict[str, Any] = {}
@@ -171,7 +172,13 @@ def register_message(value: str, kind: str):
         if kind not in _info["messages"]:
             _info["messages"][kind] = []
 
-        _info["messages"][kind].append(f"[{datetime.utcnow()} UTC]: {value}")
+        should_log = True
+        if kind == "debug":
+            if not config.include_debug_in_output:
+                should_log = False
+
+        if should_log:
+            _info["messages"][kind].append(f"[{datetime.utcnow()} UTC]: {value}")
 
 
 def register(issue: Issue) -> None:

@@ -25,10 +25,10 @@ from yawast import config
 
 YAWAST_UA = (
     f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
-    f"yawast-ng/{get_version()}/PY Chrome/135.0.0.0 Safari/537.36"
+    f"yawast-ng/{get_version()} (like YAWAST/0.11.0/PY) Chrome/135.0.0.0 Safari/537.36"
 )
 
-SERVICE_UA = f"yawast-ng/{get_version()}/PY"
+SERVICE_UA = f"yawast-ng/{get_version()} (like YAWAST/0.11.0/PY)"
 _lock = Lock()
 
 

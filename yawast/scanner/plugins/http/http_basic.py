@@ -23,6 +23,7 @@ from yawast.scanner.plugins.http.servers import apache_httpd, php, iis, nginx, p
 from yawast.scanner.plugins.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import network, utils, output
+from yawast import config
 
 _checked_cookies: Dict[Vln, List[str]] = {}
 
@@ -348,10 +349,15 @@ def check_local_ip_disclosure(session: Session) -> List[Result]:
     def _send_http_10_get(
         con: Union[ssl.SSLSocket, socket.socket],
     ) -> Tuple[str, HTTPResponse]:
+
+        ua = network.YAWAST_UA
+        if config.user_agent is not None:
+            ua = config.user_agent
+
         req = (
             "HEAD / HTTP/1.0\r\n"
             "User-Agent: {user_agent}\r\n"
-            "Accept: */*\r\n\r\n".format(user_agent=network.YAWAST_UA)
+            "Accept: */*\r\n\r\n".format(user_agent=ua)
         )
 
         con.sendall(req.encode("utf_8"))

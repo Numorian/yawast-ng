@@ -122,3 +122,23 @@ This is an array of URLs scanned, with a UUID for each request and response duri
 #### The `vulnerabilities` Key
 
 This is an array of all vulnerabilities being searched for, with basic information about the vulnerability, such as the severity, and can be associated with the data in the `issues` key by name.
+
+### Configuration File (`~/.yawast-ng.json`)
+
+During the startup process, yawast-ng will check for a JSON file called `~/.yawast-ng.json` which contains configuration data that alters how the application runs. This will override default settings, and is intended to allow you to customize the application for your environment. 
+
+The file is a JSON file, and should be formatted as such. The following keys are available:
+
+- `user_agent` - The user agent string to be used for all requests to the target(s). This is useful for testing, and can be set to a specific value. If missing, yawast-ng will use the default value.
+- `max_spider_pages` - The maximum number of pages to spider. This is useful for limiting the number of pages scanned, and can be set to a specific value. If missing, yawast-ng will use the default value.
+- `include_debug_in_output` - By default yawast-ng will include the debug output in the JSON file. This can be set to `false` to disable this feature. If missing, yawast-ng will use the default value. This will substantially reduce the size of the output file, and is recommended for most users.
+
+### Example Configuration File
+
+```json
+{
+  "user_agent": "ExampleCo Security Scanner/yawast-ng",
+  "max_spider_pages": 100,
+  "include_debug_in_output": false
+}
+```

@@ -1,6 +1,7 @@
 ## 0.13.0 - In Development
 
 * Reduced memory usage by approx. 30% + approx. 275MB.
+* Added support for configuration settings in `~/.yawast-ng.json` (see Usage page in the documentation).
 * Use `sitemap.xml` to establish initial spider URL list, when available.
 * Reduce memory usage when not using the `--output` option.
 * Bug: Fix a failure to save the output file when an existing file already exists.

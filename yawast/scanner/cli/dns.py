@@ -219,6 +219,9 @@ def scan(session: Session):
     except Exception as err:
         output.error(f"Error getting DNSKEY records: {str(err)}")
 
+    # clear the ASN data
+    network_info.purge_data()
+
     output.empty()
 
 

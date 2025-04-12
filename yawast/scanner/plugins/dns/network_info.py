@@ -6,15 +6,28 @@ from typing import Dict, Any
 
 import pkg_resources
 
-from yawast.shared import network, output
-
-_failure = False
 _cache: Dict[Any, Any] = {}
 _data: Dict[Any, Any] = {}
 
 
 def network_info(ip):
-    global _failure, _cache, _data
+    """
+    Retrieves ASN network information for a given IP address.
+
+    This function checks a cache for the IP address first. If the IP is not
+    found in the cache, it loads ASN data from a file (if not already loaded),
+    and searches for the IP address within the loaded data. If a match is found,
+    the corresponding country and description are cached and returned.
+
+    Args:
+        ip (str): The IP address to retrieve network information for.
+
+    Returns:
+        str: A string containing the country and description of the network
+             associated with the given IP address, formatted as
+             "Country - Description".
+    """
+    global _cache, _data
 
     # first, check the cache
     if _cache.get(ip) is not None:
@@ -32,6 +45,13 @@ def network_info(ip):
             return _cache[ip]
 
 
+def purge_data():
+    global _data
+
+    # clear the data
+    _data = {}
+
+
 def _build_data_from_file():
     # load the IP range to ASN mapping
     # this is a TSV file, with the following columns:
@@ -45,57 +65,48 @@ def _build_data_from_file():
     )
     with open(file_path, "r") as file:
         for line in file:
-            if line.startswith("#"):
+            # ignore comments
+            if not line or line[0] == "#":
                 continue
 
-            parts = line.split("\t")
-
+            # split only the first 4 tabs, so we don't create extra string objects
+            parts = line.rstrip("\n").split("\t", 4)
             if len(parts) < 5:
                 continue
 
-            start = _convert_ip_to_int(parts[0].strip())
-            end = _convert_ip_to_int(parts[1].strip())
-            asn = parts[2].strip()
-            country = parts[3].strip()
-            desc = parts[4].strip()
+            start_ip, end_ip, _, country, desc = parts
+            start = _convert_ip_to_int(start_ip)
+            end = _convert_ip_to_int(end_ip)
 
-            _data[start] = {"end": end, "asn": asn, "country": country, "desc": desc}
-
-
-def _ipv6_to_int(ip):
-    # pad truncated IPs
-    if "::" in ip:
-        ip = ip.replace("::", ":" + ("0:" * (8 - ip.count(":"))))
-
-    # split the IP into its 8 parts
-    parts = ip.split(":")
-
-    # convert each part to a 4-digit hex value
-    hex_parts = []
-    for part in parts:
-        hex_parts.append(part.zfill(4))
-
-    # join the parts together
-    hex_str = "".join(hex_parts)
-
-    # convert to a number
-    return int(hex_str, 16)
+            _data[start] = {
+                "end": end,
+                "country": country.strip(),
+                "desc": desc.strip(),
+            }
 
 
 def _ipv4_to_int(ip):
-    # split the IP into its 4 parts
     parts = ip.split(".")
-
-    # convert each part to a 3-digit hex value
-    hex_parts = []
+    val = 0
     for part in parts:
-        hex_parts.append(part.zfill(3))
+        val = (val << 8) | int(part)
+    return val
 
-    # join the parts together
-    hex_str = "".join(hex_parts)
 
-    # convert to an integer
-    return int(hex_str, 16)
+def _ipv6_to_int(ip):
+    if "::" in ip:
+        left, _, right = ip.partition("::")
+        left_side = left.split(":") if left else []
+        right_side = right.split(":") if right else []
+        missing = 8 - (len(left_side) + len(right_side))
+        parts = left_side + (["0"] * missing) + right_side
+    else:
+        parts = ip.split(":")
+
+    val = 0
+    for part in parts:
+        val = (val << 16) | int(part, 16)
+    return val
 
 
 def _is_ipv6_in_range(ip, start, end):

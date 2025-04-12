@@ -10,13 +10,14 @@ import os
 
 user_agent = None
 max_spider_pages = 10000
+include_degug_in_output = True
 
 
 def load_config():
     """
     Load the configuration from the config file.
     """
-    global user_agent, max_spider_pages
+    global user_agent, max_spider_pages, include_degug_in_output
 
     # check if the config file exists
     if os.path.exists("~/.yawast-ng.json"):
@@ -29,8 +30,10 @@ def load_config():
                     user_agent = config.get("user_agent", None)
                 if "max_spider_pages" in config:
                     max_spider_pages = config.get("max_spider_pages", 10000)
-        except FileNotFoundError:
-            pass
+                if "include_debug_in_output" in config:
+                    include_degug_in_output = config.get(
+                        "include_debug_in_output", True
+                    )
         except json.JSONDecodeError:
             print("Error: Invalid JSON in config file.")
         except Exception as e:

@@ -9,7 +9,7 @@ class TestLoadConfig(unittest.TestCase):
     @patch(
         "builtins.open",
         new_callable=mock_open,
-        read_data='{"user_agent": "test-agent", "max_spider_pages": 5000}',
+        read_data='{"user_agent": "test-agent", "max_spider_pages": 5000, "include_debug_in_output": false}',
     )
     def test_load_config_valid_file(self, mock_file, mock_exists):
         # Mock the existence of the config file
@@ -23,6 +23,9 @@ class TestLoadConfig(unittest.TestCase):
 
         # Assert that max_spider_pages was set correctly
         self.assertEqual(config.max_spider_pages, 5000)
+
+        # Assert that include_debug_in_output was set correctly
+        self.assertFalse(config.include_degug_in_output)
 
     @patch("os.path.exists")
     @patch("builtins.open", new_callable=mock_open, read_data="invalid json")

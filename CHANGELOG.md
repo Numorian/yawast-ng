@@ -2,6 +2,7 @@
 
 * Use `sitemap.xml` to establish initial spider URL list, when available.
 * Bug: Fix a failure to save the output file when an existing file already exists.
+* Bug: Fix an issue with saving TLS details in JSON output when using ``--internalssl`.
 
 ## 0.12.1 - 2025-04-04
 

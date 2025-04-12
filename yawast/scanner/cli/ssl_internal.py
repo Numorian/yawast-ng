@@ -33,6 +33,8 @@ from yawast.scanner.plugins.ssl import cert_info
 from yawast.scanner.session import Session
 from yawast.shared import output, utils
 
+import json
+
 
 def scan(session: Session):
     output.norm(
@@ -475,7 +477,8 @@ def scan(session: Session):
             date_scans_started=datetime.now(timezone.utc),
             date_scans_completed=datetime.now(timezone.utc),
         )
-        reporter.register_data("sslyze_results", json_output)
+        clean_json = json.loads(json_output.model_dump_json())
+        reporter.register_data("sslyze_results", clean_json)
 
 
 def _get_leaf_cert_info(cert: x509.Certificate):

@@ -21,6 +21,7 @@ from validator_collection import checkers
 from yawast._version import get_version
 from yawast.shared import output, utils
 from yawast.shared.exec_timer import ExecutionTimer
+from yawast import config
 
 YAWAST_UA = (
     f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -124,7 +125,11 @@ def http_head(
 ) -> Response:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    headers = {"User-Agent": YAWAST_UA}
+    if config.user_agent is not None:
+        headers = {"User-Agent": config.user_agent}
+    else:
+        headers = {"User-Agent": YAWAST_UA}
+
     res = _requester.head(
         url, headers=headers, allow_redirects=allow_redirects, timeout=timeout
     )
@@ -140,7 +145,11 @@ def http_head(
 def http_options(url: str, timeout: Optional[int] = 30) -> Response:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    headers = {"User-Agent": YAWAST_UA}
+    if config.user_agent is not None:
+        headers = {"User-Agent": config.user_agent}
+    else:
+        headers = {"User-Agent": YAWAST_UA}
+
     res = _requester.options(url, headers=headers, timeout=timeout)
 
     output.debug(
@@ -161,7 +170,10 @@ def http_get(
     chunk_size = 10 * 1024  # 10KB - this is the default used by requests
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    headers = {"User-Agent": YAWAST_UA}
+    if config.user_agent is not None:
+        headers = {"User-Agent": config.user_agent}
+    else:
+        headers = {"User-Agent": YAWAST_UA}
 
     if additional_headers is not None:
         headers = {**headers, **additional_headers}
@@ -214,7 +226,10 @@ def http_put(
 ) -> Response:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    headers = {"User-Agent": YAWAST_UA}
+    if config.user_agent is not None:
+        headers = {"User-Agent": config.user_agent}
+    else:
+        headers = {"User-Agent": YAWAST_UA}
 
     if additional_headers is not None:
         headers = {**headers, **additional_headers}
@@ -244,7 +259,10 @@ def http_custom(
 ) -> Response:
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    headers = {"User-Agent": YAWAST_UA}
+    if config.user_agent is not None:
+        headers = {"User-Agent": config.user_agent}
+    else:
+        headers = {"User-Agent": YAWAST_UA}
 
     if additional_headers is not None:
         headers = {**headers, **additional_headers}

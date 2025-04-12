@@ -122,3 +122,11 @@ This is an array of URLs scanned, with a UUID for each request and response duri
 #### The `vulnerabilities` Key
 
 This is an array of all vulnerabilities being searched for, with basic information about the vulnerability, such as the severity, and can be associated with the data in the `issues` key by name.
+
+### Configuration File (`~/.yawast-ng.json`)
+
+During the startup process, yawast-ng will check for a JSON file called `~/.yawast-ng.json` which contains configuration data that alters how the application runs. This will override default settings, and is intended to allow you to customize the application for your environment. 
+
+The file is a JSON file, and should be formatted as such. The following keys are available:
+
+- `user_agent` - The user agent string to be used for all requests to the target(s). This is useful for testing, and can be set to a specific value. If missing, yawast-ng will use the default value.

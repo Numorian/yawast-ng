@@ -75,3 +75,50 @@ You'll notice that most lines begin with a letter in a bracket; this is to tell 
 * `[Error]` - This indicates that an error occurred; sometimes these are serious and indicate an issue with your environment, the target server, or the application. In other cases, they may just be informational to let you know that something didn't go as planned.
 
 The indicator used may change over time based on new research or better detection techniques. In all cases, results should be carefully evaluated within the context of the application, how it's used, and what threats apply. The indicator is guidance -- a hint, if you will -- and it's up to you to determine the real impact.
+
+### JSON Output
+
+With the `--output` parameter, yawast-ng will create a JSON file, with information about the scan, each issue found, where the issues were found, each request and response, and reference data. These files are intended to provide comprehensive evidence of the results of the scan.
+
+These files are rather large, so they are compressed as a zip file when they are produced; a fairly simple website can produce an output in the hundreds of thousands of lines. While these files are quite large, they are intended to provide a thorough and complete report of the scan, to allow for further process or a clear record of the evidence.
+
+The file contains the following top-level keys:
+
+- `_info` - General information about yawast-ng, the scan, and output.
+- `data` - Information about each URL being scanned, such as DNS and TLS information.
+- `issues` - A list of all issues found during the scan.
+- `evidence` The evidence captured, such as the HTTP requests and response.
+- `vulnerabilities` - List of the vulnerabilities being searched for.
+
+#### The `_info` Key
+
+This is detailed information about yawast-ng, the scan, and information useful for debugging. It contains the following keys:
+
+- `start_time` - Time that the scan began, as a unix timestamp.
+- `yawast_version` - Version of yawast-ng being used.
+- `python_version` - Information about the version of Python being used.
+- `openssl_version` - Version of OpenSSL being used.
+- `platform` - Version of the operating system.
+- `options` - Command line used to execute the scan.
+- `encoding` - Operating system default encoding.
+- `messages` - Messages created during the run:
+  - `debug` - All debug messages created, may or may not have been displayed.
+  - `normal` - Standard console output displayed during the run.
+- `peak_memory` - Maximum amount of RAM used during the run.
+- (additional memory & related stats)
+
+#### The `data` Key
+
+This includes information from the DNS and TLS checks, and may vary depending on the options selected, in an array of URLs being scanned.
+
+#### The `issues` Key
+
+This includes a list of each issue found, by vulnerability, with the URL the issue was found at, and a reference to the request and response, in an array of URLs being scanned.
+
+#### The `evidence` Key
+
+This is an array of URLs scanned, with a UUID for each request and response during the scan. These correspond to the evidence IDs in the `issues` key.
+
+#### The `vulnerabilities` Key
+
+This is an array of all vulnerabilities being searched for, with basic information about the vulnerability, such as the severity, and can be associated with the data in the `issues` key by name.

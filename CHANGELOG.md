@@ -1,5 +1,6 @@
 ## 0.13.0 - In Development
 
+* Reduced memory usage by approx. 30%.
 * Use `sitemap.xml` to establish initial spider URL list, when available.
 * Reduce memory usage when not using the `--output` option.
 * Bug: Fix a failure to save the output file when an existing file already exists.

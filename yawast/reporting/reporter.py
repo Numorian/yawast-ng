@@ -23,7 +23,6 @@ from yawast import config
 _issues: Dict[str, Dict[Vulnerabilities, List[Issue]]] = {}
 _info: Dict[str, Any] = {}
 _data: Dict[str, Any] = {}
-_evidence: Dict[str, Evidence] = {}
 _domain: str = ""
 _output_file: str = ""
 
@@ -50,7 +49,6 @@ def save_output(spinner=None):
     register_info("memsize_issues", total_size(_issues))
     register_info("memsize_info", total_size(_info))
     register_info("memsize_data", total_size(_data))
-    register_info("memsize_evidence", total_size(_evidence))
     register_info("gc_stats", gc.get_stats())
     register_info("gc_objects", len(gc.get_objects()))
 
@@ -68,17 +66,60 @@ def save_output(spinner=None):
             "id": vuln.id,
         }
 
+    # build evidence from the issues
+    evidence = {}
+    for domain in _issues:
+        evidence[domain] = {}
+
+        for vuln in _issues[domain]:
+            for issue in _issues[domain][vuln]:
+                if isinstance(issue.evidence, Evidence):
+                    if issue.evidence.request_id is not None:
+                        evidence[domain][
+                            issue.evidence.request_id
+                        ] = issue.evidence.request
+                    if issue.evidence.response_id is not None:
+                        evidence[domain][
+                            issue.evidence.response_id
+                        ] = issue.evidence.response
+
+    issues = {}
+    for domain in _issues:
+        issues[domain] = {}
+
+        for vuln in _issues[domain]:
+            issues[domain][vuln.name] = []
+
+            for issue in _issues[domain][vuln]:
+                evidence_detail = {}
+
+                if isinstance(issue.evidence, Evidence):
+                    if issue.evidence.request_id is not None:
+                        evidence_detail["request"] = issue.evidence.request_id
+                    if issue.evidence.response_id is not None:
+                        evidence_detail["response"] = issue.evidence.response_id
+                    if issue.evidence.custom is not None:
+                        evidence_detail.update(issue.evidence.custom)
+
+                issue_detail = {
+                    "id": issue.id,
+                    "url": issue.url,
+                    "evidence": evidence_detail,
+                }
+
+                issues[domain][vuln.name].append(issue_detail)
+
     data = {
         "_info": _convert_keys(_info),
         "data": _convert_keys(_data),
-        "issues": _convert_keys(_issues),
-        "evidence": _convert_keys(_evidence),
+        "issues": issues,
+        "evidence": evidence,
         "vulnerabilities": vulns,
     }
     json_data = json.dumps(data, indent=4)
 
     # clean up the temp files from the evidence
-    for domain in _evidence:
+    for domain in _issues:
         for vuln in _issues[domain]:
             for issue in _issues[domain][vuln]:
                 try:
@@ -141,9 +182,6 @@ def setup(domain: str) -> None:
     if _domain not in _data:
         _data[_domain] = {}
 
-    if _domain not in _evidence:
-        _evidence[_domain] = {}
-
 
 def is_registered(vuln: Vulnerabilities) -> bool:
     if _issues is None:
@@ -197,28 +235,6 @@ def register(issue: Issue) -> None:
     if _domain not in _issues:
         _issues[_domain] = {}
 
-    # add the evidence to the evidence list, and swap the value in the object for its hash.
-    # the point of this is to minimize cases where we are holding the same (large) string
-    # multiple times in memory. should reduce memory by up to 20%
-    if _domain not in _evidence:
-        _evidence[_domain] = {}
-
-    if "request" in issue.evidence and issue.evidence["request"] is not None:
-        req_id = issue.evidence["request_id"]
-
-        if req_id not in _evidence[_domain]:
-            _evidence[_domain][req_id] = issue.evidence["request"]
-
-        issue.evidence["request"] = req_id
-
-    if "response" in issue.evidence and issue.evidence["response"] is not None:
-        res_id = issue.evidence["response_id"]
-
-        if res_id not in _evidence[_domain]:
-            _evidence[_domain][res_id] = issue.evidence["response"]
-
-        issue.evidence["response"] = res_id
-
     # if we haven't handled this issue yet, create a List for it
     if not is_registered(issue.vulnerability):
         _issues[_domain][issue.vulnerability] = []
@@ -240,10 +256,6 @@ def register(issue: Issue) -> None:
             issue.evidence["request"] = ""
         if "response" in issue.evidence:
             issue.evidence["response"] = ""
-        if "request" in issue.evidence:
-            _evidence[_domain][issue.evidence["request_id"]] = ""
-        if "response" in issue.evidence:
-            _evidence[_domain][issue.evidence["response_id"]] = ""
     else:
         # if we need to keep this around, let's cache to disk
         try:

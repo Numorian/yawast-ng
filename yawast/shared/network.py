@@ -400,35 +400,42 @@ def http_file_exists(
 
 
 def http_build_raw_response(res: Response) -> str:
-    if res.raw.version == 11:
-        res_line = f"HTTP/1.1 {res.raw.status} {res.raw.reason}"
-    else:
-        res_line = f"HTTP/1.0 {res.raw.status} {res.raw.reason}"
+    lines = []
 
-    res_string = res_line + "\r\n"
+    if res.raw.version == 11:
+        lines.append("HTTP/1.1 ")
+    else:
+        lines.append("HTTP/1.0 ")
+
+    lines.append(str(res.raw.status))
+    lines.append(" ")
+    lines.append(str(res.raw.reason))
+    lines.append("\r\n")
 
     if res.raw._original_response is not None:
-        res_string += "\r\n".join(
-            str(res.raw._original_response.headers).splitlines(False)
-        )
+        # Convert headers to a string once, then split
+        for hdr in str(res.raw._original_response.headers).splitlines(False):
+            lines.append(hdr)
+            lines.append("\r\n")
     else:
-        res_string += "\r\n".join(f"{k}: {v}" for k, v in res.headers.items())
+        for k, v in res.headers.items():
+            lines.append(k)
+            lines.append(": ")
+            lines.append(str(v))
+            lines.append("\r\n")
 
     try:
         if response_body_is_text(res):
             txt = res.text
-
-            if txt != "":
-                res_string += "\r\n\r\n"
-
-                res_string += txt
+            if txt:
+                lines.append("\r\n\r\n")
+                lines.append(txt)
         elif len(res.content) > 0:
-            # the body is binary - no real value in keeping it
-            res_string += "\r\n\r\n<BINARY DATA EXCLUDED>"
+            lines.append("\r\n\r\n<BINARY DATA EXCLUDED>")
     except Exception:
         output.debug_exception()
 
-    return res_string
+    return "".join(lines)
 
 
 def http_build_raw_request(

@@ -39,11 +39,12 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
 
     try:
         headers = res.headers
+        ev = Evidence.from_response(res)
 
         if "X-Powered-By" in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f'X-Powered-By Header Present: {headers["X-Powered-By"]} ({url})',
                     Vln.HTTP_HEADER_X_POWERED_BY,
                 )
@@ -57,7 +58,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
             if "0" in headers["X-XSS-Protection"]:
                 results.append(
                     Result.from_evidence(
-                        Evidence.from_response(res),
+                        ev,
                         f"X-XSS-Protection Disabled Header Present ({url})",
                         Vln.HTTP_HEADER_X_XSS_PROTECTION_DISABLED,
                     )
@@ -65,7 +66,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         else:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"X-XSS-Protection Header Not Present ({url})",
                     Vln.HTTP_HEADER_X_XSS_PROTECTION_MISSING,
                 )
@@ -74,7 +75,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "X-Runtime" in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"X-Runtime Header Present; likely indicates a RoR application ({url})",
                     Vln.HTTP_HEADER_X_RUNTIME,
                 )
@@ -83,7 +84,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "X-Backend-Server" in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f'X-Backend-Server Header Present: {headers["X-Backend-Server"]} ({url})',
                     Vln.HTTP_HEADER_X_BACKEND_SERVER,
                 )
@@ -92,7 +93,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "Via" in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f'Via Header Present: #{headers["Via"]} ({url})',
                     Vln.HTTP_HEADER_VIA,
                 )
@@ -102,7 +103,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
             if "allow" in str(headers["X-Frame-Options"]).lower():
                 results.append(
                     Result.from_evidence(
-                        Evidence.from_response(res),
+                        ev,
                         f'X-Frame-Options Header: {headers["X-Frame-Options"]} ({url})',
                         Vln.HTTP_HEADER_X_FRAME_OPTIONS_ALLOW,
                     )
@@ -110,7 +111,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         else:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"X-Frame-Options Header Not Present ({url})",
                     Vln.HTTP_HEADER_X_FRAME_OPTIONS_MISSING,
                 )
@@ -119,7 +120,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "X-Content-Type-Options" not in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"X-Content-Type-Options Header Not Present ({url})",
                     Vln.HTTP_HEADER_X_CONTENT_TYPE_OPTIONS_MISSING,
                 )
@@ -128,7 +129,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "Content-Security-Policy" not in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"Content-Security-Policy Header Not Present ({url})",
                     Vln.HTTP_HEADER_CONTENT_SECURITY_POLICY_MISSING,
                 )
@@ -137,7 +138,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "Referrer-Policy" not in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"Referrer-Policy Header Not Present ({url})",
                     Vln.HTTP_HEADER_REFERRER_POLICY_MISSING,
                 )
@@ -146,7 +147,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "Feature-Policy" not in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"Feature-Policy Header Not Present ({url})",
                     Vln.HTTP_HEADER_FEATURE_POLICY_MISSING,
                 )
@@ -156,7 +157,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
             if headers["Access-Control-Allow-Origin"] == "*":
                 results.append(
                     Result.from_evidence(
-                        Evidence.from_response(res),
+                        ev,
                         f"Access-Control-Allow-Origin: Unrestricted ({url})",
                         Vln.HTTP_HEADER_CORS_ACAO_UNRESTRICTED,
                     )
@@ -165,7 +166,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         if "Strict-Transport-Security" not in headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"Strict-Transport-Security Header Not Present ({url})",
                     Vln.HTTP_HEADER_HSTS_MISSING,
                 )
@@ -196,7 +197,7 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                             if str(dup_name).lower() not in ["set-cookie", "link"]:
                                 results.append(
                                     Result.from_evidence(
-                                        Evidence.from_response(res),
+                                        ev,
                                         f"Header {header_name} set multiple times with different values at {url}",
                                         Vln.HTTP_HEADER_DUPLICATE,
                                     )

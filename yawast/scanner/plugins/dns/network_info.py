@@ -12,7 +12,7 @@ _data: Dict[Any, Any] = None
 def network_info(ip):
     global _data
 
-    ip_int = _ip_to_int(ip)
+    ip_int = int(ipaddress.ip_address(ip))
 
     if _data is None:
         _build_data_from_file()
@@ -22,10 +22,10 @@ def network_info(ip):
     i = bisect.bisect_right(_data, (ip_int,)) - 1
 
     if i >= 0:
-        start_int, end_int, country, asn_description = _data[i]
+        start_int, end_int, description = _data[i]
         # If the provided IP (in integer form) lies within the range, return the info.
         if start_int <= ip_int <= end_int:
-            return f"{country} - {asn_description}"
+            return description
 
     return "Unknown"
 
@@ -42,9 +42,7 @@ def _build_data_from_file():
     # this is a TSV file, with the following columns:
     # 0 - Start IP
     # 1 - End IP
-    # 2 - ASN Number
-    # 3 - Country Code
-    # 4 - ASN Description
+    # 4 - Country Code - ASN Description
 
     global _data
     _data = []
@@ -57,25 +55,18 @@ def _build_data_from_file():
         for line in f:
             # remove any extra whitespace; skip empty or malformed lines
             parts = line.strip().split("\t")
-            if len(parts) < 5:
+            if len(parts) < 3:
                 continue
 
             try:
-                # convert start and end IP addresses to integers
-                start_int = _ip_to_int(parts[0])
-                end_int = _ip_to_int(parts[1])
+                start_int = int(parts[0])
+                end_int = int(parts[1])
             except ValueError:
                 # skip lines with invalid IP addresses
                 continue
 
-            # extract the country code and ASN description
-            country = parts[3]
-            asn_description = parts[4]
-            _data.append((start_int, end_int, country, asn_description))
+            description = parts[2]
+            _data.append((start_int, end_int, description))
 
     # sort the data to make sure binary search can be used
     _data.sort(key=lambda record: record[0])
-
-
-def _ip_to_int(ip_str):
-    return int(ipaddress.ip_address(ip_str))

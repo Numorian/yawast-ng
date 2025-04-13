@@ -4,6 +4,7 @@
 * Added support for configuration settings in `~/.yawast-ng.json` (see Usage page in the documentation).
 * Use `sitemap.xml` to establish initial spider URL list, when available.
 * Reduce memory usage when not using the `--output` option.
+* Improve performance of ASN data lookups.
 * Bug: Fix a failure to save the output file when an existing file already exists.
 * Bug: Fix an issue with saving TLS details in JSON output when using `--internalssl`.
 

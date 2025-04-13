@@ -16,8 +16,7 @@ class TestNetworkInfo(TestCase):
             (
                 1746672384,
                 1746672639,
-                "US",
-                "CLOUDFLARENET",
+                "US - CLOUDFLARENET",
             ),  # 104.28.27.55 falls in this range
         ]
 
@@ -31,8 +30,7 @@ class TestNetworkInfo(TestCase):
             (
                 50543257686929658985975890372355686400,
                 50543257686992523128595851089440407551,
-                "US",
-                "CLOUDFLARENET",
+                "US - CLOUDFLARENET",
             ),  # 2606:4700:3031::6815:4b87 falls in this range
         ]
 
@@ -47,7 +45,7 @@ class TestNetworkInfo(TestCase):
     def test_network_info_unknown_ip(self, mock_build_data):
         # Mock the _data to simulate known IP ranges
         network_info._data = [
-            (1746672384, 1746672639, "US", "CLOUDFLARENET"),
+            (1746672384, 1746672639, "US - CLOUDFLARENET"),
         ]
 
         res = network_info.network_info("8.8.8.8")  # IP not in the mocked range

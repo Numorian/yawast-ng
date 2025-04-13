@@ -2,7 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-import secrets
+import secrets, ssl
 from difflib import SequenceMatcher
 from http import cookiejar
 from multiprocessing import Lock
@@ -45,24 +45,28 @@ _file_not_found_handling: Dict[str, Dict[str, Union[bool, Response]]] = {}
 def init(proxy: str, cookie: str, header: str) -> None:
     global _requester, _file_not_found_handling
 
+    tls_context = ssl.create_default_context()
+    tls_context.check_hostname = False
+    tls_context.verify_mode = ssl.CERT_NONE
+
     _requester.cookies.set_policy(_BlockCookiesSet())
     _requester.verify = False
-    _requester.mount(
-        "http://",
-        HTTPAdapter(
-            max_retries=urllib3.Retry(total=3, read=5, connect=5, backoff_factor=0.3),
-            pool_maxsize=50,
-            pool_block=True,
-        ),
+
+    retries = urllib3.Retry(total=3, read=5, connect=5, backoff_factor=0.3)
+    http_adapter = HTTPAdapter(
+        max_retries=retries,
+        pool_maxsize=50,
+        pool_block=True,
     )
-    _requester.mount(
-        "https://",
-        HTTPAdapter(
-            max_retries=urllib3.Retry(total=3, read=5, connect=5, backoff_factor=0.3),
-            pool_maxsize=50,
-            pool_block=True,
-        ),
+    _requester.mount("http://", http_adapter)
+
+    https_adapter = HTTPAdapter(
+        max_retries=retries,
+        pool_maxsize=50,
+        pool_block=True,
     )
+    https_adapter.init_poolmanager(10, 10, False, ssl_context=tls_context)
+    _requester.mount("https://", https_adapter)
 
     if proxy is not None and len(proxy) > 0:
         # we have a proxy, set it

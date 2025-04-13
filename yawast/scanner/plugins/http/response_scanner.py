@@ -98,12 +98,14 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
     results = []
 
     try:
+        ev = Evidence.from_response(res)
+
         if "Cache-Control" in res.headers:
             # we have the header, check the content
             if "public" in str(res.headers["Cache-Control"]).lower():
                 results.append(
                     Result.from_evidence(
-                        Evidence.from_response(res),
+                        ev,
                         f"Cache-Control: Public: {url}",
                         Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_PUBLIC,
                     )
@@ -112,7 +114,7 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
             if "no-cache" not in str(res.headers["Cache-Control"]).lower():
                 results.append(
                     Result.from_evidence(
-                        Evidence.from_response(res),
+                        ev,
                         f"Cache-Control: no-cache Not Found: {url}",
                         Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_NO_CACHE_MISSING,
                     )
@@ -121,7 +123,7 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
             if "no-store" not in str(res.headers["Cache-Control"]).lower():
                 results.append(
                     Result.from_evidence(
-                        Evidence.from_response(res),
+                        ev,
                         f"Cache-Control: no-store Not Found: {url}",
                         Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_NO_STORE_MISSING,
                     )
@@ -130,7 +132,7 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
             if "private" not in str(res.headers["Cache-Control"]).lower():
                 results.append(
                     Result.from_evidence(
-                        Evidence.from_response(res),
+                        ev,
                         f"Cache-Control: private Not Found: {url}",
                         Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_PRIVATE_MISSING,
                     )
@@ -139,7 +141,7 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
             # header missing
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"Cache-Control Header Not Found: {url}",
                     Vulnerabilities.HTTP_HEADER_CACHE_CONTROL_MISSING,
                 )
@@ -148,7 +150,7 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
         if "Expires" not in res.headers:
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"Expires Header Not Found: {url}",
                     Vulnerabilities.HTTP_HEADER_EXPIRES_MISSING,
                 )
@@ -163,7 +165,7 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
                     # Expires is in the future - it's an issue
                     results.append(
                         Result.from_evidence(
-                            Evidence.from_response(res),
+                            ev,
                             f"Expires Header - Future Dated ({res.headers['Expires']}): {url}",
                             Vulnerabilities.HTTP_HEADER_EXPIRES_FUTURE,
                         )
@@ -174,7 +176,7 @@ def _check_cache_headers(url: str, res: Response) -> List[Result]:
         if "Pragma" not in res.headers or "no-cache" not in str(res.headers["Pragma"]):
             results.append(
                 Result.from_evidence(
-                    Evidence.from_response(res),
+                    ev,
                     f"Pragma: no-cache Not Found: {url}",
                     Vulnerabilities.HTTP_HEADER_PRAGMA_NO_CACHE_MISSING,
                 )

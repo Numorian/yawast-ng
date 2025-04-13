@@ -10,9 +10,9 @@ from bs4 import BeautifulSoup
 from packaging import version
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.evidence import Evidence
+from yawast.reporting.evidence import Evidence
 from yawast.scanner.plugins.http import version_checker, response_scanner
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 from yawast.shared import network, output, utils
 
 

@@ -13,8 +13,8 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.evidence import Evidence
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.evidence import Evidence
+from yawast.reporting.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import output
 

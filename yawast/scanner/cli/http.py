@@ -10,7 +10,7 @@ from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.issue import Issue
-from yawast.scanner.plugins.evidence import Evidence
+from yawast.reporting.evidence import Evidence
 from yawast.scanner.plugins.http import (
     http_basic,
     waf,
@@ -33,7 +33,7 @@ from yawast.scanner.plugins.http.servers import (
     iis,
     php,
 )
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import network, output, utils
 

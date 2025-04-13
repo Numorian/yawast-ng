@@ -14,7 +14,8 @@ from yawast.external.memory_size import Size
 from yawast.external.total_size import total_size
 from yawast.reporting.enums import Vulnerabilities, Severity
 from yawast.reporting.issue import Issue
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.evidence import Evidence
+from yawast.reporting.result import Result
 from yawast.shared import output
 from yawast.shared.exec_timer import ExecutionTimer
 from yawast import config
@@ -22,7 +23,7 @@ from yawast import config
 _issues: Dict[str, Dict[Vulnerabilities, List[Issue]]] = {}
 _info: Dict[str, Any] = {}
 _data: Dict[str, Any] = {}
-_evidence: Dict[str, Any] = {}
+_evidence: Dict[str, Evidence] = {}
 _domain: str = ""
 _output_file: str = ""
 
@@ -75,6 +76,16 @@ def save_output(spinner=None):
         "vulnerabilities": vulns,
     }
     json_data = json.dumps(data, indent=4)
+
+    # clean up the temp files from the evidence
+    for domain in _evidence:
+        for vuln in _issues[domain]:
+            for issue in _issues[domain][vuln]:
+                try:
+                    if isinstance(issue.evidence, Evidence):
+                        issue.evidence.purge_files()
+                except Exception as error:
+                    print(f"Error purging files: {error}")
 
     try:
         filename = _output_file
@@ -233,6 +244,13 @@ def register(issue: Issue) -> None:
             _evidence[_domain][issue.evidence["request_id"]] = ""
         if "response" in issue.evidence:
             _evidence[_domain][issue.evidence["response_id"]] = ""
+    else:
+        # if we need to keep this around, let's cache to disk
+        try:
+            if isinstance(issue.evidence, Evidence):
+                issue.evidence.cache_to_file()
+        except Exception as error:
+            output.debug(f"Error caching evidence: {error}")
 
     _issues[_domain][issue.vulnerability].append(issue)
 

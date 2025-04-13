@@ -12,9 +12,9 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.evidence import Evidence
+from yawast.reporting.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 from yawast.shared import network, output
 from yawast import config
 

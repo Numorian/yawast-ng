@@ -5,7 +5,7 @@
 from typing import List, Dict
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 
 
 def get_waf(headers: Dict, raw: str, url: str) -> List[Result]:

@@ -11,8 +11,8 @@ from requests import Response
 
 from yawast.external import retirejs
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.evidence import Evidence
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.evidence import Evidence
+from yawast.reporting.result import Result
 from yawast.shared import output, network, utils
 
 _data: Union[Dict[Any, Any], None] = {}

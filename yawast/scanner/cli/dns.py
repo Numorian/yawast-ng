@@ -10,6 +10,7 @@ from publicsuffixlist import PublicSuffixList
 
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter, issue
+from yawast.reporting.result import Result
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.dns import basic
 from yawast.scanner.plugins.dns import caa
@@ -193,8 +194,13 @@ def scan(session: Session):
         if caa_count == 0:
             reporter.display(
                 "\tCAA: Domain does not have protection from CAA",
-                issue.Issue(
-                    Vulnerabilities.DNS_CAA_MISSING, session.url, {"caa_records": carec}
+                issue.Issue.from_result(
+                    Result(
+                        "Domain does not have protection from CAA",
+                        Vulnerabilities.DNS_CAA_MISSING,
+                        session.url,
+                        {"caa_records": carec},
+                    )
                 ),
             )
     except Exception as err:
@@ -214,7 +220,14 @@ def scan(session: Session):
         else:
             reporter.display(
                 "\tDNSKEY: Domain does not use DNSSEC",
-                issue.Issue(Vulnerabilities.DNS_DNSSEC_NOT_ENABLED, session.url, {}),
+                issue.Issue.from_result(
+                    Result(
+                        "Domain does not use DNSSEC",
+                        Vulnerabilities.DNS_DNSSEC_NOT_ENABLED,
+                        session.url,
+                        "Domain does not use DNSSEC",
+                    )
+                ),
             )
     except Exception as err:
         output.error(f"Error getting DNSKEY records: {str(err)}")

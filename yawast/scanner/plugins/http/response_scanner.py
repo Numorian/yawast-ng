@@ -13,10 +13,10 @@ from dateutil.parser import parse
 from requests.models import Response
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.evidence import Evidence
+from yawast.reporting.evidence import Evidence
 from yawast.scanner.plugins.http import http_basic, retirejs, error_checker
 from yawast.scanner.plugins.http.servers import rails, apache_tomcat, iis
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 from yawast.shared import network, output
 
 

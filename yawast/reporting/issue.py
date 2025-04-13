@@ -6,11 +6,12 @@ import uuid
 from typing import cast, Dict, Any
 
 from yawast.reporting.enums import Vulnerabilities, VulnerabilityInfo
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.evidence import Evidence
+from yawast.reporting.result import Result
 
 
 class Issue(dict):
-    def __init__(self, vuln: Vulnerabilities, url: str, evidence: Dict[str, Any]):
+    def __init__(self, vuln: Vulnerabilities, url: str, evidence: Evidence):
         val = cast(VulnerabilityInfo, vuln.value)
 
         self.vulnerability = vuln

@@ -5,10 +5,13 @@
 from typing import Optional, Any, Dict
 from requests import Response
 
-import hashlib
+import hashlib, tempfile, os
 
 
 class Evidence(Dict[str, Any]):
+    request_file_name: Optional[str]
+    response_file_name: Optional[str]
+
     def __init__(
         self,
         url: str,
@@ -43,6 +46,21 @@ class Evidence(Dict[str, Any]):
                 res = self.response.encode("utf-8")
                 res_id = hashlib.blake2b(res, digest_size=16).hexdigest()
                 self.response_id = res_id
+
+        # if the request or response is a file, we need to read it
+        # we'll just return the contents of the file
+        if key == "request" and hasattr(self, "request_file_name"):
+            try:
+                with open(self.request_file_name, "r") as req_file:
+                    return req_file.read()
+            except OSError:
+                pass
+        elif key == "response" and hasattr(self, "response_file_name"):
+            try:
+                with open(self.response_file_name, "r") as res_file:
+                    return res_file.read()
+            except OSError:
+                pass
 
         return super().__getitem__(key)
 
@@ -100,3 +118,37 @@ class Evidence(Dict[str, Any]):
         )
 
         return ev
+
+    def cache_to_file(self):
+        # save the request and response to a file, if set
+        # we save them as temp files, and we'll reload them when we need them
+
+        min_cache_size = 1024 * 100  # 100kb
+
+        if "request" in self and len(self["request"]) > min_cache_size:
+            with tempfile.NamedTemporaryFile(delete=False) as req_file:
+                req_file.write(self["request"].encode("utf-8"))
+                self.request_file_name = req_file.name
+                self["request"] = ""
+
+        if "response" in self and len(self["response"]) > min_cache_size:
+            with tempfile.NamedTemporaryFile(delete=False) as res_file:
+                res_file.write(self["response"].encode("utf-8"))
+                self.response_file_name = res_file.name
+                self["response"] = ""
+
+    def purge_files(self):
+        # delete the temp files, if they exist
+        if hasattr(self, "request_file_name") and self.request_file_name is not None:
+            try:
+                os.remove(self.request_file_name)
+            except OSError:
+                pass
+            self.request_file_name = None
+
+        if hasattr(self, "response_file_name") and self.response_file_name is not None:
+            try:
+                os.remove(self.response_file_name)
+            except OSError:
+                pass
+            self.response_file_name = None

@@ -6,7 +6,7 @@ import re
 from typing import List
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 from yawast.shared import network, output
 
 _checked: List[str] = []

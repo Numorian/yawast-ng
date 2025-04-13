@@ -11,7 +11,7 @@ from typing import List, Optional
 import pkg_resources
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 from yawast.shared import output
 
 

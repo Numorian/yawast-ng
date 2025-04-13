@@ -15,9 +15,9 @@ import pkg_resources
 from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.evidence import Evidence
+from yawast.reporting.evidence import Evidence
 from yawast.scanner.plugins.http import response_scanner
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 from yawast.shared import network, output
 
 _files: List[str] = []

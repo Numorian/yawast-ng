@@ -8,8 +8,8 @@ from typing import Union, List, cast
 from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.evidence import Evidence
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.evidence import Evidence
+from yawast.reporting.result import Result
 from yawast.shared import network, output
 
 

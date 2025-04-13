@@ -5,7 +5,7 @@
 from typing import List
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.result import Result
+from yawast.reporting.result import Result
 
 
 def check_banner(banner: str, raw: str, url: str) -> List[Result]:

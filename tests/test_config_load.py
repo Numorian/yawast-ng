@@ -25,7 +25,7 @@ class TestLoadConfig(unittest.TestCase):
         self.assertEqual(config.max_spider_pages, 5000)
 
         # Assert that include_debug_in_output was set correctly
-        self.assertFalse(config.include_degug_in_output)
+        self.assertFalse(config.include_debug_in_output)
 
     @patch("os.path.exists")
     @patch("builtins.open", new_callable=mock_open, read_data="invalid json")

@@ -76,19 +76,17 @@ class Evidence(Dict[str, Any]):
 
     def __eq__(self, other):
         if isinstance(other, Evidence):
-            if (
-                self.request_id is not None
-                and other.request_id is not None
-                and self.response_id is not None
-                and other.response_id is not None
-            ):
-                return (
-                    self.request_id == other.request_id
-                    and self.response_id == other.response_id
-                )
-            else:
-                # just use the parent class equality
-                return super().__eq__(other)
+            # check if the items are the same
+            if len(self) != len(other):
+                return False
+
+            for k, v in self.items():
+                if k not in other:
+                    return False
+                if v != other[k]:
+                    return False
+
+            return True
         else:
             return False
 

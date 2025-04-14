@@ -180,7 +180,7 @@ def _print(val):
             reporter.register_message(clean, "normal")
 
         if not is_dbg or (is_dbg and _debug):
-            if _no_wrap:
+            if _no_wrap or _wrapper is None:
                 print(val)
             else:
                 print(_wrapper.fill(val))

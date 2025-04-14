@@ -71,18 +71,8 @@ class Evidence(Dict[str, Any]):
         return super().__getitem__(key)
 
     def __hash__(self):
-        if self.request_id is not None and self.response_id is not None:
-            # if we have both, we can use them
-            return hash((self.request_id, self.response_id))
-        elif self.request_id is not None:
-            # if we only have the request_id, use that
-            return hash(self.request_id)
-        elif self.response_id is not None:
-            # if we only have the response_id, use that
-            return hash(self.response_id)
-        else:
-            # if we have neither, just use the parent class hash
-            return super().__hash__()
+        # return the hash of the entire object
+        return hash(tuple(self.items()))
 
     def __eq__(self, other):
         if isinstance(other, Evidence):

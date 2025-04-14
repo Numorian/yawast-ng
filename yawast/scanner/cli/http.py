@@ -366,7 +366,7 @@ def _check_password_reset(session: Session, element_name: Optional[str] = None):
             )
             print(
                 "If this element seems to be common, please request that it be "
-                "added: https://github.com/adamcaudill/yawast/issues"
+                "added: https://github.com/Numorian/yawast-ng/issues"
             )
             name = utils.prompt("What is the user/email entry element name? ")
 

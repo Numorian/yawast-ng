@@ -278,6 +278,7 @@ def display(msg: str, issue: Issue) -> None:
 
     # if there's no evidence, default to the msg - better than nothing
     if issue.evidence is None:
+        # TODO: This should be an Evidence object, not a string
         issue.evidence = msg.strip()
 
     register(issue)

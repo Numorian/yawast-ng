@@ -125,6 +125,8 @@ def scan(session: Session):
     # get files, and add those to the link list
     links += _file_search(session, links)
 
+    # this doens't have the spinner, and is handled differently
+    # because it's one of the rare places that we can be interactive
     if (
         session.args.pass_reset_page is not None
         and len(session.args.pass_reset_page) > 0
@@ -344,6 +346,11 @@ def _check_password_reset(session: Session, element_name: Optional[str] = None):
     if user is None:
         user = utils.prompt("What is a valid user? ")
 
+    if user is None or len(user) == 0:
+        # we don't have a valid user, so we can't do anything
+        # as there's no path forward, we'll just return
+        return
+
     try:
         with Spinner():
             res = password_reset.check_resp_user_enum(session, user, element_name)
@@ -369,6 +376,11 @@ def _check_password_reset(session: Session, element_name: Optional[str] = None):
                 "added: https://github.com/Numorian/yawast-ng/issues"
             )
             name = utils.prompt("What is the user/email entry element name? ")
+
+            if name is None or len(name) == 0:
+                # we don't have a valid element name, so we can't do anything
+                # as there's no path forward, we'll just return
+                return
 
             _check_password_reset(session, name)
     except Exception as e:

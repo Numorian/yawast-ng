@@ -5,7 +5,7 @@
 from unittest import TestCase
 
 from tests import utils
-from yawast.scanner.plugins.ssl_labs import api
+from yawast.scanner.modules.ssl_labs import api
 from yawast.shared import output
 
 

@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from dns import resolver
 
-from yawast.scanner.plugins.dns.caa import _get_cname
+from yawast.scanner.modules.dns.caa import _get_cname
 
 
 class TestGetCname(TestCase):

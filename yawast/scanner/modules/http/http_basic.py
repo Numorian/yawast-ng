@@ -20,8 +20,8 @@ from yawast.external.http_response_from_socket import HttpResponseParser
 from yawast.reporting.enums import Vulnerabilities as Vln
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
-from yawast.scanner.plugins.http import response_scanner
-from yawast.scanner.plugins.http.servers import apache_httpd, iis, nginx, php, python
+from yawast.scanner.modules.http import response_scanner
+from yawast.scanner.modules.http.servers import apache_httpd, iis, nginx, php, python
 from yawast.scanner.session import Session
 from yawast.shared import network, output, utils
 

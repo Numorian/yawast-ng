@@ -12,8 +12,8 @@ from cryptography.hazmat.primitives import hashes
 
 from yawast.reporting import issue, reporter
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.ssl import cert_info
-from yawast.scanner.plugins.ssl_labs import api
+from yawast.scanner.modules.ssl import cert_info
+from yawast.scanner.modules.ssl_labs import api
 from yawast.scanner.session import Session
 from yawast.shared import output
 

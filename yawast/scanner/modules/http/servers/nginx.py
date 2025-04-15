@@ -9,7 +9,7 @@ from packaging import version
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.result import Result
-from yawast.scanner.plugins.http import response_scanner, version_checker
+from yawast.scanner.modules.http import response_scanner, version_checker
 from yawast.shared import network
 
 

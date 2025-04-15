@@ -14,7 +14,7 @@ from requests import Response
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
-from yawast.scanner.plugins.http import version_checker
+from yawast.scanner.modules.http import version_checker
 from yawast.scanner.session import Session
 from yawast.shared import network
 

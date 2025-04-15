@@ -7,7 +7,7 @@ from unittest import TestCase
 import requests
 import requests_mock
 
-from yawast.scanner.plugins.http import error_checker
+from yawast.scanner.modules.http import error_checker
 
 
 class TestErrorChecker(TestCase):

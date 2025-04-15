@@ -5,7 +5,7 @@
 import os
 from unittest import TestCase
 
-from yawast.scanner.plugins.dns import srv
+from yawast.scanner.modules.dns import srv
 
 
 class TestFindSrvRecords(TestCase):

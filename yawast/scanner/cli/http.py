@@ -12,7 +12,7 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.issue import Issue
 from yawast.reporting.result import Result
-from yawast.scanner.plugins.http import (
+from yawast.scanner.modules.http import (
     error_checker,
     file_search,
     http_basic,
@@ -22,12 +22,12 @@ from yawast.scanner.plugins.http import (
     spider,
     waf,
 )
-from yawast.scanner.plugins.http.applications import jira, wordpress
-from yawast.scanner.plugins.http.applications.generic import password_reset
-from yawast.scanner.plugins.http.applications.generic.password_reset import (
+from yawast.scanner.modules.http.applications import jira, wordpress
+from yawast.scanner.modules.http.applications.generic import password_reset
+from yawast.scanner.modules.http.applications.generic.password_reset import (
     PasswordResetElementNotFound,
 )
-from yawast.scanner.plugins.http.servers import (
+from yawast.scanner.modules.http.servers import (
     apache_httpd,
     apache_tomcat,
     iis,

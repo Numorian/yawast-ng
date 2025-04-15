@@ -14,8 +14,8 @@ from requests.models import Response
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
-from yawast.scanner.plugins.http import error_checker, http_basic, retirejs
-from yawast.scanner.plugins.http.servers import apache_tomcat, iis, rails
+from yawast.scanner.modules.http import error_checker, http_basic, retirejs
+from yawast.scanner.modules.http.servers import apache_tomcat, iis, rails
 from yawast.shared import network, output
 
 

@@ -4,7 +4,7 @@
 
 from unittest import TestCase
 
-from yawast.scanner.plugins.dns import basic
+from yawast.scanner.modules.dns import basic
 
 
 class TestGetText(TestCase):

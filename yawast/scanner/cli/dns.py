@@ -12,7 +12,7 @@ from yawast.external.spinner import Spinner
 from yawast.reporting import issue, reporter
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.result import Result
-from yawast.scanner.plugins.dns import basic, caa, dnssec, network_info, srv, subdomains
+from yawast.scanner.modules.dns import basic, caa, dnssec, network_info, srv, subdomains
 from yawast.scanner.session import Session
 from yawast.shared import output, utils
 

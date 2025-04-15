@@ -4,7 +4,7 @@
 
 from unittest import TestCase
 
-from yawast.scanner.plugins.http.servers import apache_httpd
+from yawast.scanner.modules.http.servers import apache_httpd
 
 
 class TestHttpApacheHttpd(TestCase):

@@ -4,7 +4,7 @@
 
 from unittest import TestCase
 
-from yawast.scanner.plugins.dns import caa
+from yawast.scanner.modules.dns import caa
 
 
 class TestGetCaa(TestCase):

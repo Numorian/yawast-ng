@@ -4,8 +4,8 @@
 
 from unittest import TestCase
 
-from yawast.scanner.plugins.ssl import cert_info
-from yawast.scanner.plugins.ssl.cert_info import _get_ct_log_data
+from yawast.scanner.modules.ssl import cert_info
+from yawast.scanner.modules.ssl.cert_info import _get_ct_log_data
 
 
 class TestSslCertData(TestCase):

@@ -5,7 +5,7 @@
 from unittest import TestCase
 
 from tests import utils
-from yawast.scanner.plugins.dns import dnssec
+from yawast.scanner.modules.dns import dnssec
 from yawast.shared import output
 
 

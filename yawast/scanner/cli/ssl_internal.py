@@ -27,8 +27,8 @@ from validator_collection import checkers
 
 from yawast.reporting import issue, reporter
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.dns import basic
-from yawast.scanner.plugins.ssl import cert_info
+from yawast.scanner.modules.dns import basic
+from yawast.scanner.modules.ssl import cert_info
 from yawast.scanner.session import Session
 from yawast.shared import output, utils
 

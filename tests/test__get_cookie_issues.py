@@ -7,8 +7,8 @@ from unittest import TestCase
 import requests
 import requests_mock
 
-from yawast.scanner.plugins.http import http_basic
-from yawast.scanner.plugins.http.http_basic import get_cookie_issues
+from yawast.scanner.modules.http import http_basic
+from yawast.scanner.modules.http.http_basic import get_cookie_issues
 
 
 class TestGetCookieIssues(TestCase):

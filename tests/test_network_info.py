@@ -4,11 +4,11 @@
 
 from unittest import TestCase, mock
 
-from yawast.scanner.plugins.dns import network_info
+from yawast.scanner.modules.dns import network_info
 
 
 class TestNetworkInfo(TestCase):
-    @mock.patch("yawast.scanner.plugins.dns.network_info._build_data_from_file")
+    @mock.patch("yawast.scanner.modules.dns.network_info._build_data_from_file")
     def test_network_info_known_ip4(self, mock_build_data):
         # Mock the _data to simulate known IP ranges
         network_info._data = [
@@ -22,7 +22,7 @@ class TestNetworkInfo(TestCase):
         res = network_info.network_info("104.28.27.55")
         self.assertEqual("US - CLOUDFLARENET", res)
 
-    @mock.patch("yawast.scanner.plugins.dns.network_info._build_data_from_file")
+    @mock.patch("yawast.scanner.modules.dns.network_info._build_data_from_file")
     def test_network_info_known_ip6(self, mock_build_data):
         # Mock the _data to simulate known IP ranges
         network_info._data = [
@@ -40,7 +40,7 @@ class TestNetworkInfo(TestCase):
         res = network_info.network_info("104.28.27.55")
         self.assertEqual("US - CLOUDFLARENET", res)
 
-    @mock.patch("yawast.scanner.plugins.dns.network_info._build_data_from_file")
+    @mock.patch("yawast.scanner.modules.dns.network_info._build_data_from_file")
     def test_network_info_unknown_ip(self, mock_build_data):
         # Mock the _data to simulate known IP ranges
         network_info._data = [
@@ -50,7 +50,7 @@ class TestNetworkInfo(TestCase):
         res = network_info.network_info("8.8.8.8")  # IP not in the mocked range
         self.assertEqual("Unknown", res)
 
-    @mock.patch("yawast.scanner.plugins.dns.network_info._build_data_from_file")
+    @mock.patch("yawast.scanner.modules.dns.network_info._build_data_from_file")
     def test_network_info_empty_data(self, mock_build_data):
         # Mock the _data to simulate an empty dataset
         network_info._data = []
@@ -58,7 +58,7 @@ class TestNetworkInfo(TestCase):
         res = network_info.network_info("104.28.27.55")
         self.assertEqual("Unknown", res)
 
-    @mock.patch("yawast.scanner.plugins.dns.network_info._build_data_from_file")
+    @mock.patch("yawast.scanner.modules.dns.network_info._build_data_from_file")
     def test_network_info_invalid_ip(self, mock_build_data):
         with self.assertRaises(ValueError):
             network_info.network_info("invalid_ip")

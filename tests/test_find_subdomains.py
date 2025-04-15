@@ -5,7 +5,7 @@
 import os
 from unittest import TestCase
 
-from yawast.scanner.plugins.dns import subdomains
+from yawast.scanner.modules.dns import subdomains
 
 
 class TestFindSubdomains(TestCase):

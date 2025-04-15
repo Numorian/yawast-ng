@@ -6,8 +6,8 @@ from typing import Optional
 
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
-from yawast.scanner.plugins.dns import basic
-from yawast.scanner.plugins.network import port_scan
+from yawast.scanner.modules.dns import basic
+from yawast.scanner.modules.network import port_scan
 from yawast.scanner.session import Session
 from yawast.shared import output
 

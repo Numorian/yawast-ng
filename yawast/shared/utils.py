@@ -12,6 +12,7 @@ from urllib.parse import urlunparse
 
 from validator_collection import checkers
 
+from yawast import config
 from yawast.shared import output
 from yawast.shared.exec_timer import ExecutionTimer
 
@@ -189,6 +190,10 @@ def exit_message(message: str):
 
 def prompt(msg: str) -> str:
     ret = ""
+
+    # check the config for allow_interactive
+    if not config.allow_interactive:
+        return ret
 
     if sys.stdout.isatty():
         INPUT_LOCK.acquire()

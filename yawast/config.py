@@ -11,13 +11,14 @@ import os
 user_agent = None
 max_spider_pages = 10000
 include_debug_in_output = True
+allow_interactive = True
 
 
 def load_config():
     """
     Load the configuration from the config file.
     """
-    global user_agent, max_spider_pages, include_debug_in_output
+    global user_agent, max_spider_pages, include_debug_in_output, allow_interactive
 
     # check if the config file exists
     if os.path.exists("~/.yawast-ng.json"):
@@ -31,6 +32,7 @@ def load_config():
 
                 max_spider_pages = config.get("max_spider_pages", 10000)
                 include_debug_in_output = config.get("include_debug_in_output", True)
+                allow_interactive = config.get("allow_interactive", True)
         except json.JSONDecodeError:
             print("Error: Invalid JSON in config file.")
         except Exception as e:

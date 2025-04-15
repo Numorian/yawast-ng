@@ -132,6 +132,7 @@ The file is a JSON file, and should be formatted as such. The following keys are
 - `user_agent` - The user agent string to be used for all requests to the target(s). This is useful for testing, and can be set to a specific value. If missing, yawast-ng will use the default value.
 - `max_spider_pages` - The maximum number of pages to spider. This is useful for limiting the number of pages scanned, and can be set to a specific value. If missing, yawast-ng will use the default value.
 - `include_debug_in_output` - By default yawast-ng will include the debug output in the JSON file. This can be set to `false` to disable this feature. If missing, yawast-ng will use the default value. This will substantially reduce the size of the output file, and is recommended for most users.
+- `allow_interactive` - By default, yawast-ng will prompt for user input when needed. This is needed for certain tests, though can be disabled when used in an automated environment. If missing, yawast-ng will use the default value. This is recommended to be enabled (`true`) for most users.
 
 ### Example Configuration File
 

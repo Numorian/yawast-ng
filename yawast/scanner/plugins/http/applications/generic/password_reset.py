@@ -4,12 +4,12 @@
 
 import secrets
 import time
-from typing import List, Optional, Dict, Union, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
 from yawast.reporting.enums import Vulnerabilities

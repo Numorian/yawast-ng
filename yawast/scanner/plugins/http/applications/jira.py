@@ -2,14 +2,14 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 import re
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import response_scanner
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import response_scanner
 from yawast.scanner.session import Session
-from yawast.shared import output, network
+from yawast.shared import network, output
 
 
 def check_for_jira(session: Session) -> Tuple[List[Result], Union[str, None]]:

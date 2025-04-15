@@ -2,10 +2,12 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from typing import Optional, Any, Dict
-from requests import Response
+import hashlib
+import os
+import tempfile
+from typing import Any, Dict, Optional
 
-import hashlib, tempfile, os
+from requests import Response
 
 
 class Evidence(Dict[str, Any]):

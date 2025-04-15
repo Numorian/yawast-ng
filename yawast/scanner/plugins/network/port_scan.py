@@ -5,7 +5,7 @@
 import json
 import os
 import socket
-from multiprocessing.dummy import Pool, Manager
+from multiprocessing.dummy import Manager, Pool
 from typing import List, Optional
 
 import pkg_resources

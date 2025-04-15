@@ -1,7 +1,8 @@
 import unittest
-from unittest.mock import patch, mock_open
-from yawast import config
+from unittest.mock import mock_open, patch
+
 from tests import utils
+from yawast import config
 
 
 class TestLoadConfig(unittest.TestCase):

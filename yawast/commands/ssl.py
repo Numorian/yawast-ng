@@ -5,9 +5,9 @@
 import socket
 
 from yawast.commands import utils as cutils
-from yawast.scanner.cli import ssl_internal, ssl_sweet32, ssl_labs
+from yawast.scanner.cli import ssl_internal, ssl_labs, ssl_sweet32
 from yawast.scanner.session import Session
-from yawast.shared import utils, output
+from yawast.shared import output, utils
 
 
 def start(session: Session):

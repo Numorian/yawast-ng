@@ -2,7 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from typing import Tuple, Dict, Any, List
+from typing import Any, Dict, List, Tuple
 
 from yawast.shared import network, output
 

@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import uuid
-from typing import cast, Dict, Any
+from typing import Any, Dict, cast
 
 from yawast.reporting.enums import Vulnerabilities, VulnerabilityInfo
 from yawast.reporting.evidence import Evidence

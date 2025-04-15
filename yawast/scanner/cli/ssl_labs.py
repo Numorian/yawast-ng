@@ -4,13 +4,13 @@
 
 import sys
 from time import sleep
-from typing import Optional, List
+from typing import List, Optional
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
-from yawast.reporting import reporter, issue
+from yawast.reporting import issue, reporter
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.ssl import cert_info
 from yawast.scanner.plugins.ssl_labs import api

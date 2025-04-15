@@ -2,10 +2,9 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from yawast.scanner.plugins.dns import network_info
-from unittest import TestCase, mock
 
 
 class TestNetworkInfo(TestCase):

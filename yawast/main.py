@@ -12,21 +12,20 @@ import threading
 import time
 import warnings
 from datetime import datetime
-from multiprocessing import current_process, active_children
+from multiprocessing import active_children, current_process
 from typing import cast
 
 import psutil
 from colorama import Fore
 from packaging import version
 
-from yawast import command_line
+from yawast import command_line, config
 from yawast._version import get_version
 from yawast.external.get_char import getchar
 from yawast.external.memory_size import Size
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
-from yawast.shared import output, network, utils
-from yawast import config
+from yawast.shared import network, output, utils
 
 _start_time = datetime.now()
 _monitor = None

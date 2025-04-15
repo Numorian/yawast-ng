@@ -3,9 +3,9 @@
 #  See the LICENSE file for full license details.
 
 import copy
-from typing import Union, Dict, List
+from typing import Dict, List, Union
 
-from dns import resolver, exception
+from dns import exception, resolver
 from dns.resolver import Resolver
 
 from yawast.shared import output

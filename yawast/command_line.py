@@ -7,7 +7,7 @@ import sys
 from typing import List
 
 from yawast._version import get_version
-from yawast.commands import scan, dns, ssl
+from yawast.commands import dns, scan, ssl
 from yawast.reporting import reporter
 from yawast.scanner.session import Session
 from yawast.shared import utils

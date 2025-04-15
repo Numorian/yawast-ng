@@ -1,11 +1,13 @@
 import hashlib
 import os
 import tempfile
-from typing import Any, Dict, cast
 import unittest
-from yawast.reporting.evidence import Evidence
+from typing import Any, Dict, cast
 from unittest.mock import Mock, patch
+
 from requests import PreparedRequest, Response
+
+from yawast.reporting.evidence import Evidence
 
 
 class TestEvidenceInit(unittest.TestCase):

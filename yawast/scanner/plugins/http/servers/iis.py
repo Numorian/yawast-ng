@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import secrets
-from typing import List, cast, Dict
+from typing import Dict, List, cast
 from urllib.parse import urljoin, urlparse, urlunparse
 
 from bs4 import BeautifulSoup
@@ -11,8 +11,8 @@ from packaging import version
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import response_scanner, version_checker
 from yawast.shared import network, output, utils
 
 

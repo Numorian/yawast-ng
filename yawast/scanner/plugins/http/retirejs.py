@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import json
-from typing import List, Dict, Tuple, Any, Union
+from typing import Any, Dict, List, Tuple, Union
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
@@ -13,7 +13,7 @@ from yawast.external import retirejs
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
-from yawast.shared import output, network, utils
+from yawast.shared import network, output, utils
 
 _data: Union[Dict[Any, Any], None] = {}
 _checked: List[str] = []

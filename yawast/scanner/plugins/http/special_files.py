@@ -7,8 +7,8 @@ from urllib.parse import urljoin
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import response_scanner
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import response_scanner
 from yawast.shared import network
 
 

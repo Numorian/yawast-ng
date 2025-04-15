@@ -1,17 +1,17 @@
-import unittest
-from unittest.mock import patch
+import gc
+import json
 import os
+import unittest
+import zipfile
+from unittest.mock import MagicMock, patch
+
+from tests import utils
+from yawast import config
 from yawast.reporting import reporter
+from yawast.reporting.enums import Severity, Vulnerabilities
+from yawast.reporting.evidence import Evidence
 from yawast.reporting.issue import Issue
 from yawast.reporting.result import Result
-from yawast.reporting.evidence import Evidence
-from yawast.reporting.enums import Severity, Vulnerabilities
-from yawast import config
-from tests import utils
-import json
-import gc
-import zipfile
-from unittest.mock import patch, MagicMock
 
 
 class TestReporterInit(unittest.TestCase):

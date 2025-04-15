@@ -2,7 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from typing import Union, Dict
+from typing import Dict, Union
 
 from packaging import version
 

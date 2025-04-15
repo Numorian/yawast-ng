@@ -2,9 +2,11 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from typing import Dict, Any
+import bisect
+import ipaddress
+from typing import Any, Dict
 
-import pkg_resources, bisect, ipaddress
+import pkg_resources
 
 _data: Dict[Any, Any] = None
 

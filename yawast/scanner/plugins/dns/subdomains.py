@@ -7,7 +7,7 @@ from multiprocessing import Manager
 from multiprocessing.dummy import Pool
 
 import pkg_resources
-from dns import resolver, exception
+from dns import exception, resolver
 
 from yawast.shared import output
 

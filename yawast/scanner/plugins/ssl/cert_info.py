@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import base64
-from typing import List, Dict, cast
+from typing import Dict, List, cast
 
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend

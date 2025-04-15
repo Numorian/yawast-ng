@@ -10,9 +10,9 @@ import traceback
 from inspect import FrameInfo, stack
 from multiprocessing.util import get_logger
 from threading import Lock
-from typing import cast, Optional
+from typing import Optional, cast
 
-from colorama import init, Fore, Style
+from colorama import Fore, Style, init
 
 from yawast.reporting import reporter
 from yawast.shared import utils

@@ -7,8 +7,7 @@ import re
 import sys
 import threading
 import time
-from urllib.parse import urlparse
-from urllib.parse import urlunparse
+from urllib.parse import urlparse, urlunparse
 
 from validator_collection import checkers
 

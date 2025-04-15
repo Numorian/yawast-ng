@@ -2,26 +2,27 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from selenium.common.exceptions import WebDriverException
 
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
 from yawast.reporting.enums import Vulnerabilities
-from yawast.reporting.issue import Issue
 from yawast.reporting.evidence import Evidence
+from yawast.reporting.issue import Issue
+from yawast.reporting.result import Result
 from yawast.scanner.plugins.http import (
+    error_checker,
+    file_search,
     http_basic,
-    waf,
-    spider,
+    response_scanner,
     retirejs,
     special_files,
-    file_search,
-    error_checker,
-    response_scanner,
+    spider,
+    waf,
 )
-from yawast.scanner.plugins.http.applications import wordpress, jira
+from yawast.scanner.plugins.http.applications import jira, wordpress
 from yawast.scanner.plugins.http.applications.generic import password_reset
 from yawast.scanner.plugins.http.applications.generic.password_reset import (
     PasswordResetElementNotFound,
@@ -29,11 +30,10 @@ from yawast.scanner.plugins.http.applications.generic.password_reset import (
 from yawast.scanner.plugins.http.servers import (
     apache_httpd,
     apache_tomcat,
-    nginx,
     iis,
+    nginx,
     php,
 )
-from yawast.reporting.result import Result
 from yawast.scanner.session import Session
 from yawast.shared import network, output, utils
 

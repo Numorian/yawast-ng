@@ -3,7 +3,6 @@
 #  See the LICENSE file for full license details.
 
 import warnings
-
 from datetime import datetime
 from typing import List, Union
 
@@ -14,9 +13,9 @@ from requests.models import Response
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import http_basic, retirejs, error_checker
-from yawast.scanner.plugins.http.servers import rails, apache_tomcat, iis
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import error_checker, http_basic, retirejs
+from yawast.scanner.plugins.http.servers import apache_tomcat, iis, rails
 from yawast.shared import network, output
 
 

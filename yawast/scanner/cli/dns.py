@@ -9,17 +9,12 @@ from typing import Tuple
 from publicsuffixlist import PublicSuffixList
 
 from yawast.external.spinner import Spinner
-from yawast.reporting import reporter, issue
-from yawast.reporting.result import Result
+from yawast.reporting import issue, reporter
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.dns import basic
-from yawast.scanner.plugins.dns import caa
-from yawast.scanner.plugins.dns import dnssec
-from yawast.scanner.plugins.dns import network_info
-from yawast.scanner.plugins.dns import srv
-from yawast.scanner.plugins.dns import subdomains
+from yawast.reporting.result import Result
+from yawast.scanner.plugins.dns import basic, caa, dnssec, network_info, srv, subdomains
 from yawast.scanner.session import Session
-from yawast.shared import utils, output
+from yawast.shared import output, utils
 
 
 def scan(session: Session):

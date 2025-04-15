@@ -7,7 +7,7 @@ import socket
 import ssl
 import struct
 from http.client import HTTPResponse
-from typing import List, Dict, Union, Tuple, Optional
+from typing import Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
 
 import pkg_resources
@@ -15,15 +15,15 @@ from publicsuffixlist import PublicSuffixList
 from requests.models import Response
 from validator_collection import checkers
 
+from yawast import config
 from yawast.external.http_response_from_socket import HttpResponseParser
 from yawast.reporting.enums import Vulnerabilities as Vln
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import response_scanner
-from yawast.scanner.plugins.http.servers import apache_httpd, php, iis, nginx, python
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import response_scanner
+from yawast.scanner.plugins.http.servers import apache_httpd, iis, nginx, php, python
 from yawast.scanner.session import Session
-from yawast.shared import network, utils, output
-from yawast import config
+from yawast.shared import network, output, utils
 
 _checked_cookies: Dict[Vln, List[str]] = {}
 

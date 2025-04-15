@@ -8,17 +8,17 @@ import os
 import time
 import zipfile
 from datetime import datetime
-from typing import Dict, List, cast, Optional, Any, Union
+from typing import Any, Dict, List, Optional, Union, cast
 
+from yawast import config
 from yawast.external.memory_size import Size
 from yawast.external.total_size import total_size
-from yawast.reporting.enums import Vulnerabilities, Severity
-from yawast.reporting.issue import Issue
+from yawast.reporting.enums import Severity, Vulnerabilities
 from yawast.reporting.evidence import Evidence
+from yawast.reporting.issue import Issue
 from yawast.reporting.result import Result
 from yawast.shared import output
 from yawast.shared.exec_timer import ExecutionTimer
-from yawast import config
 
 _issues: Dict[str, Dict[Vulnerabilities, List[Issue]]] = {}
 _info: Dict[str, Any] = {}

@@ -12,16 +12,16 @@ from bs4 import BeautifulSoup
 from tests import utils
 from yawast import command_line
 from yawast.scanner.cli import http
-from yawast.scanner.plugins.http import http_basic, response_scanner, file_search
-from yawast.scanner.plugins.http.applications import wordpress, jira
+from yawast.scanner.plugins.http import file_search, http_basic, response_scanner
+from yawast.scanner.plugins.http.applications import jira, wordpress
 from yawast.scanner.plugins.http.response_scanner import _check_cache_headers
 from yawast.scanner.plugins.http.servers import (
-    rails,
-    python,
+    apache_tomcat,
+    iis,
     nginx,
     php,
-    iis,
-    apache_tomcat,
+    python,
+    rails,
 )
 from yawast.scanner.plugins.http.special_files import (
     check_special_files,

@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import pkg_resources
-from dns import resolver, exception
+from dns import exception, resolver
 
 from yawast.shared import output
 

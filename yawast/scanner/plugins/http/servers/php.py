@@ -5,16 +5,16 @@
 import os
 from concurrent.futures import as_completed
 from concurrent.futures.thread import ThreadPoolExecutor
-from typing import List, cast, Tuple
-from urllib.parse import urljoin, urlparse, quote
+from typing import List, Tuple, cast
+from urllib.parse import quote, urljoin, urlparse
 
 from packaging import version
 from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import version_checker
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import version_checker
 from yawast.scanner.session import Session
 from yawast.shared import network
 

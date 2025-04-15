@@ -2,7 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from dns import resolver, exception, dnssec
+from dns import dnssec, exception, resolver
 
 from yawast.shared import output
 

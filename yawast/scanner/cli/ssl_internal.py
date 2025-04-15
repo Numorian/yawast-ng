@@ -2,38 +2,35 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
+import json
 from datetime import datetime, timezone
 from typing import List
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
-
 from sslyze import (
-    __version__,
-    Scanner,
-    ServerScanRequest,
-    ServerNetworkLocation,
-    ServerScanStatusEnum,
-    ScanCommandAttemptStatusEnum,
     CertificateDeploymentAnalysisResult,
-    CipherSuitesScanResult,
     CipherSuite,
+    CipherSuitesScanResult,
     RobotScanResultEnum,
-    TlsResumptionSupportEnum,
-    SslyzeOutputAsJson,
+    ScanCommandAttemptStatusEnum,
+    Scanner,
+    ServerNetworkLocation,
+    ServerScanRequest,
     ServerScanResultAsJson,
+    ServerScanStatusEnum,
+    SslyzeOutputAsJson,
+    TlsResumptionSupportEnum,
+    __version__,
 )
-
 from validator_collection import checkers
 
-from yawast.reporting import reporter, issue
+from yawast.reporting import issue, reporter
 from yawast.reporting.enums import Vulnerabilities
 from yawast.scanner.plugins.dns import basic
 from yawast.scanner.plugins.ssl import cert_info
 from yawast.scanner.session import Session
 from yawast.shared import output, utils
-
-import json
 
 
 def scan(session: Session):

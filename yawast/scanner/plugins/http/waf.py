@@ -2,7 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from typing import List, Dict
+from typing import Dict, List
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.result import Result

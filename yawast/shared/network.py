@@ -2,26 +2,25 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-import secrets, ssl
+import secrets
+import ssl
 from difflib import SequenceMatcher
 from http import cookiejar
 from multiprocessing import Lock
-from typing import Dict, Union, Tuple, Optional
-from typing import cast
-from urllib.parse import urlparse, urljoin
-from urllib.parse import urlunparse
+from typing import Dict, Optional, Tuple, Union, cast
+from urllib.parse import urljoin, urlparse, urlunparse
 
 import requests
 import urllib3
 from requests.adapters import HTTPAdapter
-from requests.models import Response, Request, PreparedRequest
+from requests.models import PreparedRequest, Request, Response
 from requests_mock.request import _RequestObjectProxy
 from validator_collection import checkers
 
+from yawast import config
 from yawast._version import get_version
 from yawast.shared import output, utils
 from yawast.shared.exec_timer import ExecutionTimer
-from yawast import config
 
 YAWAST_UA = (
     f"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "

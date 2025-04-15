@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import re
-from typing import Tuple, Union, List, cast
+from typing import List, Tuple, Union, cast
 from urllib.parse import urljoin
 
 from packaging import version
@@ -11,8 +11,8 @@ from requests import Response
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import version_checker, response_scanner
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import response_scanner, version_checker
 from yawast.shared import network, output
 
 

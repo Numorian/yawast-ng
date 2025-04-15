@@ -3,20 +3,20 @@
 #  See the LICENSE file for full license details.
 
 import time
-from multiprocessing import Manager, Lock
+import xml.etree.ElementTree as ET
+from multiprocessing import Lock, Manager
 from multiprocessing.dummy import Pool
 from typing import List, Tuple
 from urllib.parse import urljoin
-import xml.etree.ElementTree as ET
 
 from bs4 import BeautifulSoup
 
+from yawast import config
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
-from yawast.scanner.plugins.http import response_scanner
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import response_scanner
 from yawast.shared import network, output
-from yawast import config
 
 _links: List[str] = []
 _insecure: List[str] = []

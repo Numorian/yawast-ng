@@ -8,9 +8,9 @@ from urllib.parse import urljoin
 from packaging import version
 
 from yawast.reporting.enums import Vulnerabilities
-from yawast.scanner.plugins.http import version_checker, response_scanner
-from yawast.scanner.plugins.http.servers import php
 from yawast.reporting.result import Result
+from yawast.scanner.plugins.http import response_scanner, version_checker
+from yawast.scanner.plugins.http.servers import php
 from yawast.shared import network
 
 

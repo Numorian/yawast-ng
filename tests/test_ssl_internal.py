@@ -5,10 +5,10 @@
 from unittest import TestCase
 
 from tests import utils
-from yawast.scanner.session import Session
 from yawast import command_line
-from yawast.shared import output
 from yawast.scanner.cli import ssl_internal
+from yawast.scanner.session import Session
+from yawast.shared import output
 
 
 class TestSslInternal(TestCase):

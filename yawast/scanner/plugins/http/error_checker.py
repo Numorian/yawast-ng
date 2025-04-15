@@ -3,7 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import re
-from typing import Union, List, cast
+from typing import List, Union, cast
 
 from requests import Response
 

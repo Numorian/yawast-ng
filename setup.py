@@ -5,10 +5,7 @@
 from os import path
 
 # from requirementslib import Lockfile
-from setuptools import find_packages
-
-from setuptools import setup
-
+from setuptools import find_packages, setup
 
 root_path = path.dirname(path.realpath(__file__))
 
@@ -58,7 +55,7 @@ setup(
     author="Adam Caudill",
     author_email="adam@adamcaudill.com",
     license="MIT",
-    packages=find_packages(exclude=["tests"]),
+    packages=find_packages(exclude=["tests", "sample-plugin"]),
     entry_points={"console_scripts": ["yawast = yawast.__main__:main"]},
     install_requires=[
         "sslyze==6.0.0",

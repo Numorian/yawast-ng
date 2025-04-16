@@ -2,7 +2,6 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-import importlib
 import sys
 from typing import Dict, Type
 
@@ -12,8 +11,6 @@ if sys.version_info < (3, 10):
     from importlib_metadata import entry_points
 else:
     from importlib.metadata import entry_points
-
-import pkg_resources
 
 from yawast.scanner.plugins.hook_scanner_base import HookScannerBase
 from yawast.scanner.plugins.plugin_base import PluginBase

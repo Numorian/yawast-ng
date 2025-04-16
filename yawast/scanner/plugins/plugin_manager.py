@@ -6,6 +6,8 @@ import importlib
 import sys
 from typing import Dict, Type
 
+from requests import Response
+
 if sys.version_info < (3, 10):
     from importlib_metadata import entry_points
 else:
@@ -125,6 +127,24 @@ def run_other_scans(url: str) -> None:
                     plugin_instance.check(url)
 
                     output.debug(f"Plugin {plugin_name} completed successfully.")
+            except Exception as e:
+                output.error(f"Failed to run plugin {plugin_name}: {e}")
+                continue
+
+
+def run_hook_response_received(url: str, response: Response):
+    """
+    Run all loaded hook plugins.
+    """
+    if "hook" in plugins and len(plugins["hook"]) > 0:
+
+        for plugin_name, plugin_class in plugins["hook"].items():
+            try:
+                # get the plugins that derive from HookScannerBase
+                if issubclass(plugin_class, HookScannerBase):
+                    plugin_instance = plugin_class()
+                    plugin_instance.response_received(url, response)
+
             except Exception as e:
                 output.error(f"Failed to run plugin {plugin_name}: {e}")
                 continue

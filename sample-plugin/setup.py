@@ -13,6 +13,7 @@ setup(
     entry_points={
         "yawast.plugins": [
             "yawast-plugin-sample = plugin.sample_plugin:SamplePlugin",
+            "yawast-plugin-sample-hook = plugin.sample_plugin:SampleHookPlugin",
         ],
     },
     classifiers=[

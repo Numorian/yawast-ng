@@ -19,6 +19,7 @@ from validator_collection import checkers
 
 from yawast import config
 from yawast._version import get_version
+from yawast.scanner.plugins import plugin_manager
 from yawast.shared import output, utils
 from yawast.shared.exec_timer import ExecutionTimer
 
@@ -142,6 +143,8 @@ def http_head(
         f"{int(res.elapsed.total_seconds() * 1000)}ms."
     )
 
+    plugin_manager.run_hook_response_received(url, res)
+
     return res
 
 
@@ -159,6 +162,8 @@ def http_options(url: str, timeout: Optional[int] = 30) -> Response:
         f"{res.request.method}: {url} - completed ({res.status_code}) in "
         f"{int(res.elapsed.total_seconds() * 1000)}ms."
     )
+
+    plugin_manager.run_hook_response_received(url, res)
 
     return res
 
@@ -217,6 +222,8 @@ def http_get(
         f"(Body: {len(res.content)})"
     )
 
+    plugin_manager.run_hook_response_received(url, res)
+
     return res
 
 
@@ -251,6 +258,8 @@ def http_put(
         f"(Body: {len(res.content)})"
     )
 
+    plugin_manager.run_hook_response_received(url, res)
+
     return res
 
 
@@ -277,6 +286,8 @@ def http_custom(
         f"{int(res.elapsed.total_seconds() * 1000)}ms "
         f"(Body: {len(res.content)})"
     )
+
+    plugin_manager.run_hook_response_received(url, res)
 
     return res
 

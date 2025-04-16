@@ -325,3 +325,68 @@ class TestPluginLoader(TestCase):
         # Should not call output.debug or output.error
         mock_output.debug.assert_not_called()
         mock_output.error.assert_not_called()
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_response_received_runs_hook_plugins(self, mock_output):
+        # Setup a plugin that inherits from HookScannerBase
+        class FakeHookPlugin(plugin_manager.HookScannerBase):
+            def __init__(self):
+                self.called = False
+
+            def response_received(self, url, response):
+                self.called = True
+                mock_output.debug("hook called")
+
+        fake_plugin = FakeHookPlugin
+        plugin_manager.plugins["hook"].clear()
+        plugin_manager.plugins["hook"]["hook1"] = fake_plugin
+
+        fake_response = mock.Mock()
+        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+
+        # Should call response_received and not call output.error
+        mock_output.error.assert_not_called()
+        mock_output.debug.assert_any_call("hook called")
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_response_received_skips_non_hook_plugins(self, mock_output):
+        # Setup a plugin that does NOT inherit from HookScannerBase
+        class NotAHook:
+            def response_received(self, url, response):
+                raise Exception("Should not be called")
+
+        plugin_manager.plugins["hook"].clear()
+        plugin_manager.plugins["hook"]["not_hook"] = NotAHook
+
+        fake_response = mock.Mock()
+        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+
+        # Should not call output.error (since issubclass will fail and be caught)
+        mock_output.error.assert_not_called()
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_response_received_handles_plugin_exception(self, mock_output):
+        # Setup a plugin that raises in response_received
+        class FailingHook(plugin_manager.HookScannerBase):
+            def response_received(self, url, response):
+                raise ValueError("fail hook!")
+
+        plugin_manager.plugins["hook"].clear()
+        plugin_manager.plugins["hook"]["fail_hook"] = FailingHook
+
+        fake_response = mock.Mock()
+        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+
+        # Should call output.error with the exception message
+        mock_output.error.assert_any_call(
+            mock.ANY  # message includes "Failed to run plugin fail_hook: fail hook!"
+        )
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_response_received_no_hook_plugins(self, mock_output):
+        plugin_manager.plugins["hook"].clear()
+        fake_response = mock.Mock()
+        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+        # Should not call output.error or output.debug
+        mock_output.error.assert_not_called()
+        mock_output.debug.assert_not_called()

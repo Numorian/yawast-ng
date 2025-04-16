@@ -2,13 +2,6 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-# this is the loader for plugins, it will check for installed packages that
-# match the naming scheme (yawast_plugin_*) and load them. they are then
-# exposed via dictionary, by type and name. for those that derive from
-# scanner_plugin_base, they will be called during the scan process.
-# for those that derive from hook_scanner_base, they will use the
-# defined hooks to acces the scanner and add their own functionality.
-
 import importlib
 import sys
 from typing import Dict, Type

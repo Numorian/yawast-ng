@@ -2,9 +2,9 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from enum import Enum
 from typing import List, NamedTuple
 
+from aenum import Enum, extend_enum
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
@@ -52,6 +52,11 @@ class VulnerabilityInfoEnum(VulnerabilityInfo, Enum):
 
 
 class Vulnerabilities(VulnerabilityInfoEnum):
+    def add(name: str, severity: Severity, description: str):
+        extend_enum(
+            Vulnerabilities, name, VulnerabilityInfo.create(name, severity, description)
+        )
+
     APP_WORDPRESS_VERSION = VulnerabilityInfo.create(
         "App_WordPress_Version", Severity.LOW, ""
     )

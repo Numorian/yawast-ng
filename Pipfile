@@ -31,6 +31,7 @@ setuptools = ">=78.1,<79.0.0"
 ordered-set = ">=4.1.0,<5.0.0"
 python-dateutil = ">=2.9.0,<3.0.0"
 webdriver-manager = "*"
+aenum = "*"
 
 [requires]
 python_version = "3.12"

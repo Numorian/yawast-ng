@@ -3,6 +3,7 @@
 
 from requests import Response
 
+from yawast.reporting.enums import Severity, Vulnerabilities
 from yawast.scanner.plugins.hook_scanner_base import HookScannerBase
 from yawast.scanner.plugins.scanner_plugin_base import HttpScannerPluginBase
 from yawast.shared import output
@@ -18,6 +19,16 @@ class SamplePlugin(HttpScannerPluginBase):
         self.name = "SamplePlugin"
         self.description = "A sample plugin that demonstrates the plugin interface."
         self.version = "0.1.0"
+
+        # create a new Vulerability, so that it can be reported
+        # after this call, the new vulnerability can be accessed via
+        # yawast.reporting.enums.Vulnerabilities.SAMPLE_PLUGIN_FOUND
+        # and reported via yawast.reporting.result.Result
+        Vulnerabilities.add(
+            "SAMPLE_PLUGIN_FOUND",
+            Severity.LOW,
+            "A sample plugin was found.",
+        )
 
     def check(self, url: str) -> None:
         # This is where your plugin logic goes.

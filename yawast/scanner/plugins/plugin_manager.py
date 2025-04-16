@@ -113,3 +113,25 @@ def run_network_scans(url: str) -> None:
             except Exception as e:
                 output.error(f"Failed to run plugin {plugin_name}: {e}")
                 continue
+
+
+def run_other_scans(url: str) -> None:
+    """
+    Run all loaded scanner plugins.
+    """
+    if "scanner" in plugins and len(plugins["scanner"]) > 0:
+        output.debug("Running other scanner plugins...")
+
+        for plugin_name, plugin_class in plugins["scanner"].items():
+            try:
+                # get the plugins that derive from ScannerPluginBase
+                if issubclass(plugin_class, ScannerPluginBase) and not issubclass(
+                    plugin_class, (HttpScannerPluginBase, NetworkScannerPluginBase)
+                ):
+                    plugin_instance = plugin_class()
+                    plugin_instance.check(url)
+
+                    output.debug(f"Plugin {plugin_name} completed successfully.")
+            except Exception as e:
+                output.error(f"Failed to run plugin {plugin_name}: {e}")
+                continue

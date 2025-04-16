@@ -8,6 +8,7 @@ from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
 from yawast.scanner.modules.dns import basic
 from yawast.scanner.modules.network import port_scan
+from yawast.scanner.plugins import plugin_manager
 from yawast.scanner.session import Session
 from yawast.shared import output
 
@@ -15,6 +16,9 @@ from yawast.shared import output
 def scan(session: Session):
     if session.args.ports:
         _check_open_ports(session.domain, session.url)
+
+    # run the scanning plugins
+    plugin_manager.run_network_scans(session.url)
 
 
 def _check_open_ports(domain: str, url: str, file: Optional[str] = None):

@@ -6,6 +6,7 @@ import socket
 
 from yawast.commands import utils as cutils
 from yawast.scanner.cli import dns, http, network, ssl_internal, ssl_labs, ssl_sweet32
+from yawast.scanner.plugins import plugin_manager
 from yawast.scanner.session import Session
 from yawast.shared import output, utils
 
@@ -63,6 +64,9 @@ def start(session: Session):
             ssl_sweet32.scan(session)
 
     http.scan(session)
+
+    # run any other pluging, that don't fall into the Http or Network categories
+    plugin_manager.run_other_scans(session.url)
 
     # reset any stored data
     http.reset()

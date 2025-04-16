@@ -34,6 +34,7 @@ from yawast.scanner.modules.http.servers import (
     nginx,
     php,
 )
+from yawast.scanner.plugins import plugin_manager
 from yawast.scanner.session import Session
 from yawast.shared import network, output, utils
 
@@ -206,6 +207,9 @@ def scan(session: Session):
             res += wordpress.check_path_disclosure(wp_path)
         if res:
             reporter.display_results(res, "\t")
+
+    # run the scanning plugins
+    plugin_manager.run_http_scans(session.url)
 
 
 def reset():

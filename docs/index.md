@@ -37,6 +37,7 @@ Details about yawast-ng and how to use it can be found below:
 * [Scanning TLS/SSL](https://numorian.github.io/yawast-ng/tls/)
   * [OpenSSL & 3DES Compatibility](https://numorian.github.io/yawast-ng/openssl/)
 * [Sample Output](https://numorian.github.io/yawast-ng/sample/)
+* [Plugins](https://numorian.github.io/yawast-ng/plugins/)
 * [FAQ](https://numorian.github.io/yawast-ng/faq/)
 * [Change Log](https://github.com/Numorian/yawast-ng/blob/master/CHANGELOG.md)
 

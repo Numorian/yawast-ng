@@ -25,6 +25,7 @@ from yawast.external.get_char import getchar
 from yawast.external.memory_size import Size
 from yawast.external.spinner import Spinner
 from yawast.reporting import reporter
+from yawast.scanner.plugins import plugin_manager
 from yawast.shared import network, output, utils
 
 _start_time = datetime.now()
@@ -133,6 +134,11 @@ def print_header():
     )
     output.print_color(Fore.CYAN, " " + _get_version_info())
     print()
+
+    # load plugins, and print the list of loaded plugins
+    plugin_manager.load_plugins()
+    plugin_manager.print_loaded_plugins()
+
     print(f" Started at {start_time}")
     print("")
 

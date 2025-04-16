@@ -1,51 +1,59 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="{{ site.lang | default: " en-US" }}">
 
-{% seo %}
-    <link rel="stylesheet" href="{{ "/assets/css/stylec.css?v=" | append: site.github.build_revision | relative_url }}">
-    <!--[if lt IE 9]>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% seo %}
+  <link rel="stylesheet" href="{{ " /assets/css/stylec.css?v=" | append: site.github.build_revision | relative_url }}">
+  <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1><a href="{{ "/" | absolute_url }}"><img src="{{site.logo | relative_url}}" alt="YAWAST" width="270px" /></a></h1>
+</head>
 
-        <p>{{ site.description | default: site.github.project_tagline }}</p>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1><a href="{{ " /" | absolute_url }}"><img src="{{site.logo | relative_url}}" alt="YAWAST" width="270px" /></a>
+      </h1>
 
-        <ul>
-          <li><a href="https://numorian.github.io/yawast-ng/blog/">Blog</a></li>
-          <li><a href="https://numorian.github.io/yawast-ng/installation/">Installation</a></li>
-          <li><a href="https://numorian.github.io/yawast-ng/usage/">Usage &amp; Parameters</a></li>
-          <li><a href="https://numorian.github.io/yawast-ng/checks/">Checks Performed</a></li>
-          <li><a href="https://numorian.github.io/yawast-ng/tls/">Scanning TLS / SSL</a></li>
-          <li><a href="https://numorian.github.io/yawast-ng/about/">About</a></li>
-          <li><a href="https://numorian.github.io/yawast-ng/faq/">FAQs</a></li>
-        </ul>
+      <p>{{ site.description | default: site.github.project_tagline }}</p>
 
-        {% if site.github.is_project_page %}
-        <p class="view"><a href="{{ site.github.repository_url }}">View the Project on GitHub <small>{{ site.github.repository_nwo }}</small></a></p>
-        {% endif %}
-      </header>
-      <section>
+      <ul>
+        <li><a href="https://numorian.github.io/yawast-ng/blog/">Blog</a></li>
+        <li><a href="https://numorian.github.io/yawast-ng/installation/">Installation</a></li>
+        <li><a href="https://numorian.github.io/yawast-ng/usage/">Usage &amp; Parameters</a></li>
+        <li><a href="https://numorian.github.io/yawast-ng/checks/">Checks Performed</a></li>
+        <li><a href="https://numorian.github.io/yawast-ng/tls/">Scanning TLS / SSL</a></li>
+        <li><a href="https://numorian.github.io/yawast-ng/plugins/">Plugins</a></li>
+        <li><a href="https://numorian.github.io/yawast-ng/about/">About</a></li>
+        <li><a href="https://numorian.github.io/yawast-ng/faq/">FAQs</a></li>
+      </ul>
+
+      {% if site.github.is_project_page %}
+      <p class="view"><a href="{{ site.github.repository_url }}">View the Project on GitHub <small>{{
+            site.github.repository_nwo }}</small></a></p>
+      {% endif %}
+    </header>
+    <section>
 
       {{ content }}
 
-      </section>
-      <footer>
-        <a href="https://numorian.com"><img src="{{ "/assets/Logo.512-black-on-white.png" | relative_url }}" alt="Numorian" width="50px" style="vertical-align:middle" />
+    </section>
+    <footer>
+      <a href="https://numorian.com"><img src="{{ " /assets/Logo.512-black-on-white.png" | relative_url }}"
+          alt="Numorian" width="50px" style="vertical-align:middle" />
         <span style="vertical-align:middle">Numorian</span></a>
-        <p>yawast-ng is proudly supported by Numorian.</p>
-        
+      <p>yawast-ng is proudly supported by Numorian.</p>
 
-        <p><small>&copy; 2025 Adam Caudill - See <a href="https://github.com/Numorian/yawast-ng/blob/main/LICENSE">license</a> for details.</small></p>
-      </footer>
-    </div>
-    <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
-  </body>
+
+      <p><small>&copy; 2025 Adam Caudill - See <a
+            href="https://github.com/Numorian/yawast-ng/blob/main/LICENSE">license</a> for details.</small></p>
+    </footer>
+  </div>
+  <script src="{{ " /assets/js/scale.fix.js" | relative_url }}"></script>
+</body>
+
 </html>

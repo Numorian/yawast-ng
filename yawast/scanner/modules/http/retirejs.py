@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from requests import Response
 
 from yawast.external import retirejs
-from yawast.reporting.enums import Vulnerabilities
+from yawast.reporting.enums import Severity, Vulnerabilities, VulnerabilityReference
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
 from yawast.shared import network, output, utils
@@ -37,14 +37,61 @@ def get_results(soup: BeautifulSoup, url: str, res: Response) -> List[Result]:
 
             if "vulnerabilities" in issue:
                 for vuln in issue["vulnerabilities"]:
-                    info = (
-                        f'Vulnerable JavaScript: {comp}-{ver} ({js_url}): Severity: {vuln["severity"]} - '
-                        f'Info: {" ".join(vuln["info"])}'
-                    )
+                    info = f'Vulnerable JavaScript: {comp}-{ver} ({js_url}): Severity: {vuln["severity"]}'
 
                     # make sure we haven't reported this issue before
                     if info not in _reports:
                         _reports.append(info)
+
+                        # produce the name for the vulnerability
+                        # first, we'll check vuln["identifiers"] to see if we have a CVE,
+                        # if not, we'll check for githubID, and this issue. we should
+                        # always have one of these, but if we don't, we'll just use the
+                        # component name
+                        name = None
+                        if "CVE" in vuln["identifiers"]:
+                            # CVE is an array, so we'll just use the first one
+                            cve = vuln["identifiers"]["CVE"][0]
+                            name = f"Js_Vulnerable_Version_{comp}_{cve}"
+                        elif "githubID" in vuln["identifiers"]:
+                            name = f"Js_Vulnerable_Version_{comp}_{vuln["identifiers"]["githubID"]}"
+                        elif "issue" in vuln["identifiers"]:
+                            name = f"Js_Vulnerable_Version_{comp}_{vuln["identifiers"]["issue"]}"
+                        else:
+                            name = f"Js_Vulnerable_Version_{comp}_{ver}_OTHER"
+
+                        # check the Vulnerabilities enum to see if we have this one already
+                        vulnerability: Vulnerabilities
+                        if not hasattr(Vulnerabilities, name.upper()):
+                            # map vuln["severity"] to our Severity enum
+                            if vuln["severity"] == "high":
+                                severity = Severity.HIGH
+                            elif vuln["severity"] == "medium":
+                                severity = Severity.MEDIUM
+                            else:
+                                severity = Severity.LOW
+
+                            # build the description. it should be in vuln["identifiers"]["summary"]
+                            # but if that's not there, we'll just constructe a string
+                            if "summary" in vuln["identifiers"]:
+                                description = vuln["identifiers"]["summary"]
+                            else:
+                                description = (
+                                    f"Vulnerable JavaScript: {comp}-{ver} ({js_url})"
+                                )
+
+                            Vulnerabilities.add(name, severity, description)
+                            vulnerability = Vulnerabilities.get(name)
+
+                            # vuln["info"] should be a list of links, we can add those as references
+                            for link in vuln["info"]:
+                                link_name = link.split("/")[-1]
+                                vulnerability.references.append(
+                                    VulnerabilityReference(link_name, link)
+                                )
+                        else:
+                            # we already have this one, so just use it
+                            vulnerability = Vulnerabilities.get(name)
 
                         results.append(
                             Result.from_evidence(
@@ -59,8 +106,11 @@ def get_results(soup: BeautifulSoup, url: str, res: Response) -> List[Result]:
                                     },
                                 ),
                                 info,
-                                Vulnerabilities.JS_VULNERABLE_VERSION,
+                                vulnerability,
                             )
+                        )
+                        output.debug(
+                            f"Found JS vulnerability: {comp}-{ver} ({js_url}): Severity: {vuln['severity']}"
                         )
     except Exception:
         output.debug_exception()

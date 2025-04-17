@@ -59,7 +59,7 @@ def save_output(spinner=None):
         spinner.start()
 
     vulns = {}
-    for vuln in Vulnerabilities:
+    for vuln in Vulnerabilities.all():
         vulns[vuln.name] = {
             "severity": vuln.severity,
             "description": vuln.description,

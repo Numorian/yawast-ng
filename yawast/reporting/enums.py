@@ -2,9 +2,9 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
+from enum import Enum
 from typing import List, NamedTuple
 
-from aenum import Enum, extend_enum
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 
@@ -47,15 +47,28 @@ class VulnerabilityInfo(NamedTuple):
         return hash(self.id)
 
 
-class VulnerabilityInfoEnum(VulnerabilityInfo, Enum):
-    pass
-
-
-class Vulnerabilities(VulnerabilityInfoEnum):
+class Vulnerabilities:
     def add(name: str, severity: Severity, description: str):
-        extend_enum(
-            Vulnerabilities, name, VulnerabilityInfo.create(name, severity, description)
-        )
+        vi = VulnerabilityInfo.create(name, severity, description)
+
+        setattr(Vulnerabilities, name.upper(), vi)
+
+    def get(name: str) -> VulnerabilityInfo:
+        return getattr(Vulnerabilities, name.upper(), None)
+
+    def all() -> List[VulnerabilityInfo]:
+        ret = []
+        for attr in dir(Vulnerabilities):
+            if not attr.startswith("__") and not callable(
+                getattr(Vulnerabilities, attr)
+            ):
+                val = getattr(Vulnerabilities, attr)
+                # check if the attribute is a VulnerabilityInfo instance
+                # and not a class or other type
+                if isinstance(val, VulnerabilityInfo):
+                    ret.append(val)
+
+        return ret
 
     APP_WORDPRESS_VERSION = VulnerabilityInfo.create(
         "App_WordPress_Version", Severity.LOW, ""

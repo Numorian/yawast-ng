@@ -5,20 +5,20 @@
 import uuid
 from typing import Any, Dict, List, Union
 
-from yawast.reporting.enums import Vulnerabilities
+from yawast.reporting.enums import VulnerabilityInfo
 from yawast.reporting.evidence import Evidence
 
 
 class Result:
     evidence: Evidence
     url: str
-    vulnerability: Vulnerabilities
+    vulnerability: VulnerabilityInfo
     message: str
 
     def __init__(
         self,
         msg: str,
-        vuln: Vulnerabilities,
+        vuln: VulnerabilityInfo,
         url: str,
         evidence: Union[str, List[str], Dict[str, Any], Evidence, None] = None,
     ):
@@ -69,7 +69,7 @@ class Result:
         return f"Result: {self.id} - {self.vulnerability.name} - {self.url} - {self.message}"
 
     @classmethod
-    def from_evidence(cls, ev: Evidence, msg: str, vuln: Vulnerabilities):
+    def from_evidence(cls, ev: Evidence, msg: str, vuln: VulnerabilityInfo):
         r = cls(msg, vuln, ev.url, ev)
 
         return r

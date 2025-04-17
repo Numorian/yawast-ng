@@ -11,11 +11,9 @@ from yawast.reporting.result import Result
 
 
 class Issue(dict):
-    def __init__(self, vuln: Vulnerabilities, url: str, evidence: Evidence):
-        val = cast(VulnerabilityInfo, vuln.value)
-
+    def __init__(self, vuln: VulnerabilityInfo, url: str, evidence: Evidence):
         self.vulnerability = vuln
-        self.severity = val.severity
+        self.severity = vuln.severity
         self.url = url
         self.evidence = evidence
         self.id = uuid.uuid4().hex

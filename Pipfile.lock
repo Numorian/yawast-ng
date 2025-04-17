@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7a522d25051040e1d9cb94861d5d7f6ec31d7e76bc187a8e5755eed4e7233210"
+            "sha256": "1331f91181e6ff68fef6c10ce38488b1bea7b22a5cd9bca0fba76bfe327aca6d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,15 +16,6 @@
         ]
     },
     "default": {
-        "aenum": {
-            "hashes": [
-                "sha256:27b1710b9d084de6e2e695dab78fe9f269de924b51ae2850170ee7e1ca6288a5",
-                "sha256:8cbd76cd18c4f870ff39b24284d3ea028fbe8731a58df3aa581e434c575b9559",
-                "sha256:e0dfaeea4c2bd362144b87377e2c61d91958c5ed0b4daf89cb6f45ae23af6288"
-            ],
-            "index": "pypi",
-            "version": "==3.1.15"
-        },
         "annotated-types": {
             "hashes": [
                 "sha256:1f02e8b43a8fbbc3f3e0d4f0f4bfc8131bcb4eebe8849b8e5c773f3a1c582a53",
@@ -43,12 +34,12 @@
         },
         "beautifulsoup4": {
             "hashes": [
-                "sha256:1bd32405dacc920b42b83ba01644747ed77456a65760e285fbc47633ceddaf8b",
-                "sha256:99045d7d3f08f91f0d656bc9b7efbae189426cd913d830294a15eefa0ea4df16"
+                "sha256:9bbbb14bfde9d79f38b8cd5f8c7c85f4b8f2523190ebed90e950a8dea4cb1c4b",
+                "sha256:dbb3c4e1ceae6aefebdaf2423247260cd062430a410e38c66f2baa50a8437195"
             ],
             "index": "pypi",
             "markers": "python_full_version >= '3.7.0'",
-            "version": "==4.13.3"
+            "version": "==4.13.4"
         },
         "certifi": {
             "hashes": [
@@ -742,7 +733,6 @@
                 "sha256:67621c6afa721c7afdb9c50d3c38119f22c9c1b93823af27e05a78e3a6fd0e5e",
                 "sha256:fc9c1c4bcb646317bf0f1a9396bad1423346a445fd34a86ccc6c3a7e434ebde3"
             ],
-            "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==2.0.2"
         },
@@ -816,7 +806,7 @@
             "markers": "python_full_version >= '3.7.0'",
             "version": "==1.2.0"
         },
-        "yawast": {
+        "yawast-ng": {
             "editable": true,
             "path": "."
         }

@@ -390,3 +390,68 @@ class TestPluginLoader(TestCase):
         # Should not call output.error or output.debug
         mock_output.error.assert_not_called()
         mock_output.debug.assert_not_called()
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_injection_point_found_runs_hook_plugins(self, mock_output):
+        # Setup a plugin that inherits from HookScannerBase
+        class FakeHookPlugin(plugin_manager.HookScannerBase):
+            def __init__(self):
+                self.called = False
+
+            def injection_point_found(self, url, point):
+                self.called = True
+                mock_output.debug("hook injection called")
+
+        fake_plugin = FakeHookPlugin
+        plugin_manager.plugins["hook"].clear()
+        plugin_manager.plugins["hook"]["hook1"] = fake_plugin
+
+        fake_point = mock.Mock()
+        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+
+        # Should call injection_point_found and not call output.error
+        mock_output.error.assert_not_called()
+        mock_output.debug.assert_any_call("hook injection called")
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_injection_point_found_skips_non_hook_plugins(self, mock_output):
+        # Setup a plugin that does NOT inherit from HookScannerBase
+        class NotAHook:
+            def injection_point_found(self, url, point):
+                raise Exception("Should not be called")
+
+        plugin_manager.plugins["hook"].clear()
+        plugin_manager.plugins["hook"]["not_hook"] = NotAHook
+
+        fake_point = mock.Mock()
+        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+
+        # Should not call output.error (since issubclass will fail and be caught)
+        mock_output.error.assert_not_called()
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_injection_point_found_handles_plugin_exception(self, mock_output):
+        # Setup a plugin that raises in injection_point_found
+        class FailingHook(plugin_manager.HookScannerBase):
+            def injection_point_found(self, url, point):
+                raise ValueError("fail hook injection!")
+
+        plugin_manager.plugins["hook"].clear()
+        plugin_manager.plugins["hook"]["fail_hook"] = FailingHook
+
+        fake_point = mock.Mock()
+        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+
+        # Should call output.error with the exception message
+        mock_output.error.assert_any_call(
+            mock.ANY  # message includes "Failed to run plugin fail_hook: fail hook injection!"
+        )
+
+    @mock.patch("yawast.scanner.plugins.plugin_manager.output")
+    def test_run_hook_injection_point_found_no_hook_plugins(self, mock_output):
+        plugin_manager.plugins["hook"].clear()
+        fake_point = mock.Mock()
+        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+        # Should not call output.error or output.debug
+        mock_output.error.assert_not_called()
+        mock_output.debug.assert_not_called()

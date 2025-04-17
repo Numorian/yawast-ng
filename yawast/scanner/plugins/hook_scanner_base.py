@@ -3,6 +3,8 @@
 #  See the LICENSE file for full license details.
 
 from requests import Response
+
+from yawast.reporting.injection import InjectionPoint
 from yawast.scanner.plugins.plugin_base import PluginBase
 
 
@@ -20,5 +22,11 @@ class HookScannerBase(PluginBase):
     def response_received(self, url: str, response: Response) -> None:
         """
         Called when a response is received.
+        """
+        raise NotImplementedError("Subclasses must implement this method.")
+
+    def injection_point_found(self, url: str, point: InjectionPoint) -> None:
+        """
+        Called when an injection point is found.
         """
         raise NotImplementedError("Subclasses must implement this method.")

@@ -12,6 +12,7 @@ if sys.version_info < (3, 10):
 else:
     from importlib.metadata import entry_points
 
+from yawast.reporting.injection import InjectionPoint
 from yawast.scanner.plugins.hook_scanner_base import HookScannerBase
 from yawast.scanner.plugins.plugin_base import PluginBase
 from yawast.scanner.plugins.scanner_plugin_base import (
@@ -141,6 +142,24 @@ def run_hook_response_received(url: str, response: Response):
                 if issubclass(plugin_class, HookScannerBase):
                     plugin_instance = plugin_class()
                     plugin_instance.response_received(url, response)
+
+            except Exception as e:
+                output.error(f"Failed to run plugin {plugin_name}: {e}")
+                continue
+
+
+def run_hook_injection_point_found(url: str, point: InjectionPoint):
+    """
+    Run all loaded hook plugins.
+    """
+    if "hook" in plugins and len(plugins["hook"]) > 0:
+
+        for plugin_name, plugin_class in plugins["hook"].items():
+            try:
+                # get the plugins that derive from HookScannerBase
+                if issubclass(plugin_class, HookScannerBase):
+                    plugin_instance = plugin_class()
+                    plugin_instance.injection_point_found(url, point)
 
             except Exception as e:
                 output.error(f"Failed to run plugin {plugin_name}: {e}")

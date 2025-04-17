@@ -4,6 +4,7 @@
 from requests import Response
 
 from yawast.reporting.enums import Severity, Vulnerabilities
+from yawast.reporting.injection import InjectionPoint
 from yawast.scanner.plugins.hook_scanner_base import HookScannerBase
 from yawast.scanner.plugins.scanner_plugin_base import HttpScannerPluginBase
 from yawast.shared import output
@@ -52,3 +53,8 @@ class SampleHookPlugin(HookScannerBase):
         # For demonstration, we'll just print a message if the response is large.
         if len(response.content) > 1024 * 100:
             output.info(f"SampleHookPlugin received large response: {url}")
+
+    def injection_point_found(self, url: str, point: InjectionPoint) -> None:
+        # This is where your injection point logic goes.
+        # For demonstration, we'll just print a message if an injection point is found.
+        output.info(f"SampleHookPlugin found injection point: {url} ({point})")

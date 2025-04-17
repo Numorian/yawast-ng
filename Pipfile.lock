@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "922427fba6bfd19fa9be80b2495da6483ce30fa72c22c3950ccd143c0089c025"
+            "sha256": "1331f91181e6ff68fef6c10ce38488b1bea7b22a5cd9bca0fba76bfe327aca6d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -807,7 +807,8 @@
             "version": "==1.2.0"
         },
         "yawast-ng": {
-            "version": "==0.12.1.dev55+ge1c183d.dirty"
+            "editable": true,
+            "path": "."
         }
     },
     "develop": {

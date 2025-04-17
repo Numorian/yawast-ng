@@ -5,18 +5,21 @@
 import warnings
 from datetime import datetime
 from typing import List, Union
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 from dateutil import tz
 from dateutil.parser import parse
 from requests.models import Response
 
+from yawast.reporting import reporter
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
+from yawast.reporting.injection import InjectionPoint
 from yawast.reporting.result import Result
 from yawast.scanner.modules.http import error_checker, http_basic, retirejs
 from yawast.scanner.modules.http.servers import apache_tomcat, iis, rails
-from yawast.shared import network, output
+from yawast.shared import network, output, utils
 
 
 def check_response(
@@ -45,6 +48,9 @@ def check_response(
 
         results += _check_cache_headers(url, res)
 
+        points = _find_injection_points(url, res, soup)
+        reporter.register_injection_points(points)
+
     results += http_basic.get_header_issues(res, raw_full, url)
     results += http_basic.get_cookie_issues(res, url)
 
@@ -56,6 +62,56 @@ def check_response(
     results += _check_charset(url, res)
 
     return results
+
+
+def _find_injection_points(
+    url: str, res: Response, soup: Union[BeautifulSoup, None] = None
+):
+    """
+    This function checks for potential injection points in the response.
+    It will check for the following:
+    - URL parameters
+    - Form fields
+    """
+    injection_points: List[InjectionPoint] = []
+
+    # check the URL for parameters
+    if res.request.url:
+        # check for URL parameters
+        parsed_url = urlparse(res.request.url)
+        if parsed_url.query:
+            # look for any parameters in the query string
+            for param in parsed_url.query.split("&"):
+                if "=" in param:
+                    name, value = param.split("=", 1)
+
+                    ip = InjectionPoint(url, name, res.request.method, value)
+                    injection_points.append(ip)
+
+    # check the response for form fields
+    if soup:
+        # check for form fields
+        forms = soup.find_all("form")
+        for form in forms:
+            # get the method and action
+            method = form.get("method", "GET").upper()
+            action = form.get("action", "")
+            if not action:
+                action = res.request.url
+
+            # make action absolute
+            action = utils.fix_relative_link(action, url)
+
+            # get the input fields
+            inputs = form.find_all("input")
+            for input_field in inputs:
+                name = input_field.get("name", "")
+                value = input_field.get("value", "")
+
+                ip = InjectionPoint(action, name, method, value)
+                injection_points.append(ip)
+
+    return injection_points
 
 
 def _check_charset(url: str, res: Response) -> List[Result]:

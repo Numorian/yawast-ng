@@ -15,6 +15,7 @@ from yawast.external.memory_size import Size
 from yawast.external.total_size import total_size
 from yawast.reporting.enums import Severity, Vulnerabilities
 from yawast.reporting.evidence import Evidence
+from yawast.reporting.injection import InjectionPoint
 from yawast.reporting.issue import Issue
 from yawast.reporting.result import Result
 from yawast.shared import output
@@ -25,6 +26,7 @@ _info: Dict[str, Any] = {}
 _data: Dict[str, Any] = {}
 _domain: str = ""
 _output_file: str = ""
+_injection_points: Dict[str, List[InjectionPoint]] = {}
 
 
 def init(output_file: Union[str, None] = None) -> None:
@@ -108,6 +110,17 @@ def save_output(spinner=None):
                 }
 
                 issues[domain][vuln.name].append(issue_detail)
+
+    # add the injection points
+    injection_points = {}
+    if len(_injection_points) > 0:
+        for domain in _injection_points:
+            injection_points[domain] = []
+
+            for point in _injection_points[domain]:
+                injection_points[domain].append(point.to_dict())
+
+    register_data("injection_points", injection_points)
 
     data = {
         "_info": _convert_keys(_info),
@@ -228,6 +241,14 @@ def register_message(value: str, kind: str):
 
         if should_log:
             _info["messages"][kind].append(f"[{datetime.utcnow()} UTC]: {value}")
+
+
+def register_injection_points(points: List[InjectionPoint]):
+    if _output_file is not None and len(_output_file) > 0:
+        if _domain not in _injection_points:
+            _injection_points[_domain] = []
+
+        _injection_points[_domain].extend(points)
 
 
 def register(issue: Issue) -> None:

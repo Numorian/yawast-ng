@@ -2,6 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
+import re
 import time
 import xml.etree.ElementTree as ET
 from multiprocessing import Lock, Manager
@@ -16,7 +17,7 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
 from yawast.scanner.modules.http import response_scanner
-from yawast.shared import network, output
+from yawast.shared import network, output, utils
 
 _links: List[str] = []
 _insecure: List[str] = []
@@ -171,10 +172,12 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
                 for link in soup.find_all("a"):
                     href = link.get("href")
 
-                    if str(href).startswith("/") and not str(href).startswith("//"):
-                        href = urljoin(base_url, href)
-
                     if href is not None:
+                        # fix // links
+                        href = str(href).strip()
+
+                        href = utils.fix_relative_link(href, url)
+
                         # check to see if this link is in scope
                         if href.startswith(base_url) and href not in _links:
                             if "." in href.split("/")[-1]:

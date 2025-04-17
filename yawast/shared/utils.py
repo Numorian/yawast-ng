@@ -7,7 +7,7 @@ import re
 import sys
 import threading
 import time
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urljoin, urlparse, urlunparse
 
 from validator_collection import checkers
 
@@ -180,6 +180,31 @@ def extract_url(url):
         parsed = parsed._replace(params="")
 
     return urlunparse(parsed)
+
+
+def fix_relative_link(href: str, url: str) -> str:
+    # get the base URL, i.e. http://example.com/
+    # or https://example.com:8080/
+    base_url = urlparse(url)
+    base_url = f"{base_url.scheme}://{base_url.netloc}"
+
+    if href.startswith("//"):
+        href = str(href).replace("//", base_url.split(":")[0] + "://", 1)
+
+    # check for a protocol handler ([a-z]+://)
+    if not re.match(r"^[a-zA-Z][a-zA-Z\d+\-.]*://", href):
+        # fix relative links with a leading slash
+        if href.startswith("/"):
+            href = urljoin(base_url, href)
+        # fix relative links that start with a slasha dot
+        elif href.startswith("."):
+            href = urljoin(url, href)
+        # fix relative links that have no prefix - just a filename/directory
+        # if we've made it this far, then it's a relative link
+        else:
+            href = urljoin(url, href)
+
+    return href
 
 
 def exit_message(message: str):

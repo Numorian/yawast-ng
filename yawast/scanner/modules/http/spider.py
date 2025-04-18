@@ -17,6 +17,7 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
 from yawast.scanner.modules.http import response_scanner
+from yawast.scanner.session import Session
 from yawast.shared import network, output, utils
 
 _links: List[str] = []
@@ -25,17 +26,18 @@ _lock = Lock()
 _tasks = []
 
 
-def spider(url) -> Tuple[List[str], List[Result]]:
+def spider(session: Session) -> Tuple[List[str], List[Result]]:
     global _links, _insecure, _tasks, _lock
 
     results: List[Result] = []
+    url = session.url
 
     # create processing pool
     pool = Pool()
     mgr = Manager()
     queue = mgr.Queue()
 
-    asy = pool.apply_async(_start_scan, (url, [url], queue, pool))
+    asy = pool.apply_async(_start_scan, (session, url, [url], queue, pool))
 
     with _lock:
         _tasks.append(asy)
@@ -87,7 +89,7 @@ def spider(url) -> Tuple[List[str], List[Result]]:
     return links, results
 
 
-def _start_scan(base_url: str, urls: List[str], queue, pool):
+def _start_scan(session: Session, base_url: str, urls: List[str], queue, pool):
     global _links, _insecure, _tasks, _lock
 
     # check to see if there's a sitemap.xml file - if there is, we'll
@@ -115,12 +117,14 @@ def _start_scan(base_url: str, urls: List[str], queue, pool):
                     for url in urls:
                         if url not in _links:
                             asy = pool.apply_async(
-                                _get_links, (url, [url], queue, pool)
+                                _get_links, (session, url, [url], queue, pool)
                             )
                             _tasks.append(asy)
             else:
                 output.debug(f"Spider: No URLs found in sitemap.xml.")
-                asy = pool.apply_async(_get_links, (base_url, [base_url], queue, pool))
+                asy = pool.apply_async(
+                    _get_links, (session, base_url, [base_url], queue, pool)
+                )
 
                 with _lock:
                     _tasks.append(asy)
@@ -133,13 +137,13 @@ def _start_scan(base_url: str, urls: List[str], queue, pool):
             f"Spider: No sitemap found at {sitemap_url}. Starting with base URL."
         )
 
-        asy = pool.apply_async(_get_links, (base_url, [base_url], queue, pool))
+        asy = pool.apply_async(_get_links, (session, base_url, [base_url], queue, pool))
 
         with _lock:
             _tasks.append(asy)
 
 
-def _get_links(base_url: str, urls: List[str], queue, pool):
+def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):
     global _links, _insecure, _tasks, _lock
 
     results: List[Result] = []
@@ -187,6 +191,15 @@ def _get_links(base_url: str, urls: List[str], queue, pool):
 
                             with _lock:
                                 _links.append(href)
+
+                            # check to see if this is a PHP file
+                            if file_ext is not None and str(file_ext).lower() == "php":
+                                # check to see if we have a php_page set
+                                if session.args.php_page is None:
+                                    session.args.php_page = href
+                                    output.debug(
+                                        f"Spider: Found PHP page: {href} - setting as php_page"
+                                    )
 
                             # filter out some of the obvious binary files
                             if file_ext is None or str(file_ext).lower() not in [

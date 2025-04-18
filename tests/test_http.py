@@ -1136,6 +1136,7 @@ class TestHttpBasic(TestCase):
     def test_spider_single(self):
         network.init("", "", "")
         url = "https://adamcaudill.com/"
+        session = Session(None, url)
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -1148,7 +1149,7 @@ class TestHttpBasic(TestCase):
                 m.head(requests_mock.ANY, status_code=200)
 
                 try:
-                    links, res = spider(url)
+                    links, res = spider(session)
                 except Exception as error:
                     self.assertIsNone(error)
 
@@ -1160,6 +1161,7 @@ class TestHttpBasic(TestCase):
     def test_spider_link(self):
         network.init("", "", "")
         url = "https://adamcaudill.com/"
+        session = Session(None, url)
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -1172,7 +1174,7 @@ class TestHttpBasic(TestCase):
                 m.head(requests_mock.ANY, status_code=200)
 
                 try:
-                    links, res = spider(url)
+                    links, res = spider(session)
                 except Exception as error:
                     self.assertIsNone(error)
 
@@ -1184,6 +1186,7 @@ class TestHttpBasic(TestCase):
     def test_spider_logout(self):
         network.init("", "", "")
         url = "https://adamcaudill.com/"
+        session = Session(None, url)
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -1196,7 +1199,7 @@ class TestHttpBasic(TestCase):
                 m.head(requests_mock.ANY, status_code=200)
 
                 try:
-                    links, res = spider(url)
+                    links, res = spider(session)
                 except Exception as error:
                     self.assertIsNone(error)
 
@@ -1208,6 +1211,7 @@ class TestHttpBasic(TestCase):
     def test_spider_jpg(self):
         network.init("", "", "")
         url = "https://adamcaudill.com/"
+        session = Session(None, url)
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -1221,7 +1225,7 @@ class TestHttpBasic(TestCase):
                 m.head(requests_mock.ANY, status_code=200)
 
                 try:
-                    links, res = spider(url)
+                    links, res = spider(session)
                 except Exception as error:
                     self.assertIsNone(error)
 
@@ -1233,6 +1237,7 @@ class TestHttpBasic(TestCase):
     def test_spider_insecure(self):
         network.init("", "", "")
         url = "https://adamcaudill.com/"
+        session = Session(None, url)
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -1245,7 +1250,7 @@ class TestHttpBasic(TestCase):
                 m.head(requests_mock.ANY, status_code=200)
 
                 try:
-                    links, res = spider(url)
+                    links, res = spider(session)
                 except Exception as error:
                     self.assertIsNone(error)
 
@@ -1257,6 +1262,7 @@ class TestHttpBasic(TestCase):
     def test_spider_redirect(self):
         network.init("", "", "")
         url = "https://adamcaudill.com/"
+        session = Session(None, url)
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
@@ -1271,7 +1277,7 @@ class TestHttpBasic(TestCase):
                 m.head(f"{url}redirect/", status_code=301, headers={"Location": "/"})
 
                 try:
-                    links, res = spider(url)
+                    links, res = spider(session)
                 except Exception as error:
                     self.assertIsNone(error)
 

@@ -109,7 +109,7 @@ def scan(session: Session):
     links: List[str] = []
     with Spinner():
         try:
-            links, res = spider.spider(session.url)
+            links, res = spider.spider(session)
         except Exception as error:
             output.debug_exception()
             output.error(f"Error running scan: {str(error)}")

@@ -124,6 +124,33 @@ def reset():
     _requester = requests.Session()
 
 
+def update_auth(auth: Dict[str, Union[Dict, None]] = None) -> None:
+    for k, v in auth.items():
+        if k == "headers":
+            for header in v:
+                if header is not None and len(header) > 0:
+                    if "=" in header:
+                        name = header.split("=", 1)[0]
+                        val = header.split("=", 1)[1]
+                        _requester.headers.update({name: val})
+                    elif ": " in header:
+                        # in case they use the wire format - not officially supported, but, meh
+                        name = header.split(": ", 1)[0]
+                        val = header.split(": ", 1)[1]
+                        _requester.headers.update({name: val})
+                    else:
+                        output.error(
+                            f"Invalid header specified ({header}) - header must be in NAME=VALUE format. Ignored."
+                        )
+        elif k == "cookies":
+            for cookie in v:
+                name = cookie
+                val = v[cookie]
+                processed_cookie = requests.cookies.create_cookie(name=name, value=val)
+
+                _requester.cookies.set_cookie(processed_cookie)
+
+
 def http_head(
     url: str, allow_redirects: Optional[bool] = True, timeout: Optional[int] = 30
 ) -> Response:

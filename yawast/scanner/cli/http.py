@@ -15,6 +15,7 @@ from yawast.reporting.result import Result
 from yawast.scanner.modules.http import (
     error_checker,
     file_search,
+    generic_login,
     http_basic,
     response_scanner,
     retirejs,
@@ -42,6 +43,29 @@ from yawast.shared import network, output, utils
 def scan(session: Session):
     reporter.register_data("url", session.url)
     reporter.register_data("domain", session.domain)
+
+    # start by attempting to login, if we have credentials
+    if session.args.user is not None and session.args.password is not None:
+        try:
+            output.norm("\tAttempting to login...")
+            tokens = generic_login.login_and_get_auth(
+                session.url, session.args.user, session.args.password
+            )
+
+            if tokens["error"] is not None and len(tokens["error"]) > 0:
+                output.warn(f"Potential login failure: {tokens['error']}")
+
+            network.update_auth(tokens)
+            output.norm(f"\tLogin completed.")
+            output.empty()
+        except generic_login.LoginFormNotFound as error:
+            output.warn(
+                "Unable to find a known login form. Please report this issue: "
+                "https://github.com/Numorian/yawast-ng/issues"
+            )
+        except Exception as error:
+            output.debug_exception()
+            output.error(f"Error performing login: {str(error)}")
 
     output.empty()
     output.norm("HEAD:")

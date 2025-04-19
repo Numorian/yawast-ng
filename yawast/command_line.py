@@ -92,7 +92,12 @@ def build_parser():
     parser_scan.add_argument(
         "--user",
         type=str,
-        help="Valid username for the application (will prompt if not provided)",
+        help="Valid username for the application (may prompt if not provided)",
+    )
+    parser_scan.add_argument(
+        "--password",
+        type=str,
+        help="Valid password for the application (may prompt if not provided)",
     )
     parser_scan.add_argument(
         "--pass_reset_page",

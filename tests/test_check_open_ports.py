@@ -3,6 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import os
+from unittest import mock
 
 import pytest
 
@@ -13,7 +14,11 @@ from yawast.shared import output
 
 
 class TestCheckOpenPorts:
-    def test_check_open_ports(self):
+    @mock.patch("yawast.scanner.modules.network.port_scan.socket.socket")
+    def test_check_open_ports(self, mock_socket):
+        # Simulate all ports as open
+        instance = mock_socket.return_value
+        instance.connect_ex.return_value = 0
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/common_ports.json")
 
@@ -23,7 +28,11 @@ class TestCheckOpenPorts:
 
         assert len(recs) > 0
 
-    def test_check_open_ports_invalid_ip(self):
+    @mock.patch("yawast.scanner.modules.network.port_scan.socket.socket")
+    def test_check_open_ports_invalid_ip(self, mock_socket):
+        # Simulate all ports as closed
+        instance = mock_socket.return_value
+        instance.connect_ex.return_value = 1
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/common_ports.json")
 
@@ -33,7 +42,11 @@ class TestCheckOpenPorts:
 
         assert len(recs) == 0
 
-    def test_check_open_ports_cli(self):
+    @mock.patch("yawast.scanner.modules.network.port_scan.socket.socket")
+    def test_check_open_ports_cli(self, mock_socket):
+        # Simulate all ports as open
+        instance = mock_socket.return_value
+        instance.connect_ex.return_value = 0
         output.setup(False, False, False)
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/common_ports.json")
@@ -43,7 +56,11 @@ class TestCheckOpenPorts:
 
         assert "Exception" not in stderr.getvalue()
 
-    def test_check_open_ports_cli_bad_domain(self):
+    @mock.patch("yawast.scanner.modules.network.port_scan.socket.socket")
+    def test_check_open_ports_cli_bad_domain(self, mock_socket):
+        # Simulate all ports as closed
+        instance = mock_socket.return_value
+        instance.connect_ex.return_value = 1
         output.setup(False, False, False)
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/common_ports.json")

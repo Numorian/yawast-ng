@@ -2,15 +2,14 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
-
+import pytest
 import requests
 import requests_mock
 
 from yawast.scanner.modules.http import error_checker
 
 
-class TestErrorChecker(TestCase):
+class TestErrorChecker:
     def test_check_response_none(self):
         with requests_mock.Mocker() as m:
             url = "http://example.com"
@@ -20,7 +19,7 @@ class TestErrorChecker(TestCase):
 
         res = error_checker.check_response(url, resp)
 
-        self.assertEqual(0, len(res))
+        assert len(res) == 0
 
     def test_check_response_php(self):
         url = "http://example.com"
@@ -37,7 +36,7 @@ class TestErrorChecker(TestCase):
 
         res = error_checker.check_response(url, resp)
 
-        self.assertEqual(1, len(res))
+        assert len(res) == 1
 
     def test_check_response_java(self):
         url = "http://example.com"
@@ -54,7 +53,7 @@ class TestErrorChecker(TestCase):
 
         res = error_checker.check_response(url, resp)
 
-        self.assertEqual(1, len(res))
+        assert len(res) == 1
 
     def test_check_response_fp(self):
         url = "http://example.com"
@@ -66,4 +65,4 @@ class TestErrorChecker(TestCase):
 
         res = error_checker.check_response(url, resp)
 
-        self.assertEqual(0, len(res))
+        assert len(res) == 0

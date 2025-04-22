@@ -1,47 +1,47 @@
 import hashlib
 import os
 import tempfile
-import unittest
 from typing import Any, Dict, cast
 from unittest.mock import Mock, patch
 
+import pytest
 from requests import PreparedRequest, Response
 
 from yawast.reporting.evidence import Evidence
 
 
-class TestEvidenceInit(unittest.TestCase):
+class TestEvidenceInit:
     def test_init_with_url_only(self):
         url = "http://example.com"
         evidence = Evidence(url, None, None)
 
-        self.assertEqual(evidence["url"], url)
-        self.assertIsNone(evidence.get("request"))
-        self.assertIsNone(evidence.get("response"))
-        self.assertIsNone(evidence.get("request_id"))
-        self.assertIsNone(evidence.get("response_id"))
+        assert evidence["url"] == url
+        assert evidence.get("request") is None
+        assert evidence.get("response") is None
+        assert evidence.get("request_id") is None
+        assert evidence.get("response_id") is None
 
     def test_init_with_request(self):
         url = "http://example.com"
         request = "GET / HTTP/1.1"
         evidence = Evidence(url, request, None)
 
-        self.assertEqual(evidence["url"], url)
-        self.assertEqual(evidence["request"], request)
-        self.assertIsNotNone(evidence.get("request_id"))
-        self.assertIsNone(evidence.get("response"))
-        self.assertIsNone(evidence.get("response_id"))
+        assert evidence["url"] == url
+        assert evidence["request"] == request
+        assert evidence.get("request_id") is not None
+        assert evidence.get("response") is None
+        assert evidence.get("response_id") is None
 
     def test_init_with_response(self):
         url = "http://example.com"
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, response)
 
-        self.assertEqual(evidence["url"], url)
-        self.assertEqual(evidence["response"], response)
-        self.assertIsNotNone(evidence.get("response_id"))
-        self.assertIsNone(evidence.get("request"))
-        self.assertIsNone(evidence.get("request_id"))
+        assert evidence["url"] == url
+        assert evidence["response"] == response
+        assert evidence.get("response_id") is not None
+        assert evidence.get("request") is None
+        assert evidence.get("request_id") is None
 
     def test_init_with_request_and_response(self):
         url = "http://example.com"
@@ -49,27 +49,27 @@ class TestEvidenceInit(unittest.TestCase):
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, request, response)
 
-        self.assertEqual(evidence["url"], url)
-        self.assertEqual(evidence["request"], request)
-        self.assertEqual(evidence["response"], response)
-        self.assertIsNotNone(evidence.get("request_id"))
-        self.assertIsNotNone(evidence.get("response_id"))
+        assert evidence["url"] == url
+        assert evidence["request"] == request
+        assert evidence["response"] == response
+        assert evidence.get("request_id") is not None
+        assert evidence.get("response_id") is not None
 
     def test_init_with_custom_data(self):
         url = "http://example.com"
         custom_data = {"key1": "value1", "key2": "value2"}
         evidence = Evidence(url, None, None, custom=custom_data)
 
-        self.assertEqual(evidence["url"], url)
-        self.assertEqual(evidence["key1"], "value1")
-        self.assertEqual(evidence["key2"], "value2")
-        self.assertIsNone(evidence.get("request"))
-        self.assertIsNone(evidence.get("response"))
-        self.assertIsNone(evidence.get("request_id"))
-        self.assertIsNone(evidence.get("response_id"))
+        assert evidence["url"] == url
+        assert evidence["key1"] == "value1"
+        assert evidence["key2"] == "value2"
+        assert evidence.get("request") is None
+        assert evidence.get("response") is None
+        assert evidence.get("request_id") is None
+        assert evidence.get("response_id") is None
 
 
-class TestEvidenceGetItem(unittest.TestCase):
+class TestEvidenceGetItem:
     def test_getitem_request_id_generated(self):
         url = "http://example.com"
         request = "GET / HTTP/1.1"
@@ -77,10 +77,10 @@ class TestEvidenceGetItem(unittest.TestCase):
 
         # Accessing request_id should generate it
         request_id = evidence["request_id"]
-        self.assertIsNotNone(request_id)
-        self.assertEqual(
-            request_id,
-            hashlib.blake2b(request.encode("utf-8"), digest_size=16).hexdigest(),
+        assert request_id is not None
+        assert (
+            request_id
+            == hashlib.blake2b(request.encode("utf-8"), digest_size=16).hexdigest()
         )
 
     def test_getitem_response_id_generated(self):
@@ -90,10 +90,10 @@ class TestEvidenceGetItem(unittest.TestCase):
 
         # Accessing response_id should generate it
         response_id = evidence["response_id"]
-        self.assertIsNotNone(response_id)
-        self.assertEqual(
-            response_id,
-            hashlib.blake2b(response.encode("utf-8"), digest_size=16).hexdigest(),
+        assert response_id is not None
+        assert (
+            response_id
+            == hashlib.blake2b(response.encode("utf-8"), digest_size=16).hexdigest()
         )
 
     def test_getitem_request_id_late_set(self):
@@ -104,10 +104,10 @@ class TestEvidenceGetItem(unittest.TestCase):
 
         # Accessing request_id should generate it
         request_id = evidence["request_id"]
-        self.assertIsNotNone(request_id)
-        self.assertEqual(
-            request_id,
-            hashlib.blake2b(request.encode("utf-8"), digest_size=16).hexdigest(),
+        assert request_id is not None
+        assert (
+            request_id
+            == hashlib.blake2b(request.encode("utf-8"), digest_size=16).hexdigest()
         )
 
     def test_getitem_response_id_late_set(self):
@@ -118,10 +118,10 @@ class TestEvidenceGetItem(unittest.TestCase):
 
         # Accessing response_id should generate it
         response_id = evidence["response_id"]
-        self.assertIsNotNone(response_id)
-        self.assertEqual(
-            response_id,
-            hashlib.blake2b(response.encode("utf-8"), digest_size=16).hexdigest(),
+        assert response_id is not None
+        assert (
+            response_id
+            == hashlib.blake2b(response.encode("utf-8"), digest_size=16).hexdigest()
         )
 
     def test_getitem_request_from_file(self):
@@ -133,7 +133,7 @@ class TestEvidenceGetItem(unittest.TestCase):
             evidence.request_file_name = temp_file.name
 
         # Accessing request should read from the file
-        self.assertEqual(evidence["request"], request_content)
+        assert evidence["request"] == request_content
 
         # Clean up
         os.remove(temp_file.name)
@@ -147,7 +147,7 @@ class TestEvidenceGetItem(unittest.TestCase):
             evidence.response_file_name = temp_file.name
 
         # Accessing response should read from the file
-        self.assertEqual(evidence["response"], response_content)
+        assert evidence["response"] == response_content
 
         # Clean up
         os.remove(temp_file.name)
@@ -156,11 +156,11 @@ class TestEvidenceGetItem(unittest.TestCase):
         url = "http://example.com"
         evidence = Evidence(url, None, None)
 
-        with self.assertRaises(KeyError):
+        with pytest.raises(KeyError):
             _ = evidence["non_existent_key"]
 
 
-class TestEvidenceHash(unittest.TestCase):
+class TestEvidenceHash:
     def test_hash_with_identical_objects(self):
         url = "http://example.com"
         request = "GET / HTTP/1.1"
@@ -169,7 +169,7 @@ class TestEvidenceHash(unittest.TestCase):
         evidence2 = Evidence(url, request, response)
 
         # Hashes of identical objects should be the same
-        self.assertEqual(hash(evidence1), hash(evidence2))
+        assert hash(evidence1) == hash(evidence2)
 
     def test_hash_with_different_objects(self):
         url1 = "http://example.com"
@@ -180,7 +180,7 @@ class TestEvidenceHash(unittest.TestCase):
         evidence2 = Evidence(url2, request, response)
 
         # Hashes of different objects should not be the same
-        self.assertNotEqual(hash(evidence1), hash(evidence2))
+        assert hash(evidence1) != hash(evidence2)
 
     def test_hash_with_custom_data(self):
         url = "http://example.com"
@@ -192,17 +192,17 @@ class TestEvidenceHash(unittest.TestCase):
         evidence2 = Evidence(url, request, response, custom=custom_data2)
 
         # Hashes should differ if custom data is different
-        self.assertNotEqual(hash(evidence1), hash(evidence2))
+        assert hash(evidence1) != hash(evidence2)
 
     def test_hash_with_empty_object(self):
         url = "http://example.com"
         evidence = Evidence(url, None, None)
 
         # Hash should be consistent for an empty object
-        self.assertIsInstance(hash(evidence), int)
+        assert isinstance(hash(evidence), int)
 
 
-class TestEvidenceEquality(unittest.TestCase):
+class TestEvidenceEquality:
     def test_eq_with_identical_objects(self):
         url = "http://example.com"
         request = "GET / HTTP/1.1"
@@ -211,7 +211,7 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence2 = Evidence(url, request, response)
 
         # Identical objects should be equal
-        self.assertEqual(evidence1, evidence2)
+        assert evidence1 == evidence2
 
     def test_eq_with_different_urls(self):
         url1 = "http://example.com"
@@ -222,7 +222,7 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence2 = Evidence(url2, request, response)
 
         # Objects with different URLs should not be equal
-        self.assertNotEqual(evidence1, evidence2)
+        assert evidence1 != evidence2
 
     def test_eq_with_different_requests(self):
         url = "http://example.com"
@@ -233,7 +233,7 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence2 = Evidence(url, request2, response)
 
         # Objects with different requests should not be equal
-        self.assertNotEqual(evidence1, evidence2)
+        assert evidence1 != evidence2
 
     def test_eq_with_different_responses(self):
         url = "http://example.com"
@@ -244,7 +244,7 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence2 = Evidence(url, request, response2)
 
         # Objects with different responses should not be equal
-        self.assertNotEqual(evidence1, evidence2)
+        assert evidence1 != evidence2
 
     def test_eq_with_different_custom_data(self):
         url = "http://example.com"
@@ -256,7 +256,7 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence2 = Evidence(url, request, response, custom=custom_data2)
 
         # Objects with different custom data should not be equal
-        self.assertNotEqual(evidence1, evidence2)
+        assert evidence1 != evidence2
 
     def test_eq_with_non_evidence_object(self):
         url = "http://example.com"
@@ -265,9 +265,7 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence = Evidence(url, request, response)
 
         # Comparing with a non-Evidence object should return False
-        self.assertNotEqual(
-            evidence, {"url": url, "request": request, "response": response}
-        )
+        assert evidence != {"url": url, "request": request, "response": response}
 
     def test_eq_with_empty_objects(self):
         url = "http://example.com"
@@ -275,7 +273,7 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence2 = Evidence(url, None, None)
 
         # Empty objects with the same URL should be equal
-        self.assertEqual(evidence1, evidence2)
+        assert evidence1 == evidence2
 
     def test_eq_with_different_lengths(self):
         url = "http://example.com"
@@ -283,17 +281,17 @@ class TestEvidenceEquality(unittest.TestCase):
         evidence2 = Evidence(url, None, None, custom={"key": "value"})
 
         # Objects with different lengths should not be equal
-        self.assertNotEqual(evidence1, evidence2)
+        assert evidence1 != evidence2
 
 
-class TestEvidenceRequestProperty(unittest.TestCase):
+class TestEvidenceRequestProperty:
     def test_request_property_with_direct_value(self):
         url = "http://example.com"
         request_content = "GET / HTTP/1.1"
         evidence = Evidence(url, request_content, None)
 
         # The request property should return the direct value
-        self.assertEqual(evidence.request, request_content)
+        assert evidence.request == request_content
 
     def test_request_property_with_file(self):
         url = "http://example.com"
@@ -304,7 +302,7 @@ class TestEvidenceRequestProperty(unittest.TestCase):
             evidence.request_file_name = temp_file.name
 
         # The request property should read from the file
-        self.assertEqual(evidence.request, request_content)
+        assert evidence.request == request_content
 
         # Clean up
         os.remove(temp_file.name)
@@ -315,24 +313,24 @@ class TestEvidenceRequestProperty(unittest.TestCase):
         evidence.request_file_name = "non_existent_file.txt"
 
         # The request property should return None if the file is missing
-        self.assertIsNone(evidence.request)
+        assert evidence.request is None
 
     def test_request_property_with_no_value(self):
         url = "http://example.com"
         evidence = Evidence(url, None, None)
 
         # The request property should return None if no value is set
-        self.assertIsNone(evidence.request)
+        assert evidence.request is None
 
 
-class TestEvidenceResponseProperty(unittest.TestCase):
+class TestEvidenceResponseProperty:
     def test_response_property_with_direct_value(self):
         url = "http://example.com"
         response_content = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, response_content)
 
         # The response property should return the direct value
-        self.assertEqual(evidence.response, response_content)
+        assert evidence.response == response_content
 
     def test_response_property_with_file(self):
         url = "http://example.com"
@@ -343,7 +341,7 @@ class TestEvidenceResponseProperty(unittest.TestCase):
             evidence.response_file_name = temp_file.name
 
         # The response property should read from the file
-        self.assertEqual(evidence.response, response_content)
+        assert evidence.response == response_content
 
         # Clean up
         os.remove(temp_file.name)
@@ -354,23 +352,23 @@ class TestEvidenceResponseProperty(unittest.TestCase):
         evidence.response_file_name = "non_existent_file.txt"
 
         # The response property should return None if the file is missing
-        self.assertIsNone(evidence.response)
+        assert evidence.response is None
 
     def test_response_property_with_no_value(self):
         url = "http://example.com"
         evidence = Evidence(url, None, None)
 
         # The response property should return None if no value is set
-        self.assertIsNone(evidence.response)
+        assert evidence.response is None
 
 
-class TestEvidenceCustomProperty(unittest.TestCase):
+class TestEvidenceCustomProperty:
     def test_custom_property_with_no_custom_data(self):
         url = "http://example.com"
         evidence = Evidence(url, None, None)
 
         # The custom property should return an empty dictionary if no custom data is set
-        self.assertEqual(evidence.custom, {})
+        assert evidence.custom == {}
 
     def test_custom_property_with_custom_data(self):
         url = "http://example.com"
@@ -378,7 +376,7 @@ class TestEvidenceCustomProperty(unittest.TestCase):
         evidence = Evidence(url, None, None, custom=custom_data)
 
         # The custom property should return the custom data
-        self.assertEqual(evidence.custom, custom_data)
+        assert evidence.custom == custom_data
 
     def test_custom_property_with_mixed_data(self):
         url = "http://example.com"
@@ -388,7 +386,7 @@ class TestEvidenceCustomProperty(unittest.TestCase):
         evidence = Evidence(url, request, response, custom=custom_data)
 
         # The custom property should exclude standard keys and return only custom data
-        self.assertEqual(evidence.custom, custom_data)
+        assert evidence.custom == custom_data
 
     def test_custom_property_with_overlapping_keys(self):
         url = "http://example.com"
@@ -396,10 +394,10 @@ class TestEvidenceCustomProperty(unittest.TestCase):
         evidence = Evidence(url, None, None, custom=custom_data)
 
         # The custom property should exclude standard keys like "url"
-        self.assertEqual(evidence.custom, {"key1": "value1"})
+        assert evidence.custom == {"key1": "value1"}
 
 
-class TestEvidenceFromResponse(unittest.TestCase):
+class TestEvidenceFromResponse:
     @patch("yawast.shared.network.http_build_raw_request")
     @patch("yawast.shared.network.http_build_raw_response")
     def test_from_response_with_valid_response(
@@ -421,12 +419,12 @@ class TestEvidenceFromResponse(unittest.TestCase):
         evidence = Evidence.from_response(mock_response, custom=custom_data)
 
         # Assertions
-        self.assertEqual(evidence["url"], url)
-        self.assertEqual(evidence["request"], request_content)
-        self.assertEqual(evidence["response"], response_content)
-        self.assertEqual(evidence["key1"], "value1")
-        self.assertIsNotNone(evidence["request_id"])
-        self.assertIsNotNone(evidence["response_id"])
+        assert evidence["url"] == url
+        assert evidence["request"] == request_content
+        assert evidence["response"] == response_content
+        assert evidence["key1"] == "value1"
+        assert evidence["request_id"] is not None
+        assert evidence["response_id"] is not None
 
         # Verify mocks
         mock_http_build_raw_request.assert_called_once_with(mock_response.request)
@@ -452,11 +450,11 @@ class TestEvidenceFromResponse(unittest.TestCase):
         evidence = Evidence.from_response(mock_response)
 
         # Assertions
-        self.assertEqual(evidence["url"], url)
-        self.assertEqual(evidence["request"], request_content)
-        self.assertEqual(evidence["response"], response_content)
-        self.assertIsNotNone(evidence["request_id"])
-        self.assertIsNotNone(evidence["response_id"])
+        assert evidence["url"] == url
+        assert evidence["request"] == request_content
+        assert evidence["response"] == response_content
+        assert evidence["request_id"] is not None
+        assert evidence["response_id"] is not None
 
         # Verify mocks
         mock_http_build_raw_request.assert_called_once_with(mock_response.request)
@@ -481,18 +479,18 @@ class TestEvidenceFromResponse(unittest.TestCase):
         evidence = Evidence.from_response(mock_response)
 
         # Assertions
-        self.assertEqual(evidence["url"], url)
-        self.assertEqual(evidence["request"], request_content)
-        self.assertIsNone(evidence["response"])
-        self.assertIsNotNone(evidence["request_id"])
-        self.assertIsNone(evidence.get("response_id"))
+        assert evidence["url"] == url
+        assert evidence["request"] == request_content
+        assert evidence["response"] is None
+        assert evidence["request_id"] is not None
+        assert evidence.get("response_id") is None
 
         # Verify mocks
         mock_http_build_raw_request.assert_called_once_with(mock_response.request)
         mock_http_build_raw_response.assert_called_once_with(mock_response)
 
 
-class TestEvidenceCacheToFile(unittest.TestCase):
+class TestEvidenceCacheToFile:
     def test_cache_to_file_with_small_request_and_response(self):
         url = "http://example.com"
         request = "GET / HTTP/1.1"
@@ -503,10 +501,10 @@ class TestEvidenceCacheToFile(unittest.TestCase):
         evidence.cache_to_file()
 
         # Ensure request and response are not cached to files
-        self.assertIsNone(evidence.request_file_name)
-        self.assertIsNone(evidence.response_file_name)
-        self.assertEqual(evidence["request"], request)
-        self.assertEqual(evidence["response"], response)
+        assert evidence.request_file_name is None
+        assert evidence.response_file_name is None
+        assert evidence["request"] == request
+        assert evidence["response"] == response
 
     def test_cache_to_file_with_large_request(self):
         url = "http://example.com"
@@ -518,12 +516,12 @@ class TestEvidenceCacheToFile(unittest.TestCase):
         evidence.cache_to_file()
 
         # Ensure request is cached to a file
-        self.assertIsNotNone(evidence.request_file_name)
-        self.assertEqual(evidence.get("request"), "")
+        assert evidence.request_file_name is not None
+        assert evidence.get("request") == ""
 
         # Ensure response is not cached to a file
-        self.assertIsNone(evidence.response_file_name)
-        self.assertEqual(evidence["response"], response)
+        assert evidence.response_file_name is None
+        assert evidence["response"] == response
 
         # Clean up
         if evidence.request_file_name:
@@ -539,12 +537,12 @@ class TestEvidenceCacheToFile(unittest.TestCase):
         evidence.cache_to_file()
 
         # Ensure response is cached to a file
-        self.assertIsNotNone(evidence.response_file_name)
-        self.assertEqual(evidence.get("response"), "")
+        assert evidence.response_file_name is not None
+        assert evidence.get("response") == ""
 
         # Ensure request is not cached to a file
-        self.assertIsNone(evidence.request_file_name)
-        self.assertEqual(evidence["request"], request)
+        assert evidence.request_file_name is None
+        assert evidence["request"] == request
 
         # Clean up
         if evidence.response_file_name:
@@ -560,10 +558,10 @@ class TestEvidenceCacheToFile(unittest.TestCase):
         evidence.cache_to_file()
 
         # Ensure both request and response are cached to files
-        self.assertIsNotNone(evidence.request_file_name)
-        self.assertIsNotNone(evidence.response_file_name)
-        self.assertEqual(evidence.get("request"), "")
-        self.assertEqual(evidence.get("response"), "")
+        assert evidence.request_file_name is not None
+        assert evidence.response_file_name is not None
+        assert evidence.get("request") == ""
+        assert evidence.get("response") == ""
 
         # Clean up
         if evidence.request_file_name:
@@ -572,7 +570,7 @@ class TestEvidenceCacheToFile(unittest.TestCase):
             os.remove(evidence.response_file_name)
 
 
-class TestEvidencePurgeFiles(unittest.TestCase):
+class TestEvidencePurgeFiles:
     def test_purge_files_with_existing_files(self):
         url = "http://example.com"
         request_content = "GET / HTTP/1.1"
@@ -589,8 +587,8 @@ class TestEvidencePurgeFiles(unittest.TestCase):
             evidence.response_file_name = res_file.name
 
         # Ensure files exist before calling purge_files
-        self.assertTrue(os.path.exists(evidence.request_file_name))
-        self.assertTrue(os.path.exists(evidence.response_file_name))
+        assert os.path.exists(evidence.request_file_name)
+        assert os.path.exists(evidence.response_file_name)
 
         res_file_name = evidence.response_file_name
         req_file_name = evidence.request_file_name
@@ -599,10 +597,10 @@ class TestEvidencePurgeFiles(unittest.TestCase):
         evidence.purge_files()
 
         # Ensure files are deleted and file names are set to None
-        self.assertFalse(os.path.exists(res_file_name))
-        self.assertFalse(os.path.exists(req_file_name))
-        self.assertIsNone(evidence.request_file_name)
-        self.assertIsNone(evidence.response_file_name)
+        assert not os.path.exists(res_file_name)
+        assert not os.path.exists(req_file_name)
+        assert evidence.request_file_name is None
+        assert evidence.response_file_name is None
 
     def test_purge_files_with_missing_files(self):
         url = "http://example.com"
@@ -616,20 +614,27 @@ class TestEvidencePurgeFiles(unittest.TestCase):
         evidence.purge_files()
 
         # Ensure file names are set to None
-        self.assertIsNone(evidence.request_file_name)
-        self.assertIsNone(evidence.response_file_name)
+        assert evidence.request_file_name is None
+        assert evidence.response_file_name is None
 
     def test_purge_files_with_no_files_set(self):
         url = "http://example.com"
         evidence = Evidence(url, None, None)
 
         # Ensure no file names are set initially
-        self.assertIsNone(evidence.request_file_name)
-        self.assertIsNone(evidence.response_file_name)
+        assert evidence.request_file_name is None
+        assert evidence.response_file_name is None
 
         # Call purge_files
         evidence.purge_files()
 
         # Ensure file names remain None
-        self.assertIsNone(evidence.request_file_name)
-        self.assertIsNone(evidence.response_file_name)
+        assert evidence.request_file_name is None
+        assert evidence.response_file_name is None
+
+
+class TestEvidence:
+    def test_evidence(self):
+        url = "http://example.com"
+        evidence = Evidence(url, None, None)
+        assert evidence is not None

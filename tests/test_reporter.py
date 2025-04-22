@@ -1,9 +1,10 @@
 import gc
 import json
 import os
-import unittest
 import zipfile
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
+
+import pytest
 
 from tests import utils
 from yawast import config
@@ -14,34 +15,34 @@ from yawast.reporting.issue import Issue
 from yawast.reporting.result import Result
 
 
-class TestReporterInit(unittest.TestCase):
-    def tearDown(self):
+class TestReporterInit:
+    def teardown_method(self):
         # Reset the global variable after each test
         reporter._output_file = ""
 
     @patch("os.path.abspath", side_effect=lambda x: f"/abs/{x}")
     def test_init_none(self, mock_abspath):
         reporter.init(None)
-        self.assertEqual(reporter._output_file, "")
+        assert reporter._output_file == ""
 
     @patch("time.time", return_value=123)
     @patch("os.path.isdir", return_value=True)
     @patch("os.path.abspath", side_effect=lambda x: f"/abs/{x}")
     def test_init_directory(self, mock_abspath, mock_isdir, mock_time):
         reporter.init("test_dir")
-        self.assertIn("yawast_123.json", reporter._output_file)
-        self.assertTrue(reporter._output_file.startswith("/abs/test_dir/"))
+        assert "yawast_123.json" in reporter._output_file
+        assert reporter._output_file.startswith("/abs/test_dir/")
 
     @patch("os.path.isfile", return_value=False)
     @patch("os.path.isdir", return_value=False)
     @patch("os.path.abspath", side_effect=lambda x: f"/abs/{x}")
     def test_init_file(self, mock_abspath, mock_isdir, mock_isfile):
         reporter.init("test_output.json")
-        self.assertEqual(reporter._output_file, "/abs/test_output.json")
+        assert reporter._output_file == "/abs/test_output.json"
 
 
-class TestReporterSaveOutput(unittest.TestCase):
-    def setUp(self):
+class TestReporterSaveOutput:
+    def setup_method(self):
         # Save original references
         self.orig_issues = reporter._issues
         self.orig_info = reporter._info
@@ -60,7 +61,7 @@ class TestReporterSaveOutput(unittest.TestCase):
         reporter._data = {}
         reporter._output_file = "/tmp/test_output"
 
-    def tearDown(self):
+    def teardown_method(self):
         # Restore original references
         reporter._issues = self.orig_issues
         reporter._info = self.orig_info
@@ -95,21 +96,21 @@ class TestReporterSaveOutput(unittest.TestCase):
         mock_zip.assert_called_once()
 
 
-class TestReporterGetOutputFile(unittest.TestCase):
-    def tearDown(self):
+class TestReporterGetOutputFile:
+    def teardown_method(self):
         reporter._output_file = ""
 
     def test_get_output_file_with_value(self):
         reporter._output_file = "/some/path/test_output"
-        self.assertEqual(reporter.get_output_file(), "/some/path/test_output.zip")
+        assert reporter.get_output_file() == "/some/path/test_output.zip"
 
     def test_get_output_file_empty(self):
         reporter._output_file = ""
-        self.assertEqual(reporter.get_output_file(), "")
+        assert reporter.get_output_file() == ""
 
 
-class TestReporterSetup(unittest.TestCase):
-    def setUp(self):
+class TestReporterSetup:
+    def setup_method(self):
         self.orig_domain = reporter._domain
         self.orig_issues = reporter._issues
         self.orig_data = reporter._data
@@ -117,7 +118,7 @@ class TestReporterSetup(unittest.TestCase):
         reporter._issues = {}
         reporter._data = {}
 
-    def tearDown(self):
+    def teardown_method(self):
         reporter._domain = self.orig_domain
         reporter._issues = self.orig_issues
         reporter._data = self.orig_data
@@ -125,67 +126,59 @@ class TestReporterSetup(unittest.TestCase):
     def test_setup_creates_new_domain_keys(self):
         domain = "example.com"
         reporter.setup(domain)
-        self.assertEqual(reporter._domain, domain)
-        self.assertIn(domain, reporter._issues)
-        self.assertIn(domain, reporter._data)
-        self.assertEqual(reporter._issues[domain], {})
-        self.assertEqual(reporter._data[domain], {})
+        assert reporter._domain == domain
+        assert domain in reporter._issues
+        assert domain in reporter._data
+        assert reporter._issues[domain] == {}
+        assert reporter._data[domain] == {}
 
     def test_setup_preserves_existing_domain_data(self):
         domain = "example.com"
         reporter._issues[domain] = {"test_key": "test_value"}
         reporter._data[domain] = {"test_key": "test_value"}
         reporter.setup(domain)
-        self.assertEqual(reporter._issues[domain], {"test_key": "test_value"})
-        self.assertEqual(reporter._data[domain], {"test_key": "test_value"})
+        assert reporter._issues[domain] == {"test_key": "test_value"}
+        assert reporter._data[domain] == {"test_key": "test_value"}
 
 
-class TestReporterIsRegistered(unittest.TestCase):
-    def setUp(self):
+class TestReporterIsRegistered:
+    def setup_method(self):
         self.orig_issues = reporter._issues
         self.orig_domain = reporter._domain
         reporter._issues = {}
         reporter._domain = ""
 
-    def tearDown(self):
+    def teardown_method(self):
         reporter._issues = self.orig_issues
         reporter._domain = self.orig_domain
 
     def test_is_registered_no_issues(self):
-        self.assertFalse(
-            reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
-        )
+        assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
     def test_is_registered_different_domain(self):
         reporter._issues["example.com"] = {}
         reporter._domain = "test.com"
-        self.assertFalse(
-            reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
-        )
+        assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
     def test_is_registered_with_vuln(self):
         reporter._domain = "example.com"
         reporter._issues["example.com"] = {
             Vulnerabilities.SERVER_INVALID_404_FILE: ["sample_issue"]
         }
-        self.assertTrue(reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE))
+        assert reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
     def test_is_registered_domain_not_present_in_issues(self):
         reporter._domain = "not_in_issues"
-        self.assertFalse(
-            reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
-        )
+        assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
     def test_is_registered_issue_not_present(self):
         reporter._domain = "example.com"
         reporter._issues["example.com"] = {}
-        self.assertFalse(
-            reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
-        )
+        assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
 
-class TestReporterRegisterData(unittest.TestCase):
-    def setUp(self):
+class TestReporterRegisterData:
+    def setup_method(self):
         self.orig_data = reporter._data
         self.orig_output_file = reporter._output_file
         self.orig_domain = reporter._domain
@@ -193,7 +186,7 @@ class TestReporterRegisterData(unittest.TestCase):
         reporter._output_file = "/tmp/test_output"
         reporter._domain = "example.com"
 
-    def tearDown(self):
+    def teardown_method(self):
         reporter._data = self.orig_data
         reporter._output_file = self.orig_output_file
         reporter._domain = self.orig_domain
@@ -201,41 +194,41 @@ class TestReporterRegisterData(unittest.TestCase):
     def test_register_data_with_existing_domain(self):
         reporter._data["example.com"] = {"existing_key": "existing_value"}
         reporter.register_data("new_key", "new_value")
-        self.assertIn("new_key", reporter._data["example.com"])
-        self.assertEqual(reporter._data["example.com"]["new_key"], "new_value")
-        self.assertIn("existing_key", reporter._data["example.com"])
+        assert "new_key" in reporter._data["example.com"]
+        assert reporter._data["example.com"]["new_key"] == "new_value"
+        assert "existing_key" in reporter._data["example.com"]
 
     def test_register_data_with_new_domain(self):
         reporter._domain = "newdomain.com"
         reporter.register_data("new_key", "new_value")
-        self.assertIn("newdomain.com", reporter._data)
-        self.assertIn("new_key", reporter._data["newdomain.com"])
-        self.assertEqual(reporter._data["newdomain.com"]["new_key"], "new_value")
+        assert "newdomain.com" in reporter._data
+        assert "new_key" in reporter._data["newdomain.com"]
+        assert reporter._data["newdomain.com"]["new_key"] == "new_value"
 
     def test_register_data_with_no_domain(self):
         reporter._domain = None
         reporter.register_data("global_key", "global_value")
-        self.assertIn("global_key", reporter._data)
-        self.assertEqual(reporter._data["global_key"], "global_value")
+        assert "global_key" in reporter._data
+        assert reporter._data["global_key"] == "global_value"
 
     def test_register_data_appends_to_existing_list(self):
         reporter._data["example.com"] = {"list_key": [1, 2, 3]}
         reporter.register_data("list_key", [4, 5])
-        self.assertEqual(reporter._data["example.com"]["list_key"], [1, 2, 3, 4, 5])
+        assert reporter._data["example.com"]["list_key"] == [1, 2, 3, 4, 5]
 
     def test_register_data_updates_existing_dict(self):
         reporter._data["example.com"] = {"dict_key": {"a": 1}}
         reporter.register_data("dict_key", {"b": 2})
-        self.assertEqual(reporter._data["example.com"]["dict_key"], {"a": 1, "b": 2})
+        assert reporter._data["example.com"]["dict_key"] == {"a": 1, "b": 2}
 
     def test_register_data_overwrites_non_matching_types(self):
         reporter._data["example.com"] = {"key": [1, 2, 3]}
         reporter.register_data("key", {"a": 1})
-        self.assertEqual(reporter._data["example.com"]["key"], {"a": 1})
+        assert reporter._data["example.com"]["key"] == {"a": 1}
 
 
-class TestReporterRegisterMessage(unittest.TestCase):
-    def setUp(self):
+class TestReporterRegisterMessage:
+    def setup_method(self):
         self.orig_info = reporter._info
         self.orig_output_file = reporter._output_file
         self.orig_config = config.include_debug_in_output
@@ -243,50 +236,50 @@ class TestReporterRegisterMessage(unittest.TestCase):
         reporter._output_file = "/tmp/test_output"
         config.include_debug_in_output = True
 
-    def tearDown(self):
+    def teardown_method(self):
         reporter._info = self.orig_info
         reporter._output_file = self.orig_output_file
         config.include_debug_in_output = self.orig_config
 
     def test_register_message_creates_messages_key(self):
         reporter.register_message("Test message", "info")
-        self.assertIn("messages", reporter._info)
-        self.assertIn("info", reporter._info["messages"])
-        self.assertEqual(len(reporter._info["messages"]["info"]), 1)
-        self.assertIn("Test message", reporter._info["messages"]["info"][0])
+        assert "messages" in reporter._info
+        assert "info" in reporter._info["messages"]
+        assert len(reporter._info["messages"]["info"]) == 1
+        assert "Test message" in reporter._info["messages"]["info"][0]
 
     def test_register_message_appends_to_existing_kind(self):
         reporter._info["messages"] = {"info": ["[2023-01-01 UTC]: Existing message"]}
         reporter.register_message("New message", "info")
-        self.assertEqual(len(reporter._info["messages"]["info"]), 2)
-        self.assertIn("New message", reporter._info["messages"]["info"][1])
+        assert len(reporter._info["messages"]["info"]) == 2
+        assert "New message" in reporter._info["messages"]["info"][1]
 
     def test_register_message_creates_new_kind(self):
         reporter.register_message("Test message", "warning")
-        self.assertIn("warning", reporter._info["messages"])
-        self.assertEqual(len(reporter._info["messages"]["warning"]), 1)
-        self.assertIn("Test message", reporter._info["messages"]["warning"][0])
+        assert "warning" in reporter._info["messages"]
+        assert len(reporter._info["messages"]["warning"]) == 1
+        assert "Test message" in reporter._info["messages"]["warning"][0]
 
     def test_register_message_ignores_debug_when_disabled(self):
         config.include_debug_in_output = False
         reporter.register_message("Debug message", "debug")
-        self.assertEqual(len(reporter._info["messages"]["debug"]), 0)
+        assert len(reporter._info["messages"]["debug"]) == 0
 
     def test_register_message_logs_debug_when_enabled(self):
         config.include_debug_in_output = True
         reporter.register_message("Debug message", "debug")
-        self.assertIn("debug", reporter._info["messages"])
-        self.assertEqual(len(reporter._info["messages"]["debug"]), 1)
-        self.assertIn("Debug message", reporter._info["messages"]["debug"][0])
+        assert "debug" in reporter._info["messages"]
+        assert len(reporter._info["messages"]["debug"]) == 1
+        assert "Debug message" in reporter._info["messages"]["debug"][0]
 
     def test_register_message_no_output_file(self):
         reporter._output_file = ""
         reporter.register_message("Test message", "info")
-        self.assertNotIn("messages", reporter._info)
+        assert "messages" not in reporter._info
 
 
-class TestReporterRegister(unittest.TestCase):
-    def setUp(self):
+class TestReporterRegister:
+    def setup_method(self):
         self.orig_issues = reporter._issues
         self.orig_domain = reporter._domain
         self.orig_output_file = reporter._output_file
@@ -294,7 +287,7 @@ class TestReporterRegister(unittest.TestCase):
         reporter._domain = "example.com"
         reporter._output_file = ""
 
-    def tearDown(self):
+    def teardown_method(self):
         reporter._issues = self.orig_issues
         reporter._domain = self.orig_domain
         reporter._output_file = self.orig_output_file
@@ -306,18 +299,18 @@ class TestReporterRegister(unittest.TestCase):
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue)
-        self.assertIn(
-            Vulnerabilities.SERVER_INVALID_404_FILE, reporter._issues["example.com"]
+        assert (
+            Vulnerabilities.SERVER_INVALID_404_FILE in reporter._issues["example.com"]
         )
-        self.assertEqual(
+        assert (
             len(
                 reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE]
-            ),
-            1,
+            )
+            == 1
         )
-        self.assertEqual(
-            reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE][0],
-            issue,
+        assert (
+            reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE][0]
+            == issue
         )
 
     def test_register_does_not_duplicate_issues(self):
@@ -328,11 +321,11 @@ class TestReporterRegister(unittest.TestCase):
         )
         reporter.register(issue)
         reporter.register(issue)  # Register the same issue again
-        self.assertEqual(
+        assert (
             len(
                 reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE]
-            ),
-            1,
+            )
+            == 1
         )
 
     def test_register_handles_different_issues(self):
@@ -348,11 +341,11 @@ class TestReporterRegister(unittest.TestCase):
         )
         reporter.register(issue1)
         reporter.register(issue2)
-        self.assertEqual(
+        assert (
             len(
                 reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE]
-            ),
-            2,
+            )
+            == 2
         )
 
     @patch("yawast.reporting.reporter.output.debug")
@@ -378,8 +371,8 @@ class TestReporterRegister(unittest.TestCase):
         registered_issue = reporter._issues["example.com"][
             Vulnerabilities.SERVER_INVALID_404_FILE
         ][0]
-        self.assertEqual(registered_issue.evidence["request"], "")
-        self.assertEqual(registered_issue.evidence["response"], "")
+        assert registered_issue.evidence["request"] == ""
+        assert registered_issue.evidence["response"] == ""
 
     @patch("yawast.reporting.evidence.Evidence.cache_to_file")
     def test_register_caches_evidence_to_disk(self, mock_cache_to_file):
@@ -408,8 +401,8 @@ class TestReporterRegister(unittest.TestCase):
         mock_debug.assert_called_with("Error caching evidence: Cache error")
 
 
-class TestReporterDisplay(unittest.TestCase):
-    def setUp(self):
+class TestReporterDisplay:
+    def setup_method(self):
         self.orig_issues = reporter._issues
         self.orig_domain = reporter._domain
         self.orig_output_file = reporter._output_file
@@ -417,7 +410,7 @@ class TestReporterDisplay(unittest.TestCase):
         reporter._domain = "example.com"
         reporter._output_file = ""
 
-    def tearDown(self):
+    def teardown_method(self):
         reporter._issues = self.orig_issues
         reporter._domain = self.orig_domain
         reporter._output_file = self.orig_output_file
@@ -433,7 +426,7 @@ class TestReporterDisplay(unittest.TestCase):
         reporter.display("Critical issue message", issue)
         mock_vuln.assert_called_once_with("Critical issue message")
         mock_register.assert_called_once_with(issue)
-        self.assertEqual(issue.evidence, "Critical issue message")
+        assert issue.evidence == "Critical issue message"
 
     @patch("yawast.reporting.reporter.output.warn")
     @patch("yawast.reporting.reporter.register")
@@ -446,7 +439,7 @@ class TestReporterDisplay(unittest.TestCase):
         reporter.display("Medium issue message", issue)
         mock_warn.assert_called_once_with("Medium issue message")
         mock_register.assert_called_once_with(issue)
-        self.assertEqual(issue.evidence, "Medium issue message")
+        assert issue.evidence == "Medium issue message"
 
     @patch("yawast.reporting.reporter.output.info")
     @patch("yawast.reporting.reporter.register")
@@ -459,7 +452,7 @@ class TestReporterDisplay(unittest.TestCase):
         reporter.display("Low issue message", issue)
         mock_info.assert_called_once_with("Low issue message")
         mock_register.assert_called_once_with(issue)
-        self.assertEqual(issue.evidence, "Low issue message")
+        assert issue.evidence == "Low issue message"
 
     @patch("yawast.reporting.reporter.output.info")
     @patch("yawast.reporting.reporter.register")
@@ -472,7 +465,7 @@ class TestReporterDisplay(unittest.TestCase):
         reporter.display("Low issue message", issue)
         mock_info.assert_called_once_with("Low issue message")
         mock_register.assert_called_once_with(issue)
-        self.assertEqual(issue.evidence, "Existing evidence")
+        assert issue.evidence == "Existing evidence"
 
     @patch("yawast.reporting.reporter.output.vuln")
     @patch("yawast.reporting.reporter.is_registered", return_value=False)
@@ -502,7 +495,7 @@ class TestReporterDisplay(unittest.TestCase):
         mock_is_registered.assert_called_once_with(issue.vulnerability)
 
 
-class TestReporterDisplayResults(unittest.TestCase):
+class TestReporterDisplayResults:
     @patch("yawast.reporting.reporter.display")
     @patch("yawast.reporting.issue.Issue.from_result")
     def test_display_results_calls_display(self, mock_from_result, mock_display):
@@ -533,16 +526,14 @@ class TestReporterDisplayResults(unittest.TestCase):
         reporter.display_results(mock_results, padding=">> ")
 
         # Verify that Issue.from_result was called for each result
-        self.assertEqual(mock_from_result.call_count, 3)
-        mock_from_result.assert_has_calls(
-            [unittest.mock.call(res) for res in mock_results]
-        )
+        assert mock_from_result.call_count == 3
+        mock_from_result.assert_has_calls([call(res) for res in mock_results])
 
         # Verify that display was called for each result
-        self.assertEqual(mock_display.call_count, 3)
+        assert mock_display.call_count == 3
         mock_display.assert_has_calls(
             [
-                unittest.mock.call(f">> {res.message}", issue)
+                call(f">> {res.message}", issue)
                 for res, issue in zip(mock_results, mock_issues)
             ]
         )

@@ -1,12 +1,12 @@
-import unittest
 from unittest import mock
+
+import pytest
 
 import yawast.shared.network as network
 
 
-class TestUpdateAuth(unittest.TestCase):
-    def setUp(self):
-        # Reset the session before each test
+class TestUpdateAuth:
+    def setup_method(self):
         network.reset()
 
     @mock.patch.object(network, "_requester")
@@ -29,22 +29,20 @@ class TestUpdateAuth(unittest.TestCase):
         mock_output.error.assert_called_once()
         mock_requester.headers.update.assert_not_called()
 
+    @mock.patch("requests.cookies.create_cookie")
     @mock.patch.object(network, "_requester")
-    def test_update_auth_cookies(self, mock_requester):
+    def test_update_auth_cookies(self, mock_requester, mock_create_cookie):
         cookies = {"sessionid": "abc123", "userid": "42"}
         auth = {"cookies": cookies}
-        with mock.patch("requests.cookies.create_cookie") as mock_create_cookie:
-            mock_cookie = mock.Mock()
-            mock_create_cookie.side_effect = lambda name, value: f"{name}={value}"
-            network.update_auth(auth)
-            calls = [
-                mock.call(name="sessionid", value="abc123"),
-                mock.call(name="userid", value="42"),
-            ]
-            mock_create_cookie.assert_has_calls(calls, any_order=True)
-            mock_requester.cookies.set_cookie.assert_any_call("sessionid=abc123")
-            mock_requester.cookies.set_cookie.assert_any_call("userid=42")
+        mock_create_cookie.side_effect = lambda name, value: f"{name}={value}"
+        network.update_auth(auth)
+        calls = [
+            mock.call(name="sessionid", value="abc123"),
+            mock.call(name="userid", value="42"),
+        ]
+        mock_create_cookie.assert_has_calls(calls, any_order=True)
+        mock_requester.cookies.set_cookie.assert_any_call("sessionid=abc123")
+        mock_requester.cookies.set_cookie.assert_any_call("userid=42")
 
     def test_update_auth_empty(self):
-        # Should not raise or do anything
         network.update_auth({})

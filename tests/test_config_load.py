@@ -1,11 +1,12 @@
-import unittest
 from unittest.mock import mock_open, patch
+
+import pytest
 
 from tests import utils
 from yawast import config
 
 
-class TestLoadConfig(unittest.TestCase):
+class TestConfigLoad:
     @patch("os.path.exists")
     @patch(
         "builtins.open",
@@ -20,13 +21,13 @@ class TestLoadConfig(unittest.TestCase):
         config.load_config()
 
         # Assert that the user_agent was set correctly
-        self.assertEqual(config.user_agent, "test-agent")
+        assert config.user_agent == "test-agent"
 
         # Assert that max_spider_pages was set correctly
-        self.assertEqual(config.max_spider_pages, 5000)
+        assert config.max_spider_pages == 5000
 
         # Assert that include_debug_in_output was set correctly
-        self.assertFalse(config.include_debug_in_output)
+        assert not config.include_debug_in_output
 
     @patch("os.path.exists")
     @patch("builtins.open", new_callable=mock_open, read_data="invalid json")
@@ -39,10 +40,10 @@ class TestLoadConfig(unittest.TestCase):
             config.load_config()
 
         # Assert that the user_agent was not set
-        self.assertIsNone(config.user_agent)
+        assert config.user_agent is None
 
         # Check for the error message
-        self.assertIn("Error: Invalid JSON in config file.", stdout.getvalue())
+        assert "Error: Invalid JSON in config file." in stdout.getvalue()
 
     @patch("os.path.exists")
     def test_load_config_file_not_found(self, mock_exists):
@@ -53,7 +54,7 @@ class TestLoadConfig(unittest.TestCase):
         config.load_config()
 
         # Assert that the user_agent remains None
-        self.assertIsNone(config.user_agent)
+        assert config.user_agent is None
 
     @patch("os.path.exists")
     @patch("builtins.open", side_effect=Exception("Unexpected error"))
@@ -66,11 +67,7 @@ class TestLoadConfig(unittest.TestCase):
             config.load_config()
 
         # Assert that the user_agent was not set
-        self.assertIsNone(config.user_agent)
+        assert config.user_agent is None
 
         # Check for the unexpected error message
-        self.assertIn("Error: Unexpected error", stdout.getvalue())
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert "Error: Unexpected error" in stdout.getvalue()

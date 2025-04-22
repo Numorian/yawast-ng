@@ -3,16 +3,18 @@
 #  See the LICENSE file for full license details.
 
 import os
-from unittest import TestCase
+
+import pytest
 
 from yawast.scanner.modules.dns import srv
 
 
-class TestFindSrvRecords(TestCase):
+class TestFindSrvRecords:
     def test_find_srv_records(self):
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/srv.txt")
 
         recs = srv.find_srv_records("adamcaudill.com", path)
 
-        self.assertTrue(len(recs) > 0)
+        assert len(recs) > 0
+        assert srv is not None

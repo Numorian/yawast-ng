@@ -60,7 +60,7 @@ jobs:
       if: always()
       run: |
         pipenv install codecov
-        pipenv run coverage run -m unittest discover
+        pipenv run pytest --maxfail=2 --disable-warnings --tb=short
         pipenv run coverage xml
       shell: bash {0}
 

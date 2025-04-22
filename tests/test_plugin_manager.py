@@ -1,12 +1,14 @@
 import sys
 import types
-from unittest import TestCase, mock
+from unittest import mock
+
+import pytest
 
 import yawast.scanner.plugins.plugin_manager as plugin_manager
 from tests import utils
 
 
-class TestPluginLoader(TestCase):
+class TestPluginManager:
     @mock.patch("builtins.print")
     def test_print_loaded_plugins_with_plugins(self, mock_print):
         # Setup fake plugin classes

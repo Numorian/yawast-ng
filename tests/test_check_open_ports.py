@@ -3,7 +3,8 @@
 #  See the LICENSE file for full license details.
 
 import os
-from unittest import TestCase
+
+import pytest
 
 from tests import utils
 from yawast.scanner.cli.network import _check_open_ports
@@ -11,7 +12,7 @@ from yawast.scanner.modules.network import port_scan
 from yawast.shared import output
 
 
-class TestCheckOpenPorts(TestCase):
+class TestCheckOpenPorts:
     def test_check_open_ports(self):
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/common_ports.json")
@@ -20,7 +21,7 @@ class TestCheckOpenPorts(TestCase):
             "https://adamcaudill.com", "104.21.15.2", path
         )
 
-        self.assertTrue(len(recs) > 0)
+        assert len(recs) > 0
 
     def test_check_open_ports_invalid_ip(self):
         target_dir = os.path.dirname(os.path.realpath("__file__"))
@@ -30,7 +31,7 @@ class TestCheckOpenPorts(TestCase):
             "https://adamcaudill.com", "256.28.26.55", path
         )
 
-        self.assertTrue(len(recs) == 0)
+        assert len(recs) == 0
 
     def test_check_open_ports_cli(self):
         output.setup(False, False, False)
@@ -40,7 +41,7 @@ class TestCheckOpenPorts(TestCase):
         with utils.capture_sys_output() as (stdout, stderr):
             _check_open_ports("adamcaudill.com", "https://adamcaudill.com", path)
 
-        self.assertNotIn("Exception", stderr.getvalue())
+        assert "Exception" not in stderr.getvalue()
 
     def test_check_open_ports_cli_bad_domain(self):
         output.setup(False, False, False)
@@ -52,4 +53,4 @@ class TestCheckOpenPorts(TestCase):
                 "invalidaksjdhkajshd.com", "https://adamcaudill.com", path
             )
 
-        self.assertNotIn("Exception", stderr.getvalue())
+        assert "Exception" not in stderr.getvalue()

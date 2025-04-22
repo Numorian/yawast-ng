@@ -2,8 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
-
+import pytest
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -17,7 +16,7 @@ from yawast.scanner.session import Session
 from yawast.shared import output
 
 
-class TestSeleniumIntegration(TestCase):
+class TestSelenium:
     def test_pwd_rst_get_driver(self):
         url = "https://example.com/"
 
@@ -30,12 +29,12 @@ class TestSeleniumIntegration(TestCase):
             try:
                 driver = _get_driver(s, url)
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-            self.assertIsInstance(driver, WebDriver)
-            self.assertIn("<h1>Example Domain</h1>", driver.page_source)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert isinstance(driver, WebDriver)
+            assert "<h1>Example Domain</h1>" in driver.page_source
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_pwd_rst_find_field(self):
         url = "https://www.starbucks.com/account/forgot-password"
@@ -50,11 +49,11 @@ class TestSeleniumIntegration(TestCase):
                 driver = _get_driver(s, url)
                 element = _find_user_field(driver)
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-            self.assertIsInstance(driver, WebDriver)
-            self.assertIsInstance(element, WebElement)
-            self.assertIn("Just need to confirm your email", driver.page_source)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-            self.assertEqual("emailAddress", element.get_attribute("id"))
+            assert isinstance(driver, WebDriver)
+            assert isinstance(element, WebElement)
+            assert "Just need to confirm your email" in driver.page_source
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
+            assert element.get_attribute("id") == "emailAddress"

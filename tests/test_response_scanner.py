@@ -1,7 +1,6 @@
-import unittest
-from unittest import mock
 from urllib.parse import urlparse
 
+import pytest
 from bs4 import BeautifulSoup
 from requests.models import Request, Response
 
@@ -18,7 +17,7 @@ def make_response(url, method="GET"):
     return res
 
 
-class TestFindInjectionPoints(unittest.TestCase):
+class TestFindInjectionPoints:
     def test_injection_points_url_params_only(self):
         url = "http://example.com/page"
         res = make_response("http://example.com/page?foo=bar&baz=qux", "POST")
@@ -27,7 +26,7 @@ class TestFindInjectionPoints(unittest.TestCase):
             InjectionPoint(url, "foo", "POST", "bar"),
             InjectionPoint(url, "baz", "POST", "qux"),
         ]
-        self.assertEqual(points, expected)
+        assert points == expected
 
     def test_injection_points_form_fields_only(self):
         url = "http://example.com/page"
@@ -44,7 +43,7 @@ class TestFindInjectionPoints(unittest.TestCase):
             InjectionPoint("http://example.com/submit", "username", "POST", "alice"),
             InjectionPoint("http://example.com/submit", "password", "POST", "secret"),
         ]
-        self.assertEqual(points, expected)
+        assert points == expected
 
     def test_injection_points_url_and_form_fields(self):
         url = "http://example.com/page?foo=bar"
@@ -60,7 +59,7 @@ class TestFindInjectionPoints(unittest.TestCase):
             InjectionPoint(url, "foo", "GET", "bar"),
             InjectionPoint(url, "q", "GET", "search"),
         ]
-        self.assertEqual(points, expected)
+        assert points == expected
 
     def test_injection_points_form_action_missing(self):
         url = "http://example.com/page"
@@ -75,14 +74,14 @@ class TestFindInjectionPoints(unittest.TestCase):
         expected = [
             InjectionPoint(url, "x", "GET", "1"),
         ]
-        self.assertEqual(points, expected)
+        assert points == expected
 
     def test_injection_points_no_params_no_forms(self):
         url = "http://example.com/page"
         res = make_response(url, "GET")
         soup = BeautifulSoup("<html></html>", "html.parser")
         points = response_scanner._find_injection_points(url, res, soup)
-        self.assertEqual(points, [])
+        assert points == []
 
     def test_injection_points_form_input_missing_name_value(self):
         url = "http://example.com/page"
@@ -97,4 +96,4 @@ class TestFindInjectionPoints(unittest.TestCase):
         expected = [
             InjectionPoint("http://example.com/a", "", "POST", ""),
         ]
-        self.assertEqual(points, expected)
+        assert points == expected

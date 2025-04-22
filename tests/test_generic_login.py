@@ -1,10 +1,11 @@
-import unittest
 from unittest import mock
+
+import pytest
 
 from yawast.scanner.modules.http import generic_login
 
 
-class TestLoginAndGetAuth(unittest.TestCase):
+class TestGenericLogin:
     @mock.patch("yawast.scanner.modules.http.generic_login.webdriver.Chrome")
     @mock.patch("yawast.scanner.modules.http.generic_login.ChromeDriverManager")
     @mock.patch("yawast.scanner.modules.http.generic_login._find_element")
@@ -43,9 +44,9 @@ class TestLoginAndGetAuth(unittest.TestCase):
 
         result = generic_login.login_and_get_auth("http://example.com", "user", "pass")
 
-        self.assertEqual(result["cookies"], {"sessionid": "abc123"})
-        self.assertEqual(result["header"], {"authorization": "Bearer token"})
-        self.assertIsNone(result["error"])
+        assert result["cookies"] == {"sessionid": "abc123"}
+        assert result["header"] == {"authorization": "Bearer token"}
+        assert result["error"] is None
         mock_driver.quit.assert_called_once()
 
     @mock.patch("yawast.scanner.modules.http.generic_login.webdriver.Chrome")
@@ -70,7 +71,7 @@ class TestLoginAndGetAuth(unittest.TestCase):
         mock_find_element.side_effect = [None, None, None, None]
         mock_find_login_link.return_value = None
 
-        with self.assertRaises(generic_login.LoginFormNotFound):
+        with pytest.raises(generic_login.LoginFormNotFound):
             generic_login.login_and_get_auth("http://example.com", "user", "pass")
         mock_driver.quit.assert_called_once()
 
@@ -106,9 +107,9 @@ class TestLoginAndGetAuth(unittest.TestCase):
 
         result = generic_login.login_and_get_auth("http://example.com", "user", "pass")
 
-        self.assertEqual(result["cookies"], {})
-        self.assertIsNone(result["header"])
-        self.assertEqual(result["error"], "Invalid password")
+        assert result["cookies"] == {}
+        assert result["header"] is None
+        assert result["error"] == "Invalid password"
         mock_driver.quit.assert_called_once()
 
     @mock.patch("yawast.scanner.modules.http.generic_login.webdriver.Chrome")
@@ -145,12 +146,8 @@ class TestLoginAndGetAuth(unittest.TestCase):
 
         result = generic_login.login_and_get_auth("http://example.com", "user", "pass")
 
-        self.assertEqual(result["cookies"], {})
-        self.assertIsNone(result["header"])
-        self.assertIsNone(result["error"])
+        assert result["cookies"] == {}
+        assert result["header"] is None
+        assert result["error"] is None
         login_link.click.assert_called_once()
         mock_driver.quit.assert_called_once()
-
-
-if __name__ == "__main__":
-    unittest.main()

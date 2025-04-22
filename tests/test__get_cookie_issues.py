@@ -2,8 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
-
+import pytest
 import requests
 import requests_mock
 
@@ -11,7 +10,7 @@ from yawast.scanner.modules.http import http_basic
 from yawast.scanner.modules.http.http_basic import get_cookie_issues
 
 
-class TestGetCookieIssues(TestCase):
+class TestGetCookieIssues:
     def test__get_cookie_issues_no_sec_no_tls(self):
         http_basic.reset()
 
@@ -29,7 +28,7 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(0, len(res))
+        assert len(res) == 0
 
     def test__get_cookie_issues_sec_no_tls(self):
         http_basic.reset()
@@ -48,8 +47,8 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Cookie Secure Flag Invalid (over HTTP)", res[0].message)
+        assert len(res) == 1
+        assert "Cookie Secure Flag Invalid (over HTTP)" in res[0].message
 
     def test__get_cookie_issues_no_sec_ssn(self):
         http_basic.reset()
@@ -68,10 +67,10 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(2, len(res))
-        self.assertIn("Cookie Missing Secure Flag", res[0].message)
-        self.assertIn(
-            "Cookie SameSite=None Flag Invalid (without Secure flag)", res[1].message
+        assert len(res) == 2
+        assert "Cookie Missing Secure Flag" in res[0].message
+        assert (
+            "Cookie SameSite=None Flag Invalid (without Secure flag)" in res[1].message
         )
 
     def test__get_cookie_issues_ssn(self):
@@ -91,7 +90,7 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
+        assert len(res) == 1
 
     def test__get_cookie_issues_no_sec(self):
         http_basic.reset()
@@ -110,8 +109,8 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Cookie Missing Secure Flag", res[0].message)
+        assert len(res) == 1
+        assert "Cookie Missing Secure Flag" in res[0].message
 
     def test__get_cookie_issues_no_ho(self):
         http_basic.reset()
@@ -128,8 +127,8 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Cookie Missing HttpOnly Flag", res[0].message)
+        assert len(res) == 1
+        assert "Cookie Missing HttpOnly Flag" in res[0].message
 
     def test__get_cookie_issues_no_ss(self):
         http_basic.reset()
@@ -146,8 +145,8 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Cookie Missing SameSite Flag", res[0].message)
+        assert len(res) == 1
+        assert "Cookie Missing SameSite Flag" in res[0].message
 
     def test__get_cookie_bigip_1(self):
         http_basic.reset()
@@ -166,8 +165,8 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Big-IP Internal IP Address Disclosure", res[0].message)
+        assert len(res) == 1
+        assert "Big-IP Internal IP Address Disclosure" in res[0].message
 
     def test__get_cookie_bigip_2(self):
         http_basic.reset()
@@ -186,8 +185,8 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Big-IP Internal IP Address Disclosure", res[0].message)
+        assert len(res) == 1
+        assert "Big-IP Internal IP Address Disclosure" in res[0].message
 
     def test__get_cookie_bigip_3(self):
         http_basic.reset()
@@ -206,8 +205,8 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Big-IP Internal IP Address Disclosure", res[0].message)
+        assert len(res) == 1
+        assert "Big-IP Internal IP Address Disclosure" in res[0].message
 
     def test__get_cookie_bigip_4(self):
         http_basic.reset()
@@ -226,5 +225,5 @@ class TestGetCookieIssues(TestCase):
 
         res = get_cookie_issues(resp, url)
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Big-IP Internal IP Address Disclosure", res[0].message)
+        assert len(res) == 1
+        assert "Big-IP Internal IP Address Disclosure" in res[0].message

@@ -2,14 +2,15 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
 from yawast.scanner.modules.dns import basic
 
 
-class TestGetIps(TestCase):
-    def test_get_ips_ac(self):
-        res = basic.get_ips("adamcaudill.com")
+class TestGetIps:
+    def test_get_ips(self):
+        ips = basic.get_ips("adamcaudill.com")
 
         # make sure we have at least 2 IPs
-        self.assertGreaterEqual(len(res), 2)
+        assert len(ips) >= 2
+        assert ips is not None

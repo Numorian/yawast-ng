@@ -2,43 +2,42 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
-from yawast.scanner.modules.dns import caa
+from yawast.scanner.modules.dns.caa import get_caa
 
 
-class TestGetCaa(TestCase):
+class TestGetCaa:
     def test_get_caa(self):
-        recs = caa.get_caa("cntest.adamcaudill.com")
-
-        self.assertTrue(len(recs) > 0)
+        recs = get_caa("cntest.adamcaudill.com")
+        assert len(recs) > 0
 
         # RECORD 1
         # check the domain
-        self.assertEqual("cntest.adamcaudill.com", recs[0][0])
+        assert "cntest.adamcaudill.com" == recs[0][0]
 
         # check the type of the CNAME
-        self.assertEqual("CNAME", recs[0][1])
+        assert "CNAME" == recs[0][1]
 
         # check the return of the CNAME
-        self.assertEqual("www.google.com.", recs[0][2])
+        assert "www.google.com." == recs[0][2]
 
         # RECORD 2
         # check the domain
-        self.assertEqual("www.google.com", recs[1][0])
+        assert "www.google.com" == recs[1][0]
 
         # check the type of record
-        self.assertEqual("CAA", recs[1][1])
+        assert "CAA" == recs[1][1]
 
         # check the return of the CAA
-        self.assertEqual([], recs[1][2])
+        assert [] == recs[1][2]
 
         # RECORD 3
         # check the domain
-        self.assertEqual("google.com", recs[2][0])
+        assert "google.com" == recs[2][0]
 
         # check the type of record
-        self.assertEqual("CAA", recs[2][1])
+        assert "CAA" == recs[2][1]
 
         # check the record length for the CAA data
-        self.assertTrue(len(recs[2][2]) > 0)
+        assert len(recs[2][2]) > 0

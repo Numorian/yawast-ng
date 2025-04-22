@@ -2,17 +2,17 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
 from yawast.scanner.modules.dns import basic
 
 
-class TestGetText(TestCase):
+class TestGetText:
     def test_get_text(self):
         recs = basic.get_text("adamcaudill.com")
 
-        self.assertTrue(len(recs) > 0)
+        assert len(recs) > 0
 
         for rec in recs:
             if rec.startswith("v="):
-                self.assertEqual("v=spf1 mx a ptr include:_spf.google.com ~all", rec)
+                assert rec == "v=spf1 mx a ptr include:_spf.google.com ~all"

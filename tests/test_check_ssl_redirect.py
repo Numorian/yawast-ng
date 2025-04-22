@@ -2,31 +2,31 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
 from yawast.shared import network
 
 
-class TestCheckSslRedirect(TestCase):
+class TestCheckSslRedirect:
     def test_check_ssl_redirect_valid(self):
-        self.assertEqual(
-            "https://adamcaudill.com/",
-            network.check_ssl_redirect("http://adamcaudill.com/"),
+        assert (
+            network.check_ssl_redirect("http://adamcaudill.com/")
+            == "https://adamcaudill.com/"
         )
 
     def test_check_ssl_redirect_https(self):
-        self.assertEqual(
-            "https://adamcaudill.com/",
-            network.check_ssl_redirect("https://adamcaudill.com/"),
+        assert (
+            network.check_ssl_redirect("https://adamcaudill.com/")
+            == "https://adamcaudill.com/"
         )
 
     def test_check_ssl_redirect_none(self):
-        self.assertEqual(
-            "http://example.com/", network.check_ssl_redirect("http://example.com/")
+        assert (
+            network.check_ssl_redirect("http://example.com/") == "http://example.com/"
         )
 
     def test_check_ssl_redirect_path(self):
-        self.assertEqual(
-            "https://mail.google.com/",
-            network.check_ssl_redirect("http://mail.google.com/"),
+        assert (
+            network.check_ssl_redirect("http://mail.google.com/")
+            == "https://mail.google.com/"
         )

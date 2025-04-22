@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 	&& curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
 	&& echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
 	&& apt-get update && apt-get install -y google-chrome-stable \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
 
 COPY . /data
 WORKDIR /data
@@ -22,6 +22,6 @@ ENV LC_ALL=C.UTF-8
 
 RUN pip install -r docker-requirements.text
 
-RUN cd /data/ && python -m unittest discover
+RUN cd /data/ && pytest --maxfail=2 --disable-warnings --tb=short
 
 ENTRYPOINT ["/data/bin/yawast-ng"]

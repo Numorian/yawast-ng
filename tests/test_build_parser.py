@@ -2,21 +2,21 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
 from tests import utils
 from yawast import command_line
 
 
-class TestBuildParser(TestCase):
+class TestBuildParser:
     def test_build_parser(self):
         parser = command_line.build_parser()
 
         # make sure we got something back
-        self.assertIsNotNone(parser)
+        assert parser is not None
 
-        with self.assertRaises(SystemExit):
+        with pytest.raises(SystemExit):
             with utils.capture_sys_output() as (stdout, stderr):
                 parser.parse_known_args([""])
 
-        self.assertIn("yawast: error", stderr.getvalue())
+        assert "yawast: error" in stderr.getvalue()

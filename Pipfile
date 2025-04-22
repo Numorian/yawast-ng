@@ -9,6 +9,8 @@ coverage = "*"
 wheel = "*"
 black = ">=25.0,<26.0.0"
 memray = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [packages]
 yawast-ng = {editable = true,path = "."}

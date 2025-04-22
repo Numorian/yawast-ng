@@ -22,6 +22,6 @@ ENV LC_ALL=C.UTF-8
 
 RUN pip install -r docker-requirements.text
 
-RUN cd /data/ && pytest --maxfail=2 --disable-warnings --tb=short
+RUN cd /data/ && python -m pytest --maxfail=2 --disable-warnings --tb=short
 
 ENTRYPOINT ["/data/bin/yawast-ng"]

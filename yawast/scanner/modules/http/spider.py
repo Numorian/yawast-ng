@@ -2,6 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
+import os
 import re
 import time
 import xml.etree.ElementTree as ET
@@ -33,7 +34,8 @@ def spider(session: Session) -> Tuple[List[str], List[Result]]:
     url = session.url
 
     # create processing pool
-    pool = Pool()
+    max_threads = min(config.max_spider_threads, os.cpu_count() or 1)
+    pool = Pool(max_threads)
     mgr = Manager()
     queue = mgr.Queue()
 

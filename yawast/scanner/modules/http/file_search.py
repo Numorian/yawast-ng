@@ -14,6 +14,7 @@ from urllib.parse import urljoin, urlparse
 import pkg_resources
 from requests import Response
 
+from yawast import config
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
@@ -133,7 +134,8 @@ def find_backups(links: List[str]) -> Tuple[List[str], List[Result]]:
                 if target not in process_queue:
                     process_queue.append(target)
 
-    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+    max_threads = min(config.max_spider_threads, os.cpu_count() or 1)
+    with ThreadPoolExecutor(max_workers=max_threads) as executor:
         f = {executor.submit(_get_resp, url): url for url in process_queue}
         for future in as_completed(f):
             url = f[future]
@@ -170,7 +172,8 @@ def find_ds_store(links: List[str]) -> List[Result]:
 
             queue.append(turl)
 
-    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+    max_threads = min(config.max_spider_threads, os.cpu_count() or 1)
+    with ThreadPoolExecutor(max_workers=max_threads) as executor:
         f = {executor.submit(_get_resp, url): url for url in queue}
         for future in as_completed(f):
             url = f[future]
@@ -204,7 +207,8 @@ def _find_files(
     workers = []
 
     # create processing pool
-    pool = Pool(os.cpu_count())
+    max_threads = min(config.max_spider_threads, os.cpu_count() or 1)
+    pool = Pool(max_threads)
     mgr = Manager()
     queue = mgr.Queue()
 

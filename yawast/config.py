@@ -10,6 +10,7 @@ import os
 
 user_agent = None
 max_spider_pages = 10000
+max_spider_threads = 10
 include_debug_in_output = True
 allow_interactive = True
 
@@ -18,7 +19,7 @@ def load_config():
     """
     Load the configuration from the config file.
     """
-    global user_agent, max_spider_pages, include_debug_in_output, allow_interactive
+    global user_agent, max_spider_pages, include_debug_in_output, allow_interactive, max_spider_threads
 
     # check if the config file exists
     if os.path.exists("~/.yawast-ng.json"):
@@ -31,6 +32,7 @@ def load_config():
                     user_agent = config.get("user_agent", None)
 
                 max_spider_pages = config.get("max_spider_pages", 10000)
+                max_spider_threads = config.get("max_spider_threads", 10)
                 include_debug_in_output = config.get("include_debug_in_output", True)
                 allow_interactive = config.get("allow_interactive", True)
         except json.JSONDecodeError:

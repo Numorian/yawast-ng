@@ -10,6 +10,7 @@ from typing import List, Optional
 
 import pkg_resources
 
+from yawast import config
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.result import Result
 from yawast.shared import output
@@ -19,7 +20,8 @@ def check_open_ports(url: str, ip: str, path: Optional[str] = None) -> List[Resu
     results = []
 
     # create processing pool
-    pool = Pool(os.cpu_count() * 2)
+    max_threads = min(config.max_spider_threads, os.cpu_count() or 1)
+    pool = Pool(max_threads)
     mgr = Manager()
     queue = mgr.Queue()
 

@@ -1,3 +1,4 @@
+import logging
 import multiprocessing.util
 import warnings
 
@@ -39,3 +40,17 @@ def suppress_multiprocessing_debug():
 
     # Set the custom logger to suppress debug output
     multiprocessing.util._logger = CustomLogger()
+
+
+@pytest.fixture(autouse=True)
+def fix_logger_handler_levels():
+    # Ensure all logger handler levels are ints, not mocks, to avoid TypeError in tests
+    for logger_name in logging.root.manager.loggerDict:
+        logger = logging.getLogger(logger_name)
+        for handler in getattr(logger, "handlers", []):
+            if not isinstance(getattr(handler, "level", None), int):
+                handler.level = logging.INFO
+    # Also fix root logger
+    for handler in logging.getLogger().handlers:
+        if not isinstance(getattr(handler, "level", None), int):
+            handler.level = logging.INFO

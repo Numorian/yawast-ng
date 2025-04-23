@@ -896,7 +896,7 @@ def _get_vulnerability_info(ep, url):
             reporter.display(
                 "\t\tHeartbleed: Vulnerable",
                 issue.Issue(
-                    Vulnerabilities.TLS_HEARTBLEEDL, url, {"ip": ep["ipAddress"]}
+                    Vulnerabilities.TLS_HEARTBLEED, url, {"ip": ep["ipAddress"]}
                 ),
             )
         else:

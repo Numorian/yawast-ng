@@ -52,7 +52,11 @@ def main():
     args, urls = parser.parse_known_args()
 
     # setup the output system
-    output.setup(args.debug, args.nocolors, args.nowrap)
+    output.setup(
+        getattr(args, "debug", False),
+        getattr(args, "nocolors", False),
+        getattr(args, "nowrap", False),
+    )
     output.debug("Starting application...")
 
     proxy = args.proxy if "proxy" in args else None
@@ -73,7 +77,7 @@ def main():
     # we are good to keep going
     print_header()
 
-    if args.output is not None:
+    if getattr(args, "output", None) is not None:
         reporter.init(args.output)
         _set_basic_info()
 

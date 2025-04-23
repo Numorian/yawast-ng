@@ -1,8 +1,9 @@
+import types
 from unittest import mock
 
 import pytest
 
-import yawast.shared.network as network
+from yawast.shared import network
 
 
 class TestUpdateAuth:
@@ -46,3 +47,179 @@ class TestUpdateAuth:
 
     def test_update_auth_empty(self):
         network.update_auth({})
+
+
+def test_init_sets_proxy_cookie_header(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "_requester",
+        mock.Mock(
+            cookies=mock.Mock(set_policy=lambda x: None, set_cookie=lambda x: None),
+            proxies={},
+            headers={},
+            verify=None,
+            mount=lambda *a, **k: None,
+        ),
+    )
+    monkeypatch.setattr(network, "_file_not_found_handling", {})
+    monkeypatch.setattr(network, "output", mock.Mock(error=lambda x: None))
+    monkeypatch.setattr(
+        network, "ssl", mock.Mock(create_default_context=lambda: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network, "urllib3", mock.Mock(Retry=lambda *a, **k: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network,
+        "HTTPAdapter",
+        mock.Mock(return_value=mock.Mock(init_poolmanager=lambda *a, **k: None)),
+    )
+    network.init("proxy:8080", "foo=bar", "X-Test=1")
+    # Should not raise
+
+
+def test_update_auth(monkeypatch):
+    network._requester = mock.Mock(
+        headers={}, cookies=mock.Mock(set_cookie=lambda x: None)
+    )
+    network.update_auth({"headers": ["X-Test=1"], "cookies": {"foo": "bar"}})
+    # Should not raise
+
+
+def test_http_head_and_options(monkeypatch):
+    res = mock.Mock(
+        status_code=200,
+        request=mock.Mock(method="HEAD"),
+        elapsed=types.SimpleNamespace(total_seconds=lambda: 0.01),
+        headers={},
+        url="http://foo",
+        content=b"",
+        text="",
+        raw=mock.Mock(version=11, status=200, reason="OK", _original_response=None),
+    )
+    monkeypatch.setattr(network._requester, "head", lambda *a, **k: res)
+    monkeypatch.setattr(
+        network.plugin_manager, "run_hook_response_received", lambda u, r: None
+    )
+    monkeypatch.setattr(network.output, "debug", lambda x: None)
+    monkeypatch.setattr(network.config, "user_agent", None)
+    out = network.http_head("http://foo")
+    assert out is res
+    monkeypatch.setattr(network._requester, "options", lambda *a, **k: res)
+    out2 = network.http_options("http://foo")
+    assert out2 is res
+
+
+def test_http_get(monkeypatch):
+    res = mock.Mock(
+        status_code=200,
+        request=mock.Mock(method="GET"),
+        elapsed=types.SimpleNamespace(total_seconds=lambda: 0.01),
+        headers={},
+        url="http://foo",
+        content=b"abc",
+        text="abc",
+        iter_content=lambda c: [b"abc"],
+    )
+    monkeypatch.setattr(network._requester, "get", lambda *a, **k: res)
+    monkeypatch.setattr(
+        network.plugin_manager, "run_hook_response_received", lambda u, r: None
+    )
+    monkeypatch.setattr(network.output, "debug", lambda x: None)
+    monkeypatch.setattr(network.config, "user_agent", None)
+    out = network.http_get("http://foo")
+    assert out is res
+
+
+def test_http_put(monkeypatch):
+    res = mock.Mock(
+        status_code=200,
+        request=mock.Mock(method="PUT"),
+        elapsed=types.SimpleNamespace(total_seconds=lambda: 0.01),
+        headers={},
+        url="http://foo",
+        content=b"abc",
+        text="abc",
+    )
+    monkeypatch.setattr(network._requester, "put", lambda *a, **k: res)
+    monkeypatch.setattr(
+        network.plugin_manager, "run_hook_response_received", lambda u, r: None
+    )
+    monkeypatch.setattr(network.output, "debug", lambda x: None)
+    monkeypatch.setattr(network.config, "user_agent", None)
+    out = network.http_put("http://foo", "data")
+    assert out is res
+
+
+def test_http_custom(monkeypatch):
+    res = mock.Mock(
+        status_code=200,
+        request=mock.Mock(method="CUSTOM"),
+        elapsed=types.SimpleNamespace(total_seconds=lambda: 0.01),
+        headers={},
+        url="http://foo",
+        content=b"abc",
+        text="abc",
+    )
+    monkeypatch.setattr(network._requester, "request", lambda *a, **k: res)
+    monkeypatch.setattr(
+        network.plugin_manager, "run_hook_response_received", lambda u, r: None
+    )
+    monkeypatch.setattr(network.output, "debug", lambda x: None)
+    monkeypatch.setattr(network.config, "user_agent", None)
+    out = network.http_custom("CUSTOM", "http://foo")
+    assert out is res
+
+
+def test_http_json(monkeypatch):
+    res = mock.Mock(json=lambda: {"foo": 1}, status_code=200)
+    monkeypatch.setattr(network._requester, "get", lambda *a, **k: res)
+    out, code = network.http_json("http://foo")
+    assert out["foo"] == 1
+    assert code == 200
+
+
+def test_http_build_raw_request_and_response(monkeypatch):
+    req = mock.Mock(method="GET", url="http://foo", headers={"X": "1"}, body="body")
+    raw = network.http_build_raw_request(req)
+    assert "GET http://foo" in raw
+    res = mock.Mock(
+        raw=mock.Mock(version=11, status=200, reason="OK", _original_response=None),
+        headers={"X": "1"},
+        text="abc",
+        content=b"abc",
+    )
+    monkeypatch.setattr(network, "response_body_is_text", lambda r: True)
+    out = network.http_build_raw_response(res)
+    assert "HTTP/1.1" in out
+
+
+def test_response_body_is_text(monkeypatch):
+    res = mock.Mock(content=b"abc", headers={"Content-Type": "text/html"}, text="abc")
+    assert network.response_body_is_text(res)
+    res2 = mock.Mock(content=b"abc", headers={}, text="abc")
+    monkeypatch.setattr(network.utils, "is_printable_str", lambda x: True)
+    assert network.response_body_is_text(res2)
+    res3 = mock.Mock(content=b"", headers={}, text="")
+    assert not network.response_body_is_text(res3)
+
+
+def test_check_ipv4_ipv6_connection(monkeypatch):
+    monkeypatch.setattr(network, "_check_connection", lambda url: "1.2.3.4")
+    monkeypatch.setattr(
+        network, "checkers", mock.Mock(is_ipv4=lambda x: True, is_ipv6=lambda x: True)
+    )
+    assert "IPv4" in network.check_ipv4_connection()
+    assert "IPv6" in network.check_ipv6_connection()
+
+
+def test__check_connection(monkeypatch):
+    monkeypatch.setattr(
+        network, "requests", mock.Mock(get=lambda *a, **k: mock.Mock(text="1.2.3.4"))
+    )
+    assert network._check_connection("http://foo") == "1.2.3.4"
+
+
+def test_reset():
+    network.reset()
+    assert network._requester is not None

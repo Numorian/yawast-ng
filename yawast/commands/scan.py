@@ -17,6 +17,10 @@ def start(session: Session):
     # make sure it resolves
     try:
         socket.gethostbyname(session.domain)
+    except OSError as e:
+        output.debug_exception()
+        output.error(f"DNS resolution failed: {e}")
+        return
     except socket.gaierror as error:
         output.debug_exception()
         output.error(f"Fatal Error: Unable to resolve {session.domain} ({str(error)})")

@@ -31,23 +31,14 @@ class Result:
                 self.evidence = evidence
             elif isinstance(evidence, dict):
                 # create a new evidence object from the dictionary
-                request = None
-                if "request" in evidence:
-                    request = evidence["request"]
-
-                response = None
-                if "response" in evidence:
-                    response = evidence["response"]
-
-                custom = None
-                # get any other data and add it to the custom dict
-                if len(evidence) > 3:
-                    custom = {
-                        k: v
-                        for k, v in evidence.items()
-                        if k not in ["request", "response", "url"]
-                    }
-
+                request = evidence.get("request")
+                response = evidence.get("response")
+                # always include any extra keys as custom
+                custom = {
+                    k: v
+                    for k, v in evidence.items()
+                    if k not in ["request", "response", "url"]
+                } or None
                 self.evidence = Evidence(url, request, response, custom)
             elif isinstance(evidence, str):
                 # if the evidence is a string, lets tack on the message as an extra element

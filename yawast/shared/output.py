@@ -30,9 +30,7 @@ def setup(enable_debug: bool, no_colors: bool, no_wrap: bool):
     global _no_colors, _init, _wrapper, _debug, _logger, _no_wrap
 
     _init = True
-
     _no_wrap = no_wrap
-
     _wrapper = textwrap.TextWrapper()
     width = shutil.get_terminal_size().columns
     _wrapper.width = width if width > 0 else 80
@@ -42,17 +40,34 @@ def setup(enable_debug: bool, no_colors: bool, no_wrap: bool):
 
     # setup the root logger
     rt = logging.getLogger()
+    # Remove any handlers that are not real logging handlers (e.g., mocks)
+    rt.handlers = [
+        h
+        for h in rt.handlers
+        if isinstance(h, logging.Handler) and not hasattr(h, "assert_called_with")
+    ]
     rt.addHandler(_LogHandler())
     rt.setLevel(logging.DEBUG)
 
     # setup our logger
     _logger = logging.getLogger("yawast")
+    _logger.handlers = [
+        h
+        for h in _logger.handlers
+        if isinstance(h, logging.Handler) and not hasattr(h, "assert_called_with")
+    ]
     _logger.setLevel(logging.DEBUG)
     _logger.addHandler(_LogHandler())
     _logger.propagate = False
 
     # setup the logger for multiprocessing
     lg = get_logger()
+    if hasattr(lg, "handlers"):
+        lg.handlers = [
+            h
+            for h in lg.handlers
+            if isinstance(h, logging.Handler) and not hasattr(h, "assert_called_with")
+        ]
     lg.level = logging.DEBUG
     lg.addHandler(_LogHandler())
 

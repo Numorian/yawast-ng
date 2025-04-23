@@ -16,6 +16,10 @@ def start(session: Session):
     # make sure it resolves
     try:
         socket.gethostbyname(session.domain)
+    except OSError as e:
+        output.debug_exception()
+        output.error(f"DNS resolution failed: {e}")
+        return
     except socket.gaierror as error:
         output.debug_exception()
         output.error(f"Fatal Error: Unable to resolve {session.domain} ({str(error)})")
@@ -52,10 +56,7 @@ def start(session: Session):
                 output.norm("Switching to internal SSL scanner...")
 
                 try:
-                    # ssl_internal.scan(session)
-                    raise NotImplementedError(
-                        "Internal SSL scanner is not implemented, temporarily."
-                    )
+                    ssl_internal.scan(session)
                 except Exception as error:
                     output.error(f"Error running scan with SSLyze: {str(error)}")
 

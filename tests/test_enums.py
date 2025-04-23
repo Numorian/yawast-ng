@@ -1,6 +1,11 @@
 import pytest
 
-from yawast.reporting.enums import Severity, Vulnerabilities, VulnerabilityInfo
+from yawast.reporting.enums import (
+    Severity,
+    Vulnerabilities,
+    VulnerabilityInfo,
+    VulnerabilityReference,
+)
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.issue import Issue
 
@@ -61,3 +66,41 @@ class TestVulnerabilitiesAdd:
         assert vuln_info.severity == severity
         assert vuln_info.description == description
         assert issue.vulnerability == Vulnerabilities.TEST_CREATE_VULN_ISSUE_REF
+
+
+def test_severity_enum():
+    assert Severity.CRITICAL == "critical"
+    assert Severity.HIGH == "high"
+    assert Severity.MEDIUM == "medium"
+    assert Severity.LOW == "low"
+    assert Severity.BEST_PRACTICE == "best_practice"
+    assert Severity.INFO == "info"
+
+
+def test_vulnerability_reference():
+    ref = VulnerabilityReference("CVE-1234", "https://example.com")
+    assert ref.name == "CVE-1234"
+    assert ref.url == "https://example.com"
+
+
+def test_vulnerability_info_create_and_hash():
+    vi = VulnerabilityInfo.create("Test", Severity.LOW, "desc")
+    assert vi.name == "Test"
+    assert vi.severity == Severity.LOW
+    assert vi.description == "desc"
+    assert vi.id.startswith("Y")
+    assert isinstance(hash(vi), int)
+
+
+def test_vulnerabilities_get_and_all():
+    vi = Vulnerabilities.get("App_WordPress_Version")
+    assert isinstance(vi, VulnerabilityInfo)
+    all_vulns = Vulnerabilities.all()
+    assert any(isinstance(v, VulnerabilityInfo) for v in all_vulns)
+
+
+def test_vulnerabilities_add():
+    Vulnerabilities.add("Test_Add", Severity.INFO, "desc")
+    vi = Vulnerabilities.get("Test_Add")
+    assert isinstance(vi, VulnerabilityInfo)
+    assert vi.name == "Test_Add"

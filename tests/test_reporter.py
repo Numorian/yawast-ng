@@ -1,7 +1,10 @@
 import gc
 import json
 import os
+import tempfile
+import types
 import zipfile
+from unittest import mock
 from unittest.mock import MagicMock, call, patch
 
 import pytest
@@ -9,7 +12,7 @@ import pytest
 from tests import utils
 from yawast import config
 from yawast.reporting import reporter
-from yawast.reporting.enums import Severity, Vulnerabilities
+from yawast.reporting.enums import Severity, Vulnerabilities, VulnerabilityInfo
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.issue import Issue
 from yawast.reporting.result import Result
@@ -562,3 +565,118 @@ class TestReporterDisplayResults:
         # Verify that neither Issue.from_result nor display was called
         mock_from_result.assert_not_called()
         mock_display.assert_not_called()
+
+
+def setup_module(module):
+    # Reset reporter state before each test module
+    reporter._issues.clear()
+    reporter._info.clear()
+    reporter._data.clear()
+    reporter._domain = ""
+    reporter._output_file = ""
+    reporter._injection_points.clear()
+
+
+def make_issue():
+    vuln = Vulnerabilities.get("App_WordPress_Version")
+    ev = Evidence("http://foo", "req", "resp")
+    return Issue(vuln, "http://foo", ev)
+
+
+def test_init_and_get_output_file(tmp_path):
+    out_file = tmp_path / "out.json"
+    reporter.init(str(out_file))
+    assert reporter.get_output_file().endswith("out.json.zip")
+
+
+def test_setup_and_register():
+    reporter._output_file = "foo.json"
+    reporter.setup("example.com")
+    issue = make_issue()
+    reporter.register(issue)
+    assert reporter.is_registered(issue.vulnerability)
+
+
+def test_register_duplicate(monkeypatch):
+    reporter._output_file = "foo.json"
+    reporter.setup("example.com")
+    issue = make_issue()
+    reporter.register(issue)
+    with mock.patch("yawast.shared.output.debug") as debug:
+        reporter.register(issue)
+        debug.assert_called()
+
+
+def test_register_info_and_data():
+    reporter._output_file = "foo.json"
+    reporter.setup("example.com")
+    reporter.register_info("foo", 123)
+    assert reporter._info["foo"] == 123
+    reporter.register_data("bar", {"baz": 1})
+    assert "bar" in reporter._data["example.com"]
+
+
+def test_register_message(monkeypatch):
+    reporter._output_file = "foo.json"
+    monkeypatch.setattr(reporter.config, "include_debug_in_output", True)
+    reporter.register_message("msg", "debug")
+    assert "debug" in reporter._info["messages"]
+
+
+def test_register_injection_points():
+    reporter._output_file = "foo.json"
+    reporter.setup("example.com")
+    point = mock.Mock(spec=reporter.InjectionPoint)
+    reporter.register_injection_points([point])
+    assert point in reporter._injection_points["example.com"]
+
+
+def test_display_and_display_results(monkeypatch):
+    reporter._output_file = "foo.json"
+    reporter.setup("example.com")
+    issue = make_issue()
+    monkeypatch.setattr(reporter.output, "vuln", lambda x: None)
+    monkeypatch.setattr(reporter.output, "warn", lambda x: None)
+    monkeypatch.setattr(reporter.output, "info", lambda x: None)
+    reporter.display("msg", issue)
+    res = types.SimpleNamespace(
+        message="msg",
+        vulnerability=issue.vulnerability,
+        url="http://foo",
+        evidence=issue.evidence,
+    )
+    monkeypatch.setattr(reporter, "Issue", Issue)
+    reporter.display_results([res])
+
+
+def test_save_output(tmp_path, monkeypatch):
+    reporter._output_file = str(tmp_path / "out.json")
+    reporter.setup("example.com")
+    issue = make_issue()
+    reporter.register(issue)
+    monkeypatch.setattr(
+        reporter,
+        "ExecutionTimer",
+        lambda: mock.MagicMock(
+            __enter__=lambda s: s, __exit__=lambda s, e, v, t: None, to_ms=lambda: 1
+        ),
+    )
+    monkeypatch.setattr(reporter.output, "debug", lambda x: None)
+    monkeypatch.setattr(reporter.output, "info", lambda x: None)
+    monkeypatch.setattr(reporter.output, "warn", lambda x: None)
+    monkeypatch.setattr(reporter.output, "vuln", lambda x: None)
+    monkeypatch.setattr(reporter.output, "print_color", lambda *a, **k: None)
+    reporter.save_output()
+    assert os.path.exists(str(tmp_path / "out.json.zip"))
+
+
+def test__register_data_and__convert_keys():
+    d = {"foo": [1]}
+    reporter._register_data(d, "foo", [2, 3])
+    assert d["foo"] == [1, 2, 3]
+    d2 = {"bar": {"baz": 1}}
+    reporter._register_data(d2, "bar", {"baz": 2})
+    assert d2["bar"]["baz"] == 2
+    d3 = {"x": 1}
+    out = reporter._convert_keys(d3)
+    assert out["x"] == 1

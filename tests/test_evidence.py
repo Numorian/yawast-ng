@@ -638,3 +638,74 @@ class TestEvidence:
         url = "http://example.com"
         evidence = Evidence(url, None, None)
         assert evidence is not None
+
+
+import os
+import tempfile
+from unittest import mock
+
+from yawast.reporting.evidence import Evidence
+
+
+def test_evidence_init_and_properties():
+    ev = Evidence("http://foo", "req", "resp", {"x": 1})
+    assert ev.url == "http://foo"
+    assert ev.request == "req"
+    assert ev.response == "resp"
+    assert ev.custom["x"] == 1
+    assert isinstance(ev.request_id, str)
+    assert isinstance(ev.response_id, str)
+
+
+def test_evidence_eq_and_hash():
+    ev1 = Evidence("http://foo", "req", "resp", {"x": 1})
+    ev2 = Evidence("http://foo", "req", "resp", {"x": 1})
+    ev3 = Evidence("http://foo", "req2", "resp", {"x": 1})
+    assert ev1 == ev2
+    assert ev1 != ev3
+    assert hash(ev1) == hash(ev2)
+
+
+def test_evidence_getitem_and_file(monkeypatch, tmp_path):
+    ev = Evidence("http://foo", "req", "resp")
+    # Simulate file for request
+    req_file = tmp_path / "req.txt"
+    req_file.write_text("file_req")
+    ev.request_file_name = str(req_file)
+    assert ev["request"] == "file_req"
+    # Simulate file for response
+    res_file = tmp_path / "res.txt"
+    res_file.write_text("file_resp")
+    ev.response_file_name = str(res_file)
+    assert ev["response"] == "file_resp"
+
+
+def test_evidence_from_response(monkeypatch):
+    class DummyReq:
+        url = "http://foo"
+
+    class DummyResp:
+        request = DummyReq()
+
+    monkeypatch.setattr(
+        "yawast.shared.network.http_build_raw_request", lambda req: "rawreq"
+    )
+    monkeypatch.setattr(
+        "yawast.shared.network.http_build_raw_response", lambda resp: "rawresp"
+    )
+    ev = Evidence.from_response(DummyResp())
+    assert ev["request"] == "rawreq"
+    assert ev["response"] == "rawresp"
+
+
+def test_evidence_cache_to_file_and_purge(tmp_path):
+    big = "x" * (1024 * 26)
+    ev = Evidence("http://foo", big, big)
+    ev.cache_to_file()
+    assert ev.request_file_name is not None
+    assert ev.response_file_name is not None
+    assert os.path.exists(ev.request_file_name)
+    assert os.path.exists(ev.response_file_name)
+    ev.purge_files()
+    assert ev.request_file_name is None
+    assert ev.response_file_name is None

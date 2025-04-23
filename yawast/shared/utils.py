@@ -39,7 +39,7 @@ def is_url(url):
                 return False
         else:
             return False
-    except ValueError:
+    except Exception:
         return False
 
 
@@ -76,27 +76,24 @@ def get_domain(val: str) -> str:
 
 def is_printable_str(b: bytes) -> bool:
     decoders = ["utf_8", "latin_1", "cp1251"]
-    printable = False
     good_decoder = None
 
     with ExecutionTimer() as timer:
         for decoder in decoders:
-            s = b.decode(decoder, "backslashreplace")
-
-            if not any(
-                repr(ch).startswith("'\\x") or repr(ch).startswith("'\\u") for ch in s
-            ):
-                printable = True
+            try:
+                s = b.decode(decoder)
+            except Exception:
+                continue
+            if s.isprintable() and all(ord(ch) < 128 for ch in s):
                 good_decoder = decoder
-
                 break
 
     if good_decoder is not None:
         output.debug(f"Decoded string as {good_decoder} in {timer.to_ms()}ms")
+        return True
     else:
         output.debug(f"Failed to decode string in {timer.to_ms()}ms")
-
-    return printable
+        return False
 
 
 def strip_ansi_str(val: str) -> str:
@@ -127,6 +124,7 @@ def get_port(url: str) -> int:
 
 
 def extract_url(url):
+    url = str(url)  # Ensure input is always a string
     # check for extra slashes in the scheme
     if re.match(r"^[a-z]{2,8}:///+", url, re.IGNORECASE):
         url = re.sub(r":///+", "://", url, 1)

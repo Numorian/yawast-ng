@@ -457,3 +457,118 @@ class TestPluginManager:
         # Should not call output.error or output.debug
         mock_output.error.assert_not_called()
         mock_output.debug.assert_not_called()
+
+
+def make_plugin_base(name, base):
+    class Dummy(base):
+        def __init__(self):
+            self.checked = False
+
+        def check(self, url):
+            self.checked = True
+
+    Dummy.__name__ = name
+    return Dummy
+
+
+def test_load_plugins_scanner_and_hook(monkeypatch):
+    Scanner = make_plugin_base("ScannerPlugin", plugin_manager.ScannerPluginBase)
+    HttpScanner = make_plugin_base("HttpScanner", plugin_manager.HttpScannerPluginBase)
+    NetworkScanner = make_plugin_base(
+        "NetworkScanner", plugin_manager.NetworkScannerPluginBase
+    )
+    Hook = make_plugin_base("HookPlugin", plugin_manager.HookScannerBase)
+
+    # Simulate entry points
+    class EP:
+        def __init__(self, name, cls):
+            self.name = name
+            self._cls = cls
+
+        def load(self):
+            return self._cls
+
+    eps = [
+        EP("scanner", Scanner),
+        EP("http", HttpScanner),
+        EP("network", NetworkScanner),
+        EP("hook", Hook),
+    ]
+    monkeypatch.setattr(plugin_manager, "entry_points", lambda group: eps)
+    monkeypatch.setattr(plugin_manager.output, "debug", lambda x: None)
+    monkeypatch.setattr(plugin_manager.output, "error", lambda x: None)
+    plugin_manager.plugins["scanner"].clear()
+    plugin_manager.plugins["hook"].clear()
+    plugin_manager.load_plugins()
+    assert "scanner" in plugin_manager.plugins and "hook" in plugin_manager.plugins
+    assert (
+        "scanner" in plugin_manager.plugins
+        and "scanner" in plugin_manager.plugins["scanner"]
+    )
+    assert "hook" in plugin_manager.plugins["hook"]
+
+
+def test_print_loaded_plugins(capsys):
+    plugin_manager.plugins["scanner"] = {"foo": type("A", (), {})}
+    plugin_manager.plugins["hook"] = {"bar": type("B", (), {})}
+    plugin_manager.print_loaded_plugins()
+    out = capsys.readouterr().out
+    assert "Loaded scanner plugins:" in out
+    assert "Loaded hook plugins:" in out
+
+
+def test_run_http_scans(monkeypatch):
+    Dummy = make_plugin_base("HttpScanner", plugin_manager.HttpScannerPluginBase)
+    Dummy.check = mock.Mock()
+    plugin_manager.plugins["scanner"] = {"http": Dummy}
+    monkeypatch.setattr(plugin_manager.output, "debug", lambda x: None)
+    plugin_manager.run_http_scans("http://foo")
+    Dummy.check.assert_called_once()
+
+
+def test_run_network_scans(monkeypatch):
+    Dummy = make_plugin_base("NetworkScanner", plugin_manager.NetworkScannerPluginBase)
+    Dummy.check = mock.Mock()
+    plugin_manager.plugins["scanner"] = {"network": Dummy}
+    monkeypatch.setattr(plugin_manager.output, "debug", lambda x: None)
+    plugin_manager.run_network_scans("http://foo")
+    Dummy.check.assert_called_once()
+
+
+def test_run_other_scans(monkeypatch):
+    class Other(plugin_manager.ScannerPluginBase):
+        def check(self, url):
+            self.called = True
+
+    plugin_manager.plugins["scanner"] = {"other": Other}
+    monkeypatch.setattr(plugin_manager.output, "debug", lambda x: None)
+    plugin_manager.run_other_scans("http://foo")
+
+
+def test_run_hook_response_received(monkeypatch):
+    class Dummy(plugin_manager.HookScannerBase):
+        def response_received(self, url, resp):
+            self.called = True
+
+    plugin_manager.plugins["hook"] = {"hook": Dummy}
+    plugin_manager.run_hook_response_received("http://foo", mock.Mock())
+
+
+def test_run_hook_injection_point_found(monkeypatch):
+    class Dummy(plugin_manager.HookScannerBase):
+        def injection_point_found(self, url, point):
+            self.called = True
+
+    plugin_manager.plugins["hook"] = {"hook": Dummy}
+    plugin_manager.run_hook_injection_point_found("http://foo", mock.Mock())
+
+
+def test_plugin_error_handling(monkeypatch):
+    class Bad(plugin_manager.HttpScannerPluginBase):
+        def check(self, url):
+            raise Exception("fail")
+
+    plugin_manager.plugins["scanner"] = {"bad": Bad}
+    monkeypatch.setattr(plugin_manager.output, "debug", lambda x: None)
+    monkeypatch.setattr(plugin_manager.output, "error", lambda x: None)
+    plugin_manager.run_http_scans("http://foo")

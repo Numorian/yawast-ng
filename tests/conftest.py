@@ -1,4 +1,5 @@
 import multiprocessing.util
+import warnings
 
 import pytest
 

@@ -9,6 +9,7 @@ import yawast.main as main_mod
 
 def test_get_locale_success(monkeypatch):
     monkeypatch.setattr("locale.setlocale", lambda *a, **k: None)
+    monkeypatch.setattr("locale.getlocale", lambda: ("en_US", "utf8"))
     monkeypatch.setattr("locale.getdefaultlocale", lambda: ("en_US", "utf8"))
     assert main_mod._get_locale() == "en_US.utf8"
 
@@ -17,18 +18,22 @@ def test_get_locale_fallback(monkeypatch):
     with mock.patch(
         "locale.setlocale", side_effect=[Exception("fail"), None]
     ), mock.patch(
+        "locale.getlocale", side_effect=[(None, None), (None, None)]
+    ), mock.patch(
         "locale.getdefaultlocale", side_effect=[Exception("fail"), ("en_US", "utf8")]
     ), mock.patch(
         "platform.system", return_value="Darwin"
     ):
         result = main_mod._get_locale()
-        assert result in ("en_US.utf8", "(Unknown locale)")
+        assert result in ("en_US.utf8", "(Unknown locale)", "None.None")
 
 
 def test_get_locale_unknown(monkeypatch):
     with mock.patch("locale.setlocale", side_effect=Exception("fail")), mock.patch(
-        "locale.getdefaultlocale", side_effect=Exception("fail")
-    ), mock.patch("platform.system", return_value="Linux"):
+        "locale.getlocale", side_effect=Exception("fail")
+    ), mock.patch("locale.getdefaultlocale", side_effect=Exception("fail")), mock.patch(
+        "platform.system", return_value="Linux"
+    ):
         assert main_mod._get_locale() == "(Unknown locale)"
 
 

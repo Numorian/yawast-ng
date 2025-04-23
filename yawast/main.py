@@ -204,7 +204,7 @@ def _get_locale() -> str:
     # get the locale
     try:
         locale.setlocale(locale.LC_ALL, "")
-        lcl = locale.getdefaultlocale()
+        lcl = locale.getlocale()
     except Exception as error:
         print(
             f"Unable to get Locale: {str(error)} - attempting to force locale to en_US.utf8"
@@ -216,7 +216,7 @@ def _get_locale() -> str:
             else:
                 locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
-            lcl = locale.getdefaultlocale()
+            lcl = locale.getlocale()
         except Exception as err:
             print(f"Unable to set locale: {str(err)}")
 

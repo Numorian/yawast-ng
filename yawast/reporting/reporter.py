@@ -7,7 +7,7 @@ import json
 import os
 import time
 import zipfile
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union, cast
 
 from yawast import config
@@ -240,7 +240,9 @@ def register_message(value: str, kind: str):
                 should_log = False
 
         if should_log:
-            _info["messages"][kind].append(f"[{datetime.utcnow()} UTC]: {value}")
+            _info["messages"][kind].append(
+                f"[{datetime.now(timezone.utc)} UTC]: {value}"
+            )
 
 
 def register_injection_points(points: List[InjectionPoint]):

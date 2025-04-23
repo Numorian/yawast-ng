@@ -87,7 +87,7 @@ def test_to_comparable():
 
 def test_replace_version():
     s = "1.2.3"
-    assert "[0-9][0-9.a-z_\-]+" in retirejs._replace_version(s)
+    assert r"[0-9][0-9.a-z_\-]+" in retirejs._replace_version(s)
 
 
 def test_is_vulnerable():

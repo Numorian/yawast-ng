@@ -59,7 +59,7 @@ jobs:
     - name: Run unit tests
       if: always()
       run: |
-        pipenv run pytest --maxfail=2 --disable-warnings --tb=short --cov
+        pipenv run pytest --maxfail=2 --disable-warnings --tb=short --cov --cov-report=xml
       shell: bash {0}
 
     - name: Upload results to Codecov

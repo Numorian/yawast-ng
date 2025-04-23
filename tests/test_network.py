@@ -223,3 +223,84 @@ def test__check_connection(monkeypatch):
 def test_reset():
     network.reset()
     assert network._requester is not None
+
+
+class DummyArgs:
+    def __init__(self, ports=False):
+        self.ports = ports
+
+
+class DummySession:
+    def __init__(self, domain, url, ports=False):
+        self.domain = domain
+        self.url = url
+        self.args = DummyArgs(ports=ports)
+
+
+def test_scan_with_ports(monkeypatch):
+    from yawast.scanner.cli import network as cli_network
+
+    session = DummySession("example.com", "http://example.com", ports=True)
+    called = {}
+    monkeypatch.setattr(
+        cli_network, "_check_open_ports", lambda d, u: called.setdefault("ports", True)
+    )
+    monkeypatch.setattr(
+        cli_network.plugin_manager,
+        "run_network_scans",
+        lambda url: called.setdefault("plugin", True),
+    )
+    cli_network.scan(session)
+    assert called["ports"]
+    assert called["plugin"]
+
+
+def test_scan_without_ports(monkeypatch):
+    from yawast.scanner.cli import network as cli_network
+
+    session = DummySession("example.com", "http://example.com", ports=False)
+    monkeypatch.setattr(
+        cli_network.plugin_manager,
+        "run_network_scans",
+        lambda url: setattr(session, "plugin", True),
+    )
+    cli_network.scan(session)
+    assert hasattr(session, "plugin")
+
+
+def test_check_open_ports_normal(monkeypatch):
+    from yawast.scanner.cli import network as cli_network
+
+    called = {}
+    monkeypatch.setattr(cli_network.output, "empty", lambda: None)
+    monkeypatch.setattr(cli_network.output, "norm", lambda *a, **k: None)
+    monkeypatch.setattr(
+        cli_network.reporter,
+        "display_results",
+        lambda res, tab: called.setdefault("display", True),
+    )
+    monkeypatch.setattr(cli_network.basic, "get_ips", lambda domain: ["1.2.3.4"])
+    monkeypatch.setattr(
+        cli_network.port_scan, "check_open_ports", lambda url, ip, file: ["open_port"]
+    )
+    cli_network._check_open_ports("example.com", "http://example.com")
+    assert called["display"]
+
+
+def test_check_open_ports_exception(monkeypatch):
+    from yawast.scanner.cli import network as cli_network
+
+    monkeypatch.setattr(cli_network.output, "empty", lambda: None)
+    monkeypatch.setattr(cli_network.output, "norm", lambda *a, **k: None)
+    monkeypatch.setattr(
+        cli_network.output,
+        "error",
+        lambda msg: setattr(cli_network, "error_called", msg),
+    )
+    monkeypatch.setattr(
+        cli_network.basic,
+        "get_ips",
+        lambda domain: (_ for _ in ()).throw(Exception("fail")),
+    )
+    cli_network._check_open_ports("example.com", "http://example.com")
+    assert hasattr(cli_network, "error_called")

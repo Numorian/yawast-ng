@@ -107,3 +107,226 @@ def test_scan_normal_domain(monkeypatch):
     session.args.srv = False
     session.args.subdomains = True
     dns.scan(session)
+
+
+def test_scan_txt_exception(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com")
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.basic.get_text",
+        lambda d: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "yawast.shared.output.error", lambda msg: setattr(session, "txt_error", msg)
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "txt_error")
+
+
+def test_scan_mx_exception(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com")
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.basic.get_mx",
+        lambda d: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "yawast.shared.output.error", lambda msg: setattr(session, "mx_error", msg)
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "mx_error")
+
+
+def test_scan_ns_exception(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com")
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.basic.get_ns",
+        lambda d: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "yawast.shared.output.error", lambda msg: setattr(session, "ns_error", msg)
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "ns_error")
+
+
+def test_scan_srv_exception(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com", srv=True)
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ns", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.srv.find_srv_records",
+        lambda d: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "yawast.shared.output.error", lambda msg: setattr(session, "srv_error", msg)
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "srv_error")
+
+
+def test_scan_subdomains_exception(monkeypatch):
+    session = DummySession(
+        domain="example.com", url="http://example.com", subdomains=True
+    )
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ns", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.subdomains.find_subdomains",
+        lambda d: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "yawast.shared.output.error",
+        lambda msg: setattr(session, "subdomains_error", msg),
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "subdomains_error")
+
+
+def test_scan_caa_exception(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com")
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ns", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.caa.get_caa",
+        lambda d: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "yawast.shared.output.error", lambda msg: setattr(session, "caa_error", msg)
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "caa_error")
+
+
+def test_scan_caa_missing(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com")
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ns", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.caa.get_caa", lambda d: [("example.com", "CAA", [])]
+    )
+    monkeypatch.setattr(
+        "yawast.reporting.reporter.display",
+        lambda *a, **k: setattr(session, "caa_display", True),
+    )
+    monkeypatch.setattr(
+        "yawast.reporting.issue.Issue.from_result", lambda *a, **k: None
+    )
+    monkeypatch.setattr("yawast.reporting.result.Result", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "caa_display")
+
+
+def test_scan_dnssec_missing(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com")
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ns", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.caa.get_caa", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.dnssec.get_dnskey", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.reporting.reporter.display",
+        lambda *a, **k: setattr(session, "dnssec_display", True),
+    )
+    monkeypatch.setattr(
+        "yawast.reporting.issue.Issue.from_result", lambda *a, **k: None
+    )
+    monkeypatch.setattr("yawast.reporting.result.Result", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "dnssec_display")
+
+
+def test_scan_dnssec_exception(monkeypatch):
+    session = DummySession(domain="example.com", url="http://example.com")
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ips", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ns", lambda d: [])
+    monkeypatch.setattr("yawast.scanner.modules.dns.caa.get_caa", lambda d: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.dnssec.get_dnskey",
+        lambda d: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(
+        "yawast.shared.output.error", lambda msg: setattr(session, "dnssec_error", msg)
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.network_info.purge_data", lambda: None
+    )
+    dns.scan(session)
+    assert hasattr(session, "dnssec_error")

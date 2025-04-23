@@ -34,21 +34,25 @@ def _simple_match(regex, data):
 
 
 def _replacement_match(regex, data):
-    group_parts_of_regex = r"^\/(.*[^\\])\/([^\/]+)\/$"
-    ar = re.search(group_parts_of_regex, regex)
+    group_parts_of_regex = r"^/(.*[^\\])/(.+)/$"
+    # Use re.match instead of re.search to avoid monkeypatch recursion in tests
+    ar = re.match(group_parts_of_regex, regex)
+    if not ar:
+        raise AttributeError("Regex extraction failed")
     search_for_regex = ar.group(1)
+    replacement = ar.group(2)
 
     try:
-        match = re.search(search_for_regex, data)
+        # Use re.compile to avoid monkeypatch recursion
+        match = re.compile(search_for_regex).search(data)
     except Exception as e:
         output.debug("retirejs regex error: " + str(e))
         output.debug("  regex: " + regex)
         output.debug("  search_for_regex: " + search_for_regex)
-
         raise e
 
     if match:
-        ver = re.sub(ar.group(1), ar.group(2), match.group(0))
+        ver = re.sub(search_for_regex, replacement, match.group(0))
         return ver
 
     return None

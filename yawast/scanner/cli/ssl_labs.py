@@ -223,8 +223,8 @@ def _get_cert_info(body, ep, url):
     for name in cert["altNames"]:
         output.norm(f"\t\t{name}")
 
-    output.norm(f'\tNot Before: {x509_cert.not_valid_before.isoformat(" ")}')
-    output.norm(f'\tNot After: {x509_cert.not_valid_after.isoformat(" ")}')
+    output.norm(f'\tNot Before: {x509_cert.not_valid_before_utc.isoformat(" ")}')
+    output.norm(f'\tNot After: {x509_cert.not_valid_after_utc.isoformat(" ")}')
 
     if cert["keyAlg"] == "EC":
         output.norm(

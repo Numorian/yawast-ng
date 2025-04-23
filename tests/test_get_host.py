@@ -2,18 +2,18 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
 from yawast.scanner.modules.dns import basic
 
 
-class TestGetHost(TestCase):
+class TestGetHost:
     def test_get_host(self):
         res = basic.get_host("8.8.8.8")
 
-        self.assertEqual("dns.google", res)
+        assert res == "dns.google"
 
     def test_get_host_na(self):
         res = basic.get_host("104.28.27.55")
 
-        self.assertEqual("N/A", res)
+        assert res == "N/A"

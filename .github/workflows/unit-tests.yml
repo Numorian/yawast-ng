@@ -34,5 +34,5 @@ jobs:
         shell: bash {0}
       - name: Run unit tests
         run: |
-          pipenv run python -m unittest discover
+          pipenv run pytest --maxfail=2 --disable-warnings --tb=short
         shell: bash {0}

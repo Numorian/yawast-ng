@@ -2,25 +2,20 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
 from yawast.shared import network
 
 
-class TestCheckWwwRedirect(TestCase):
+class TestCheckWWWRedirect:
     def test_check_www_redirect_valid(self):
-        self.assertEqual(
-            "https://adamcaudill.com/",
-            network.check_www_redirect("https://www.adamcaudill.com/"),
-        )
+        result = network.check_www_redirect("https://www.adamcaudill.com/")
+        assert result == "https://adamcaudill.com/"
 
     def test_check_www_redirect_none(self):
-        self.assertEqual(
-            "https://adamcaudill.com/",
-            network.check_www_redirect("https://adamcaudill.com/"),
-        )
+        result = network.check_www_redirect("https://adamcaudill.com/")
+        assert result == "https://adamcaudill.com/"
 
     def test_check_www_redirect_www(self):
-        self.assertEqual(
-            "https://www.apple.com/", network.check_www_redirect("https://apple.com/")
-        )
+        result = network.check_www_redirect("https://apple.com/")
+        assert result == "https://www.apple.com/"

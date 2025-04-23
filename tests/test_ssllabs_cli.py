@@ -4,7 +4,8 @@
 
 import json
 import os
-from unittest import TestCase
+
+import pytest
 
 from tests import utils
 from yawast.scanner.cli.ssl_labs import (
@@ -15,7 +16,7 @@ from yawast.scanner.cli.ssl_labs import (
 from yawast.shared import output
 
 
-class TestSslLabsCLI(TestCase):
+class TestSslLabsCLI:
     def test__get_cert_info(self):
         output.setup(False, False, False)
         target_dir = os.path.dirname(os.path.realpath("__file__"))
@@ -29,7 +30,7 @@ class TestSslLabsCLI(TestCase):
                     _get_cert_info(body, ep, "http://adamcaudill.com")
         except Exception as error:
             print(error)
-            self.assertIsNone(error)
+            assert error is None
 
     def test__get_protocol_info(self):
         output.setup(False, False, False)
@@ -44,7 +45,7 @@ class TestSslLabsCLI(TestCase):
                     _get_protocol_info(ep, "http://adamcaudill.com")
         except Exception as error:
             print(error)
-            self.assertIsNone(error)
+            assert error is None
 
     def test__get_vulnerability_info(self):
         output.setup(False, False, False)
@@ -59,4 +60,4 @@ class TestSslLabsCLI(TestCase):
                     _get_vulnerability_info(ep, "http://adamcaudill.com")
         except Exception as error:
             print(error)
-            self.assertIsNone(error)
+            assert error is None

@@ -3,18 +3,19 @@
 #  See the LICENSE file for full license details.
 
 import os
-from unittest import TestCase
+
+import pytest
 
 from yawast.scanner.modules.dns import subdomains
 
 
-class TestFindSubdomains(TestCase):
+class TestFindSubdomains:
     def test_find_subdomains(self):
         target_dir = os.path.dirname(os.path.realpath("__file__"))
         path = os.path.join(target_dir, "tests/test_data/subdomains.txt")
 
         recs = subdomains.find_subdomains("adamcaudill.com", path)
 
-        self.assertTrue(len(recs) > 0)
+        assert len(recs) > 0
 
-        self.assertEqual("www.adamcaudill.com.", recs[0][1])
+        assert "www.adamcaudill.com." == recs[0][1]

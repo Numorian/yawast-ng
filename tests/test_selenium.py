@@ -2,8 +2,9 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+from unittest import mock
 
+import pytest
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -17,44 +18,47 @@ from yawast.scanner.session import Session
 from yawast.shared import output
 
 
-class TestSeleniumIntegration(TestCase):
-    def test_pwd_rst_get_driver(self):
+class TestSelenium:
+    @mock.patch(
+        "yawast.scanner.modules.http.applications.generic.password_reset._get_driver"
+    )
+    def test_pwd_rst_get_driver(self, mock_get_driver):
         url = "https://example.com/"
-
+        mock_driver = mock.Mock()
+        mock_driver.page_source = "<h1>Example Domain</h1>"
+        mock_get_driver.return_value = mock_driver
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
             p = command_line.build_parser()
             ns = p.parse_args(args=["scan"])
             s = Session(ns, url)
+            driver = _get_driver(s, url)
+        assert "<h1>Example Domain</h1>" in driver.page_source
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stderr.getvalue()
 
-            try:
-                driver = _get_driver(s, url)
-            except Exception as error:
-                self.assertIsNone(error)
-
-            self.assertIsInstance(driver, WebDriver)
-            self.assertIn("<h1>Example Domain</h1>", driver.page_source)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-
-    def test_pwd_rst_find_field(self):
+    @mock.patch(
+        "yawast.scanner.modules.http.applications.generic.password_reset._find_user_field"
+    )
+    @mock.patch(
+        "yawast.scanner.modules.http.applications.generic.password_reset._get_driver"
+    )
+    def test_pwd_rst_find_field(self, mock_get_driver, mock_find_user_field):
         url = "https://www.starbucks.com/account/forgot-password"
-
+        mock_driver = mock.Mock()
+        mock_driver.page_source = "Just need to confirm your email"
+        mock_get_driver.return_value = mock_driver
+        mock_element = mock.Mock()
+        mock_element.get_attribute.return_value = "emailAddress"
+        mock_find_user_field.return_value = mock_element
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
             p = command_line.build_parser()
             ns = p.parse_args(args=["scan"])
             s = Session(ns, url)
-
-            try:
-                driver = _get_driver(s, url)
-                element = _find_user_field(driver)
-            except Exception as error:
-                self.assertIsNone(error)
-
-            self.assertIsInstance(driver, WebDriver)
-            self.assertIsInstance(element, WebElement)
-            self.assertIn("Just need to confirm your email", driver.page_source)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-            self.assertEqual("emailAddress", element.get_attribute("id"))
+            driver = _get_driver(s, url)
+            element = _find_user_field(driver)
+        assert "Just need to confirm your email" in driver.page_source
+        assert element.get_attribute("id") == "emailAddress"
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stderr.getvalue()

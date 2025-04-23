@@ -52,7 +52,11 @@ def main():
     args, urls = parser.parse_known_args()
 
     # setup the output system
-    output.setup(args.debug, args.nocolors, args.nowrap)
+    output.setup(
+        getattr(args, "debug", False),
+        getattr(args, "nocolors", False),
+        getattr(args, "nowrap", False),
+    )
     output.debug("Starting application...")
 
     proxy = args.proxy if "proxy" in args else None
@@ -73,7 +77,7 @@ def main():
     # we are good to keep going
     print_header()
 
-    if args.output is not None:
+    if getattr(args, "output", None) is not None:
         reporter.init(args.output)
         _set_basic_info()
 
@@ -200,7 +204,7 @@ def _get_locale() -> str:
     # get the locale
     try:
         locale.setlocale(locale.LC_ALL, "")
-        lcl = locale.getdefaultlocale()
+        lcl = locale.getlocale()
     except Exception as error:
         print(
             f"Unable to get Locale: {str(error)} - attempting to force locale to en_US.utf8"
@@ -212,7 +216,7 @@ def _get_locale() -> str:
             else:
                 locale.setlocale(locale.LC_ALL, "en_US.utf8")
 
-            lcl = locale.getdefaultlocale()
+            lcl = locale.getlocale()
         except Exception as err:
             print(f"Unable to set locale: {str(err)}")
 

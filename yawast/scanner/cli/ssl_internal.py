@@ -489,8 +489,8 @@ def _get_leaf_cert_info(cert: x509.Certificate):
     for name in alt_names:
         output.norm(f"\t\t{name}")
 
-    output.norm(f'\tNot Before: {cert.not_valid_before.isoformat(" ")}')
-    output.norm(f'\tNot After: {cert.not_valid_after.isoformat(" ")}')
+    output.norm(f'\tNot Before: {cert.not_valid_before_utc.isoformat(" ")}')
+    output.norm(f'\tNot After: {cert.not_valid_after_utc.isoformat(" ")}')
 
     output.norm(f"\tKey: {cert.signature_algorithm_oid._name}")
 

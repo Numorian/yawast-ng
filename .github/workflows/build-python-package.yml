@@ -59,9 +59,7 @@ jobs:
     - name: Run unit tests
       if: always()
       run: |
-        pipenv install codecov
-        pipenv run coverage run -m unittest discover
-        pipenv run coverage xml
+        pipenv run pytest --maxfail=2 --disable-warnings --tb=short --cov --cov-report=xml
       shell: bash {0}
 
     - name: Upload results to Codecov

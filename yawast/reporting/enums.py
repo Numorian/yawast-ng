@@ -27,20 +27,28 @@ class VulnerabilityInfo(NamedTuple):
     name: str
     severity: Severity
     description: str
+    solution: str = ""
     display_all: bool = False
     references: List[VulnerabilityReference] = []
     id: str = "(Invalid)"  # must be the last item
 
     @classmethod
     def create(
-        cls, name: str, severity: Severity, description: str, display_all: bool = False
+        cls,
+        name: str,
+        severity: Severity,
+        description: str,
+        display_all: bool = False,
+        solution: str = "",
     ):
         digest = hashes.Hash(hashes.SHAKE128(5), backend=default_backend())
         digest.update(name.encode("utf_8"))
         d = digest.finalize().hex()
         id_val = f"Y{d}"
 
-        return cls.__new__(cls, name, severity, description, display_all, [], id_val)
+        return cls.__new__(
+            cls, name, severity, description, solution, display_all, [], id_val
+        )
 
     @classmethod
     def __hash__(self):

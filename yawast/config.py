@@ -15,11 +15,22 @@ include_debug_in_output = True
 allow_interactive = True
 
 
+def reset_config():
+    global user_agent, max_spider_pages, max_spider_threads, include_debug_in_output, allow_interactive
+    user_agent = None
+    max_spider_pages = 10000
+    max_spider_threads = 10
+    include_debug_in_output = True
+    allow_interactive = True
+
+
 def load_config():
     """
     Load the configuration from the config file.
     """
     global user_agent, max_spider_pages, include_debug_in_output, allow_interactive, max_spider_threads
+
+    reset_config()
 
     # check if the config file exists
     if os.path.exists("~/.yawast-ng.json"):

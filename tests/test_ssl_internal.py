@@ -2,7 +2,7 @@
 #  This file is part of YAWAST which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
-from unittest import TestCase
+import pytest
 
 from tests import utils
 from yawast import command_line
@@ -11,8 +11,8 @@ from yawast.scanner.session import Session
 from yawast.shared import output
 
 
-class TestSslInternal(TestCase):
-    def test_internal_ssl(self):
+class TestSslInternal:
+    def test_ssl_internal(self):
         url = "https://github.com/"
 
         output.setup(False, False, False)
@@ -24,8 +24,8 @@ class TestSslInternal(TestCase):
             try:
                 ssl_internal.scan(s)
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-            self.assertNotIn("Error", stdout.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
+            assert "Error" not in stdout.getvalue()

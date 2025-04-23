@@ -3,8 +3,8 @@
 #  See the LICENSE file for full license details.
 import os
 from pathlib import Path
-from unittest import TestCase
 
+import pytest
 import requests
 import requests_mock
 from bs4 import BeautifulSoup
@@ -33,7 +33,7 @@ from yawast.scanner.session import Session
 from yawast.shared import network, output
 
 
-class TestHttpBasic(TestCase):
+class TestHttpBasic:
     def test_get_header_issues_no_sec_headers(self):
         url = "http://example.com"
 
@@ -46,7 +46,7 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(7, len(res))
+        assert len(res) == 7
 
     def test_get_header_issues_none(self):
         url = "http://example.com"
@@ -74,7 +74,7 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(0, len(res))
+        assert len(res) == 0
 
     def test_get_header_issues_dup_header(self):
         network.init("", "", "")
@@ -90,14 +90,12 @@ class TestHttpBasic(TestCase):
                 resp, network.http_build_raw_response(resp), url
             )
 
-        self.assertIsNotNone(results)
-        self.assertTrue(len(results) > 0)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertTrue(
-            any(
-                "set multiple times with different values" in r.message for r in results
-            )
+        assert results is not None
+        assert len(results) > 0
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert any(
+            "set multiple times with different values" in r.message for r in results
         )
 
     def test_get_header_issues_powered_by(self):
@@ -125,8 +123,8 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(1, len(res))
-        self.assertIn("X-Powered-By Header Present", res[0].message)
+        assert len(res) == 1
+        assert "X-Powered-By Header Present" in res[0].message
 
     def test_get_header_issues_xss(self):
         url = "http://example.com"
@@ -152,8 +150,8 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(1, len(res))
-        self.assertIn("X-XSS-Protection Disabled Header Present", res[0].message)
+        assert len(res) == 1
+        assert "X-XSS-Protection Disabled Header Present" in res[0].message
 
     def test_get_header_issues_runtime(self):
         url = "http://example.com"
@@ -180,8 +178,8 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(1, len(res))
-        self.assertIn("X-Runtime Header Present", res[0].message)
+        assert len(res) == 1
+        assert "X-Runtime Header Present" in res[0].message
 
     def test_get_header_issues_backend(self):
         url = "http://example.com"
@@ -208,8 +206,8 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(1, len(res))
-        self.assertIn("X-Backend-Server Header Present", res[0].message)
+        assert len(res) == 1
+        assert "X-Backend-Server Header Present" in res[0].message
 
     def test_get_header_issues_via(self):
         url = "http://example.com"
@@ -236,8 +234,8 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Via Header Present", res[0].message)
+        assert len(res) == 1
+        assert "Via Header Present" in res[0].message
 
     def test_get_header_issues_xfa(self):
         url = "http://example.com"
@@ -263,8 +261,8 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(1, len(res))
-        self.assertIn("X-Frame-Options Header", res[0].message)
+        assert len(res) == 1
+        assert "X-Frame-Options Header" in res[0].message
 
     def test_get_header_issues_acao(self):
         url = "http://example.com"
@@ -291,8 +289,8 @@ class TestHttpBasic(TestCase):
             resp, network.http_build_raw_response(resp), url
         )
 
-        self.assertEqual(1, len(res))
-        self.assertIn("Access-Control-Allow-Origin: Unrestricted", res[0].message)
+        assert len(res) == 1
+        assert "Access-Control-Allow-Origin: Unrestricted" in res[0].message
 
     def test_check_propfind_none_err(self):
         url = "http://example.com"
@@ -303,7 +301,7 @@ class TestHttpBasic(TestCase):
             res = http_basic.check_propfind(url)
 
         for r in res:
-            self.assertNotIn("PROPFIND Enabled", r.message)
+            assert "PROPFIND Enabled" not in r.message
 
     def test_check_propfind_none_ok(self):
         url = "http://example.com"
@@ -314,7 +312,7 @@ class TestHttpBasic(TestCase):
             res = http_basic.check_propfind(url)
 
         for r in res:
-            self.assertNotIn("PROPFIND Enabled", r.message)
+            assert "PROPFIND Enabled" not in r.message
 
     def test_check_propfind(self):
         url = "http://example.com"
@@ -330,7 +328,7 @@ class TestHttpBasic(TestCase):
 
             res = http_basic.check_propfind(url)
 
-        self.assertTrue(any("PROPFIND Enabled" in r.message for r in res))
+        assert any("PROPFIND Enabled" in r.message for r in res)
 
     def test_check_trace_none_err(self):
         url = "http://example.com"
@@ -341,7 +339,7 @@ class TestHttpBasic(TestCase):
             res = http_basic.check_trace(url)
 
         for r in res:
-            self.assertNotIn("HTTP TRACE Enabled", r.message)
+            assert "HTTP TRACE Enabled" not in r.message
 
     def test_check_trace_none_ok(self):
         url = "http://example.com"
@@ -352,7 +350,7 @@ class TestHttpBasic(TestCase):
             res = http_basic.check_trace(url)
 
         for r in res:
-            self.assertNotIn("HTTP TRACE Enabled", r.message)
+            assert "HTTP TRACE Enabled" not in r.message
 
     def test_check_trace(self):
         url = "http://example.com"
@@ -362,7 +360,7 @@ class TestHttpBasic(TestCase):
 
             res = http_basic.check_trace(url)
 
-        self.assertTrue(any("HTTP TRACE Enabled" in r.message for r in res))
+        assert any("HTTP TRACE Enabled" in r.message for r in res)
 
     def test_check_opts_none_err(self):
         url = "http://example.com"
@@ -373,7 +371,7 @@ class TestHttpBasic(TestCase):
             res = http_basic.check_options(url)
 
         for r in res:
-            self.assertNotIn("HTTP Verbs (OPTIONS)", r.message)
+            assert "HTTP Verbs (OPTIONS)" not in r.message
 
     def test_check_opts_none_ok(self):
         url = "http://example.com"
@@ -384,7 +382,7 @@ class TestHttpBasic(TestCase):
             res = http_basic.check_options(url)
 
         for r in res:
-            self.assertNotIn("HTTP Verbs (OPTIONS)", r.message)
+            assert "HTTP Verbs (OPTIONS)" not in r.message
 
     def test_check_opts_allow(self):
         url = "http://example.com"
@@ -394,7 +392,7 @@ class TestHttpBasic(TestCase):
 
             res = http_basic.check_options(url)
 
-        self.assertTrue(any("Allow HTTP Verbs (OPTIONS)" in r.message for r in res))
+        assert any("Allow HTTP Verbs (OPTIONS)" in r.message for r in res)
 
     def test_check_opts_public(self):
         url = "http://example.com"
@@ -404,7 +402,7 @@ class TestHttpBasic(TestCase):
 
             res = http_basic.check_options(url)
 
-        self.assertTrue(any("Public HTTP Verbs (OPTIONS)" in r.message for r in res))
+        assert any("Public HTTP Verbs (OPTIONS)" in r.message for r in res)
 
     def test_cache_headers_none(self):
         url = "http://example.com"
@@ -416,9 +414,9 @@ class TestHttpBasic(TestCase):
 
         res = _check_cache_headers(url, resp)
 
-        self.assertTrue(any("Cache-Control Header Not Found" in r.message for r in res))
-        self.assertTrue(any("Expires Header Not Found" in r.message for r in res))
-        self.assertTrue(any("Pragma: no-cache Not Found" in r.message for r in res))
+        assert any("Cache-Control Header Not Found" in r.message for r in res)
+        assert any("Expires Header Not Found" in r.message for r in res)
+        assert any("Pragma: no-cache Not Found" in r.message for r in res)
 
     def test_cache_headers_expires_invalid(self):
         url = "http://example.com"
@@ -430,7 +428,7 @@ class TestHttpBasic(TestCase):
 
         res = _check_cache_headers(url, resp)
 
-        self.assertFalse(any("Expires Header Not Found" in r.message for r in res))
+        assert not any("Expires Header Not Found" in r.message for r in res)
 
     def test_cache_headers_expires_future(self):
         url = "http://example.com"
@@ -446,8 +444,8 @@ class TestHttpBasic(TestCase):
 
         res = _check_cache_headers(url, resp)
 
-        self.assertFalse(any("Expires Header Not Found" in r.message for r in res))
-        self.assertTrue(any("Expires Header - Future Dated" in r.message for r in res))
+        assert not any("Expires Header Not Found" in r.message for r in res)
+        assert any("Expires Header - Future Dated" in r.message for r in res)
 
     def test_cache_headers_expires_past(self):
         url = "http://example.com"
@@ -463,8 +461,8 @@ class TestHttpBasic(TestCase):
 
         res = _check_cache_headers(url, resp)
 
-        self.assertFalse(any("Expires Header Not Found" in r.message for r in res))
-        self.assertFalse(any("Expires Header - Future Dated" in r.message for r in res))
+        assert not any("Expires Header Not Found" in r.message for r in res)
+        assert not any("Expires Header - Future Dated" in r.message for r in res)
 
     def test_cache_headers_pragma(self):
         url = "http://example.com"
@@ -476,7 +474,7 @@ class TestHttpBasic(TestCase):
 
         res = _check_cache_headers(url, resp)
 
-        self.assertFalse(any("Pragma: no-cache Not Found" in r.message for r in res))
+        assert not any("Pragma: no-cache Not Found" in r.message for r in res)
 
     def test_cache_headers_cc_public(self):
         url = "http://example.com"
@@ -488,16 +486,10 @@ class TestHttpBasic(TestCase):
 
         res = _check_cache_headers(url, resp)
 
-        self.assertTrue(any("Cache-Control: Public" in r.message for r in res))
-        self.assertTrue(
-            any("Cache-Control: no-cache Not Found" in r.message for r in res)
-        )
-        self.assertTrue(
-            any("Cache-Control: no-store Not Found" in r.message for r in res)
-        )
-        self.assertTrue(
-            any("Cache-Control: private Not Found" in r.message for r in res)
-        )
+        assert any("Cache-Control: Public" in r.message for r in res)
+        assert any("Cache-Control: no-cache Not Found" in r.message for r in res)
+        assert any("Cache-Control: no-store Not Found" in r.message for r in res)
+        assert any("Cache-Control: private Not Found" in r.message for r in res)
 
     def test_cache_headers_cc_private(self):
         url = "http://example.com"
@@ -509,12 +501,8 @@ class TestHttpBasic(TestCase):
 
         res = _check_cache_headers(url, resp)
 
-        self.assertTrue(
-            any("Cache-Control: no-cache Not Found" in r.message for r in res)
-        )
-        self.assertTrue(
-            any("Cache-Control: no-store Not Found" in r.message for r in res)
-        )
+        assert any("Cache-Control: no-cache Not Found" in r.message for r in res)
+        assert any("Cache-Control: no-store Not Found" in r.message for r in res)
 
     def test_response_scanner_vuln(self):
         network.init("", "", "")
@@ -524,7 +512,7 @@ class TestHttpBasic(TestCase):
         http.reset()
         res = response_scanner.check_response(url, resp)
 
-        self.assertTrue(any("Vulnerable JavaScript" in r.message for r in res))
+        assert any("Vulnerable JavaScript" in r.message for r in res)
 
     def test_response_scanner_ext(self):
         network.init("", "", "")
@@ -534,7 +522,7 @@ class TestHttpBasic(TestCase):
         http.reset()
         res = response_scanner.check_response(url, resp)
 
-        self.assertTrue(any("External JavaScript File" in r.message for r in res))
+        assert any("External JavaScript File" in r.message for r in res)
 
     def test_rails_cve_2019_5418_none(self):
         url = "http://example.com/"
@@ -545,7 +533,7 @@ class TestHttpBasic(TestCase):
             rails.reset()
             res = rails.check_cve_2019_5418(url)
 
-        self.assertFalse(any("Rails CVE-2019-5418" in r.message for r in res))
+        assert not any("Rails CVE-2019-5418" in r.message for r in res)
 
     def test_rails_cve_2019_5418(self):
         url = "http://example.com/"
@@ -556,7 +544,7 @@ class TestHttpBasic(TestCase):
             rails.reset()
             res = rails.check_cve_2019_5418(url)
 
-        self.assertTrue(any("Rails CVE-2019-5418" in r.message for r in res))
+        assert any("Rails CVE-2019-5418" in r.message for r in res)
 
     def test_rails_cve_2019_5418_fp(self):
         url = "http://example.com/"
@@ -567,29 +555,27 @@ class TestHttpBasic(TestCase):
             rails.reset()
             res = rails.check_cve_2019_5418(url)
 
-        self.assertFalse(any("Rails CVE-2019-5418" in r.message for r in res))
+        assert not any("Rails CVE-2019-5418" in r.message for r in res)
 
     def test_python_check_banner(self):
         res = python.check_banner("Python/3.0.3", "head_data", "http://example.com")
 
-        self.assertTrue(any("Python Version Exposed" in r.message for r in res))
+        assert any("Python Version Exposed" in r.message for r in res)
 
     def test_nginx_check_banner_gen(self):
         res = nginx.check_banner("nginx", "head_data", "http://example.com")
 
-        self.assertTrue(
-            any("Generic Nginx Server Banner Found" in r.message for r in res)
-        )
+        assert any("Generic Nginx Server Banner Found" in r.message for r in res)
 
     def test_nginx_check_banner(self):
         res = nginx.check_banner("nginx/1.0.0", "head_data", "http://example.com")
 
-        self.assertTrue(any("Nginx Version Exposed" in r.message for r in res))
+        assert any("Nginx Version Exposed" in r.message for r in res)
 
     def test_nginx_check_banner_outdated(self):
         res = nginx.check_banner("nginx/1.0.0", "head_data", "http://example.com")
 
-        self.assertTrue(any("Nginx Outdated" in r.message for r in res))
+        assert any("Nginx Outdated" in r.message for r in res)
 
     def test_wp_path_disc_nix(self):
         network.init("", "", "")
@@ -608,8 +594,8 @@ class TestHttpBasic(TestCase):
 
             res = wordpress.check_path_disclosure(url)
 
-        self.assertTrue(any("WordPress File Path Disclosure" in r.message for r in res))
-        self.assertTrue(any("/home/akismet.php" in r.message for r in res))
+        assert any("WordPress File Path Disclosure" in r.message for r in res)
+        assert any("/home/akismet.php" in r.message for r in res)
 
     def test_wp_path_disc_win(self):
         network.init("", "", "")
@@ -628,8 +614,8 @@ class TestHttpBasic(TestCase):
 
             res = wordpress.check_path_disclosure(url)
 
-        self.assertTrue(any("WordPress File Path Disclosure" in r.message for r in res))
-        self.assertTrue(any("C:\\home\\akismet.php" in r.message for r in res))
+        assert any("WordPress File Path Disclosure" in r.message for r in res)
+        assert any("C:\\home\\akismet.php" in r.message for r in res)
 
     def test_wp_path_disc_none_err(self):
         network.init("", "", "")
@@ -645,9 +631,7 @@ class TestHttpBasic(TestCase):
 
             res = wordpress.check_path_disclosure(url)
 
-        self.assertFalse(
-            any("WordPress File Path Disclosure" in r.message for r in res)
-        )
+        assert not any("WordPress File Path Disclosure" in r.message for r in res)
 
     def test_wp_path_disc_none(self):
         network.init("", "", "")
@@ -660,9 +644,7 @@ class TestHttpBasic(TestCase):
 
             res = wordpress.check_path_disclosure(url)
 
-        self.assertFalse(
-            any("WordPress File Path Disclosure" in r.message for r in res)
-        )
+        assert not any("WordPress File Path Disclosure" in r.message for r in res)
 
     def test_php_find_info(self):
         network.init("", "", "")
@@ -677,7 +659,7 @@ class TestHttpBasic(TestCase):
 
             res = php.find_phpinfo([url])
 
-        self.assertTrue(any("PHP Info Found" in r.message for r in res))
+        assert any("PHP Info Found" in r.message for r in res)
 
     def test_php_find_info_none(self):
         network.init("", "", "")
@@ -696,7 +678,7 @@ class TestHttpBasic(TestCase):
 
             res = php.find_phpinfo([url])
 
-        self.assertFalse(any("PHP Info Found" in r.message for r in res))
+        assert not any("PHP Info Found" in r.message for r in res)
 
     def test_check_404(self):
         network.init("", "", "X-Test=123")
@@ -711,10 +693,10 @@ class TestHttpBasic(TestCase):
                 try:
                     file, _, _, _ = network.check_404_response(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_check_put(self):
         network.init("", "", "")
@@ -728,11 +710,11 @@ class TestHttpBasic(TestCase):
                 try:
                     res = network.http_put(url, "data")
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-            self.assertIsNotNone(res)
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
+            assert res is not None
 
     def test_wp_ident(self):
         network.init("", "", "")
@@ -743,11 +725,11 @@ class TestHttpBasic(TestCase):
             try:
                 _, res = wordpress.identify(url)
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-            self.assertTrue(any("Found WordPress" in r.message for r in res))
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
+            assert any("Found WordPress" in r.message for r in res)
 
     def test_wp_json_user_enum(self):
         network.init("", "", "")
@@ -758,13 +740,11 @@ class TestHttpBasic(TestCase):
             try:
                 res = wordpress.check_json_user_enum(url)
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-            self.assertTrue(
-                any("WordPress WP-JSON User Enumeration" in r.message for r in res)
-            )
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
+            assert any("WordPress WP-JSON User Enumeration" in r.message for r in res)
 
     def test_find_backup_ext(self):
         network.init("", "", "")
@@ -778,10 +758,10 @@ class TestHttpBasic(TestCase):
                     [url, f"{url}readme.html", f"{url}#test"]
                 )
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_find_backup_ext_all(self):
         network.init("", "", "")
@@ -801,19 +781,19 @@ class TestHttpBasic(TestCase):
                     http.reset()
                     _, res = file_search.find_backups([url, f"{url}test/readme.html"])
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
-            self.assertTrue(any("Found backup file" in r.message for r in res))
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
+            assert any("Found backup file" in r.message for r in res)
 
     def test_net_init_empty(self):
         try:
             network.init("", "", "")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
+        assert network._requester is not None
 
         network.reset()
 
@@ -821,9 +801,9 @@ class TestHttpBasic(TestCase):
         try:
             network.init(None, None, None)
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
+        assert network._requester is not None
 
         network.reset()
 
@@ -833,12 +813,12 @@ class TestHttpBasic(TestCase):
             with utils.capture_sys_output() as (stdout, stderr):
                 network.init("http://127.0.0.1:1234", "", "")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertNotIn("Invalid proxy server specified", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert "Invalid proxy server specified" not in stdout.getvalue()
 
         network.reset()
 
@@ -848,12 +828,12 @@ class TestHttpBasic(TestCase):
             with utils.capture_sys_output() as (stdout, stderr):
                 network.init("127.0.0.1:1234", "", "")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertNotIn("Invalid proxy server specified", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert "Invalid proxy server specified" not in stdout.getvalue()
 
         network.reset()
 
@@ -865,12 +845,12 @@ class TestHttpBasic(TestCase):
 
                 _ = network.http_get("http://example.com")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertIn("Error", stdout.getvalue())
-        self.assertIn("Invalid proxy server specified", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" in stdout.getvalue()
+        assert "Invalid proxy server specified" in stdout.getvalue()
 
         network.reset()
 
@@ -882,12 +862,12 @@ class TestHttpBasic(TestCase):
 
                 _ = network.http_get("http://example.com")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertNotIn("cookie must be in NAME=VALUE format", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert "cookie must be in NAME=VALUE format" not in stdout.getvalue()
 
         network.reset()
 
@@ -899,12 +879,12 @@ class TestHttpBasic(TestCase):
 
                 _ = network.http_get("http://example.com")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertNotIn("cookie must be in NAME=VALUE format", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert "cookie must be in NAME=VALUE format" not in stdout.getvalue()
 
         network.reset()
 
@@ -916,12 +896,12 @@ class TestHttpBasic(TestCase):
 
                 _ = network.http_get("http://example.com")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertIn("Error", stdout.getvalue())
-        self.assertIn("cookie must be in NAME=VALUE format", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" in stdout.getvalue()
+        assert "cookie must be in NAME=VALUE format" in stdout.getvalue()
 
         network.reset()
 
@@ -933,12 +913,12 @@ class TestHttpBasic(TestCase):
 
                 _ = network.http_get("http://example.com")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertNotIn("header must be in NAME=VALUE format", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert "header must be in NAME=VALUE format" not in stdout.getvalue()
 
         network.reset()
 
@@ -950,12 +930,12 @@ class TestHttpBasic(TestCase):
 
                 _ = network.http_get("http://example.com")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertNotIn("header must be in NAME=VALUE format", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert "header must be in NAME=VALUE format" not in stdout.getvalue()
 
         network.reset()
 
@@ -967,12 +947,12 @@ class TestHttpBasic(TestCase):
 
                 _ = network.http_get("http://example.com")
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(network._requester)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertIn("Error", stdout.getvalue())
-        self.assertIn("header must be in NAME=VALUE format", stdout.getvalue())
+        assert network._requester is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" in stdout.getvalue()
+        assert "header must be in NAME=VALUE format" in stdout.getvalue()
 
         network.reset()
 
@@ -997,15 +977,15 @@ class TestHttpBasic(TestCase):
 
                     results, jira_url = jira.check_for_jira(session)
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(jira_url)
-        self.assertIsNotNone(results)
-        self.assertTrue(len(results) > 0)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertTrue(any("Jira Installation Found" in r.message for r in results))
-        self.assertTrue(any("v8.1.0-801000" in r.message for r in results))
+        assert jira_url is not None
+        assert results is not None
+        assert len(results) > 0
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert any("Jira Installation Found" in r.message for r in results)
+        assert any("v8.1.0-801000" in r.message for r in results)
 
         network.reset()
 
@@ -1028,15 +1008,13 @@ class TestHttpBasic(TestCase):
 
                     results = jira.check_jira_user_registration(url)
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(results)
-        self.assertTrue(len(results) > 0)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertTrue(
-            any("Jira User Registration Enabled" in r.message for r in results)
-        )
+        assert results is not None
+        assert len(results) > 0
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert any("Jira User Registration Enabled" in r.message for r in results)
 
         network.reset()
 
@@ -1054,13 +1032,13 @@ class TestHttpBasic(TestCase):
 
                     results = file_search.find_ds_store([url])
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(results)
-        self.assertTrue(len(results) > 0)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertTrue(any(".DS_Store File Found" in r.message for r in results))
+        assert results is not None
+        assert len(results) > 0
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert any(".DS_Store File Found" in r.message for r in results)
 
         network.reset()
 
@@ -1084,12 +1062,12 @@ class TestHttpBasic(TestCase):
                         s, ["https://www.example.org/test/"]
                     )
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(results)
-        self.assertTrue(len(results) == 0)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
+        assert results is not None
+        assert len(results) == 0
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
 
         network.reset()
 
@@ -1119,16 +1097,14 @@ class TestHttpBasic(TestCase):
 
                     results = iis.check_telerik_rau_enabled(soup, url)
         except Exception as error:
-            self.assertIsNone(error)
+            assert error is None
 
-        self.assertIsNotNone(results)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stdout.getvalue())
-        self.assertTrue(
-            any(
-                "Telerik UI for ASP.NET AJAX RadAsyncUpload Enabled" in r.message
-                for r in results
-            )
+        assert results is not None
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stdout.getvalue()
+        assert any(
+            "Telerik UI for ASP.NET AJAX RadAsyncUpload Enabled" in r.message
+            for r in results
         )
 
         network.reset()
@@ -1151,12 +1127,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = spider(session)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_spider_link(self):
         network.init("", "", "")
@@ -1176,12 +1152,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = spider(session)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_spider_logout(self):
         network.init("", "", "")
@@ -1201,12 +1177,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = spider(session)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_spider_jpg(self):
         network.init("", "", "")
@@ -1227,12 +1203,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = spider(session)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_spider_insecure(self):
         network.init("", "", "")
@@ -1252,12 +1228,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = spider(session)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_spider_redirect(self):
         network.init("", "", "")
@@ -1279,12 +1255,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = spider(session)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_special_files(self):
         network.init("", "", "")
@@ -1301,12 +1277,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = check_special_files(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_special_paths(self):
         network.init("", "", "")
@@ -1323,12 +1299,12 @@ class TestHttpBasic(TestCase):
                 try:
                     links, res = check_special_paths(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertIsNotNone(links)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert links is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_waf_cloudflare(self):
         network.init("", "", "")
@@ -1352,11 +1328,11 @@ class TestHttpBasic(TestCase):
                     raw = network.http_build_raw_response(head)
                     res = get_waf(head.headers, raw, url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_waf_incapsula(self):
         network.init("", "", "")
@@ -1378,11 +1354,11 @@ class TestHttpBasic(TestCase):
                     raw = network.http_build_raw_response(head)
                     res = get_waf(head.headers, raw, url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_all_200(self):
         network.init("", "", "")
@@ -1397,10 +1373,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_redirect(self):
         network.init("", "", "")
@@ -1415,10 +1391,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_bad_head(self):
         network.init("", "", "")
@@ -1433,10 +1409,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_all_401(self):
         network.init("", "", "")
@@ -1451,10 +1427,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_all_500(self):
         network.init("", "", "")
@@ -1469,10 +1445,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_all_200_bin(self):
         network.init("", "", "")
@@ -1488,10 +1464,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_all_200_bin_all(self):
         network.init("", "", "")
@@ -1507,10 +1483,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_all_200_diff(self):
         network.init("", "", "")
@@ -1526,10 +1502,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_404_similar(self):
         network.init("", "", "")
@@ -1545,10 +1521,10 @@ class TestHttpBasic(TestCase):
                 try:
                     _, _ = network.http_file_exists(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_tomcat_version(self):
         network.init("", "", "")
@@ -1564,11 +1540,11 @@ class TestHttpBasic(TestCase):
                 try:
                     res = apache_tomcat.check_version(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_http_methods_good(self):
         network.init("", "", "")
@@ -1585,11 +1561,11 @@ class TestHttpBasic(TestCase):
                 try:
                     methods, res = http_basic.check_http_methods(url)
                 except Exception as error:
-                    self.assertIsNone(error)
+                    assert error is None
 
-            self.assertIsNotNone(res)
-            self.assertNotIn("Exception", stderr.getvalue())
-            self.assertNotIn("Error", stderr.getvalue())
+            assert res is not None
+            assert "Exception" not in stderr.getvalue()
+            assert "Error" not in stderr.getvalue()
 
     def test_hsts_preload_status_false(self):
         network.init("", "", "")
@@ -1600,11 +1576,11 @@ class TestHttpBasic(TestCase):
             try:
                 res = http_basic.check_hsts_preload(url)
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-        self.assertTrue(len(res) == 1)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stderr.getvalue())
+        assert len(res) == 1
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stderr.getvalue()
 
     def test_hsts_preload_status_true(self):
         network.init("", "", "")
@@ -1615,8 +1591,8 @@ class TestHttpBasic(TestCase):
             try:
                 res = http_basic.check_hsts_preload(url)
             except Exception as error:
-                self.assertIsNone(error)
+                assert error is None
 
-        self.assertTrue(len(res) == 1)
-        self.assertNotIn("Exception", stderr.getvalue())
-        self.assertNotIn("Error", stderr.getvalue())
+        assert len(res) == 1
+        assert "Exception" not in stderr.getvalue()
+        assert "Error" not in stderr.getvalue()

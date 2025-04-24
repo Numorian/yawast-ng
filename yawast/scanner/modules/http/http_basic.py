@@ -178,32 +178,17 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
         # check to see if any headers are duplicated.
         # we have to access a private member, as it's the only access to the raw headers
         if res.raw._original_response is not None:
-            raw_headers = str(res.raw._original_response.headers).splitlines(False)
-            raw_headers_checked: List[str] = []
+            raw_headers = str(res.raw._original_response.headers)
+            duplicate_headers = find_duplicate_headers(raw_headers)
 
-            for raw_header in raw_headers:
-                header_name = raw_header.split(":")[0]
-
-                if header_name not in raw_headers_checked:
-                    raw_headers_checked.append(header_name)
-
-                    for dup in raw_headers:
-                        dup_name = dup.split(":")[0]
-
-                        if dup_name == header_name and dup != raw_header:
-                            # we have a second header, with a different value
-                            # before we report this as an issue, we first need to see if this is one of the headers
-                            # that are often sent more than once. we don't want to create a lot of noise with this
-                            if str(dup_name).lower() not in ["set-cookie", "link"]:
-                                results.append(
-                                    Result.from_evidence(
-                                        ev,
-                                        f"Header {header_name} set multiple times with different values at {url}",
-                                        Vln.HTTP_HEADER_DUPLICATE,
-                                    )
-                                )
-
-                            break
+            for header_name in duplicate_headers:
+                results.append(
+                    Result.from_evidence(
+                        ev,
+                        f"Header {header_name} set multiple times with different values at {url}",
+                        Vln.HTTP_HEADER_DUPLICATE,
+                    )
+                )
     except Exception:
         output.debug_exception()
 
@@ -662,3 +647,26 @@ def _decode_big_ip_cookie(value: str) -> Union[str, None]:
                 ret = f"{host}:{port}"
 
     return ret
+
+
+def find_duplicate_headers(raw_headers: str) -> List[str]:
+    """
+    Given a raw HTTP header string, return a list of header names (excluding set-cookie and link)
+    that are set multiple times with different values.
+    """
+    header_map = {}
+    duplicates = []
+    for line in raw_headers.splitlines():
+        if not line.strip():
+            continue
+        if ":" not in line:
+            continue
+        name, value = line.split(":", 1)
+        name = name.strip().lower()
+        value = value.strip()
+        if name in header_map:
+            if value != header_map[name] and name not in ["set-cookie", "link"]:
+                duplicates.append(name)
+        else:
+            header_map[name] = value
+    return duplicates

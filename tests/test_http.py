@@ -37,7 +37,7 @@ class TestHttpBasic:
     def test_get_header_issues_no_sec_headers(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(url, text="body")
 
             resp = requests.get(url)
@@ -51,7 +51,7 @@ class TestHttpBasic:
     def test_get_header_issues_none(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -76,32 +76,31 @@ class TestHttpBasic:
 
         assert len(res) == 0
 
-    def test_get_header_issues_dup_header(self):
-        network.init("", "", "")
-        output.setup(False, False, False)
+    def test_find_duplicate_headers(self):
+        from yawast.scanner.modules.http.http_basic import find_duplicate_headers
 
-        # we are using www.tumblr.com as they return multiple vary header
-        url = "https://www.tumblr.com"
-
-        output.setup(False, True, True)
-        with utils.capture_sys_output() as (stdout, stderr):
-            resp = requests.get(url)
-            results = http_basic.get_header_issues(
-                resp, network.http_build_raw_response(resp), url
-            )
-
-        assert results is not None
-        assert len(results) > 0
-        assert "Exception" not in stderr.getvalue()
-        assert "Error" not in stdout.getvalue()
-        assert any(
-            "set multiple times with different values" in r.message for r in results
+        # Simulate raw HTTP headers with duplicates
+        raw = (
+            "X-Test: foo\n"
+            "Vary: Accept-Encoding\n"
+            "Vary: Cookie\n"
+            "X-Test: foo\n"  # same value, not a duplicate
+            "X-Test: bar\n"  # different value, should be flagged
+            "Set-Cookie: a=1\n"
+            "Set-Cookie: b=2\n"  # allowed duplicate
+            "Link: <a>\n"
+            "Link: <b>\n"  # allowed duplicate
         )
+        dups = find_duplicate_headers(raw)
+        assert "vary" in dups
+        assert "x-test" in dups
+        assert "set-cookie" not in dups
+        assert "link" not in dups
 
     def test_get_header_issues_powered_by(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -129,7 +128,7 @@ class TestHttpBasic:
     def test_get_header_issues_xss(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -156,7 +155,7 @@ class TestHttpBasic:
     def test_get_header_issues_runtime(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -184,7 +183,7 @@ class TestHttpBasic:
     def test_get_header_issues_backend(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -212,7 +211,7 @@ class TestHttpBasic:
     def test_get_header_issues_via(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -240,7 +239,7 @@ class TestHttpBasic:
     def test_get_header_issues_xfa(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -267,7 +266,7 @@ class TestHttpBasic:
     def test_get_header_issues_acao(self):
         url = "http://example.com"
 
-        with requests_mock.Mocker(real_http=True) as m:
+        with requests_mock.Mocker() as m:
             m.get(
                 url,
                 text="body",
@@ -718,33 +717,64 @@ class TestHttpBasic:
 
     def test_wp_ident(self):
         network.init("", "", "")
-        url = "https://underscores.me/wp/"
+        url = "https://example.com/"
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
-            try:
-                _, res = wordpress.identify(url)
-            except Exception as error:
-                assert error is None
+            with requests_mock.Mocker() as m:
+                m.get(
+                    url,
+                    text="<html></html>",
+                    status_code=200,
+                )
+                # Simulate wp-login.php in both root and blog/ subdir
+                for path in ["", "blog/"]:
+                    m.get(
+                        f"{url}{path}wp-login.php",
+                        text="<html><head><link rel='stylesheet' href='wp-admin/css/login.min.css?ver=6.0'></head><body>Powered by WordPress</body></html>",
+                        status_code=200,
+                    )
+                try:
+                    _, res = wordpress.identify(url)
+                except Exception as error:
+                    assert error is None
 
             assert "Exception" not in stderr.getvalue()
             assert "Error" not in stderr.getvalue()
-            assert any("Found WordPress" in r.message for r in res)
+            messages = [r.message for r in res]
+            if not any("Found WordPress" in msg for msg in messages):
+                raise AssertionError(f"Result messages: {messages}")
+            assert any("Found WordPress" in msg for msg in messages)
 
     def test_wp_json_user_enum(self):
         network.init("", "", "")
-        url = "https://underscores.me/"
+        url = "https://example.com/"
 
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
-            try:
-                res = wordpress.check_json_user_enum(url)
-            except Exception as error:
-                assert error is None
+            with requests_mock.Mocker() as m:
+                # Simulate a WordPress REST API user enumeration response
+                api_url = f"{url}wp-json/wp/v2/users"
+                m.get(
+                    api_url,
+                    json=[{"id": 1, "name": "admin", "slug": "admin"}],
+                    status_code=200,
+                )
+                m.head(api_url, status_code=200)
+                # Simulate the main site root (may be checked for JSON API presence)
+                m.get(url, text="", status_code=200)
+                m.head(url, status_code=200)
+                try:
+                    res = wordpress.check_json_user_enum(url)
+                except Exception as error:
+                    assert error is None
 
             assert "Exception" not in stderr.getvalue()
             assert "Error" not in stderr.getvalue()
-            assert any("WordPress WP-JSON User Enumeration" in r.message for r in res)
+            messages = [r.message for r in res]
+            if not any("WP-JSON User Enumeration" in msg for msg in messages):
+                raise AssertionError(f"Result messages: {messages}")
+            assert any("WP-JSON User Enumeration" in msg for msg in messages)
 
     def test_find_backup_ext(self):
         network.init("", "", "")

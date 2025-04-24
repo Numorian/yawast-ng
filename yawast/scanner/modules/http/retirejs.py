@@ -151,7 +151,13 @@ def _get_retirejs_results(
                     file = urljoin(f"http://{domain}", file)
 
             if file not in _checked:
-                findings = retirejs.scan_endpoint(file, _data)
+                try:
+                    findings = retirejs.scan_endpoint(file, _data)
+                except Exception:
+                    # if we can't get the file, just skip it
+                    output.debug(f"Failed to get JS file: {file}")
+                    output.debug_exception()
+                    findings = []
 
                 _checked.append(file)
 

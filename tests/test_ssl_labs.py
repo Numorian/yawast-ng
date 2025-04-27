@@ -578,3 +578,1129 @@ test_cert_info_chain_issues = patch_x509_load(test_cert_info_chain_issues)
 test_cert_info_unknown_validation_type = patch_x509_load(
     test_cert_info_unknown_validation_type
 )
+
+from unittest import mock
+
+
+def test_scan_check_scan_retries(monkeypatch):
+    # Simulate api.check_scan raising exceptions, then succeeding
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    call_count = {"count": 0}
+
+    def fake_check_scan(domain):
+        if call_count["count"] < 3:
+            call_count["count"] += 1
+            raise Exception("fail")
+        return ("READY", {"status": "READY", "endpoints": []})
+
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan", fake_check_scan
+    )
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    # Patch sys.stdout.isatty to False to avoid TTY code
+    monkeypatch.setattr("sys.stdout.isatty", lambda: False)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    ssl_labs.scan(DummySession())
+    # Should not raise, should retry 3 times
+
+
+def test_scan_check_scan_raises(monkeypatch):
+    # Simulate api.check_scan always raising exception
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    def always_fail(domain):
+        raise Exception("fail")
+
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl_labs.api.check_scan", always_fail)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr("sys.stdout.isatty", lambda: False)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    with pytest.raises(Exception):
+        ssl_labs.scan(DummySession())
+
+
+def test_scan_tty_status(monkeypatch):
+    # Simulate TTY output branch
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan",
+        lambda d: ("READY", {"status": "READY", "endpoints": []}),
+    )
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+
+    # Patch sys.stdout.isatty to True and provide a dummy write/flush
+    class DummyStdout:
+        def isatty(self):
+            return True
+
+        def write(self, s):
+            pass
+
+        def flush(self):
+            pass
+
+    monkeypatch.setattr("sys.stdout", DummyStdout())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    ssl_labs.scan(DummySession())
+
+
+def test_get_cert_info_missing_keys(monkeypatch):
+    # Simulate missing keys in cert/ep
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    # Patch x509.load_pem_x509_certificate to avoid real parsing
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+        ),
+    )
+    # certs missing, certChains missing
+    body = {"certs": []}
+    ep = {"details": {}}
+    with pytest.raises(Exception):
+        ssl_labs._get_cert_info(body, ep, "https://example.com")
+
+
+def test_get_protocol_info_missing_keys(monkeypatch):
+    # Simulate missing protocols, namedGroups, suites
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {"details": {}}
+    with pytest.raises(KeyError):
+        ssl_labs._get_protocol_info(ep, "https://example.com")
+    # Should raise KeyError due to missing 'protocols' key
+
+
+def test_get_vulnerability_info_unknown_values(monkeypatch):
+    # Simulate unknown/rare enum values
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {
+        "details": {
+            "zombiePoodle": 99,
+            "goldenDoodle": 99,
+            "zeroLengthPaddingOracle": 99,
+            "sleepingPoodle": 99,
+            "poodleTls": 99,
+            "ticketbleed": 99,
+            "openSslCcs": 99,
+            "openSSLLuckyMinus20": 99,
+            "bleichenbacher": 99,
+            "sessionResumption": 99,
+        }
+    }
+    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    # Should not raise
+
+
+def test_get_cert_info_all_issues(monkeypatch):
+    # Cover all cert issues branches
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda x: []
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda x: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda x: "log"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda x: False
+    )
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+        ),
+    )
+    cert = {
+        "id": "cert1",
+        "raw": "PEM",
+        "issues": 0b1111111111,  # all 10 bits set
+        "subject": "CN=Test",
+        "commonNames": ["Test"],
+        "altNames": ["Test"],
+        "notBefore": "2020-01-01T00:00:00Z",
+        "notAfter": "2030-01-01T00:00:00Z",
+        "keyAlg": "RSA",
+        "keySize": 4096,
+        "keyStrength": 4096,
+        "serialNumber": "01",
+        "issuerSubject": "CN=CA",
+        "validationType": "E",
+        "sct": True,
+        "mustStaple": False,
+        "revocationInfo": 3,
+        "revocationStatus": 99,
+        "crlRevocationStatus": 99,
+        "ocspRevocationStatus": 99,
+        "sigAlg": "sha256WithRSAEncryption",
+        "sha256Hash": "00" * 32,
+        "sha1Hash": "00" * 20,
+    }
+    ep = {
+        "details": {
+            "certChains": [
+                {
+                    "certIds": ["cert1"],
+                    "trustPaths": [
+                        {
+                            "certIds": ["cert1"],
+                            "trust": [
+                                {
+                                    "isTrusted": True,
+                                    "rootStore": "Mozilla",
+                                    "trustErrorMessage": "",
+                                }
+                            ],
+                        }
+                    ],
+                    "issues": 0,
+                }
+            ],
+            "hasSct": 7,
+        }
+    }
+    body = {"certs": [cert], "details": ep["details"]}
+    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    assert (
+        mock_output.warn.called or mock_output.error.called or mock_output.vuln.called
+    )
+
+
+def test_get_cert_info_ec_key(monkeypatch):
+    # Cover EC key branch
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda x: []
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda x: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda x: "log"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda x: False
+    )
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+        ),
+    )
+    cert = {
+        "id": "cert1",
+        "raw": "PEM",
+        "issues": 0,
+        "subject": "CN=Test",
+        "commonNames": ["Test"],
+        "altNames": ["Test"],
+        "notBefore": "2020-01-01T00:00:00Z",
+        "notAfter": "2030-01-01T00:00:00Z",
+        "keyAlg": "EC",
+        "keySize": 256,
+        "keyStrength": 256,
+        "serialNumber": "01",
+        "issuerSubject": "CN=CA",
+        "validationType": "E",
+        "sct": False,
+        "mustStaple": False,
+        "revocationInfo": 0,
+        "revocationStatus": 0,
+        "sigAlg": "sha256WithRSAEncryption",
+        "sha256Hash": "00" * 32,
+        "sha1Hash": "00" * 20,
+    }
+    ep = {
+        "details": {
+            "certChains": [
+                {
+                    "certIds": ["cert1"],
+                    "trustPaths": [
+                        {
+                            "certIds": ["cert1"],
+                            "trust": [
+                                {
+                                    "isTrusted": True,
+                                    "rootStore": "Mozilla",
+                                    "trustErrorMessage": "",
+                                }
+                            ],
+                        }
+                    ],
+                    "issues": 0,
+                }
+            ],
+            "hasSct": 0,
+        }
+    }
+    body = {"certs": [cert], "details": ep["details"]}
+    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    assert mock_output.norm.called
+
+
+def test_get_key_exchange_branches():
+    # Cover all branches of _get_key_exchange
+    suite1 = {
+        "kxType": "ECDHE",
+        "namedGroupBits": 256,
+        "namedGroupName": "secp256r1",
+        "kxStrength": 256,
+    }
+    suite2 = {"kxType": "DH", "dhBits": 1024, "kxStrength": 1024}
+    suite3 = {"kxType": "RSA", "kxStrength": 2048}
+    suite4 = {"kxType": "RSA"}  # missing kxStrength
+    assert (
+        ssl_labs._get_key_exchange(suite1) == "ECDHE-256 / secp256r1 (256 equivalent)"
+    )
+    assert ssl_labs._get_key_exchange(suite2, is_sim=True) == "DH-1024"
+    assert ssl_labs._get_key_exchange(suite3) == "RSA-2048"
+    with pytest.raises(KeyError):
+        ssl_labs._get_key_exchange(suite4)
+
+
+def test_is_cipher_suite_secure_branches():
+    # Cover all branches of _is_cipher_suite_secure
+    suite_weak_dh = {
+        "kxStrength": 1024,
+        "name": "TLS_RSA_WITH_AES_128_CBC_SHA",
+        "cipherStrength": 128,
+    }
+    suite_rc4 = {
+        "kxStrength": 2048,
+        "name": "TLS_RSA_WITH_RC4_128_SHA",
+        "cipherStrength": 128,
+    }
+    suite_weak_cipher = {
+        "kxStrength": 2048,
+        "name": "TLS_RSA_WITH_AES_128_CBC_SHA",
+        "cipherStrength": 64,
+    }
+    suite_secure = {
+        "kxStrength": 2048,
+        "name": "TLS_RSA_WITH_AES_128_CBC_SHA",
+        "cipherStrength": 128,
+    }
+    assert not ssl_labs._is_cipher_suite_secure(suite_weak_dh)
+    assert not ssl_labs._is_cipher_suite_secure(suite_rc4)
+    assert not ssl_labs._is_cipher_suite_secure(suite_weak_cipher)
+    assert ssl_labs._is_cipher_suite_secure(suite_secure)
+
+
+def test_scan_tty_status_all_branches(monkeypatch):
+    # Simulate TTY output and all status branches
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    # Dummy sys.stdout to capture writes
+    class DummyStdout:
+        def __init__(self):
+            self.writes = []
+
+        def isatty(self):
+            return True
+
+        def write(self, s):
+            self.writes.append(s)
+
+        def flush(self):
+            pass
+
+    dummy_stdout = DummyStdout()
+    monkeypatch.setattr("sys.stdout", dummy_stdout)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    # endpoints with status Ready, Pending, and Error
+    endpoints = [
+        {
+            "statusMessage": "Ready",
+            "ipAddress": "1.2.3.4",
+            "grade": "A",
+            "details": {
+                "certChains": [{"certIds": ["cert1"], "trustPaths": [], "issues": 0}],
+                "protocols": [],
+                "namedGroups": {"list": []},
+                "suites": [],
+                "sims": {"results": []},
+            },
+        },
+        {
+            "statusMessage": "Pending",
+            "ipAddress": "2.2.2.2",
+            "grade": "B",
+            "details": {
+                "certChains": [{"certIds": ["cert1"], "trustPaths": [], "issues": 0}],
+                "protocols": [],
+                "namedGroups": {"list": []},
+                "suites": [],
+                "sims": {"results": []},
+            },
+        },
+        {
+            "statusMessage": "Error",
+            "ipAddress": "3.3.3.3",
+            "grade": "F",
+            "details": {
+                "certChains": [{"certIds": ["cert1"], "trustPaths": [], "issues": 0}],
+                "protocols": [],
+                "namedGroups": {"list": []},
+                "suites": [],
+                "sims": {"results": []},
+            },
+        },
+    ]
+    # Add minimal certs to avoid KeyError
+    certs = [
+        {
+            "id": "cert1",
+            "raw": "PEM",
+            "issues": 0,
+            "subject": "CN=Test",
+            "commonNames": ["Test"],
+            "altNames": ["Test"],
+            "notBefore": "2020-01-01T00:00:00Z",
+            "notAfter": "2030-01-01T00:00:00Z",
+            "keyAlg": "RSA",
+            "keySize": 4096,
+            "keyStrength": 4096,
+            "serialNumber": "01",
+            "issuerSubject": "CN=CA",
+            "validationType": "E",
+            "sct": False,
+            "mustStaple": False,
+            "revocationInfo": 0,
+            "revocationStatus": 0,
+            "sigAlg": "sha256WithRSAEncryption",
+            "sha256Hash": "00" * 32,
+            "sha1Hash": "00" * 20,
+        }
+    ]
+    # Simulate scan loop: first call returns not READY, second call returns READY
+    scan_bodies = [
+        (
+            "IN_PROGRESS",
+            {"status": "IN_PROGRESS", "endpoints": endpoints, "certs": certs},
+        ),
+        ("READY", {"status": "READY", "endpoints": endpoints, "certs": certs}),
+    ]
+
+    def fake_check_scan(domain):
+        return scan_bodies.pop(0)
+
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan", fake_check_scan
+    )
+    # Patch x509.load_pem_x509_certificate to avoid PEM parsing error and provide .extensions
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+            extensions=[],
+        ),
+    )
+    ssl_labs.scan(DummySession())
+    # Check that DummyStdout captured writes for all status branches
+    assert any("Status - 1.2.3.4: Ready" in w for w in dummy_stdout.writes)
+    assert any(
+        "Status - 3.3.3.3: Error" in w or "Status - 3.3.3.3" in w
+        for w in dummy_stdout.writes
+    )
+
+
+def test_scan_missing_endpoints(monkeypatch):
+    # Simulate scan result missing 'endpoints' key
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan",
+        lambda d: ("READY", {"status": "READY"}),
+    )
+    with pytest.raises(ValueError):
+        ssl_labs.scan(DummySession())
+    assert mock_output.error.called
+    assert mock_output.debug.called
+
+
+def test_scan_status_error(monkeypatch):
+    # Simulate scan result with status ERROR
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan",
+        lambda d: ("ERROR", {"status": "ERROR", "statusMessage": "fail"}),
+    )
+    with pytest.raises(ValueError):
+        ssl_labs.scan(DummySession())
+
+
+def test_scan_status_fallback(monkeypatch):
+    # Simulate scan result with neither 'endpoints' nor 'status' in body
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    class DummyStdout:
+        def __init__(self):
+            self.writes = []
+
+        def isatty(self):
+            return True
+
+        def write(self, s):
+            self.writes.append(s)
+
+        def flush(self):
+            pass
+
+    dummy_stdout = DummyStdout()
+    monkeypatch.setattr("sys.stdout", dummy_stdout)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock.Mock())
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    # First call returns not READY, second call returns READY with no endpoints or status
+    scan_bodies = [
+        ("IN_PROGRESS", {"foo": "bar", "status": "IN_PROGRESS", "certs": []}),
+        ("READY", {"foo": "bar", "status": "READY", "certs": []}),
+    ]
+
+    def fake_check_scan(domain):
+        return scan_bodies.pop(0)
+
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan", fake_check_scan
+    )
+    with pytest.raises(ValueError):
+        ssl_labs.scan(DummySession())
+    # Print writes for debugging
+    print("DummyStdout.writes:", dummy_stdout.writes)
+    # Accept any fallback status output
+    assert any("Status" in w for w in dummy_stdout.writes)
+
+
+def test_cert_chain_trust_paths(monkeypatch):
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda x: []
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda x: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda x: "log"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda x: False
+    )
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+        ),
+    )
+    cert = {
+        "id": "cert1",
+        "raw": "PEM",
+        "issues": 0,
+        "subject": "CN=Test",
+        "commonNames": ["Test"],
+        "altNames": ["Test"],
+        "notBefore": "2020-01-01T00:00:00Z",
+        "notAfter": "2030-01-01T00:00:00Z",
+        "keyAlg": "RSA",
+        "keySize": 4096,
+        "keyStrength": 4096,
+        "serialNumber": "01",
+        "issuerSubject": "CN=CA",
+        "validationType": "E",
+        "sct": False,
+        "mustStaple": False,
+        "revocationInfo": 0,
+        "revocationStatus": 0,
+        "sigAlg": "sha256WithRSAEncryption",
+        "sha256Hash": "00" * 32,
+        "sha1Hash": "00" * 20,
+    }
+    chain = {
+        "certIds": ["cert1", "cert2"],
+        "trustPaths": [
+            {
+                "certIds": ["cert1", "cert2"],
+                "trust": [
+                    {
+                        "isTrusted": True,
+                        "rootStore": "Mozilla",
+                        "trustErrorMessage": "",
+                    },
+                    {
+                        "isTrusted": False,
+                        "rootStore": "Apple",
+                        "trustErrorMessage": "error",
+                    },
+                ],
+            }
+        ],
+        "issues": 0,
+    }
+    ep = {"details": {"certChains": [chain]}}
+    body = {"certs": [cert], "details": ep["details"]}
+    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    assert mock_output.norm.called
+
+
+def test_cert_chain_provided_by_server(monkeypatch):
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda x: []
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda x: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda x: "log"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda x: False
+    )
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+        ),
+    )
+    cert = {
+        "id": "cert1",
+        "raw": "PEM",
+        "issues": 0,
+        "subject": "CN=Test",
+        "commonNames": ["Test"],
+        "altNames": ["Test"],
+        "notBefore": "2020-01-01T00:00:00Z",
+        "notAfter": "2030-01-01T00:00:00Z",
+        "keyAlg": "RSA",
+        "keySize": 4096,
+        "keyStrength": 4096,
+        "serialNumber": "01",
+        "issuerSubject": "CN=CA",
+        "validationType": "E",
+        "sct": False,
+        "mustStaple": False,
+        "revocationInfo": 0,
+        "revocationStatus": 0,
+        "sigAlg": "sha256WithRSAEncryption",
+        "sha256Hash": "00" * 32,
+        "sha1Hash": "00" * 20,
+    }
+    chain = {
+        "certIds": ["cert1"],
+        "trustPaths": [
+            {
+                "certIds": ["cert1"],
+                "trust": [
+                    {
+                        "isTrusted": True,
+                        "rootStore": "Mozilla",
+                        "trustErrorMessage": "",
+                    },
+                ],
+            }
+        ],
+        "issues": 0,
+    }
+    # Add a cert with a sha256Hash not in chain["certIds"]
+    cert2 = dict(cert)
+    cert2["id"] = "cert2"
+    cert2["sha256Hash"] = "11" * 32
+    ep = {"details": {"certChains": [chain]}}
+    body = {"certs": [cert, cert2], "details": ep["details"]}
+    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    assert mock_output.norm.called
+
+
+def test_protocol_info_empty(monkeypatch):
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {"ipAddress": "1.2.3.4", "details": {"protocols": [], "sims": {"results": []}}}
+    ssl_labs._get_protocol_info(ep, "https://example.com")
+    assert mock_output.norm.called
+
+
+def test_simulations_platform_and_error(monkeypatch):
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    ep = {
+        "details": {
+            "sims": {
+                "results": [
+                    {
+                        "errorCode": 1,
+                        "client": {
+                            "name": "TestClient",
+                            "version": "1.0",
+                            "platform": "Win",
+                        },
+                    },
+                    {
+                        "errorCode": 0,
+                        "client": {
+                            "name": "TestClient",
+                            "version": "1.0",
+                            "platform": "Linux",
+                        },
+                        "protocolId": 1,
+                        "suiteName": "TLS_FAKE",
+                        "kxType": "RSA",
+                        "kxStrength": 2048,
+                    },
+                ]
+            }
+        }
+    }
+    ssl_labs._get_simulations(ep, {1: "TLS 1.2"})
+    assert mock_output.norm.called or mock_output.info.called
+
+
+def test_vuln_info_all_unknown(monkeypatch):
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {
+        "details": {
+            "dhUsesKnownPrimes": 99,
+            "sessionResumption": 99,
+            "freak": None,
+            "logjam": None,
+            "protocolIntolerance": 99,
+            "miscIntolerance": 99,
+        }
+    }
+    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    assert (
+        mock_output.error.called or mock_output.warn.called or mock_output.info.called
+    )
+
+
+def test_scan_status_error_branch(monkeypatch):
+    # Covers scan() else branch for non-Ready/Non-Error endpoint status
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan",
+        lambda d: (
+            "READY",
+            {
+                "status": "READY",
+                "endpoints": [
+                    {
+                        "statusMessage": "Weird",
+                        "ipAddress": "1.2.3.4",
+                        "grade": "F",
+                        "details": {
+                            "certChains": [
+                                {"certIds": ["cert1"], "trustPaths": [], "issues": 0}
+                            ],
+                            "protocols": [],
+                            "namedGroups": {"list": []},
+                            "suites": [],
+                            "sims": {"results": []},
+                        },
+                    }
+                ],
+                "certs": [
+                    {
+                        "id": "cert1",
+                        "raw": "PEM",
+                        "issues": 0,
+                        "subject": "CN=Test",
+                        "commonNames": ["Test"],
+                        "altNames": ["Test"],
+                        "notBefore": "2020-01-01T00:00:00Z",
+                        "notAfter": "2030-01-01T00:00:00Z",
+                        "keyAlg": "RSA",
+                        "keySize": 4096,
+                        "keyStrength": 4096,
+                        "serialNumber": "01",
+                        "issuerSubject": "CN=CA",
+                        "validationType": "E",
+                        "sct": False,
+                        "mustStaple": False,
+                        "revocationInfo": 0,
+                        "revocationStatus": 0,
+                        "sigAlg": "sha256WithRSAEncryption",
+                        "sha256Hash": "00" * 32,
+                        "sha1Hash": "00" * 20,
+                    }
+                ],
+            },
+        ),
+    )
+    monkeypatch.setattr("sys.stdout.isatty", lambda: False)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    # Should not raise, should call output.error for non-Ready endpoint
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs.scan(DummySession())
+    assert mock_output.error.called
+
+
+def test_cert_info_chain_trust_paths_multiple(monkeypatch):
+    # Covers trust_paths with multiple trust entries and duplicate certIds
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda x: []
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda x: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda x: "log"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda x: False
+    )
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+        ),
+    )
+    cert = {
+        "id": "cert1",
+        "raw": "PEM",
+        "issues": 0,
+        "subject": "CN=Test",
+        "commonNames": ["Test"],
+        "altNames": ["Test"],
+        "notBefore": "2020-01-01T00:00:00Z",
+        "notAfter": "2030-01-01T00:00:00Z",
+        "keyAlg": "RSA",
+        "keySize": 4096,
+        "keyStrength": 4096,
+        "serialNumber": "01",
+        "issuerSubject": "CN=CA",
+        "validationType": "E",
+        "sct": False,
+        "mustStaple": False,
+        "revocationInfo": 0,
+        "revocationStatus": 0,
+        "sigAlg": "sha256WithRSAEncryption",
+        "sha256Hash": "00" * 32,
+        "sha1Hash": "00" * 20,
+    }
+    chain = {
+        "certIds": ["cert1", "cert2"],
+        "trustPaths": [
+            {
+                "certIds": ["cert1", "cert2"],
+                "trust": [
+                    {
+                        "isTrusted": True,
+                        "rootStore": "Mozilla",
+                        "trustErrorMessage": "",
+                    },
+                    {
+                        "isTrusted": False,
+                        "rootStore": "Apple",
+                        "trustErrorMessage": "error",
+                    },
+                ],
+            },
+            {
+                "certIds": ["cert1", "cert2"],
+                "trust": [
+                    {"isTrusted": True, "rootStore": "Windows", "trustErrorMessage": ""}
+                ],
+            },
+        ],
+        "issues": 0,
+    }
+    ep = {"details": {"certChains": [chain]}}
+    body = {"certs": [cert], "details": ep["details"]}
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    assert mock_output.norm.called
+
+
+def test_protocol_info_named_groups_and_empty(monkeypatch):
+    # Covers namedGroups and empty output in _get_protocol_info
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {
+        "ipAddress": "1.2.3.4",
+        "details": {
+            "protocols": [{"name": "TLS", "version": "1.2", "id": 1}],
+            "namedGroups": {"list": [{"name": "secp256r1", "bits": 256}]},
+            "suites": [],
+            "sims": {"results": []},
+        },
+    }
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs._get_protocol_info(ep, "https://example.com")
+    assert mock_output.norm.called
+
+
+def test_vuln_info_misc_and_protocol_intolerance(monkeypatch):
+    # Covers miscIntolerance and protocolIntolerance bitmask branches
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {
+        "ipAddress": "1.2.3.4",
+        "details": {"miscIntolerance": 0b111, "protocolIntolerance": 0b111111},
+    }
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    assert mock_output.info.called or mock_output.warn.called
+
+
+def test_vuln_info_all_else_branches(monkeypatch):
+    # Covers all else/error branches for missing keys
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {"ipAddress": "1.2.3.4", "details": {}}
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    assert mock_output.error.called
+
+
+def test_scan_invalid_response(monkeypatch):
+    # Covers scan() else branch for invalid response (no endpoints, not ERROR)
+    class DummySession:
+        domain = "example.com"
+        url = "https://example.com"
+
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.start_scan", lambda d: None
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl_labs.api.check_scan",
+        lambda d: ("READY", {"status": "READY"}),
+    )
+    monkeypatch.setattr("sys.stdout.isatty", lambda: False)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
+    from yawast.scanner.cli import ssl_labs
+
+    with pytest.raises(ValueError):
+        ssl_labs.scan(DummySession())
+
+
+def test_cert_chain_all_issues(monkeypatch):
+    # Covers all chain issues: incomplete, duplicate, order, anchor
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda x: []
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda x: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda x: "log"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda x: False
+    )
+    monkeypatch.setattr(
+        "cryptography.x509.load_pem_x509_certificate",
+        lambda *a, **k: mock.Mock(
+            serial_number=1,
+            not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+            not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+            fingerprint=lambda algo: b"\x01" * 20,
+        ),
+    )
+    cert = {
+        "id": "cert1",
+        "raw": "PEM",
+        "issues": 0,
+        "subject": "CN=Test",
+        "commonNames": ["Test"],
+        "altNames": ["Test"],
+        "notBefore": "2020-01-01T00:00:00Z",
+        "notAfter": "2030-01-01T00:00:00Z",
+        "keyAlg": "RSA",
+        "keySize": 4096,
+        "keyStrength": 4096,
+        "serialNumber": "01",
+        "issuerSubject": "CN=CA",
+        "validationType": "E",
+        "sct": False,
+        "mustStaple": False,
+        "revocationInfo": 0,
+        "revocationStatus": 0,
+        "sigAlg": "sha256WithRSAEncryption",
+        "sha256Hash": "00" * 32,
+        "sha1Hash": "00" * 20,
+    }
+    chain = {
+        "certIds": ["cert1"],
+        "trustPaths": [
+            {
+                "certIds": ["cert1"],
+                "trust": [
+                    {"isTrusted": True, "rootStore": "Mozilla", "trustErrorMessage": ""}
+                ],
+            }
+        ],
+        "issues": (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4),
+    }
+    ep = {"details": {"certChains": [chain]}}
+    body = {"certs": [cert], "details": ep["details"]}
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    assert mock_output.warn.call_count >= 4
+
+
+def test_protocol_info_unknown_version(monkeypatch):
+    # Covers _get_protocol_info else branch for unknown protocol version
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {
+        "ipAddress": "1.2.3.4",
+        "details": {
+            "protocols": [{"name": "TLSX", "version": "9.9", "id": 1}],
+            "suites": [],
+            "sims": {"results": []},
+        },
+    }
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs._get_protocol_info(ep, "https://example.com")
+    assert mock_output.norm.called
+
+
+def test_vuln_info_rare_enum(monkeypatch):
+    # Covers rare/unknown enum values for dhUsesKnownPrimes, sessionResumption, etc.
+    mock_output = mock.Mock()
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
+    monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
+    ep = {
+        "ipAddress": "1.2.3.4",
+        "details": {
+            "dhUsesKnownPrimes": 99,
+            "sessionResumption": 99,
+            "ticketbleed": 99,
+            "openSslCcs": 99,
+            "openSSLLuckyMinus20": 99,
+            "bleichenbacher": 99,
+        },
+    }
+    from yawast.scanner.cli import ssl_labs
+
+    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    assert mock_output.error.call_count >= 3

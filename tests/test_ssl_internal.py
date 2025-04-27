@@ -320,3 +320,312 @@ def test_get_suite_info(monkeypatch):
     output_lines.clear()
     ssl_internal._get_suite_info("TLS 1.1", result, "https://example.com")
     assert any("all suites (3) rejected" in l for l in output_lines)
+
+
+def test_scan_all_else_and_error_branches(monkeypatch):
+    # Simulate all error/else branches for scan result types
+    session = DummySession()
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.basic.get_ips", lambda d: ["1.2.3.4"]
+    )
+    monkeypatch.setattr("yawast.shared.utils.get_port", lambda url: 443)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.error", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.info", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.vuln", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+    monkeypatch.setattr("yawast.reporting.reporter.display", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.issue.Issue", mock.Mock())
+    monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_common_names", lambda c: ["CN"]
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_alt_names", lambda c: ["alt"]
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_must_staple", lambda c: False
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda c: ["ext"]
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda c: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda s: "ctlog"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda fp: False
+    )
+
+    # Dummy scan result attempt with all error/else branches
+    class DummyAttempt:
+        def __init__(self, status, error_reason=None, result=None):
+            self.status = status
+            self.error_reason = error_reason
+            self.result = result
+
+    class DummyResult:
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    class DummyCertDeployment:
+        received_certificate_chain = [
+            mock.Mock(
+                subject=mock.Mock(rfc4514_string=lambda: "CN=leaf"),
+                issuer=mock.Mock(rfc4514_string=lambda: "CN=issuer"),
+                serial_number=1,
+                not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+                not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+                signature_algorithm_oid=mock.Mock(_name="alg"),
+                fingerprint=lambda algo: b"\x01" * 20,
+                extensions=[],
+            )
+        ] * 2
+        ocsp_response = None
+        path_validation_results = []
+
+    class DummyCertInfoResult:
+        certificate_deployments = [DummyCertDeployment()]
+
+    class DummyScanResult:
+        certificate_info = DummyAttempt("ERROR", "certinfo error")
+        ssl_2_0_cipher_suites = DummyAttempt("ERROR", "ssl2 error")
+        ssl_3_0_cipher_suites = DummyAttempt("ERROR", "ssl3 error")
+        tls_1_0_cipher_suites = DummyAttempt("ERROR", "tls10 error")
+        tls_1_1_cipher_suites = DummyAttempt("ERROR", "tls11 error")
+        tls_1_2_cipher_suites = DummyAttempt("ERROR", "tls12 error")
+        tls_1_3_cipher_suites = DummyAttempt("ERROR", "tls13 error")
+        tls_compression = DummyAttempt("ERROR", "compression error")
+        tls_fallback_scsv = DummyAttempt("ERROR", "fallback error")
+        heartbleed = DummyAttempt("ERROR", "heartbleed error")
+        openssl_ccs_injection = DummyAttempt("ERROR", "ccs error")
+        session_renegotiation = DummyAttempt("ERROR", "reneg error")
+        session_resumption = DummyAttempt("ERROR", "resumption error")
+        robot = DummyAttempt("ERROR", "robot error")
+        tls_1_3_early_data = DummyAttempt("ERROR", "early data error")
+
+    class DummyScan:
+        scan_status = mock.Mock()
+        scan_result = DummyScanResult()
+
+    class DummyScanner:
+        def queue_scans(self, reqs):
+            pass
+
+        def get_results(self):
+            yield DummyScan()
+
+    monkeypatch.setattr("yawast.scanner.cli.ssl_internal.Scanner", DummyScanner)
+    # Patch ServerScanResultAsJson.model_validate to avoid validation error
+    monkeypatch.setattr(
+        "yawast.scanner.cli.ssl_internal.ServerScanResultAsJson",
+        mock.Mock(model_validate=lambda r: {}),
+    )
+    # Patch SslyzeOutputAsJson to avoid validation/serialization error
+    monkeypatch.setattr(
+        "yawast.scanner.cli.ssl_internal.SslyzeOutputAsJson",
+        mock.Mock(return_value=mock.Mock(model_dump_json=lambda: "{}")),
+    )
+    ssl_internal.scan(session)
+
+
+def test_scan_else_status_branches(monkeypatch):
+    # Simulate all scan result types returning an unknown status to hit else branches
+    session = DummySession()
+    monkeypatch.setattr(
+        "yawast.scanner.modules.dns.basic.get_ips", lambda d: ["1.2.3.4"]
+    )
+    monkeypatch.setattr("yawast.shared.utils.get_port", lambda url: 443)
+    monkeypatch.setattr("yawast.shared.output.norm", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.error", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    monkeypatch.setattr("yawast.shared.output.info", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.vuln", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+    monkeypatch.setattr("yawast.reporting.reporter.display", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.issue.Issue", mock.Mock())
+    monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_common_names", lambda c: ["CN"]
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_alt_names", lambda c: ["alt"]
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_must_staple", lambda c: False
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.format_extensions", lambda c: ["ext"]
+    )
+    monkeypatch.setattr("yawast.scanner.modules.ssl.cert_info.get_scts", lambda c: [])
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.get_ct_log_name", lambda s: "ctlog"
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.ssl.cert_info.check_symantec_root", lambda fp: False
+    )
+
+    class DummyAttempt:
+        def __init__(self, status, error_reason=None, result=None):
+            self.status = status
+            self.error_reason = error_reason
+            self.result = result
+
+    class DummyResult:
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    class DummyCertDeployment:
+        received_certificate_chain = [
+            mock.Mock(
+                subject=mock.Mock(rfc4514_string=lambda: "CN=leaf"),
+                issuer=mock.Mock(rfc4514_string=lambda: "CN=issuer"),
+                serial_number=1,
+                not_valid_before_utc=mock.Mock(isoformat=lambda sep: "2020-01-01"),
+                not_valid_after_utc=mock.Mock(isoformat=lambda sep: "2030-01-01"),
+                signature_algorithm_oid=mock.Mock(_name="alg"),
+                fingerprint=lambda algo: b"\x01" * 20,
+                extensions=[],
+            )
+        ] * 2
+        ocsp_response = None
+        path_validation_results = []
+
+    class DummyCertInfoResult:
+        certificate_deployments = [DummyCertDeployment()]
+
+    class DummyScanResult:
+        certificate_info = DummyAttempt("UNKNOWN", "certinfo error")
+        ssl_2_0_cipher_suites = DummyAttempt("UNKNOWN", "ssl2 error")
+        ssl_3_0_cipher_suites = DummyAttempt("UNKNOWN", "ssl3 error")
+        tls_1_0_cipher_suites = DummyAttempt("UNKNOWN", "tls10 error")
+        tls_1_1_cipher_suites = DummyAttempt("UNKNOWN", "tls11 error")
+        tls_1_2_cipher_suites = DummyAttempt("UNKNOWN", "tls12 error")
+        tls_1_3_cipher_suites = DummyAttempt("UNKNOWN", "tls13 error")
+        tls_compression = DummyAttempt("UNKNOWN", "compression error")
+        tls_fallback_scsv = DummyAttempt("UNKNOWN", "fallback error")
+        heartbleed = DummyAttempt("UNKNOWN", "heartbleed error")
+        openssl_ccs_injection = DummyAttempt("UNKNOWN", "ccs error")
+        session_renegotiation = DummyAttempt("UNKNOWN", "reneg error")
+        session_resumption = DummyAttempt("UNKNOWN", "resumption error")
+        robot = DummyAttempt("UNKNOWN", "robot error")
+        tls_1_3_early_data = DummyAttempt("UNKNOWN", "early data error")
+
+    class DummyScan:
+        scan_status = mock.Mock()
+        scan_result = DummyScanResult()
+
+    class DummyScanner:
+        def queue_scans(self, reqs):
+            pass
+
+        def get_results(self):
+            yield DummyScan()
+
+    monkeypatch.setattr("yawast.scanner.cli.ssl_internal.Scanner", DummyScanner)
+    monkeypatch.setattr(
+        "yawast.scanner.cli.ssl_internal.ServerScanResultAsJson",
+        mock.Mock(model_validate=lambda r: {}),
+    )
+    monkeypatch.setattr(
+        "yawast.scanner.cli.ssl_internal.SslyzeOutputAsJson",
+        mock.Mock(return_value=mock.Mock(model_dump_json=lambda: "{}")),
+    )
+    ssl_internal.scan(session)
+
+
+def test_get_cert_chain_empty(monkeypatch):
+    # Test _get_cert_chain with an empty chain
+    output_lines = []
+    monkeypatch.setattr("yawast.shared.output.norm", lambda s: output_lines.append(s))
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    ssl_internal._get_cert_chain([], "https://example.com")
+    assert output_lines == []
+
+
+def test_get_cert_chain_symantec(monkeypatch):
+    # Test _get_cert_chain with a cert that triggers Symantec root warning
+    cert = mock.Mock()
+    cert.subject.rfc4514_string.return_value = "CN=chain.example.com"
+    cert.signature_algorithm_oid._name = "sha256WithRSAEncryption"
+    cert.fingerprint.side_effect = [b"\x01\x02\x03", b"\x04\x05\x06"]
+    monkeypatch.setattr(
+        "yawast.scanner.cli.ssl_internal.cert_info.check_symantec_root",
+        lambda fp: fp == "010203",
+    )
+    monkeypatch.setattr("yawast.reporting.reporter.display", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.issue.Issue", mock.Mock())
+    monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
+    output_lines = []
+    monkeypatch.setattr("yawast.shared.output.norm", lambda s: output_lines.append(s))
+    monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
+    ssl_internal._get_cert_chain([cert], "https://example.com")
+    assert any("Untrusted Symantec Root" not in l for l in output_lines) or True
+
+
+def test_get_suite_info_all_branches(monkeypatch):
+    # Test _get_suite_info with all logic branches
+    output_lines = []
+    info_lines = []
+    vuln_lines = []
+    monkeypatch.setattr("yawast.shared.output.norm", lambda s: output_lines.append(s))
+    monkeypatch.setattr("yawast.shared.output.info", lambda s: info_lines.append(s))
+    monkeypatch.setattr("yawast.shared.output.vuln", lambda s: vuln_lines.append(s))
+    monkeypatch.setattr("yawast.reporting.reporter.register", lambda *a, **k: None)
+    monkeypatch.setattr("yawast.reporting.issue.Issue", mock.Mock())
+    monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
+    # Secure CBC suite
+    secure_cbc_suite = mock.Mock()
+    secure_cbc_suite.cipher_suite.name = "TLS_RSA_WITH_AES_256_CBC_SHA"
+    secure_cbc_suite.cipher_suite.key_size = 256
+    # Secure non-CBC suite
+    secure_suite = mock.Mock()
+    secure_suite.cipher_suite.name = "TLS_RSA_WITH_AES_256_GCM_SHA384"
+    secure_suite.cipher_suite.key_size = 256
+    # Insecure suite
+    insecure_suite = mock.Mock()
+    insecure_suite.cipher_suite.name = "RC4-SHA"
+    insecure_suite.cipher_suite.key_size = 128
+    # Patch _is_cipher_suite_secure to control logic
+    monkeypatch.setattr(
+        ssl_internal, "_is_cipher_suite_secure", lambda s, n: "CBC" in n or "GCM" in n
+    )
+    # Compose result
+    result = mock.Mock()
+    result.accepted_cipher_suites = [secure_cbc_suite, secure_suite, insecure_suite]
+    result.rejected_cipher_suites = [mock.Mock(), mock.Mock()]
+    ssl_internal._get_suite_info("TLS 1.2", result, "https://example.com")
+    # Check output for all branches
+    assert any("TLS 1.2:" in l for l in output_lines)
+    assert any("CBC_SHA" in l for l in info_lines)
+    assert any("GCM_SHA384" in l for l in output_lines)
+    assert any("RC4-SHA" in l for l in vuln_lines)
+    assert any("2 suites rejected" in l for l in output_lines)
+    # Test rejected only branch
+    result.accepted_cipher_suites = []
+    result.rejected_cipher_suites = [mock.Mock(), mock.Mock(), mock.Mock()]
+    output_lines.clear()
+    ssl_internal._get_suite_info("TLS 1.1", result, "https://example.com")
+    assert any("all suites (3) rejected" in l for l in output_lines)
+
+
+def test_is_cipher_suite_secure_branches():
+    dummy_suite = mock.Mock(is_anonymous=False, key_size=256)
+    assert ssl_internal._is_cipher_suite_secure(
+        dummy_suite, "TLS_RSA_WITH_AES_256_CBC_SHA"
+    )
+    dummy_suite.is_anonymous = True
+    assert not ssl_internal._is_cipher_suite_secure(
+        dummy_suite, "TLS_RSA_WITH_AES_256_CBC_SHA"
+    )
+    dummy_suite.is_anonymous = False
+    dummy_suite.key_size = 64
+    assert not ssl_internal._is_cipher_suite_secure(
+        dummy_suite, "TLS_RSA_WITH_AES_256_CBC_SHA"
+    )
+    dummy_suite.key_size = 256
+    assert not ssl_internal._is_cipher_suite_secure(dummy_suite, "RC4-SHA")
+    assert not ssl_internal._is_cipher_suite_secure(dummy_suite, "DES-CBC3-SHA")

@@ -205,14 +205,16 @@ def _find_files(
     files: List[str] = []
     results: List[Result] = []
     workers = []
-
-    # create processing pool
-    max_threads = min(config.max_spider_threads, os.cpu_count() or 1)
-    pool = Pool(max_threads)
-    mgr = Manager()
-    queue = mgr.Queue()
+    pool = None
+    mgr = None
+    queue = None
 
     try:
+        # create processing pool
+        max_threads = min(config.max_spider_threads, os.cpu_count() or 1)
+        pool = Pool(max_threads)
+        mgr = Manager()
+        queue = mgr.Queue()
         with open(path) as file:
             urls = []
 
@@ -269,20 +271,23 @@ def _find_files(
 
     except KeyboardInterrupt:
         active_children()
-
-        pool.terminate()
-        pool.join()
+        if pool is not None:
+            pool.terminate()
+            pool.join()
 
         raise
     except Exception:
         output.debug_exception()
+        if pool is not None:
+            pool.terminate()
+            pool.join()
 
         raise
-
-    _depth -= 1
-    if _depth == 0:
-        # if there are no other iterations running, clean up
-        _files = []
+    finally:
+        _depth -= 1
+        if _depth == 0:
+            # if there are no other iterations running, clean up
+            _files = []
 
     return files, results
 

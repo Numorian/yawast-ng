@@ -1626,3 +1626,598 @@ class TestHttpBasic:
         assert len(res) == 1
         assert "Exception" not in stderr.getvalue()
         assert "Error" not in stderr.getvalue()
+
+    def test_get_cookie_issues_flags(self):
+        # Covers missing/invalid flags and SameSite logic
+        from yawast.scanner.modules.http.http_basic import (
+            _get_cookie_issues,
+            get_cookie_issues,
+            reset,
+        )
+
+        class DummyRes:
+            headers = {"Set-Cookie": "a=1; Secure; HttpOnly; SameSite=None"}
+            raw = type(
+                "raw",
+                (),
+                {
+                    "headers": type(
+                        "headers",
+                        (),
+                        {
+                            "getlist": lambda self, k: [
+                                "a=1; Secure; HttpOnly; SameSite=None",
+                                "b=2",
+                            ]
+                        },
+                    )()
+                },
+            )()
+
+        reset()
+        # HTTPS, all flags present
+        res = DummyRes()
+        out = get_cookie_issues(res, "https://example.com")
+        assert isinstance(out, list)
+        # HTTP, missing Secure, SameSite, HttpOnly
+        cookies = ["b=2"]
+        out2 = _get_cookie_issues(cookies, "http://example.com", res)
+        assert isinstance(out2, list)
+
+    def test_decode_big_ip_cookie(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        # Patch utils.is_private_ip to always return True
+        monkeypatch.setattr("yawast.shared.utils.is_private_ip", lambda ip: True)
+        # IPv4 pattern
+        val = "2263487148.3013.0000"
+        assert http_basic._decode_big_ip_cookie(val) is not None
+        # IPv4 rd pattern
+        val2 = "rd5o00000000000000000000ffffc0000201o80"
+        assert http_basic._decode_big_ip_cookie(val2) is not None
+        # IPv6 vi pattern
+        val3 = "vi20010112000000000000000000000030.20480"
+        assert http_basic._decode_big_ip_cookie(val3) is not None
+        # IPv6 rd pattern
+        val4 = "rd3o20010112000000000000000000000030o80"
+        assert http_basic._decode_big_ip_cookie(val4) is not None
+        # Non-matching
+        assert http_basic._decode_big_ip_cookie("notamatch") is None
+
+    def test_check_local_ip_disclosure(self, monkeypatch):
+        from types import SimpleNamespace
+
+        from yawast.scanner.modules.http import http_basic
+
+        # Mock session
+        session = SimpleNamespace()
+        session.url = "https://example.com"
+        session.url_parsed = SimpleNamespace(scheme="https")
+        session.supports_http = False
+        # Patch utils.get_port, get_domain
+        monkeypatch.setattr("yawast.shared.utils.get_port", lambda url: 443)
+        monkeypatch.setattr("yawast.shared.utils.get_domain", lambda url: "example.com")
+
+        # Patch socket and ssl
+        class DummyConn:
+            def sendall(self, data):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                pass
+
+        class DummyResp:
+            version = 11
+            code = 302
+            reason = "Found"
+            headers = {"Location": "http://10.0.0.1/"}
+
+            def getheader(self, k):
+                return self.headers.get(k)
+
+        class DummyParser:
+            @staticmethod
+            def parse_from_socket(con):
+                return DummyResp()
+
+        monkeypatch.setattr(
+            "yawast.external.http_response_from_socket.HttpResponseParser", DummyParser
+        )
+
+        # Patch ssl.create_default_context
+        class DummySSLContext:
+            check_hostname = False
+            verify_mode = None
+
+            def wrap_socket(self, sock, server_hostname=None):
+                return DummyConn()
+
+        monkeypatch.setattr("ssl.create_default_context", lambda: DummySSLContext())
+        # Patch socket.create_connection
+        monkeypatch.setattr("socket.create_connection", lambda addr: DummyConn())
+        # Patch output.debug_exception
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        # Patch Result
+        monkeypatch.setattr(
+            "yawast.reporting.result.Result",
+            lambda *a, **k: SimpleNamespace(message=a[0]),
+        )
+        # Patch Vln
+        monkeypatch.setattr(
+            "yawast.reporting.enums.Vulnerabilities",
+            SimpleNamespace(SERVER_INT_IP_EXP_HTTP10="vuln"),
+        )
+        results = http_basic.check_local_ip_disclosure(session)
+        assert isinstance(results, list)
+
+    def test_get_header_issues_exception(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        class DummyRes:
+            headers = {}
+            raw = type("raw", (), {"_original_response": None})()
+
+        # Patch Evidence.from_response to raise
+        monkeypatch.setattr(
+            "yawast.reporting.evidence.Evidence.from_response",
+            lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
+        )
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        out = http_basic.get_header_issues(DummyRes(), "", "http://example.com")
+        assert out == []
+
+    def test_check_http_methods_early_return(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        # Patch network.http_custom to return a response with status_code < 405
+        class DummyRes:
+            status_code = 200
+
+        monkeypatch.setattr(
+            "yawast.shared.network.http_custom", lambda *a, **k: DummyRes()
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.response_scanner.check_response",
+            lambda url, res: ["checked"],
+        )
+        methods, results = http_basic.check_http_methods("http://example.com")
+        assert methods == []
+        assert results == ["checked"]
+
+    def test_check_http_methods_file_path(self, monkeypatch, tmp_path):
+        from yawast.scanner.modules.http import http_basic
+
+        # Create a temp file with HTTP methods
+        file_path = tmp_path / "methods.txt"
+        file_path.write_text("GET\nPOST\n")
+
+        # Patch network.http_custom to return status_code < 405 for GET, >= 405 for POST
+        class DummyRes:
+            def __init__(self, code):
+                self.status_code = code
+
+        def http_custom(method, url):
+            return DummyRes(200 if method == "GET" else 405)
+
+        monkeypatch.setattr("yawast.shared.network.http_custom", http_custom)
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.response_scanner.check_response",
+            lambda url, res: [],
+        )
+        methods, _ = http_basic.check_http_methods("http://example.com", str(file_path))
+        assert "GET" in methods and "POST" not in methods
+
+    def test_check_hsts_preload_exception(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        monkeypatch.setattr(
+            "yawast.shared.utils.get_domain",
+            lambda url: (_ for _ in ()).throw(Exception("fail")),
+        )
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        out = http_basic.check_hsts_preload("http://example.com")
+        assert out == []
+
+    def test_check_local_ip_disclosure_http_branch(self, monkeypatch):
+        from types import SimpleNamespace
+
+        from yawast.scanner.modules.http import http_basic
+
+        session = SimpleNamespace()
+        session.url = "http://example.com"
+        session.url_parsed = SimpleNamespace(scheme="http")
+        session.supports_http = True
+        session.get_http_url = lambda: "http://example.com"
+        monkeypatch.setattr("yawast.shared.utils.get_port", lambda url: 80)
+        monkeypatch.setattr("yawast.shared.utils.get_domain", lambda url: "example.com")
+
+        class DummyConn:
+            def connect(self, addr):
+                pass
+
+            def sendall(self, data):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                pass
+
+        class DummyResp:
+            version = 11
+            code = 302
+            reason = "Found"
+            headers = {"Location": "http://10.0.0.1/"}
+
+            def getheader(self, k):
+                return self.headers.get(k)
+
+        class DummyParser:
+            @staticmethod
+            def parse_from_socket(con):
+                return DummyResp()
+
+        monkeypatch.setattr(
+            "yawast.external.http_response_from_socket.HttpResponseParser", DummyParser
+        )
+        monkeypatch.setattr("socket.socket", lambda *a, **k: DummyConn())
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        monkeypatch.setattr(
+            "yawast.reporting.result.Result",
+            lambda *a, **k: SimpleNamespace(message=a[0]),
+        )
+        monkeypatch.setattr(
+            "yawast.reporting.enums.Vulnerabilities",
+            SimpleNamespace(SERVER_INT_IP_EXP_HTTP10="vuln"),
+        )
+        results = http_basic.check_local_ip_disclosure(session)
+        assert isinstance(results, list)
+
+    def test_check_local_ip_disclosure_exception(self, monkeypatch):
+        from types import SimpleNamespace
+
+        from yawast.scanner.modules.http import http_basic
+
+        session = SimpleNamespace()
+        session.url = "https://example.com"
+        session.url_parsed = SimpleNamespace(scheme="https")
+        session.supports_http = False
+        monkeypatch.setattr("yawast.shared.utils.get_port", lambda url: 443)
+        monkeypatch.setattr("yawast.shared.utils.get_domain", lambda url: "example.com")
+
+        class DummyConn:
+            def sendall(self, data):
+                raise Exception("fail")
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                pass
+
+        class DummyParser:
+            @staticmethod
+            def parse_from_socket(con):
+                return None
+
+        monkeypatch.setattr(
+            "yawast.external.http_response_from_socket.HttpResponseParser", DummyParser
+        )
+
+        class DummySSLContext:
+            check_hostname = False
+            verify_mode = None
+
+            def wrap_socket(self, sock, server_hostname=None):
+                return DummyConn()
+
+        monkeypatch.setattr("ssl.create_default_context", lambda: DummySSLContext())
+        monkeypatch.setattr("socket.create_connection", lambda addr: DummyConn())
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        monkeypatch.setattr(
+            "yawast.reporting.result.Result",
+            lambda *a, **k: SimpleNamespace(message=a[0]),
+        )
+        monkeypatch.setattr(
+            "yawast.reporting.enums.Vulnerabilities",
+            SimpleNamespace(SERVER_INT_IP_EXP_HTTP10="vuln"),
+        )
+        results = http_basic.check_local_ip_disclosure(session)
+        assert isinstance(results, list)
+
+    def test__get_cookie_issues_exception(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        monkeypatch.setattr(
+            "yawast.reporting.enums.Vulnerabilities",
+            type(
+                "V",
+                (),
+                {
+                    "COOKIE_MISSING_SECURE_FLAG": "a",
+                    "COOKIE_INVALID_SECURE_FLAG": "b",
+                    "COOKIE_MISSING_HTTPONLY_FLAG": "c",
+                    "COOKIE_MISSING_SAMESITE_FLAG": "d",
+                    "COOKIE_WITH_SAMESITE_NONE_FLAG": "e",
+                    "COOKIE_INVALID_SAMESITE_NONE_FLAG": "f",
+                    "COOKIE_BIGIP_IP_DISCLOSURE": "g",
+                },
+            )(),
+        )
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        # Simulate urlparse raising
+        import builtins
+
+        orig_urlparse = __import__("urllib.parse").parse.urlparse
+        monkeypatch.setattr(
+            "urllib.parse.urlparse",
+            lambda url: (_ for _ in ()).throw(Exception("fail")),
+        )
+        out = http_basic._get_cookie_issues(["a=1"], "http://example.com", None)
+        assert out == []
+        monkeypatch.setattr("urllib.parse.urlparse", orig_urlparse)
+
+    def test_get_header_issues_duplicate_headers(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        class DummyOriginalResponse:
+            headers = "X-Test: foo\nX-Test: bar\n"
+
+        class DummyRaw:
+            _original_response = DummyOriginalResponse()
+
+        class DummyRes:
+            headers = {
+                "X-XSS-Protection": "1",
+                "X-Frame-Options": "blah",
+                "X-Content-Type-Options": "nosniff",
+                "Content-Security-Policy": "blah",
+                "Referrer-Policy": "blah",
+                "Feature-Policy": "blah",
+                "Strict-Transport-Security": "blah",
+                "Server": "blah",
+            }
+            raw = DummyRaw()
+
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.http_basic.find_duplicate_headers",
+            lambda raw: ["x-test"],
+        )
+        monkeypatch.setattr(
+            "yawast.reporting.evidence.Evidence.from_response",
+            lambda *a, **k: type("Ev", (), {})(),
+        )
+        monkeypatch.setattr(
+            "yawast.reporting.result.Result.from_evidence",
+            lambda *a, **k: type("R", (), {"message": "dup"})(),
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.apache_httpd.check_banner",
+            lambda *a, **k: [],
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.nginx.check_banner", lambda *a, **k: []
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.iis.check_version", lambda *a, **k: []
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.python.check_banner",
+            lambda *a, **k: [],
+        )
+        out = http_basic.get_header_issues(DummyRes(), "", "http://example.com")
+        assert any("dup" in r.message for r in out)
+
+    def test_decode_big_ip_cookie_not_private(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        monkeypatch.setattr("yawast.shared.utils.is_private_ip", lambda ip: False)
+        # Should return None for all patterns
+        assert http_basic._decode_big_ip_cookie("2263487148.3013.0000") is None
+        assert (
+            http_basic._decode_big_ip_cookie("rd5o00000000000000000000ffffc0000201o80")
+            is None
+        )
+        assert (
+            http_basic._decode_big_ip_cookie("vi20010112000000000000000000000030.20480")
+            is None
+        )
+        assert (
+            http_basic._decode_big_ip_cookie("rd3o20010112000000000000000000000030o80")
+            is None
+        )
+
+    def test_check_local_ip_disclosure_no_private_found(self, monkeypatch):
+        from types import SimpleNamespace
+
+        from yawast.scanner.modules.http import http_basic
+
+        session = SimpleNamespace()
+        session.url = "https://example.com"
+        session.url_parsed = SimpleNamespace(scheme="https")
+        session.supports_http = True
+        session.get_http_url = lambda: "http://example.com"
+        monkeypatch.setattr(
+            "yawast.shared.utils.get_port",
+            lambda url: 443 if url.startswith("https") else 80,
+        )
+        monkeypatch.setattr("yawast.shared.utils.get_domain", lambda url: "example.com")
+
+        class DummyConn:
+            def sendall(self, data):
+                pass
+
+            def connect(self, addr):
+                pass
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                pass
+
+        class DummyResp:
+            version = 11
+            code = 302
+            reason = "Found"
+            headers = {"Location": "http://8.8.8.8/"}  # Not private
+
+            def getheader(self, k):
+                return self.headers.get(k)
+
+        class DummyParser:
+            @staticmethod
+            def parse_from_socket(con):
+                return DummyResp()
+
+        monkeypatch.setattr(
+            "yawast.external.http_response_from_socket.HttpResponseParser", DummyParser
+        )
+        monkeypatch.setattr(
+            "ssl.create_default_context",
+            lambda: type(
+                "C",
+                (),
+                {
+                    "check_hostname": False,
+                    "verify_mode": None,
+                    "wrap_socket": lambda self, sock, server_hostname=None: DummyConn(),
+                },
+            )(),
+        )
+        monkeypatch.setattr("socket.create_connection", lambda addr: DummyConn())
+        monkeypatch.setattr("socket.socket", lambda *a, **k: DummyConn())
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        monkeypatch.setattr(
+            "yawast.reporting.result.Result",
+            lambda *a, **k: SimpleNamespace(message=a[0]),
+        )
+        monkeypatch.setattr(
+            "yawast.reporting.enums.Vulnerabilities",
+            SimpleNamespace(SERVER_INT_IP_EXP_HTTP10="vuln"),
+        )
+        monkeypatch.setattr("yawast.shared.utils.is_ip", lambda ip: True)
+        monkeypatch.setattr("yawast.shared.utils.is_private_ip", lambda ip: False)
+        results = http_basic.check_local_ip_disclosure(session)
+        assert results == []
+
+    def test__get_cookie_issues_bigip_not_match(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        monkeypatch.setattr(
+            "yawast.reporting.enums.Vulnerabilities",
+            type(
+                "V",
+                (),
+                {
+                    "COOKIE_MISSING_SECURE_FLAG": "a",
+                    "COOKIE_INVALID_SECURE_FLAG": "b",
+                    "COOKIE_MISSING_HTTPONLY_FLAG": "c",
+                    "COOKIE_MISSING_SAMESITE_FLAG": "d",
+                    "COOKIE_WITH_SAMESITE_NONE_FLAG": "e",
+                    "COOKIE_INVALID_SAMESITE_NONE_FLAG": "f",
+                    "COOKIE_BIGIP_IP_DISCLOSURE": "g",
+                },
+            )(),
+        )
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        monkeypatch.setattr("yawast.shared.utils.is_private_ip", lambda ip: True)
+        # Should not add a result if pattern doesn't match
+        out = http_basic._get_cookie_issues(
+            ["BIGipServerWEB=notamatch"], "https://example.com", type("R", (), {})()
+        )
+        assert out is not None
+
+    def test_get_server_banner_issues_all(self, monkeypatch):
+        from yawast.scanner.modules.http import http_basic
+
+        # Patch all check_banner/check_version to return unique results
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.apache_httpd.check_banner",
+            lambda *a, **k: ["apache"],
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.nginx.check_banner",
+            lambda *a, **k: ["nginx"],
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.iis.check_version",
+            lambda *a, **k: ["iis"],
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.servers.python.check_banner",
+            lambda *a, **k: ["python"],
+        )
+        out = http_basic.get_server_banner_issues("server", "raw", "url", {})
+        assert set(out) == {"apache", "nginx", "iis", "python"}
+
+    def test_check_propfind_exception(self, monkeypatch):
+        import pytest
+
+        from yawast.scanner.modules.http import http_basic
+
+        monkeypatch.setattr(
+            "yawast.shared.network.http_custom",
+            lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
+        )
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        with pytest.raises(Exception):
+            http_basic.check_propfind("http://example.com")
+
+    def test_check_trace_exception(self, monkeypatch):
+        import pytest
+
+        from yawast.scanner.modules.http import http_basic
+
+        monkeypatch.setattr(
+            "yawast.shared.network.http_custom",
+            lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
+        )
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        with pytest.raises(Exception):
+            http_basic.check_trace("http://example.com")
+
+    def test_check_options_exception(self, monkeypatch):
+        import pytest
+
+        from yawast.scanner.modules.http import http_basic
+
+        monkeypatch.setattr(
+            "yawast.shared.network.http_options",
+            lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
+        )
+        monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
+        with pytest.raises(Exception):
+            http_basic.check_options("http://example.com")
+
+    def test_check_http_methods_file_exception(self, monkeypatch):
+        import pytest
+
+        from yawast.scanner.modules.http import http_basic
+
+        class DummyRes:
+            status_code = 405
+
+        monkeypatch.setattr(
+            "yawast.shared.network.http_custom", lambda *a, **k: DummyRes()
+        )
+        monkeypatch.setattr(
+            "yawast.scanner.modules.http.response_scanner.check_response",
+            lambda url, res: [],
+        )
+        # Patch open to raise
+        import builtins
+
+        orig_open = builtins.open
+        monkeypatch.setattr(
+            "builtins.open", lambda *a, **k: (_ for _ in ()).throw(Exception("fail"))
+        )
+        with pytest.raises(Exception):
+            http_basic.check_http_methods(
+                "http://example.com", path="/tmp/doesnotexist.txt"
+            )
+        monkeypatch.setattr("builtins.open", orig_open)

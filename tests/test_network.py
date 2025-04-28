@@ -304,3 +304,215 @@ def test_check_open_ports_exception(monkeypatch):
     )
     cli_network._check_open_ports("example.com", "http://example.com")
     assert hasattr(cli_network, "error_called")
+
+
+def test_init_invalid_proxy(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "_requester",
+        mock.Mock(
+            cookies=mock.Mock(set_policy=lambda x: None, set_cookie=lambda x: None),
+            proxies={},
+            headers={},
+            verify=None,
+            mount=lambda *a, **k: None,
+        ),
+    )
+    monkeypatch.setattr(network, "_file_not_found_handling", {})
+    err = mock.Mock()
+    monkeypatch.setattr(network, "output", mock.Mock(error=err))
+    monkeypatch.setattr(
+        network, "ssl", mock.Mock(create_default_context=lambda: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network, "urllib3", mock.Mock(Retry=lambda *a, **k: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network,
+        "HTTPAdapter",
+        mock.Mock(return_value=mock.Mock(init_poolmanager=lambda *a, **k: None)),
+    )
+    # Should not raise, and error may or may not be called depending on proxy string
+    network.init("ftp://proxy", "foo=bar", "X-Test=1")
+    assert True
+
+
+def test_init_invalid_cookie(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "_requester",
+        mock.Mock(
+            cookies=mock.Mock(set_policy=lambda x: None, set_cookie=lambda x: None),
+            proxies={},
+            headers={},
+            verify=None,
+            mount=lambda *a, **k: None,
+        ),
+    )
+    monkeypatch.setattr(network, "_file_not_found_handling", {})
+    err = mock.Mock()
+    monkeypatch.setattr(network, "output", mock.Mock(error=err))
+    monkeypatch.setattr(
+        network, "ssl", mock.Mock(create_default_context=lambda: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network, "urllib3", mock.Mock(Retry=lambda *a, **k: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network,
+        "HTTPAdapter",
+        mock.Mock(return_value=mock.Mock(init_poolmanager=lambda *a, **k: None)),
+    )
+    # Should not raise, and error may or may not be called depending on cookie string
+    network.init("", "invalidcookie", "X-Test=1")
+    assert True
+
+
+def test_init_invalid_header(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "_requester",
+        mock.Mock(
+            cookies=mock.Mock(set_policy=lambda x: None, set_cookie=lambda x: None),
+            proxies={},
+            headers={},
+            verify=None,
+            mount=lambda *a, **k: None,
+        ),
+    )
+    monkeypatch.setattr(network, "_file_not_found_handling", {})
+    err = mock.Mock()
+    monkeypatch.setattr(network, "output", mock.Mock(error=err))
+    monkeypatch.setattr(
+        network, "ssl", mock.Mock(create_default_context=lambda: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network, "urllib3", mock.Mock(Retry=lambda *a, **k: mock.Mock())
+    )
+    monkeypatch.setattr(
+        network,
+        "HTTPAdapter",
+        mock.Mock(return_value=mock.Mock(init_poolmanager=lambda *a, **k: None)),
+    )
+    # Should not raise, and error may or may not be called depending on header string
+    network.init("", "foo=bar", "InvalidHeader")
+    assert True
+
+
+def test_http_build_raw_response_binary(monkeypatch):
+    res = mock.Mock(
+        raw=mock.Mock(version=10, status=200, reason="OK", _original_response=None),
+        headers={"X": "1"},
+        text="",
+        content=b"\x00\x01",
+    )
+    monkeypatch.setattr(network, "response_body_is_text", lambda r: False)
+    out = network.http_build_raw_response(res)
+    assert "<BINARY DATA EXCLUDED>" in out
+
+
+def test_http_build_raw_response_exception(monkeypatch):
+    res = mock.Mock(
+        raw=mock.Mock(version=10, status=200, reason="OK", _original_response=None),
+        headers={"X": "1"},
+        text="",
+        content=b"abc",
+    )
+    monkeypatch.setattr(
+        network,
+        "response_body_is_text",
+        lambda r: (_ for _ in ()).throw(Exception("fail")),
+    )
+    monkeypatch.setattr(network.output, "debug_exception", lambda: None)
+    out = network.http_build_raw_response(res)
+    assert "HTTP/1.0" in out
+
+
+def test_check_ssl_redirect_non_redirect(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=200, headers={}, request=mock.Mock(method="HEAD")
+        ),
+    )
+    assert network.check_ssl_redirect("http://foo") == "http://foo"
+
+
+def test_check_ssl_redirect_missing_location(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=301, headers={}, request=mock.Mock(method="HEAD")
+        ),
+    )
+    assert network.check_ssl_redirect("http://foo") == "http://foo"
+
+
+def test_check_ssl_redirect_exception(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=301,
+            headers={"location": "bad://"},
+            request=mock.Mock(method="HEAD"),
+        ),
+    )
+    monkeypatch.setattr(
+        network, "urlparse", lambda x: (_ for _ in ()).throw(Exception("fail"))
+    )
+    with pytest.raises(Exception):
+        network.check_ssl_redirect("http://foo")
+
+
+def test_check_www_redirect_valueerror(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=301,
+            headers={"location": "bad://"},
+            request=mock.Mock(method="HEAD"),
+        ),
+    )
+    monkeypatch.setattr(
+        network, "urlparse", lambda x: (_ for _ in ()).throw(ValueError("fail"))
+    )
+    with pytest.raises(ValueError):
+        network.check_www_redirect("http://foo")
+
+
+def test_response_body_is_text_binary(monkeypatch):
+    res = mock.Mock(content=b"\x00\x01", headers={}, text="")
+    monkeypatch.setattr(network.utils, "is_printable_str", lambda x: False)
+    assert not network.response_body_is_text(res)
+
+
+def test_check_ipv4_connection_exception(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "_check_connection",
+        lambda url: (_ for _ in ()).throw(Exception("fail")),
+    )
+    assert "(Unavailable)" in network.check_ipv4_connection()
+
+
+def test_check_ipv6_connection_exception(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "_check_connection",
+        lambda url: (_ for _ in ()).throw(Exception("fail")),
+    )
+    assert "(Unavailable)" in network.check_ipv6_connection()
+
+
+def test__check_connection_exception(monkeypatch):
+    monkeypatch.setattr(
+        network,
+        "requests",
+        mock.Mock(get=lambda *a, **k: (_ for _ in ()).throw(Exception("fail"))),
+    )
+    monkeypatch.setattr(network.output, "debug_exception", lambda: None)
+    assert network._check_connection("http://foo") == "Connection Failed"

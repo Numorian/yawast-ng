@@ -516,3 +516,198 @@ def test__check_connection_exception(monkeypatch):
     )
     monkeypatch.setattr(network.output, "debug_exception", lambda: None)
     assert network._check_connection("http://foo") == "Connection Failed"
+
+
+def test_http_file_exists_shrug(monkeypatch):
+    # Covers the 'shrug' else branch in http_file_exists
+    network._file_not_found_handling["foo.com"] = {
+        "file": False,
+        "file_res": mock.Mock(status_code=123, content=b"abc"),
+    }
+    monkeypatch.setattr(network, "utils", mock.Mock(get_domain=lambda url: "foo.com"))
+    monkeypatch.setattr(network, "_get_404_handling", lambda domain, url: None)
+    monkeypatch.setattr(
+        network, "http_get", lambda url, **kwargs: mock.Mock(status_code=200)
+    )
+    out, res = network.http_file_exists("http://foo.com/bar")
+    assert isinstance(out, bool)
+
+
+def test_http_file_exists_redirect(monkeypatch):
+    # Covers the redirect branch in http_file_exists
+    network._file_not_found_handling["foo.com"] = {
+        "file": False,
+        "file_res": mock.Mock(status_code=301, content=b"abc"),
+    }
+    monkeypatch.setattr(network, "utils", mock.Mock(get_domain=lambda url: "foo.com"))
+    monkeypatch.setattr(network, "_get_404_handling", lambda domain, url: None)
+    monkeypatch.setattr(
+        network, "http_get", lambda url, **kwargs: mock.Mock(status_code=200)
+    )
+    out, res = network.http_file_exists("http://foo.com/bar")
+    assert out is True
+
+
+def test_http_file_exists_error(monkeypatch):
+    # Covers the >=400 branch in http_file_exists
+    network._file_not_found_handling["foo.com"] = {
+        "file": False,
+        "file_res": mock.Mock(status_code=404, content=b"abc"),
+    }
+    monkeypatch.setattr(network, "utils", mock.Mock(get_domain=lambda url: "foo.com"))
+    monkeypatch.setattr(network, "_get_404_handling", lambda domain, url: None)
+    monkeypatch.setattr(
+        network, "http_get", lambda url, **kwargs: mock.Mock(status_code=200)
+    )
+    out, res = network.http_file_exists("http://foo.com/bar")
+    assert out is True
+
+
+def test_http_file_exists_fuzzy(monkeypatch):
+    # Covers the fuzzy matching branch in http_file_exists
+    file_res = mock.Mock(
+        status_code=200,
+        content=b"abc",
+        text="a\n" * 30,
+        headers={"Content-Type": "text/html"},
+    )
+    get_res = mock.Mock(
+        content=b"def",
+        text="b\n" * 30,
+        url="http://foo.com/bar",
+        headers={"Content-Type": "text/html"},
+    )
+    network._file_not_found_handling["foo.com"] = {"file": False, "file_res": file_res}
+    monkeypatch.setattr(network, "utils", mock.Mock(get_domain=lambda url: "foo.com"))
+    monkeypatch.setattr(network, "_get_404_handling", lambda domain, url: None)
+    monkeypatch.setattr(network, "http_get", lambda url, **kwargs: get_res)
+    monkeypatch.setattr(network, "response_body_is_text", lambda r: True)
+    monkeypatch.setattr(
+        network,
+        "ExecutionTimer",
+        mock.Mock(
+            return_value=mock.Mock(
+                __enter__=lambda s: s, __exit__=lambda s, a, b, c: None, to_ms=lambda: 1
+            )
+        ),
+    )
+    out, res = network.http_file_exists("http://foo.com/bar")
+    assert isinstance(out, bool)
+
+
+def test_check_404_response(monkeypatch):
+    # Covers check_404_response
+    network._file_not_found_handling["foo.com"] = {
+        "file": True,
+        "file_res": mock.Mock(),
+        "path": True,
+        "path_res": mock.Mock(),
+    }
+    monkeypatch.setattr(network, "utils", mock.Mock(get_domain=lambda url: "foo.com"))
+    monkeypatch.setattr(network, "_get_404_handling", lambda domain, url: None)
+    out = network.check_404_response("http://foo.com/bar")
+    assert isinstance(out, tuple)
+
+
+def test_check_ssl_redirect_https(monkeypatch):
+    # Covers the 'if parsed.scheme == "https"' branch
+    monkeypatch.setattr(
+        network, "urlparse", lambda url: type("P", (), {"scheme": "https"})()
+    )
+    assert network.check_ssl_redirect("https://foo") == "https://foo"
+
+
+def test_check_ssl_redirect_path(monkeypatch):
+    # Covers the 'parsed_location.netloc == "" and parsed_location.path != ""' branch
+    class DummyParsed:
+        scheme = "http"
+        netloc = ""
+        path = "/bar"
+
+        def _replace(self, **kwargs):
+            return self
+
+    monkeypatch.setattr(network, "urlparse", lambda url: DummyParsed())
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=301,
+            headers={"location": "/bar"},
+            request=mock.Mock(method="HEAD"),
+        ),
+    )
+    monkeypatch.setattr(network, "urlunparse", lambda parsed: "http://foo/bar")
+    # Should not raise
+    assert network.check_ssl_redirect("http://foo")
+
+
+def test_check_www_redirect_else(monkeypatch):
+    # Covers the final else branch in check_www_redirect
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=200, headers={}, request=mock.Mock(method="HEAD")
+        ),
+    )
+    assert network.check_www_redirect("http://foo") == "http://foo"
+
+
+def test_check_www_redirect_www_branches(monkeypatch):
+    # Covers both www/non-www domain logic
+    class DummyParsed:
+        def __init__(self, netloc):
+            self.netloc = netloc
+            self.path = ""
+
+        def _replace(self, **kwargs):
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+            return self
+
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=301,
+            headers={"location": "http://example.com"},
+            request=mock.Mock(method="HEAD"),
+        ),
+    )
+    monkeypatch.setattr(
+        network, "urlparse", lambda url: DummyParsed(url.split("//")[1])
+    )
+    monkeypatch.setattr(network, "urlunparse", lambda parsed: f"http://{parsed.netloc}")
+    # domain starts with www, location_domain does not
+    monkeypatch.setattr(
+        network.utils,
+        "get_domain",
+        lambda netloc: (
+            "www.example.com" if netloc == "www.example.com" else "example.com"
+        ),
+    )
+    assert network.check_www_redirect("http://www.example.com") == "http://example.com"
+    # domain does not start with www, location_domain does
+    monkeypatch.setattr(
+        network,
+        "http_head",
+        lambda url, allow: mock.Mock(
+            status_code=301,
+            headers={"location": "http://www.example.com"},
+            request=mock.Mock(method="HEAD"),
+        ),
+    )
+    monkeypatch.setattr(
+        network.utils,
+        "get_domain",
+        lambda netloc: "example.com" if netloc == "example.com" else "www.example.com",
+    )
+    assert network.check_www_redirect("http://example.com") == "http://www.example.com"
+
+
+def test_response_body_is_text_no_content_type(monkeypatch):
+    # Covers the 'elif "Content-Type" not in res.headers' branch
+    res = mock.Mock(content=b"abc", headers={}, text="abc")
+    monkeypatch.setattr(network.utils, "is_printable_str", lambda x: True)
+    assert network.response_body_is_text(res)

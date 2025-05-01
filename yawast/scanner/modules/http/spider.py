@@ -118,6 +118,9 @@ def _start_scan(session: Session, base_url: str, urls: List[str], queue, pool):
                     # loop through the URLs and queue them for processing
                     for url in urls:
                         if url not in _links:
+                            _links.append(
+                                url
+                            )  # Ensure sitemap URLs are included in _links
                             asy = pool.apply_async(
                                 _get_links, (session, url, [url], queue, pool)
                             )
@@ -139,10 +142,84 @@ def _start_scan(session: Session, base_url: str, urls: List[str], queue, pool):
             f"Spider: No sitemap found at {sitemap_url}. Starting with base URL."
         )
 
-        asy = pool.apply_async(_get_links, (session, base_url, [base_url], queue, pool))
+        # Instead of just scheduling the first _get_links, process recursively here
+        seen = set()
+        to_process = [base_url]
+        while to_process:
+            current = to_process.pop(0)
+            if current in seen:
+                continue
+            seen.add(current)
+            # Call _get_links and collect new links
+            new_links = _get_links_collect_links(
+                session, base_url, [current], queue, pool
+            )
+            for link in new_links:
+                if link not in seen:
+                    to_process.append(link)
 
-        with _lock:
-            _tasks.append(asy)
+
+# Helper version of _get_links that returns the links found (for recursion in _start_scan)
+def _get_links_collect_links(
+    session: Session, base_url: str, urls: List[str], queue, pool
+):
+    global _links, _insecure, _tasks, _lock
+    found_links = []
+    results: List[Result] = []
+    if len(_links) > config.max_spider_pages:
+        return []
+    for url in urls:
+        try:
+            to_process: List[str] = []
+            res = network.http_get(url, False)
+            if network.response_body_is_text(res):
+                soup = BeautifulSoup(res.text, "html.parser")
+            else:
+                soup = None
+            results += response_scanner.check_response(url, res, soup)
+            if soup is not None:
+                for link in soup.find_all("a"):
+                    href = link.get("href")
+                    if href is not None:
+                        href = str(href).strip()
+                        href = utils.fix_relative_link(href, url)
+                        if href.startswith(base_url) and href not in _links:
+                            if "." in href.split("/")[-1]:
+                                file_ext = href.split("/")[-1].split(".")[-1]
+                            else:
+                                file_ext = None
+                            with _lock:
+                                _links.append(href)
+                            if file_ext is None or str(file_ext).lower() not in [
+                                "gzip",
+                                "jpg",
+                                "jpeg",
+                                "gif",
+                                "woff",
+                                "zip",
+                                "exe",
+                                "gz",
+                                "pdf",
+                                "iso",
+                                "pkg",
+                                "dmg",
+                            ]:
+                                if not _is_unsafe_link(href, link.string):
+                                    to_process.append(href)
+                                    found_links.append(href)
+            # handle redirects
+            if "Location" in res.headers:
+                redirect = res.headers["Location"]
+                if str(redirect).startswith("/"):
+                    redirect = urljoin(base_url, redirect)
+                if str(redirect).startswith(base_url):
+                    to_process.append(redirect)
+                    found_links.append(redirect)
+        except Exception:
+            output.debug_exception()
+    output.debug(f"GetLinks Task Completed - {len(results)} issues found.")
+    queue.put(results)
+    return found_links
 
 
 def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):

@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Adam Caudill and Contributors.
+# Copyright (c) 2025 Numorian, Inc. and Contributors.
 # Unit tests for yawast/scanner/modules/http/applications/generic/password_reset.py
 from unittest import mock
 

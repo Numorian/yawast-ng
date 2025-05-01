@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Adam Caudill and Contributors.
+# Copyright (c) 2025 Numorian, Inc. and Contributors.
 # Unit tests for yawast/scanner/cli/http.py
 from unittest import mock
 from urllib.parse import urlparse

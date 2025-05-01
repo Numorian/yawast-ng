@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Adam Caudill and Contributors.
+# Copyright (c) 2025 Numorian, Inc. and Contributors.
 # Unit test for yawast/_static_version.py
 import importlib
 import sys

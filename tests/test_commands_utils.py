@@ -1,8 +1,10 @@
+import sys
 from unittest import mock
 
 import pytest
 
 from yawast.commands import utils as cutils
+from yawast.shared import utils
 
 
 def make_session(scheme="http", url="http://example.com"):
@@ -136,3 +138,27 @@ def test_check_redirect_www_redirect():
         mprint.assert_any_call(
             "Server performs WWW redirect: Scanning: http://www.example.com"
         )
+
+
+def test_get_options_basic(monkeypatch):
+    monkeypatch.setattr(
+        sys, "argv", ["prog", "scan", "--injection", "--foo", "bar", "-x"]
+    )
+    opts = utils.get_options()
+    assert "--injection" in opts
+    assert "--foo" in opts
+    assert "-x" in opts
+    assert "bar" not in opts
+    assert "scan" not in opts
+
+
+def test_get_options_no_options(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["prog", "scan", "url"])
+    opts = utils.get_options()
+    assert opts == []
+
+
+def test_get_options_only_options(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["prog", "--a", "--b", "--c"])
+    opts = utils.get_options()
+    assert set(opts) == {"--a", "--b", "--c"}

@@ -612,3 +612,53 @@ class Vulnerabilities:
 
     WAF_CLOUDFLARE = VulnerabilityInfo.create("Waf_Cloudflare", Severity.INFO, "")
     WAF_INCAPSULA = VulnerabilityInfo.create("Waf_Incapsula", Severity.INFO, "")
+
+    # SQL Injection Vulnerabilities
+    SQLI_POTENTIAL = VulnerabilityInfo.create(
+        "SQLi_Potential", Severity.HIGH, "Potential SQL Injection detected (generic)."
+    )
+    SQLI_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (generic).",
+    )
+    SQLI_MYSQL_POTENTIAL = VulnerabilityInfo.create(
+        "SQLi_MySQL_Potential",
+        Severity.HIGH,
+        "Potential SQL Injection detected (MySQL-specific).",
+    )
+    SQLI_MYSQL_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MySQL_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (MySQL-specific).",
+    )
+    SQLI_MSSQL_POTENTIAL = VulnerabilityInfo.create(
+        "SQLi_MSSQL_Potential",
+        Severity.HIGH,
+        "Potential SQL Injection detected (MSSQL-specific).",
+    )
+    SQLI_MSSQL_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MSSQL_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (MSSQL-specific).",
+    )
+    SQLI_ORACLE_POTENTIAL = VulnerabilityInfo.create(
+        "SQLi_Oracle_Potential",
+        Severity.HIGH,
+        "Potential SQL Injection detected (Oracle-specific).",
+    )
+    SQLI_ORACLE_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Oracle_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (Oracle-specific).",
+    )
+    SQLI_POSTGRES_POTENTIAL = VulnerabilityInfo.create(
+        "SQLi_Postgres_Potential",
+        Severity.HIGH,
+        "Potential SQL Injection detected (PostgreSQL-specific).",
+    )
+    SQLI_POSTGRES_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Postgres_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (PostgreSQL-specific).",
+    )

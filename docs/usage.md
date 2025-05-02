@@ -49,6 +49,7 @@ options:
   --pass_reset_page PASS_RESET_PAGE
                         Password reset page URL (will prompt if not provided)
   --php_page PHP_PAGE   Relative path to PHP script (for additional tests)
+  --injection           Enable checks for injection attacks (SQLi, etc)
 ```
 
 *A note on parameters and strings:* It's important to remember that the strings that would be passed to yawast-ng may contain special characters that could be interpreted by your shell. In general, the best practice is to pass all string parameters wrapped in single-quotes to avoid this.

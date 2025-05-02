@@ -1,5 +1,6 @@
 ## 0.13.0 - In Development
 
+* Added SQL Injection scanning, via the `--injection` option. 
 * Added plugin system. See the plugins page in the project documentation for details.
 * Added automatic session creation. Added new `--password` option to specify the password to use to login.
 * Added collection of potential injection points. These are available to plugins via a hook or JSON output.

@@ -614,51 +614,63 @@ class Vulnerabilities:
     WAF_INCAPSULA = VulnerabilityInfo.create("Waf_Incapsula", Severity.INFO, "")
 
     # SQL Injection Vulnerabilities
-    SQLI_POTENTIAL = VulnerabilityInfo.create(
-        "SQLi_Potential", Severity.HIGH, "Potential SQL Injection detected (generic)."
-    )
     SQLI_CONFIRMED = VulnerabilityInfo.create(
         "SQLi_Confirmed",
         Severity.CRITICAL,
         "Confirmed SQL Injection vulnerability (generic).",
-    )
-    SQLI_MYSQL_POTENTIAL = VulnerabilityInfo.create(
-        "SQLi_MySQL_Potential",
-        Severity.HIGH,
-        "Potential SQL Injection detected (MySQL-specific).",
+        display_all=True,
     )
     SQLI_MYSQL_CONFIRMED = VulnerabilityInfo.create(
         "SQLi_MySQL_Confirmed",
         Severity.CRITICAL,
         "Confirmed SQL Injection vulnerability (MySQL-specific).",
-    )
-    SQLI_MSSQL_POTENTIAL = VulnerabilityInfo.create(
-        "SQLi_MSSQL_Potential",
-        Severity.HIGH,
-        "Potential SQL Injection detected (MSSQL-specific).",
+        display_all=True,
     )
     SQLI_MSSQL_CONFIRMED = VulnerabilityInfo.create(
         "SQLi_MSSQL_Confirmed",
         Severity.CRITICAL,
         "Confirmed SQL Injection vulnerability (MSSQL-specific).",
-    )
-    SQLI_ORACLE_POTENTIAL = VulnerabilityInfo.create(
-        "SQLi_Oracle_Potential",
-        Severity.HIGH,
-        "Potential SQL Injection detected (Oracle-specific).",
+        display_all=True,
     )
     SQLI_ORACLE_CONFIRMED = VulnerabilityInfo.create(
         "SQLi_Oracle_Confirmed",
         Severity.CRITICAL,
         "Confirmed SQL Injection vulnerability (Oracle-specific).",
-    )
-    SQLI_POSTGRES_POTENTIAL = VulnerabilityInfo.create(
-        "SQLi_Postgres_Potential",
-        Severity.HIGH,
-        "Potential SQL Injection detected (PostgreSQL-specific).",
+        display_all=True,
     )
     SQLI_POSTGRES_CONFIRMED = VulnerabilityInfo.create(
         "SQLi_Postgres_Confirmed",
         Severity.CRITICAL,
         "Confirmed SQL Injection vulnerability (PostgreSQL-specific).",
+        display_all=True,
+    )
+    SQLI_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (generic).",
+        display_all=True,
+    )
+    SQLI_MYSQL_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MySQL_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (MySQL-specific).",
+        display_all=True,
+    )
+    SQLI_MSSQL_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MSSQL_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (MSSQL-specific).",
+        display_all=True,
+    )
+    SQLI_ORACLE_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Oracle_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (Oracle-specific).",
+        display_all=True,
+    )
+    SQLI_POSTGRES_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Postgres_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (PostgreSQL-specific).",
+        display_all=True,
     )

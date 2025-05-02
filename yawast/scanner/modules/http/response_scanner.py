@@ -62,7 +62,7 @@ def check_response(
         if any(opt == "--injection" for opt in options):
             if len(points) > 0:
                 for point in points:
-                    inj_results = sql_injection.check_injection(url, res, point)
+                    inj_results = sql_injection.check_injection(url, res, point, soup)
                     results += inj_results
 
     results += http_basic.get_header_issues(res, raw_full, url)

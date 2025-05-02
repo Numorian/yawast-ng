@@ -22,6 +22,7 @@ from yawast.scanner.modules.http import (
     http_basic,
     retirejs,
     sql_injection,
+    xss,
 )
 from yawast.scanner.modules.http.servers import apache_tomcat, iis, rails
 from yawast.shared import network, output, utils
@@ -62,8 +63,8 @@ def check_response(
         if any(opt == "--injection" for opt in options):
             if len(points) > 0:
                 for point in points:
-                    inj_results = sql_injection.check_injection(url, res, point, soup)
-                    results += inj_results
+                    results += sql_injection.check_injection(url, res, point, soup)
+                    results += xss.check_injection(url, res, point, soup)
 
     results += http_basic.get_header_issues(res, raw_full, url)
     results += http_basic.get_cookie_issues(res, url)

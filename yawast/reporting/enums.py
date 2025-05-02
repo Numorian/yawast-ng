@@ -674,3 +674,9 @@ class Vulnerabilities:
         "Confirmed Blind SQL Injection vulnerability (PostgreSQL-specific).",
         display_all=True,
     )
+    XSS_REFLECTED = VulnerabilityInfo.create(
+        "XSS_REFLECTED",
+        Severity.CRITICAL,
+        "Confirmed reflected Cross-Site Scripting (XSS) vulnerability.",
+        display_all=True,
+    )

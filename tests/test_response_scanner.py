@@ -158,12 +158,14 @@ def test_check_response_injection_enabled(monkeypatch):
 
     # Patch sql_injection.check_injection to return a dummy result
     class DummyResult:
-        vulnerability = Vulnerabilities.SQLI_POTENTIAL
+        vulnerability = Vulnerabilities.SQLI_CONFIRMED
+        message = "Dummy SQLi result"
+        evidence = {"db": "mysql"}
 
     # Patch at the correct import location for check_injection
     monkeypatch.setattr(
         "yawast.scanner.modules.http.response_scanner.sql_injection.check_injection",
-        lambda url, res, point: [DummyResult()],
+        lambda url, res, point, soup: [DummyResult()],
     )
     # Patch unrelated result-producing functions to return nothing
     monkeypatch.setattr(response_scanner.retirejs, "get_results", lambda *a, **k: [])
@@ -200,7 +202,7 @@ def test_check_response_injection_enabled(monkeypatch):
             getattr(r, "vulnerability", None),
         )
     assert any(
-        getattr(r, "vulnerability", None) == Vulnerabilities.SQLI_POTENTIAL
+        getattr(r, "vulnerability", None) == Vulnerabilities.SQLI_CONFIRMED
         for r in results
     )
 

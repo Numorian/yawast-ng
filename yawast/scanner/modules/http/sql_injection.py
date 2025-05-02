@@ -14,6 +14,7 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.injection import InjectionPoint
 from yawast.reporting.result import Result
+from yawast.scanner.modules.http.helpers import is_unsafe_form, is_unsafe_link
 from yawast.shared import network
 
 # Common SQLi payloads and error signatures for different DBs
@@ -193,6 +194,10 @@ def check_injection(
     field = injection_point.field
     orig_value = injection_point.value
 
+    # Skip unsafe forms
+    if is_unsafe_form(soup, field):
+        return []
+
     form_params = _extract_form_params(soup, field, orig_value)
 
     # Try each payload (error-based SQLi)
@@ -203,6 +208,10 @@ def check_injection(
         test_url, params = _build_params_for_request(
             method, url, field, payload, form_params
         )
+
+        if is_unsafe_link(test_url, ""):
+            return []
+
         response = None
         try:
             if method == "GET":
@@ -251,7 +260,7 @@ def check_injection(
                     baseline_response = network.http_get(baseline_url)
                     _ = baseline_response.text
                 elif method == "POST":
-                    baseline_response = network._requester.post(
+                    baseline_response = network.http_post(
                         baseline_url, data=baseline_params
                     )
                     _ = baseline_response.text

@@ -410,7 +410,6 @@ def test_check_injection_uses_form_fields(monkeypatch):
     class DummyRes:
         def __init__(self):
             self.text = html
-            self.soup = soup
 
     base_res = DummyRes()
     called_urls = []
@@ -451,15 +450,25 @@ def test__extract_form_params_basic():
     </form>"""
     soup = BeautifulSoup(html, "html.parser")
 
-    class DummyRes:
-        def __init__(self):
-            self.text = html
-            self.soup = soup
-
-    res = DummyRes()
-    params = sql_injection._extract_form_params(res, "id", "testval")
+    params = sql_injection._extract_form_params(soup, "id", "testval")
     assert params["id"] == "testval"
     assert params["Submit"] == "Submit"
+
+
+def test__extract_form_params_includes_all_fields():
+    from bs4 import BeautifulSoup
+
+    html = """<form action="#" method="GET">
+        <input type="text" name="id">
+        <input type="submit" name="Submit" value="Submit">
+        <input type="hidden" name="hidden_field">
+    </form>"""
+    soup = BeautifulSoup(html, "html.parser")
+    params = sql_injection._extract_form_params(soup, "id", "testval")
+    # All fields should be present, even if value is missing
+    assert params["id"] == "testval"
+    assert params["Submit"] == "Submit"
+    assert params["hidden_field"] == ""
 
 
 def test__build_params_for_request_get():

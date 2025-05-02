@@ -101,10 +101,10 @@ def detect_sqli_error(text):
     return None, None
 
 
-def _extract_form_params(res, field, orig_value):
+def _extract_form_params(soup, field, orig_value):
     """Extract all form fields for the relevant form containing the injection field."""
-    if hasattr(res, "soup") and res.soup is not None:
-        forms = res.soup.find_all("form")
+    if soup is not None:
+        forms = soup.find_all("form")
         for form in forms:
             inputs = form.find_all("input")
             input_names = [i.get("name") for i in inputs if i.get("name")]
@@ -114,11 +114,11 @@ def _extract_form_params(res, field, orig_value):
                     name = inp.get("name")
                     if not name:
                         continue
-                    value = inp.get("value", "")
+                    # Always include the field, even if value is missing
                     if name == field:
                         form_params[name] = orig_value
                     else:
-                        form_params[name] = value
+                        form_params[name] = inp.get("value", "")
                 return form_params
     return None
 
@@ -193,7 +193,7 @@ def check_injection(
     field = injection_point.field
     orig_value = injection_point.value
 
-    form_params = _extract_form_params(res, field, orig_value)
+    form_params = _extract_form_params(soup, field, orig_value)
 
     # Try each payload (error-based SQLi)
     found = False
@@ -216,6 +216,7 @@ def check_injection(
         if not response:
             continue
         db, sig = detect_sqli_error(response.text)
+
         if db:
             vuln_map = _get_vuln_map()
             vuln = vuln_map.get(db, Vulnerabilities.SQLI_CONFIRMED)

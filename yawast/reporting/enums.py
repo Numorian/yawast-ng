@@ -612,3 +612,65 @@ class Vulnerabilities:
 
     WAF_CLOUDFLARE = VulnerabilityInfo.create("Waf_Cloudflare", Severity.INFO, "")
     WAF_INCAPSULA = VulnerabilityInfo.create("Waf_Incapsula", Severity.INFO, "")
+
+    # SQL Injection Vulnerabilities
+    SQLI_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (generic).",
+        display_all=True,
+    )
+    SQLI_MYSQL_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MySQL_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (MySQL-specific).",
+        display_all=True,
+    )
+    SQLI_MSSQL_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MSSQL_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (MSSQL-specific).",
+        display_all=True,
+    )
+    SQLI_ORACLE_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Oracle_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (Oracle-specific).",
+        display_all=True,
+    )
+    SQLI_POSTGRES_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Postgres_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed SQL Injection vulnerability (PostgreSQL-specific).",
+        display_all=True,
+    )
+    SQLI_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (generic).",
+        display_all=True,
+    )
+    SQLI_MYSQL_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MySQL_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (MySQL-specific).",
+        display_all=True,
+    )
+    SQLI_MSSQL_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_MSSQL_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (MSSQL-specific).",
+        display_all=True,
+    )
+    SQLI_ORACLE_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Oracle_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (Oracle-specific).",
+        display_all=True,
+    )
+    SQLI_POSTGRES_BLIND_CONFIRMED = VulnerabilityInfo.create(
+        "SQLi_Postgres_Blind_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Blind SQL Injection vulnerability (PostgreSQL-specific).",
+        display_all=True,
+    )

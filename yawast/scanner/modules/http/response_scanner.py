@@ -17,7 +17,12 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.injection import InjectionPoint
 from yawast.reporting.result import Result
-from yawast.scanner.modules.http import error_checker, http_basic, retirejs
+from yawast.scanner.modules.http import (
+    error_checker,
+    http_basic,
+    retirejs,
+    sql_injection,
+)
 from yawast.scanner.modules.http.servers import apache_tomcat, iis, rails
 from yawast.shared import network, output, utils
 
@@ -50,6 +55,15 @@ def check_response(
 
         points = _find_injection_points(url, res, soup)
         reporter.register_injection_points(points)
+
+        # check for possible injection attacks
+        # we only do this if the "--injection" option is set
+        options = utils.get_options()
+        if any(opt == "--injection" for opt in options):
+            if len(points) > 0:
+                for point in points:
+                    inj_results = sql_injection.check_injection(url, res, point, soup)
+                    results += inj_results
 
     results += http_basic.get_header_issues(res, raw_full, url)
     results += http_basic.get_cookie_issues(res, url)
@@ -96,7 +110,7 @@ def _find_injection_points(
             # get the method and action
             method = form.get("method", "GET").upper()
             action = form.get("action", "")
-            if not action:
+            if not action or action == "#":
                 action = res.request.url
 
             # make action absolute

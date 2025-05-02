@@ -109,6 +109,11 @@ def build_parser():
         type=str,
         help="Relative path to PHP script (for additional tests)",
     )
+    parser_scan.add_argument(
+        "--injection",
+        action="store_true",
+        help="Enable checks for injection attacks (SQLi, etc)",
+    )
     parser_scan.set_defaults(func=command_scan)
 
     # create the parser for the "dns" command

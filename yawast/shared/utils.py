@@ -225,3 +225,9 @@ def prompt(msg: str) -> str:
         INPUT_LOCK.release()
 
     return ret
+
+
+def get_options():
+    import sys
+
+    return [arg for arg in sys.argv[1:] if arg.startswith("-")]

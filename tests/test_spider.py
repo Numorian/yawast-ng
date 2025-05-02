@@ -564,3 +564,107 @@ def test_get_links_exception_debug(monkeypatch):
     spider._get_links(session, session.url, [session.url], queue, pool)
     assert debug_exception.called
     assert debug.called
+
+
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+from yawast.scanner.modules.http import spider
+from yawast.scanner.session import Session
+
+
+class DummySession:
+    url = "http://test.local/"
+    args = type("Args", (), {"php_page": None})()
+
+
+@pytest.fixture
+def reset_spider_globals():
+    spider._links = []
+    spider._insecure = []
+    spider._tasks = []
+    yield
+    spider._links = []
+    spider._insecure = []
+    spider._tasks = []
+
+
+def test_spider_no_sitemap_recurses(reset_spider_globals):
+    # Simulate a site with 3 pages linked together
+    html_map = {
+        "http://test.local/": '<a href="/a">A</a>',
+        "http://test.local/a": '<a href="/b">B</a>',
+        "http://test.local/b": "",
+    }
+
+    def fake_http_get(url, allow_redirects=True):
+        class DummyRes:
+            def __init__(self, url):
+                self.url = url
+                self.status_code = (
+                    200 if url != "http://test.local/sitemap.xml" else 404
+                )
+                self.text = html_map.get(url, "")
+                self.headers = {}
+
+        return DummyRes(url)
+
+    with patch(
+        "yawast.scanner.modules.http.spider.network.http_get", side_effect=fake_http_get
+    ):
+        with patch(
+            "yawast.scanner.modules.http.spider.network.response_body_is_text",
+            return_value=True,
+        ):
+            with patch(
+                "yawast.scanner.modules.http.spider.response_scanner.check_response",
+                return_value=[],
+            ):
+                session = DummySession()
+                links, results = spider.spider(session)
+                assert set(links) == {"http://test.local/a", "http://test.local/b"}
+                assert results == []
+
+
+def test_spider_with_sitemap_skips_recursion(reset_spider_globals):
+    # Simulate a site with a sitemap.xml
+    sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url><loc>http://test.local/a</loc></url>
+        <url><loc>http://test.local/b</loc></url>
+    </urlset>"""
+    html_map = {
+        "http://test.local/": "",
+        "http://test.local/a": "",
+        "http://test.local/b": "",
+        "http://test.local/sitemap.xml": sitemap_xml,
+    }
+
+    def fake_http_get(url, allow_redirects=True):
+        class DummyRes:
+            def __init__(self, url):
+                self.url = url
+                self.status_code = (
+                    200 if url == "http://test.local/sitemap.xml" else 200
+                )
+                self.text = html_map.get(url, "")
+                self.headers = {}
+
+        return DummyRes(url)
+
+    with patch(
+        "yawast.scanner.modules.http.spider.network.http_get", side_effect=fake_http_get
+    ):
+        with patch(
+            "yawast.scanner.modules.http.spider.network.response_body_is_text",
+            return_value=True,
+        ):
+            with patch(
+                "yawast.scanner.modules.http.spider.response_scanner.check_response",
+                return_value=[],
+            ):
+                session = DummySession()
+                links, results = spider.spider(session)
+                assert set(links) == {"http://test.local/a", "http://test.local/b"}
+                assert results == []

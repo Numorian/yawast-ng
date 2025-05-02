@@ -440,3 +440,58 @@ def test_check_injection_uses_form_fields(monkeypatch):
     assert any("Confirmed SQL Injection" in r.message for r in results)
     # Confirm all form fields are present in the called URL
     assert any("id=%27" in u and "Submit=Submit" in u for u in called_urls)
+
+
+def test__extract_form_params_basic():
+    from bs4 import BeautifulSoup
+
+    html = """<form action="#" method="GET">
+        <input type="text" name="id" value="1">
+        <input type="submit" name="Submit" value="Submit">
+    </form>"""
+    soup = BeautifulSoup(html, "html.parser")
+
+    class DummyRes:
+        def __init__(self):
+            self.text = html
+            self.soup = soup
+
+    res = DummyRes()
+    params = sql_injection._extract_form_params(res, "id", "testval")
+    assert params["id"] == "testval"
+    assert params["Submit"] == "Submit"
+
+
+def test__build_params_for_request_get():
+    url = "http://test/?id=1&Submit=Submit"
+    method = "GET"
+    field = "id"
+    value = "'"
+    form_params = {"id": "'", "Submit": "Submit"}
+    test_url, params = sql_injection._build_params_for_request(
+        method, url, field, value, form_params
+    )
+    assert "id=%27" in test_url
+    assert "Submit=Submit" in test_url
+    assert params is None
+
+
+def test__build_params_for_request_post():
+    url = "http://test/"
+    method = "POST"
+    field = "id"
+    value = "'"
+    form_params = {"id": "'", "Submit": "Submit"}
+    test_url, params = sql_injection._build_params_for_request(
+        method, url, field, value, form_params
+    )
+    assert test_url == url
+    assert params["id"] == "'"
+    assert params["Submit"] == "Submit"
+
+
+def test__get_vuln_map():
+    m = sql_injection._get_vuln_map()
+    assert m["mysql"] == sql_injection.Vulnerabilities.SQLI_MYSQL_CONFIRMED
+    m2 = sql_injection._get_vuln_map(blind=True)
+    assert m2["mysql"] == sql_injection.Vulnerabilities.SQLI_MYSQL_BLIND_CONFIRMED

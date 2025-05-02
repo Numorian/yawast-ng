@@ -101,6 +101,67 @@ def detect_sqli_error(text):
     return None, None
 
 
+def _extract_form_params(res, field, orig_value):
+    """Extract all form fields for the relevant form containing the injection field."""
+    if hasattr(res, "soup") and res.soup is not None:
+        forms = res.soup.find_all("form")
+        for form in forms:
+            inputs = form.find_all("input")
+            input_names = [i.get("name") for i in inputs if i.get("name")]
+            if field in input_names:
+                form_params = {}
+                for inp in inputs:
+                    name = inp.get("name")
+                    if not name:
+                        continue
+                    value = inp.get("value", "")
+                    if name == field:
+                        form_params[name] = orig_value
+                    else:
+                        form_params[name] = value
+                return form_params
+    return None
+
+
+def _build_params_for_request(method, url, field, value, form_params=None):
+    """Build the params/query dict for a request, using form_params if available."""
+    from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+
+    parsed = urlparse(url)
+    if method == "GET":
+        qs = parse_qs(parsed.query)
+        if form_params:
+            qs = {k: [v] for k, v in form_params.items()}
+        qs[field] = [value]
+        new_query = urlencode(qs, doseq=True)
+        test_url = urlunparse(parsed._replace(query=new_query))
+        return test_url, None
+    elif method == "POST":
+        params = form_params.copy() if form_params else {}
+        params[field] = value
+        return url, params
+    return url, None
+
+
+def _get_vuln_map(blind=False):
+    if not blind:
+        return {
+            "mysql": Vulnerabilities.SQLI_MYSQL_CONFIRMED,
+            "mssql": Vulnerabilities.SQLI_MSSQL_CONFIRMED,
+            "oracle": Vulnerabilities.SQLI_ORACLE_CONFIRMED,
+            "postgres": Vulnerabilities.SQLI_POSTGRES_CONFIRMED,
+            "generic": Vulnerabilities.SQLI_CONFIRMED,
+        }
+    else:
+        return {
+            "mysql": Vulnerabilities.SQLI_MYSQL_BLIND_CONFIRMED,
+            "mssql": Vulnerabilities.SQLI_MSSQL_BLIND_CONFIRMED,
+            "oracle": Vulnerabilities.SQLI_ORACLE_BLIND_CONFIRMED,
+            "postgres": Vulnerabilities.SQLI_POSTGRES_BLIND_CONFIRMED,
+            "generic": Vulnerabilities.SQLI_BLIND_CONFIRMED,
+        }
+
+
 def check_injection(
     url: str, res: Response, injection_point: InjectionPoint, soup: BeautifulSoup
 ) -> List[Result]:
@@ -132,75 +193,31 @@ def check_injection(
     field = injection_point.field
     orig_value = injection_point.value
 
-    # If soup is available, try to extract all form fields for the relevant form
-    form_params = None
-    if hasattr(res, "soup") and res.soup is not None:
-        # Find the form that contains the injection field
-        forms = res.soup.find_all("form")
-        for form in forms:
-            inputs = form.find_all("input")
-            input_names = [i.get("name") for i in inputs if i.get("name")]
-            if field in input_names:
-                form_params = {}
-                for inp in inputs:
-                    name = inp.get("name")
-                    if not name:
-                        continue
-                    value = inp.get("value", "")
-                    # Use the original value for the injection field
-                    if name == field:
-                        form_params[name] = orig_value
-                    else:
-                        form_params[name] = value
-                break
+    form_params = _extract_form_params(res, field, orig_value)
 
-    # Try each payload
+    # Try each payload (error-based SQLi)
     found = False
     for payload in SQLI_PAYLOADS:
         if found:
             break
-        test_value = payload  # Use payload as the full value, not appended
-        params = {field: test_value}
-        test_url = url
+        test_url, params = _build_params_for_request(
+            method, url, field, payload, form_params
+        )
         response = None
         try:
             if method == "GET":
-                from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
-
-                parsed = urlparse(url)
-                qs = parse_qs(parsed.query)
-                # If we have form_params, use them as the base
-                if form_params:
-                    qs = {k: [v] for k, v in form_params.items()}
-                # Always set the target field to the payload
-                qs[field] = [test_value]
-                new_query = urlencode(qs, doseq=True)
-                test_url = urlunparse(parsed._replace(query=new_query))
                 response = network.http_get(test_url)
             elif method == "POST":
-                # If we have form_params, use them as the base
-                if form_params:
-                    params = form_params.copy()
-                params[field] = test_value
-                response = network._requester.post(url, data=params)
+                response = network._requester.post(test_url, data=params)
             else:
                 continue
-        except Exception as ex:
+        except Exception:
             continue
         if not response:
             continue
-        # Check for SQL error signatures
         db, sig = detect_sqli_error(response.text)
-
         if db:
-            # Confirmed SQLi for this DB
-            vuln_map = {
-                "mysql": Vulnerabilities.SQLI_MYSQL_CONFIRMED,
-                "mssql": Vulnerabilities.SQLI_MSSQL_CONFIRMED,
-                "oracle": Vulnerabilities.SQLI_ORACLE_CONFIRMED,
-                "postgres": Vulnerabilities.SQLI_POSTGRES_CONFIRMED,
-                "generic": Vulnerabilities.SQLI_CONFIRMED,
-            }
+            vuln_map = _get_vuln_map()
             vuln = vuln_map.get(db, Vulnerabilities.SQLI_CONFIRMED)
             evidence = Evidence(
                 test_url,
@@ -221,70 +238,39 @@ def check_injection(
     # Blind SQLi: time-based
     for db, payloads in BLIND_SQLI_PAYLOADS.items():
         for payload in payloads:
-            test_value = payload  # Use payload as the full value, not appended
-            params = {field: test_value}
-            test_url = url
-            response = None
-            # Measure baseline response time
-            baseline_url = url
-            baseline_params = {field: orig_value}
+            # Baseline
+            baseline_url, baseline_params = _build_params_for_request(
+                method, url, field, orig_value, form_params
+            )
             baseline_response = None
             baseline_time = None
             try:
+                start_base = time.time()
                 if method == "GET":
-                    from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
-
-                    parsed = urlparse(url)
-                    qs = parse_qs(parsed.query)
-                    # If we have form_params, use them as the base
-                    if form_params:
-                        qs = {k: [v] for k, v in form_params.items()}
-                    # Always set the target field to the original value for baseline
-                    qs[field] = [orig_value]
-                    new_query = urlencode(qs, doseq=True)
-                    baseline_url = urlunparse(parsed._replace(query=new_query))
-                    start_base = time.time()
                     baseline_response = network.http_get(baseline_url)
-                    _ = baseline_response.text  # Access text to trigger delay
-                    baseline_time = time.time() - start_base
+                    _ = baseline_response.text
                 elif method == "POST":
-                    # If we have form_params, use them as the base
-                    if form_params:
-                        baseline_params = form_params.copy()
-                    baseline_params[field] = orig_value
-                    start_base = time.time()
                     baseline_response = network._requester.post(
-                        url, data=baseline_params
+                        baseline_url, data=baseline_params
                     )
                     _ = baseline_response.text
-                    baseline_time = time.time() - start_base
                 else:
                     continue
+                baseline_time = time.time() - start_base
             except Exception:
                 continue
-            # Now measure payload response time
+            # Payload
+            test_url, params = _build_params_for_request(
+                method, url, field, payload, form_params
+            )
+            response = None
             start = time.time()
             try:
                 if method == "GET":
-                    from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
-
-                    parsed = urlparse(url)
-                    qs = parse_qs(parsed.query)
-                    # If we have form_params, use them as the base
-                    if form_params:
-                        qs = {k: [v] for k, v in form_params.items()}
-                    # Always set the target field to the payload
-                    qs[field] = [test_value]
-                    new_query = urlencode(qs, doseq=True)
-                    test_url = urlunparse(parsed._replace(query=new_query))
                     response = network.http_get(test_url)
-                    _ = response.text  # Access text to trigger delay
+                    _ = response.text
                 elif method == "POST":
-                    # If we have form_params, use them as the base
-                    if form_params:
-                        params = form_params.copy()
-                    params[field] = test_value
-                    response = network._requester.post(url, data=params)
+                    response = network._requester.post(test_url, data=params)
                     _ = response.text
                 else:
                     continue
@@ -293,18 +279,9 @@ def check_injection(
             elapsed = time.time() - start
             if not response or baseline_time is None:
                 continue
-
             delay_diff = elapsed - baseline_time
-
-            # Use the db from the current loop iteration for vuln mapping
             if delay_diff > BLIND_SQLI_DELAY:
-                vuln_map = {
-                    "mysql": Vulnerabilities.SQLI_MYSQL_BLIND_CONFIRMED,
-                    "mssql": Vulnerabilities.SQLI_MSSQL_BLIND_CONFIRMED,
-                    "oracle": Vulnerabilities.SQLI_ORACLE_BLIND_CONFIRMED,
-                    "postgres": Vulnerabilities.SQLI_POSTGRES_BLIND_CONFIRMED,
-                    "generic": Vulnerabilities.SQLI_BLIND_CONFIRMED,
-                }
+                vuln_map = _get_vuln_map(blind=True)
                 vuln = vuln_map.get(db, Vulnerabilities.SQLI_BLIND_CONFIRMED)
                 evidence = Evidence(
                     test_url,
@@ -326,5 +303,5 @@ def check_injection(
                         evidence,
                     )
                 )
-                break  # Only check the first matching payload for each DB
+                break
     return results

@@ -10,6 +10,12 @@ class DummyResponse:
         self.text = text
 
 
+# Patch response_scanner.check_response to a no-op for all tests that call check_injection
+@pytest.fixture(autouse=True)
+def patch_check_response(monkeypatch):
+    monkeypatch.setattr(xss.response_scanner, "check_response", lambda *a, **kw: None)
+
+
 @pytest.mark.parametrize("payload", xss.XSS_PAYLOADS)
 def test_xss_reflected_detected(monkeypatch, payload):
     url = f"http://test/?q=foo"

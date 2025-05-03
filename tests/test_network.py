@@ -234,12 +234,13 @@ class DummySession:
     def __init__(self, domain=None, url=None, ports=False):
         self.domain = domain
         self.url = url
-        self.args = type('Args', (), {'ports': ports})()
+        self.args = type("Args", (), {"ports": ports})()
         self.last_url = None
         self.last_data = None
         self.last_headers = None
         self.last_allow_redirects = None
         self.last_timeout = None
+
     def post(self, url, data=None, headers=None, allow_redirects=True, timeout=30):
         self.last_url = url
         self.last_data = data
@@ -734,6 +735,7 @@ class DummyResponse:
         self.request = type("Req", (), {"method": "POST"})()
         self.elapsed = type("Elapsed", (), {"total_seconds": lambda self: 0.01})()
 
+
 def test_http_post_basic(monkeypatch):
     dummy = DummySession()
     monkeypatch.setattr(network, "_requester", dummy)
@@ -746,6 +748,7 @@ def test_http_post_basic(monkeypatch):
     assert dummy.last_allow_redirects is True
     assert dummy.last_timeout == 30
 
+
 def test_http_post_with_headers(monkeypatch):
     dummy = DummySession()
     monkeypatch.setattr(network, "_requester", dummy)
@@ -755,6 +758,7 @@ def test_http_post_with_headers(monkeypatch):
     res = network.http_post(url, data, additional_headers=headers)
     assert dummy.last_headers["X-Test"] == "1"
     assert res.text.startswith("Posted to http://test/post")
+
 
 def test_http_post_redirects_and_timeout(monkeypatch):
     dummy = DummySession()

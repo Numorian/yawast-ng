@@ -676,7 +676,13 @@ class Vulnerabilities:
     )
     XSS_REFLECTED = VulnerabilityInfo.create(
         "XSS_REFLECTED",
-        Severity.CRITICAL,
+        Severity.HIGH,
         "Confirmed reflected Cross-Site Scripting (XSS) vulnerability.",
+        display_all=True,
+    )
+    XSS_DOM = VulnerabilityInfo.create(
+        "XSS_DOM",
+        Severity.HIGH,
+        "Confirmed DOM-based Cross-Site Scripting (XSS) vulnerability.",
         display_all=True,
     )

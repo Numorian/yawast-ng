@@ -185,3 +185,56 @@ def test_xss_reflected_in_pre_tag(monkeypatch):
     # Should detect XSS if payload is inside <pre> tag
     assert any(r.vulnerability == xss.Vulnerabilities.XSS_REFLECTED for r in results)
     assert any(payload in r.message for r in results)
+
+
+def test_dom_xss_detected():
+    # Simulate a response with a DOM XSS pattern
+    html = """
+    <html><head><script>
+    var hash = location.hash;
+    document.getElementById('output').innerHTML = hash;
+    </script></head><body></body></html>
+    """
+    url = "http://test/?q=foo"
+    inj_point = xss.InjectionPoint(url, "q", "GET", "foo")
+
+    class DummyResponse:
+        def __init__(self, text):
+            self.text = text
+
+    def fake_get(u):
+        return DummyResponse(html)
+
+    # Patch network.http_get
+    import types
+
+    xss.network.http_get = fake_get
+    if hasattr(xss.check_injection, "_tested_combinations"):
+        xss.check_injection._tested_combinations.clear()
+    results = xss.check_injection(url, None, inj_point, None)
+    assert any(r.vulnerability == xss.Vulnerabilities.XSS_DOM for r in results)
+
+
+def test_dom_xss_not_detected():
+    # Simulate a response with no DOM XSS pattern
+    html = """
+    <html><head><script>
+    var safe = 'hello';
+    document.getElementById('output').innerHTML = safe;
+    </script></head><body></body></html>
+    """
+    url = "http://test/?q=foo"
+    inj_point = xss.InjectionPoint(url, "q", "GET", "foo")
+
+    class DummyResponse:
+        def __init__(self, text):
+            self.text = text
+
+    def fake_get(u):
+        return DummyResponse(html)
+
+    xss.network.http_get = fake_get
+    if hasattr(xss.check_injection, "_tested_combinations"):
+        xss.check_injection._tested_combinations.clear()
+    results = xss.check_injection(url, None, inj_point, None)
+    assert not any(r.vulnerability == xss.Vulnerabilities.XSS_DOM for r in results)

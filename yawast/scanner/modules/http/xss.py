@@ -62,6 +62,72 @@ def _build_params_for_request(method, url, field, value, form_params=None):
     return url, None
 
 
+def _detect_dom_xss(html: str) -> bool:
+    """
+    Detects possible DOM-based XSS by searching for dangerous JavaScript patterns
+    where user-controllable sources are assigned to dangerous sinks.
+    """
+    import re
+
+    # Common sources and sinks for DOM XSS
+    sources = [
+        r"location(?:\.hash|\.search|\.pathname|\.href)?",
+        r"document\.URL",
+        r"document\.documentURI",
+        r"document\.referrer",
+        r"window\.name",
+        r"localStorage",
+        r"sessionStorage",
+        r"cookie",
+    ]
+    sinks = [
+        r"innerHTML",
+        r"outerHTML",
+        r"document\.write",
+        r"document\.writeln",
+        r"eval",
+        r"setTimeout",
+        r"setInterval",
+        r"Function",
+    ]
+    # Regex to find script blocks
+    script_blocks = re.findall(
+        r"<script.*?>(.*?)</script>", html, re.DOTALL | re.IGNORECASE
+    )
+    for script in script_blocks:
+        # Track variable assignments from sources
+        var_sources = {}
+        lines = script.split("\n")
+        for line in lines:
+            # var foo = location.hash; or foo = location.hash;
+            for source in sources:
+                m = re.search(rf"(?:var|let|const)?\s*(\w+)\s*=\s*{source}", line)
+                if m:
+                    var_sources[m.group(1)] = source
+        for line in lines:
+            for sink in sinks:
+                # direct assignment: sink = source
+                for source in sources:
+                    if re.search(rf"{sink}\s*=\s*.*{source}", line):
+                        return True
+                # variable propagation: sink = var (where var was set from a source)
+                m = re.search(rf"{sink}\s*=\s*(\w+)", line)
+                if m and m.group(1) in var_sources:
+                    return True
+                # function call: sink(var) or sink(source)
+                if re.search(rf"{sink}\s*\((.*?)\)", line):
+                    args = re.findall(rf"{sink}\s*\((.*?)\)", line)
+                    for arg in args:
+                        # arg is a comma-separated list
+                        for a in arg.split(","):
+                            a = a.strip()
+                            if a in var_sources or any(
+                                re.search(source, a) for source in sources
+                            ):
+                                return True
+    return False
+
+
 def check_injection(
     url: str, res: Response, injection_point: InjectionPoint, soup: BeautifulSoup
 ) -> List[Result]:
@@ -119,4 +185,15 @@ def check_injection(
                 )
             )
             break  # Stop scanning after the first positive result
+        # DOM-based XSS detection
+        if _detect_dom_xss(resp.text):
+            results.append(
+                Result(
+                    f"DOM-based XSS pattern detected in JavaScript on page: {url}",
+                    Vulnerabilities.XSS_DOM,
+                    test_url,
+                    {"payload": payload, "url": test_url, "dom_xss": True},
+                )
+            )
+            break
     return results

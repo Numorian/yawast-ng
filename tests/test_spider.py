@@ -144,19 +144,19 @@ def test_is_unsafe_link_exception(monkeypatch):
             raise Exception("fail")
 
     # Should not raise, should return False
-    assert spider._is_unsafe_link("/foo", Bad()) is False
+    assert spider.is_unsafe_link("/foo", Bad()) is False
 
 
 def test_is_unsafe_link_detects(monkeypatch):
     # Should return True for unsafe fragments
-    assert spider._is_unsafe_link("/logout", "logout") is True
-    assert spider._is_unsafe_link("/foo", "delete") is True
-    assert spider._is_unsafe_link("/foo", "destroy") is True
-    assert spider._is_unsafe_link("/logoff", "") is True
-    assert spider._is_unsafe_link("/foo", "log out") is True
-    assert spider._is_unsafe_link("/foo", "log_off") is True
-    assert spider._is_unsafe_link("/foo", "log out") is True
-    assert spider._is_unsafe_link("/foo", "log_out") is True
+    assert spider.is_unsafe_link("/logout", "logout") is True
+    assert spider.is_unsafe_link("/foo", "delete") is True
+    assert spider.is_unsafe_link("/foo", "destroy") is True
+    assert spider.is_unsafe_link("/logoff", "") is True
+    assert spider.is_unsafe_link("/foo", "log out") is True
+    assert spider.is_unsafe_link("/foo", "log_off") is True
+    assert spider.is_unsafe_link("/foo", "log out") is True
+    assert spider.is_unsafe_link("/foo", "log_out") is True
 
 
 def test_get_links_file_ext_filter(monkeypatch):

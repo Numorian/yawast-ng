@@ -231,10 +231,23 @@ class DummyArgs:
 
 
 class DummySession:
-    def __init__(self, domain, url, ports=False):
+    def __init__(self, domain=None, url=None, ports=False):
         self.domain = domain
         self.url = url
-        self.args = DummyArgs(ports=ports)
+        self.args = type("Args", (), {"ports": ports})()
+        self.last_url = None
+        self.last_data = None
+        self.last_headers = None
+        self.last_allow_redirects = None
+        self.last_timeout = None
+
+    def post(self, url, data=None, headers=None, allow_redirects=True, timeout=30):
+        self.last_url = url
+        self.last_data = data
+        self.last_headers = headers
+        self.last_allow_redirects = allow_redirects
+        self.last_timeout = timeout
+        return DummyResponse(f"Posted to {url} with {data}")
 
 
 def test_scan_with_ports(monkeypatch):
@@ -711,3 +724,48 @@ def test_response_body_is_text_no_content_type(monkeypatch):
     res = mock.Mock(content=b"abc", headers={}, text="abc")
     monkeypatch.setattr(network.utils, "is_printable_str", lambda x: True)
     assert network.response_body_is_text(res)
+
+
+class DummyResponse:
+    def __init__(self, text, status_code=200):
+        self.text = text
+        self.content = text.encode()
+        self.status_code = status_code
+        self.headers = {"Content-Type": "text/html"}
+        self.request = type("Req", (), {"method": "POST"})()
+        self.elapsed = type("Elapsed", (), {"total_seconds": lambda self: 0.01})()
+
+
+def test_http_post_basic(monkeypatch):
+    dummy = DummySession()
+    monkeypatch.setattr(network, "_requester", dummy)
+    url = "http://test/post"
+    data = {"foo": "bar"}
+    res = network.http_post(url, data)
+    assert res.text.startswith("Posted to http://test/post")
+    assert dummy.last_url == url
+    assert dummy.last_data == data
+    assert dummy.last_allow_redirects is True
+    assert dummy.last_timeout == 30
+
+
+def test_http_post_with_headers(monkeypatch):
+    dummy = DummySession()
+    monkeypatch.setattr(network, "_requester", dummy)
+    url = "http://test/post"
+    data = {"foo": "bar"}
+    headers = {"X-Test": "1"}
+    res = network.http_post(url, data, additional_headers=headers)
+    assert dummy.last_headers["X-Test"] == "1"
+    assert res.text.startswith("Posted to http://test/post")
+
+
+def test_http_post_redirects_and_timeout(monkeypatch):
+    dummy = DummySession()
+    monkeypatch.setattr(network, "_requester", dummy)
+    url = "http://test/post"
+    data = {"foo": "bar"}
+    res = network.http_post(url, data, allow_redirects=False, timeout=10)
+    assert dummy.last_allow_redirects is False
+    assert dummy.last_timeout == 10
+    assert res.text.startswith("Posted to http://test/post")

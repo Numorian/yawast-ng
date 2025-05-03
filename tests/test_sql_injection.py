@@ -7,6 +7,11 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.injection import InjectionPoint
 from yawast.scanner.modules.http import sql_injection
 
+# Patch response_scanner.check_response to a no-op for all tests that call check_injection
+@pytest.fixture(autouse=True)
+def patch_check_response(monkeypatch):
+    monkeypatch.setattr(sql_injection.response_scanner, "check_response", lambda *a, **kw: None)
+
 
 class DummyResponse:
     def __init__(self, text, status_code=200, request=None, delay=0):
@@ -504,3 +509,44 @@ def test__get_vuln_map():
     assert m["mysql"] == sql_injection.Vulnerabilities.SQLI_MYSQL_CONFIRMED
     m2 = sql_injection._get_vuln_map(blind=True)
     assert m2["mysql"] == sql_injection.Vulnerabilities.SQLI_MYSQL_BLIND_CONFIRMED
+
+
+def test_sql_injection_skips_on_error_signature(monkeypatch):
+    # Simulate a response with a SQL error signature in the base response
+    error_text = "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version"
+    res = DummyResponse(error_text)
+    inj_point = InjectionPoint("http://test/?id=1", "id", "GET", "1")
+    # Should skip scanning and return no results
+    results = sql_injection.check_injection("http://test/?id=1", res, inj_point, None)
+    assert results == []
+
+
+def test_sql_injection_scans_when_no_error_signature(monkeypatch):
+    # Simulate a response with no SQL error signature in the base response
+    res = DummyResponse("Normal page")
+    inj_point = InjectionPoint("http://test/?id=1", "id", "GET", "1")
+
+    # Patch network.http_get to simulate a SQLi error on payloads
+    def fake_get(url):
+        # Return a SQL error only if the payload is present in the URL
+        if url != "http://test/?id=1":
+
+            class R:
+                text = "SQL syntax error MySQL"
+                request = None
+
+            return R()
+        else:
+
+            class R:
+                text = "Normal page"
+                request = None
+
+            return R()
+
+    monkeypatch.setattr("yawast.shared.network.http_get", fake_get)
+    # Clear deduplication cache before each test
+    if hasattr(sql_injection.check_injection, "_tested_combinations"):
+        sql_injection.check_injection._tested_combinations.clear()
+    results = sql_injection.check_injection("http://test/?id=1", res, inj_point, None)
+    assert any(r.vulnerability for r in results)

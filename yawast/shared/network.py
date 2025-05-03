@@ -253,6 +253,41 @@ def http_get(
 
     return res
 
+def http_post(
+    url: str,
+    data: str,
+    allow_redirects: Optional[bool] = True,
+    additional_headers: Union[None, Dict] = None,
+    timeout: Optional[int] = 30,
+) -> Response:
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+    if config.user_agent is not None:
+        headers = {"User-Agent": config.user_agent}
+    else:
+        headers = {"User-Agent": YAWAST_UA}
+
+    if additional_headers is not None:
+        headers = {**headers, **additional_headers}
+
+    res = _requester.post(
+        url,
+        data=data,
+        headers=headers,
+        allow_redirects=allow_redirects,
+        timeout=timeout,
+    )
+
+    output.debug(
+        f"{res.request.method}: {url} - completed ({res.status_code}) in "
+        f"{int(res.elapsed.total_seconds() * 1000)}ms "
+        f"(Body: {len(res.content)})"
+    )
+
+    plugin_manager.run_hook_response_received(url, res)
+
+    return res
+
 
 def http_put(
     url: str,

@@ -18,6 +18,7 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
 from yawast.scanner.modules.http import response_scanner
+from yawast.scanner.modules.http.helpers import is_unsafe_link
 from yawast.scanner.session import Session
 from yawast.shared import network, output, utils
 
@@ -204,7 +205,7 @@ def _get_links_collect_links(
                                 "pkg",
                                 "dmg",
                             ]:
-                                if not _is_unsafe_link(href, link.string):
+                                if not is_unsafe_link(href, link.string):
                                     to_process.append(href)
                                     found_links.append(href)
             # handle redirects
@@ -295,7 +296,7 @@ def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):
                                 "pkg",
                                 "dmg",
                             ]:
-                                if not _is_unsafe_link(href, link.string):
+                                if not is_unsafe_link(href, link.string):
                                     to_process.append(href)
                                 else:
                                     output.debug(
@@ -345,36 +346,3 @@ def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):
 
     output.debug(f"GetLinks Task Completed - {len(results)} issues found.")
     queue.put(results)
-
-
-def _is_unsafe_link(href: str, description: str) -> bool:
-    """
-    Check for strings that indicate an unsafe link
-    :param href:
-    :param description:
-    :return:
-    """
-    unsafe_fragments = [
-        "logoff",
-        "log off",
-        "log_off",
-        "logout",
-        "log out",
-        "log_out",
-        "delete",
-        "destroy",
-    ]
-
-    ret = False
-
-    try:
-        description = str(description).lower() if description is not None else ""
-        href = str(href).lower()
-
-        for frag in unsafe_fragments:
-            if frag in href or frag in description:
-                return True
-    except Exception:
-        output.debug_exception()
-
-    return ret

@@ -1,4 +1,12 @@
+import pytest
+
 from yawast.reporting.injection import InjectionPoint
+
+
+class DummyResponse:
+    def __init__(self, text):
+        self.text = text
+        self.request = None
 
 
 def test_injection_point_eq():

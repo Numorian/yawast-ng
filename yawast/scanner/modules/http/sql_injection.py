@@ -14,6 +14,7 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.injection import InjectionPoint
 from yawast.reporting.result import Result
+from yawast.scanner.modules.http import response_scanner
 from yawast.scanner.modules.http.helpers import is_unsafe_form, is_unsafe_link
 from yawast.shared import network
 
@@ -222,8 +223,12 @@ def check_injection(
         try:
             if method == "GET":
                 response = network.http_get(test_url)
+
+                response_scanner.check_response(test_url, response, soup, False)
             elif method == "POST":
                 response = network._requester.post(test_url, data=params)
+
+                response_scanner.check_response(test_url, response, soup, False)
             else:
                 continue
         except Exception:
@@ -265,11 +270,19 @@ def check_injection(
                 if method == "GET":
                     baseline_response = network.http_get(baseline_url)
                     _ = baseline_response.text
+
+                    response_scanner.check_response(
+                        baseline_url, baseline_response, soup, False
+                    )
                 elif method == "POST":
                     baseline_response = network.http_post(
                         baseline_url, data=baseline_params
                     )
                     _ = baseline_response.text
+
+                    response_scanner.check_response(
+                        baseline_url, baseline_response, soup, False
+                    )
                 else:
                     continue
                 baseline_time = time.time() - start_base
@@ -285,9 +298,13 @@ def check_injection(
                 if method == "GET":
                     response = network.http_get(test_url)
                     _ = response.text
+
+                    response_scanner.check_response(test_url, response, soup, False)
                 elif method == "POST":
                     response = network._requester.post(test_url, data=params)
                     _ = response.text
+
+                    response_scanner.check_response(test_url, response, soup, False)
                 else:
                     continue
             except Exception:
@@ -309,6 +326,7 @@ def check_injection(
                         "elapsed": elapsed,
                         "baseline": baseline_time,
                         "delay_diff": delay_diff,
+                        "note": "Detected based on response delay only; no error signature required.",
                     },
                 )
                 results.append(

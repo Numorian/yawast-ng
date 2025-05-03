@@ -29,7 +29,10 @@ from yawast.shared import network, output, utils
 
 
 def check_response(
-    url: str, res: Response, soup: Union[BeautifulSoup, None] = None
+    url: str,
+    res: Response,
+    soup: Union[BeautifulSoup, None] = None,
+    check_injection: bool = True,
 ) -> List[Result]:
     # make sure we actually have something
     if res is None:
@@ -60,7 +63,7 @@ def check_response(
         # check for possible injection attacks
         # we only do this if the "--injection" option is set
         options = utils.get_options()
-        if any(opt == "--injection" for opt in options):
+        if any(opt == "--injection" for opt in options) and check_injection:
             if len(points) > 0:
                 for point in points:
                     results += sql_injection.check_injection(url, res, point, soup)

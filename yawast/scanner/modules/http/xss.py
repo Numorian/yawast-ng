@@ -10,6 +10,7 @@ from h11 import Response
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.injection import InjectionPoint
 from yawast.reporting.result import Result
+from yawast.scanner.modules.http import response_scanner
 from yawast.scanner.modules.http.helpers import is_unsafe_form, is_unsafe_link
 from yawast.shared import network
 
@@ -168,8 +169,12 @@ def check_injection(
         try:
             if method == "GET":
                 resp = network.http_get(test_url)
+
+                response_scanner.check_response(test_url, resp, soup, False)
             elif method == "POST":
                 resp = network.http_post(test_url, data=params)
+
+                response_scanner.check_response(test_url, resp, soup, False)
             else:
                 continue
         except Exception:

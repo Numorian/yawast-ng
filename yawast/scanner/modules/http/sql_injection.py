@@ -293,7 +293,7 @@ def check_injection(
             except Exception:
                 continue
             elapsed = time.time() - start
-            if not response or baseline_time is None:
+            if response is None or baseline_time is None:
                 continue
             delay_diff = elapsed - baseline_time
             if delay_diff > BLIND_SQLI_DELAY:
@@ -313,7 +313,7 @@ def check_injection(
                 )
                 results.append(
                     Result(
-                        f"Confirmed Blind SQL Injection ({db}) at {field} using payload: {payload} on page: {url}",
+                        f"Confirmed Blind SQL Injection ({db}) at {field} using payload: {payload} on page: {url} (detected by delay)",
                         vuln,
                         test_url,
                         evidence,

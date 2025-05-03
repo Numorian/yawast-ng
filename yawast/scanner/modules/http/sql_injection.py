@@ -189,6 +189,12 @@ def check_injection(
     if res is None:
         return results
 
+    # Check for unrelated SQL error signatures in the base response
+    db, sig = detect_sqli_error(res.text)
+    if db:
+        # Unrelated SQL error found, skip scanning to avoid false positive
+        return []
+
     # Determine method and base params
     method = injection_point.method.upper()
     field = injection_point.field

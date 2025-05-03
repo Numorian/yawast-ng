@@ -7,10 +7,13 @@ from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.injection import InjectionPoint
 from yawast.scanner.modules.http import sql_injection
 
+
 # Patch response_scanner.check_response to a no-op for all tests that call check_injection
 @pytest.fixture(autouse=True)
 def patch_check_response(monkeypatch):
-    monkeypatch.setattr(sql_injection.response_scanner, "check_response", lambda *a, **kw: None)
+    monkeypatch.setattr(
+        sql_injection.response_scanner, "check_response", lambda *a, **kw: None
+    )
 
 
 class DummyResponse:

@@ -686,3 +686,10 @@ class Vulnerabilities:
         "Confirmed DOM-based Cross-Site Scripting (XSS) vulnerability.",
         display_all=True,
     )
+    # Command Execution Vulnerability
+    COMMAND_EXECUTION_CONFIRMED = VulnerabilityInfo.create(
+        "Command_Execution_Confirmed",
+        Severity.CRITICAL,
+        "Confirmed Command Injection/Execution vulnerability.",
+        display_all=True,
+    )

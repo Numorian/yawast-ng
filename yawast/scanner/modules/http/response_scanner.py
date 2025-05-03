@@ -18,6 +18,7 @@ from yawast.reporting.evidence import Evidence
 from yawast.reporting.injection import InjectionPoint
 from yawast.reporting.result import Result
 from yawast.scanner.modules.http import (
+    command_exec,
     error_checker,
     http_basic,
     retirejs,
@@ -68,6 +69,7 @@ def check_response(
                 for point in points:
                     results += sql_injection.check_injection(url, res, point, soup)
                     results += xss.check_injection(url, res, point, soup)
+                    results += command_exec.check_injection(url, res, point, soup)
 
     results += http_basic.get_header_issues(res, raw_full, url)
     results += http_basic.get_cookie_issues(res, url)

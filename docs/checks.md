@@ -11,6 +11,7 @@ The following checks are performed; please note, this may not include all checks
 * *(Generic)* SQL Injection (MySQL, MSSQL, PostgreSQL, Oracle)
 * *(Generic)* Blind SQL Injection (MySQL, MSSQL, PostgreSQL, Oracle)
 * *(Generic)* Cross-Site Scripting (XSS) - Reflected & DOM-based
+* *(Generic)* Command Injection
 * *(Generic)* User Enumeration via Password Reset Form Response Differences
 * *(Generic)* User Enumeration via Password Reset Form Timing Differences
 * *(Generic)* Info Disclosure: X-Powered-By header present

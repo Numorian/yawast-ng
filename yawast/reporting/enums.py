@@ -693,3 +693,9 @@ class Vulnerabilities:
         "Confirmed Command Injection/Execution vulnerability.",
         display_all=True,
     )
+    OPEN_REDIRECT_CONFIRMED = VulnerabilityInfo.create(
+        "Open_Redirect_Confirmed",
+        Severity.HIGH,
+        "Confirmed Open HTTP Redirect vulnerability.",
+        display_all=True,
+    )

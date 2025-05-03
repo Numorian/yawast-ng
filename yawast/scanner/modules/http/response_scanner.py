@@ -21,6 +21,7 @@ from yawast.scanner.modules.http import (
     command_exec,
     error_checker,
     http_basic,
+    open_redirect,
     retirejs,
     sql_injection,
     xss,
@@ -43,33 +44,33 @@ def check_response(
 
     raw_full = network.http_build_raw_response(res)
 
-    if soup or network.response_body_is_text(res):
-        body = res.text
+    # Always run injection checks, even if the body is empty or not text
+    body = res.text if hasattr(res, "text") else ""
+    if soup is None and (hasattr(res, "text") and res.text):
+        warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
+        soup = BeautifulSoup(res.text, features="html.parser")
 
-        if soup is None:
-            warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
-            soup = BeautifulSoup(body, features="html.parser")
+    # check for things thar require parsed HTML
+    results += retirejs.get_results(soup, url, res) if soup else []
+    results += apache_tomcat.get_version(url, res) if soup else []
+    results += error_checker.check_response(url, res, body)
+    results += iis.check_telerik_rau_enabled(soup, url) if soup else []
 
-        # check for things thar require parsed HTML
-        results += retirejs.get_results(soup, url, res)
-        results += apache_tomcat.get_version(url, res)
-        results += error_checker.check_response(url, res, body)
-        results += iis.check_telerik_rau_enabled(soup, url)
+    results += _check_cache_headers(url, res)
 
-        results += _check_cache_headers(url, res)
+    points = _find_injection_points(url, res, soup)
+    reporter.register_injection_points(points)
 
-        points = _find_injection_points(url, res, soup)
-        reporter.register_injection_points(points)
-
-        # check for possible injection attacks
-        # we only do this if the "--injection" option is set
-        options = utils.get_options()
-        if any(opt == "--injection" for opt in options) and check_injection:
-            if len(points) > 0:
-                for point in points:
-                    results += sql_injection.check_injection(url, res, point, soup)
-                    results += xss.check_injection(url, res, point, soup)
-                    results += command_exec.check_injection(url, res, point, soup)
+    # check for possible injection attacks
+    # we only do this if the "--injection" option is set
+    options = utils.get_options()
+    if any(opt == "--injection" for opt in options) and check_injection:
+        if len(points) > 0:
+            for point in points:
+                results += sql_injection.check_injection(url, res, point, soup)
+                results += xss.check_injection(url, res, point, soup)
+                results += open_redirect.check_injection(url, res, point, soup)
+                results += command_exec.check_injection(url, res, point, soup)
 
     results += http_basic.get_header_issues(res, raw_full, url)
     results += http_basic.get_cookie_issues(res, url)

@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   {% seo %}
-  <link rel="stylesheet" href="{{ " /assets/css/stylec.css?v=" | append: site.github.build_revision | relative_url }}">
+  <link rel="stylesheet" href='{{ "/assets/css/stylec.css?v=" | append: site.github.build_revision | relative_url }}'>
   <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
@@ -16,7 +16,7 @@
 <body>
   <div class="wrapper">
     <header>
-      <h1><a href="{{ " /" | absolute_url }}"><img src="{{site.logo | relative_url}}" alt="YAWAST" width="270px" /></a>
+      <h1><a href='{{ "/" | absolute_url }}'><img src="{{site.logo | relative_url}}" alt="YAWAST" width="270px" /></a>
       </h1>
 
       <p>{{ site.description | default: site.github.project_tagline }}</p>
@@ -43,7 +43,7 @@
 
     </section>
     <footer>
-      <a href="https://numorian.com"><img src="{{ " /assets/Logo.512-black-on-white.png" | relative_url }}"
+      <a href="https://numorian.com"><img src='{{ "/assets/Logo.512-black-on-white.png" | relative_url }}'
           alt="Numorian" width="50px" style="vertical-align:middle" />
         <span style="vertical-align:middle">Numorian</span></a>
       <p>yawast-ng is proudly supported by Numorian.</p>
@@ -53,7 +53,7 @@
             href="https://github.com/Numorian/yawast-ng/blob/main/LICENSE">license</a> for details.</small></p>
     </footer>
   </div>
-  <script src="{{ " /assets/js/scale.fix.js" | relative_url }}"></script>
+  <script src='{{ "/assets/js/scale.fix.js" | relative_url }}'></script>
 </body>
 
 </html>

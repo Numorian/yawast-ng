@@ -393,12 +393,12 @@
         },
         "publicsuffixlist": {
             "hashes": [
-                "sha256:03287ce5fb357a234d27324d8055776d661cdccc3e88476f341f7e722dc163af",
-                "sha256:825eac68649f13a256f82748e42e72f8199995dd96278d4558eab68a2a47fca5"
+                "sha256:4476f2d91fe210aef350ae252aafb34d62951c2959f3ecc9f842b65b1093f46c",
+                "sha256:61b864a9154574e8bf1d761791c81896d8f8de6c21bbaac070baf091b64d5f32"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.5'",
-            "version": "==1.0.2.20250428"
+            "version": "==1.0.2.20250503"
         },
         "pycparser": {
             "hashes": [

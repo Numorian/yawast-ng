@@ -137,6 +137,7 @@ The file is a JSON file, and should be formatted as such. The following keys are
 - `max_spider_threads` - The maximum number of threads to use during the spidering process. This controls how many pages can be processed in parallel. If missing, yawast-ng will use the default value (10).
 - `include_debug_in_output` - By default yawast-ng will include the debug output in the JSON file. This can be set to `false` to disable this feature. If missing, yawast-ng will use the default value. This will substantially reduce the size of the output file, and is recommended for most users.
 - `allow_interactive` - By default, yawast-ng will prompt for user input when needed. This is needed for certain tests, though can be disabled when used in an automated environment. If missing, yawast-ng will use the default value. This is recommended to be enabled (`true`) for most users.
+- `no_json_compression` - If set to `true`, disables zip compression for the output file and writes a raw JSON file instead. By default, this is `false` and output is compressed as a zip file.
 
 ### Example Configuration File
 
@@ -145,6 +146,7 @@ The file is a JSON file, and should be formatted as such. The following keys are
   "user_agent": "ExampleCo Security Scanner/yawast-ng",
   "max_spider_pages": 100,
   "max_spider_threads": 10,
-  "include_debug_in_output": false
+  "include_debug_in_output": false,
+  "no_json_compression": true
 }
 ```

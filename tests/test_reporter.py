@@ -98,6 +98,30 @@ class TestReporterSaveOutput:
         spinner_mock.start.assert_called()
         mock_zip.assert_called_once()
 
+    def test_save_output_no_compression(self, tmp_path, monkeypatch):
+        reporter._output_file = str(tmp_path / "out.json")
+        reporter.setup("example.com")
+        issue = make_issue()
+        reporter.register(issue)
+        monkeypatch.setattr(reporter.output, "debug", lambda x: None)
+        monkeypatch.setattr(reporter.output, "info", lambda x: None)
+        monkeypatch.setattr(reporter.output, "warn", lambda x: None)
+        monkeypatch.setattr(reporter.output, "vuln", lambda x: None)
+        monkeypatch.setattr(reporter.output, "print_color", lambda *a, **k: None)
+        monkeypatch.setattr(
+            reporter,
+            "ExecutionTimer",
+            lambda: mock.MagicMock(
+                __enter__=lambda s: s, __exit__=lambda s, e, v, t: None, to_ms=lambda: 1
+            ),
+        )
+        # Set config to disable compression
+        monkeypatch.setattr(reporter.config, "no_json_compression", True)
+        reporter.save_output()
+        assert os.path.exists(str(tmp_path / "out.json"))
+        # Should not create a .zip file
+        assert not os.path.exists(str(tmp_path / "out.json.zip"))
+
 
 class TestReporterGetOutputFile:
     def teardown_method(self):

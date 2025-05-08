@@ -13,22 +13,24 @@ max_spider_pages = 10000
 max_spider_threads = 10
 include_debug_in_output = True
 allow_interactive = True
+no_json_compression = False
 
 
 def reset_config():
-    global user_agent, max_spider_pages, max_spider_threads, include_debug_in_output, allow_interactive
+    global user_agent, max_spider_pages, max_spider_threads, include_debug_in_output, allow_interactive, no_json_compression
     user_agent = None
     max_spider_pages = 10000
     max_spider_threads = 10
     include_debug_in_output = True
     allow_interactive = True
+    no_json_compression = False
 
 
 def load_config():
     """
     Load the configuration from the config file.
     """
-    global user_agent, max_spider_pages, include_debug_in_output, allow_interactive, max_spider_threads
+    global user_agent, max_spider_pages, include_debug_in_output, allow_interactive, max_spider_threads, no_json_compression
 
     reset_config()
 
@@ -46,6 +48,7 @@ def load_config():
                 max_spider_threads = config.get("max_spider_threads", 10)
                 include_debug_in_output = config.get("include_debug_in_output", True)
                 allow_interactive = config.get("allow_interactive", True)
+                no_json_compression = config.get("no_json_compression", False)
         except json.JSONDecodeError:
             print("Error: Invalid JSON in config file.")
         except Exception as e:

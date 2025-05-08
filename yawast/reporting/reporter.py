@@ -152,41 +152,51 @@ def save_output(spinner=None):
         filename = _output_file
 
         # check to see if the zip file already exists
-        if os.path.isfile(f"{filename}.zip"):
-            # if it does, let's modify the name we are going to use
-            original_file_name = os.path.basename(filename)
-            name = f"{original_file_name}_{int(time.time())}.json"
+        if not config.no_json_compression:
+            if os.path.isfile(f"{filename}.zip"):
+                # if it does, let's modify the name we are going to use
+                original_file_name = os.path.basename(filename)
+                name = f"{original_file_name}_{int(time.time())}.json"
+                filename = os.path.join(os.path.dirname(_output_file), name)
 
-            filename = os.path.join(os.path.dirname(_output_file), name)
+            zf = zipfile.ZipFile(f"{filename}.zip", "x", zipfile.ZIP_BZIP2)
 
-        zf = zipfile.ZipFile(f"{filename}.zip", "x", zipfile.ZIP_BZIP2)
+            with ExecutionTimer() as tm:
+                zf.writestr(
+                    f"{os.path.basename(filename)}",
+                    json_data.encode("utf_8", "backslashreplace"),
+                )
+            zf.close()
 
-        with ExecutionTimer() as tm:
-            zf.writestr(
-                f"{os.path.basename(filename)}",
-                json_data.encode("utf_8", "backslashreplace"),
+            orig = "{0:cM}".format(Size(len(json_data)))
+            comp = "{0:cM}".format(Size(os.path.getsize(f"{filename}.zip")))
+
+            if spinner:
+                spinner.stop()
+            print(
+                f"Saved {filename}.zip (size reduced from {orig} to {comp} in {tm.to_ms()}ms)"
             )
-
-        zf.close()
-
-        orig = "{0:cM}".format(Size(len(json_data)))
-        comp = "{0:cM}".format(Size(os.path.getsize(f"{filename}.zip")))
-
-        if spinner:
-            spinner.stop()
-        print(
-            f"Saved {filename}.zip (size reduced from {orig} to {comp} in {tm.to_ms()}ms)"
-        )
+        else:
+            # Write raw JSON file
+            with ExecutionTimer() as tm:
+                with open(filename, "w", encoding="utf-8") as f:
+                    f.write(json_data)
+            orig = "{0:cM}".format(Size(len(json_data)))
+            if spinner:
+                spinner.stop()
+            print(f"Saved {filename} (raw JSON, size {orig} in {tm.to_ms()}ms)")
     except Exception as error:
         if spinner:
             spinner.stop()
-
         print(f"Error writing output file: {error}")
 
 
 def get_output_file() -> str:
     if len(_output_file) > 0:
-        return f"{_output_file}.zip"
+        if config.no_json_compression:
+            return _output_file
+        else:
+            return f"{_output_file}.zip"
     else:
         return ""
 

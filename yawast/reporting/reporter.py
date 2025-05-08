@@ -62,10 +62,17 @@ def save_output(spinner=None):
 
     vulns = {}
     for vuln in Vulnerabilities.all():
+        # get the references for this vulnerability
+        vuln_refs = []
+        for ref in vuln.references:
+            if ref is not None:
+                vuln_refs.append({"name": ref.name, "url": ref.url})
+
         vulns[vuln.name] = {
             "severity": vuln.severity,
             "description": vuln.description,
             "id": vuln.id,
+            "references": vuln_refs,
         }
 
     # build evidence from the issues

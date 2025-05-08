@@ -675,13 +675,13 @@ class Vulnerabilities:
         display_all=True,
     )
     XSS_REFLECTED = VulnerabilityInfo.create(
-        "XSS_REFLECTED",
+        "Cross_Site_Scripting_Reflected",
         Severity.HIGH,
         "Confirmed reflected Cross-Site Scripting (XSS) vulnerability.",
         display_all=True,
     )
     XSS_DOM = VulnerabilityInfo.create(
-        "XSS_DOM",
+        "Cross_Site_Scripting_DOM",
         Severity.HIGH,
         "Confirmed DOM-based Cross-Site Scripting (XSS) vulnerability.",
         display_all=True,

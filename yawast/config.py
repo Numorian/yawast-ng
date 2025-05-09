@@ -35,10 +35,11 @@ def load_config():
     reset_config()
 
     # check if the config file exists
-    if os.path.exists("~/.yawast-ng.json"):
+    config_path = os.path.expanduser("~/.yawast-ng.json")
+    if os.path.exists(config_path):
         # load the config file
         try:
-            with open("~/.yawast-ng.json", "r") as f:
+            with open(config_path, "r") as f:
                 config = json.load(f)
 
                 if "user_agent" in config:

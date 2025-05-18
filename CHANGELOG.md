@@ -17,6 +17,7 @@
 * Bug: Fix a failure to save the output file when an existing file already exists.
 * Bug: Fix an issue with saving TLS details in JSON output when using `--internalssl`.
 * Bug: Fix an issue where some relative links were not being followed during the spidering process.
+* Bug: Fix an issue with CT Log data processing.
 
 ## 0.12.1 - 2025-04-04
 

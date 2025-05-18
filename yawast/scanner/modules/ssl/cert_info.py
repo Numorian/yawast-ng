@@ -223,7 +223,8 @@ def _get_ct_log_data():
     # merge the "logs" from the "operators" into one list
     logs = []
     for operator in data["operators"]:
-        logs.extend(operator["logs"])
+        if "logs" in operator:
+            logs.extend(operator["logs"])
 
     for log in logs:
         digest = hashes.Hash(hashes.SHA256(), backend=default_backend())

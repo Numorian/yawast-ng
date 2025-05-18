@@ -63,6 +63,8 @@ class TestReporterSaveOutput:
         reporter._info = {}
         reporter._data = {}
         reporter._output_file = "/tmp/test_output"
+        # Ensure config is reset for each test
+        config.no_json_compression = False
 
     def teardown_method(self):
         # Restore original references
@@ -70,10 +72,12 @@ class TestReporterSaveOutput:
         reporter._info = self.orig_info
         reporter._data = self.orig_data
         reporter._output_file = self.orig_output_file
+        config.no_json_compression = False
 
     @patch("zipfile.ZipFile")
     @patch("os.path.isfile", return_value=False)
     def test_save_output_no_spinner(self, mock_isfile, mock_zip):
+        config.no_json_compression = False  # Force compression for this test
         with utils.capture_sys_output() as (stdout, stderr):
             reporter.save_output()
         mock_zip.assert_called_once_with("/tmp/test_output.zip", "x", zipfile.ZIP_BZIP2)
@@ -82,6 +86,7 @@ class TestReporterSaveOutput:
     @patch("os.path.isfile", return_value=True)
     @patch("time.time", return_value=123456)
     def test_save_output_existing_zip(self, mock_time, mock_isfile, mock_zip):
+        config.no_json_compression = False  # Force compression for this test
         with utils.capture_sys_output() as (stdout, stderr):
             reporter.save_output()
         # Ensure filename changed due to existing zip
@@ -91,6 +96,7 @@ class TestReporterSaveOutput:
     @patch("zipfile.ZipFile")
     @patch("os.path.isfile", return_value=False)
     def test_save_output_with_spinner(self, mock_isfile, mock_zip):
+        config.no_json_compression = False  # Force compression for this test
         spinner_mock = MagicMock()
         with utils.capture_sys_output() as (stdout, stderr):
             reporter.save_output(spinner_mock)
@@ -674,6 +680,7 @@ def test_display_and_display_results(monkeypatch):
 
 
 def test_save_output(tmp_path, monkeypatch):
+    monkeypatch.setattr(reporter.config, "no_json_compression", False)
     reporter._output_file = str(tmp_path / "out.json")
     reporter.setup("example.com")
     issue = make_issue()

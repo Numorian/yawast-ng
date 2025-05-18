@@ -199,11 +199,8 @@ class Vulnerabilities:
     HTTP_HEADER_X_RUNTIME = VulnerabilityInfo.create(
         "Http_Header_X_Runtime", Severity.BEST_PRACTICE, ""
     )
-    HTTP_HEADER_X_XSS_PROTECTION_DISABLED = VulnerabilityInfo.create(
-        "Http_Header_X_Xss_Protection_Disabled", Severity.LOW, ""
-    )
-    HTTP_HEADER_X_XSS_PROTECTION_MISSING = VulnerabilityInfo.create(
-        "Http_Header_X_Xss_Protection_Missing", Severity.LOW, ""
+    HTTP_HEADER_X_XSS_PROTECTION_DEPRECATED = VulnerabilityInfo.create(
+        "Http_Header_X_Xss_Protection_Deprecated", Severity.BEST_PRACTICE, ""
     )
     HTTP_HEADER_X_ASPNETMVC_VERSION = VulnerabilityInfo.create(
         "Http_X_AspNetMvc_Version", Severity.LOW, ""

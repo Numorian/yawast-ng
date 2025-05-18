@@ -28,7 +28,7 @@ The following checks are performed; please note, this may not include all checks
 * *(Generic)* Public-Key-Pins header not present
 * *(Generic)* Referrer-Policy header not present
 * *(Generic)* Permission-Policy header not present
-* *(Generic)* X-XSS-Protection disabled header present
+* *(Generic)* X-XSS-Protection present
 * *(Generic)* HSTS Header Not Sent
 * *(Generic)* HSTS Preload Status (Chromium-based browsers)
 * *(Generic)* Duplicate HTTP Headers

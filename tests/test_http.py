@@ -46,7 +46,7 @@ class TestHttpBasic:
             resp, network.http_build_raw_response(resp), url
         )
 
-        assert len(res) == 7
+        assert len(res) == 6
 
     def test_get_header_issues_none(self):
         url = "http://example.com"
@@ -56,7 +56,6 @@ class TestHttpBasic:
                 url,
                 text="body",
                 headers={
-                    "X-XSS-Protection": "1",
                     "X-Frame-Options": "blah",
                     "X-Content-Type-Options": "nosniff",
                     "Content-Security-Policy": "blah",
@@ -105,7 +104,6 @@ class TestHttpBasic:
                 url,
                 text="body",
                 headers={
-                    "X-XSS-Protection": "1",
                     "X-Frame-Options": "blah",
                     "X-Content-Type-Options": "nosniff",
                     "Content-Security-Policy": "blah",
@@ -150,7 +148,7 @@ class TestHttpBasic:
         )
 
         assert len(res) == 1
-        assert "X-XSS-Protection Disabled Header Present" in res[0].message
+        assert "X-XSS-Protection Is Deprecated" in res[0].message
 
     def test_get_header_issues_runtime(self):
         url = "http://example.com"
@@ -160,7 +158,6 @@ class TestHttpBasic:
                 url,
                 text="body",
                 headers={
-                    "X-XSS-Protection": "1",
                     "X-Frame-Options": "blah",
                     "X-Content-Type-Options": "nosniff",
                     "Content-Security-Policy": "blah",
@@ -188,7 +185,6 @@ class TestHttpBasic:
                 url,
                 text="body",
                 headers={
-                    "X-XSS-Protection": "1",
                     "X-Frame-Options": "blah",
                     "X-Content-Type-Options": "nosniff",
                     "Content-Security-Policy": "blah",
@@ -216,7 +212,6 @@ class TestHttpBasic:
                 url,
                 text="body",
                 headers={
-                    "X-XSS-Protection": "1",
                     "X-Frame-Options": "blah",
                     "X-Content-Type-Options": "nosniff",
                     "Content-Security-Policy": "blah",
@@ -244,7 +239,6 @@ class TestHttpBasic:
                 url,
                 text="body",
                 headers={
-                    "X-XSS-Protection": "1",
                     "X-Frame-Options": "allow",
                     "X-Content-Type-Options": "nosniff",
                     "Content-Security-Policy": "blah",
@@ -271,7 +265,6 @@ class TestHttpBasic:
                 url,
                 text="body",
                 headers={
-                    "X-XSS-Protection": "1",
                     "X-Frame-Options": "blah",
                     "X-Content-Type-Options": "nosniff",
                     "Content-Security-Policy": "blah",
@@ -1972,7 +1965,6 @@ class TestHttpBasic:
 
         class DummyRes:
             headers = {
-                "X-XSS-Protection": "1",
                 "X-Frame-Options": "blah",
                 "X-Content-Type-Options": "nosniff",
                 "Content-Security-Policy": "blah",

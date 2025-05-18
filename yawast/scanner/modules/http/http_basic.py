@@ -54,21 +54,11 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
             results += php.check_version(headers["X-Powered-By"], raw, url)
 
         if "X-XSS-Protection" in headers:
-            # header is present, check the value
-            if "0" in headers["X-XSS-Protection"]:
-                results.append(
-                    Result.from_evidence(
-                        ev,
-                        f"X-XSS-Protection Disabled Header Present ({url})",
-                        Vln.HTTP_HEADER_X_XSS_PROTECTION_DISABLED,
-                    )
-                )
-        else:
             results.append(
                 Result.from_evidence(
                     ev,
-                    f"X-XSS-Protection Header Not Present ({url})",
-                    Vln.HTTP_HEADER_X_XSS_PROTECTION_MISSING,
+                    f"X-XSS-Protection Is Deprecated ({url})",
+                    Vln.HTTP_HEADER_X_XSS_PROTECTION_DEPRECATED,
                 )
             )
 

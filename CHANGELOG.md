@@ -13,6 +13,7 @@
 * Reduce memory usage when not using the `--output` option.
 * Improve performance of ASN data lookups.
 * Automatically detect PHP pages instead of relying on the `--php_page` option.
+* Replaced `Feature-Policy` with `Permissions-Policy` in the HTTP header checks.
 * Bug: Fix a failure to save the output file when an existing file already exists.
 * Bug: Fix an issue with saving TLS details in JSON output when using `--internalssl`.
 * Bug: Fix an issue where some relative links were not being followed during the spidering process.

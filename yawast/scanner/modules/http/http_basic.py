@@ -144,12 +144,12 @@ def get_header_issues(res: Response, raw: str, url: str) -> List[Result]:
                 )
             )
 
-        if "Feature-Policy" not in headers:
+        if "Permissions-Policy" not in headers:
             results.append(
                 Result.from_evidence(
                     ev,
-                    f"Feature-Policy Header Not Present ({url})",
-                    Vln.HTTP_HEADER_FEATURE_POLICY_MISSING,
+                    f"Permissions-Policy Header Not Present ({url})",
+                    Vln.HTTP_HEADER_PERMISSION_POLICY_MISSING,
                 )
             )
 

@@ -169,8 +169,8 @@ class Vulnerabilities:
     HTTP_HEADER_CORS_ACAO_UNRESTRICTED = VulnerabilityInfo.create(
         "Http_Header_CORS_ACAO_Unrestricted", Severity.LOW, ""
     )
-    HTTP_HEADER_FEATURE_POLICY_MISSING = VulnerabilityInfo.create(
-        "Http_Header_Feature_Policy_Missing", Severity.BEST_PRACTICE, ""
+    HTTP_HEADER_PERMISSION_POLICY_MISSING = VulnerabilityInfo.create(
+        "Http_Header_Permission_Policy_Missing", Severity.BEST_PRACTICE, ""
     )
     HTTP_HEADER_HSTS_MISSING = VulnerabilityInfo.create(
         "Http_Hsts_Missing", Severity.MEDIUM, ""

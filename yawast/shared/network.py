@@ -2,6 +2,7 @@
 #  This file is part of yawast-ng which is released under the MIT license.
 #  See the LICENSE file for full license details.
 
+import hashlib
 import secrets
 import ssl
 from difflib import SequenceMatcher
@@ -252,6 +253,7 @@ def http_get(
     plugin_manager.run_hook_response_received(url, res)
 
     return res
+
 
 def http_post(
     url: str,
@@ -548,7 +550,9 @@ def _get_404_handling(domain: str, url: str):
 
             target = utils.extract_url(url)
 
-            rnd = secrets.token_hex(12)
+            # Use deterministic 12-character hex string based on target
+            rnd = hashlib.sha256(target.encode()).hexdigest()[:12]
+            
             file_url = urljoin(target, f"{rnd}.html")
             path_url = urljoin(target, f"{rnd}/")
 

@@ -3,6 +3,7 @@
 #  See the LICENSE file for full license details.
 
 import base64
+import hashlib
 import re
 import secrets
 from typing import List, Optional, Union, cast
@@ -178,7 +179,8 @@ def check_cve_2017_12615(url: str) -> List[Result]:
     results = []
 
     try:
-        file_name = secrets.token_hex(12)
+        # Use deterministic 12-character hex string based on url for file_name
+        file_name = hashlib.sha256(url.encode()).hexdigest()[:12]
         check_value = secrets.token_hex(12)
 
         target = urljoin(url, f"{file_name}.jsp/")
@@ -305,7 +307,8 @@ def _check_version_404(url: str) -> List[Result]:
     results: List[Result] = []
 
     try:
-        rnd = secrets.token_hex(12)
+        # Use deterministic 12-character hex string based on url for rnd
+        rnd = hashlib.sha256(url.encode()).hexdigest()[:12]
 
         target = urljoin(url, f"{rnd}.jsp")
 

@@ -15,6 +15,7 @@
 * Automatically detect PHP pages instead of relying on the `--php_page` option.
 * Replaced `Feature-Policy` with `Permissions-Policy` in the HTTP header checks.
 * Added X-XSS-Protection Is Deprecated check.
+* Changed the logic for random file names to use a deterministic hash of the URL, to create consistent results.
 * Bug: Fix a failure to save the output file when an existing file already exists.
 * Bug: Fix an issue with saving TLS details in JSON output when using `--internalssl`.
 * Bug: Fix an issue where some relative links were not being followed during the spidering process.

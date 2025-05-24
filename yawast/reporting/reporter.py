@@ -267,7 +267,10 @@ def register_injection_points(points: List[InjectionPoint]):
         if _domain not in _injection_points:
             _injection_points[_domain] = []
 
-        _injection_points[_domain].extend(points)
+        existing_points = _injection_points[_domain]
+        for point in points:
+            if point not in existing_points:
+                existing_points.append(point)
 
 
 def register(issue: Issue) -> None:

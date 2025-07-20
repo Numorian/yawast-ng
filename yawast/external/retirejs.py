@@ -29,8 +29,15 @@ def scan(data, extractor, matcher=None, definitions=None):
 
 
 def _simple_match(regex, data):
-    match = re.search(regex, data)
-    return match.group(1) if match else None
+    try:
+        match = re.search(regex, data)
+        return match.group(1) if match else None
+    except re.error as e:
+        # Warn and skip unsupported regexes (e.g., variable-width lookbehind)
+        from yawast.shared import output
+
+        output.debug(f"retirejs regex error: {e}\n  regex: {regex}")
+        return None
 
 
 def _replacement_match(regex, data):

@@ -11,6 +11,7 @@ black = ">=25.0,<26.0.0"
 memray = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-xdist = "*"
 
 [packages]
 yawast-ng = {editable = true,path = "."}

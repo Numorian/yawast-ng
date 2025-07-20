@@ -35,6 +35,15 @@ def test_scan_success_all(monkeypatch):
         "yawast.scanner.cli.http.reset"
     ) as http_reset, mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         dns_scan.assert_called_once()
@@ -61,6 +70,15 @@ def test_scan_dns_ports(monkeypatch):
         "yawast.scanner.cli.http.reset"
     ), mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         dns_scan.assert_called_once()
@@ -85,6 +103,15 @@ def test_scan_nodns(monkeypatch):
         "yawast.scanner.cli.http.reset"
     ), mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         dns_scan.assert_not_called()
@@ -98,6 +125,15 @@ def test_scan_dns_error(monkeypatch):
         "yawast.shared.output.debug_exception"
     ) as debug_exc, mock.patch("yawast.shared.output.error") as error, mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         debug_exc.assert_called()
@@ -112,6 +148,15 @@ def test_scan_redirect_error(monkeypatch):
         "yawast.shared.output.error"
     ) as error, mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         debug_exc.assert_called()
@@ -142,6 +187,15 @@ def test_scan_ssl_labs(monkeypatch):
         "yawast.shared.utils.get_port", return_value=443
     ), mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         ssl_labs_scan.assert_called_once()
@@ -177,6 +231,15 @@ def test_scan_ssl_labs_error(monkeypatch):
         "yawast.shared.output.norm"
     ) as norm, mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         debug_exc.assert_called()
@@ -210,6 +273,15 @@ def test_scan_tdessessioncount(monkeypatch):
         "yawast.shared.output.error"
     ) as error, mock.patch(
         "builtins.print"
+    ), mock.patch(
+        "yawast.shared.network._requester.get",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.post",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
+    ), mock.patch(
+        "yawast.shared.network._requester.head",
+        return_value=mock.Mock(status_code=200, text="", headers={}),
     ):
         scan_cmd.start(session)
         error.assert_any_call(

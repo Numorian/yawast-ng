@@ -50,7 +50,7 @@ def test_find_user_field_no_match():
 
 
 def test_fill_form_get_body(monkeypatch):
-    session = DummySession(pass_reset_page="http://example.com")
+    session = DummySession(pass_reset_page="http://numorian.com")
     driver = mock.Mock()
     element = mock.Mock()
     element.is_displayed.return_value = True
@@ -68,7 +68,7 @@ def test_fill_form_get_body(monkeypatch):
     element.submit.return_value = None
     driver.close.return_value = None
     res, img, delay = password_reset._fill_form_get_body(
-        session, "http://example.com", "user"
+        session, "http://numorian.com", "user"
     )
     assert res == "<html></html>"
     assert img == "imgdata"
@@ -76,7 +76,7 @@ def test_fill_form_get_body(monkeypatch):
 
 
 def test_check_resp_user_enum(monkeypatch):
-    session = DummySession(pass_reset_page="http://example.com")
+    session = DummySession(pass_reset_page="http://numorian.com")
     # Patch _fill_form_get_body to return different results for good/bad user
     monkeypatch.setattr(
         "yawast.scanner.modules.http.applications.generic.password_reset._fill_form_get_body",
@@ -92,7 +92,7 @@ def test_check_resp_user_enum(monkeypatch):
 
 
 def test_check_resp_user_enum_timing(monkeypatch):
-    session = DummySession(pass_reset_page="http://example.com")
+    session = DummySession(pass_reset_page="http://numorian.com")
     # Patch _fill_form_get_body to return same response but different timing
     monkeypatch.setattr(
         "yawast.scanner.modules.http.applications.generic.password_reset._fill_form_get_body",
@@ -106,7 +106,7 @@ def test_check_resp_user_enum_timing(monkeypatch):
 
 
 def test_check_resp_user_enum_exception(monkeypatch):
-    session = DummySession(pass_reset_page="http://example.com")
+    session = DummySession(pass_reset_page="http://numorian.com")
     # Patch _fill_form_get_body to raise
     monkeypatch.setattr(
         "yawast.scanner.modules.http.applications.generic.password_reset._fill_form_get_body",
@@ -118,7 +118,9 @@ def test_check_resp_user_enum_exception(monkeypatch):
 
 
 def test_get_driver_with_proxy(monkeypatch):
-    session = DummySession(pass_reset_page="http://example.com", proxy="localhost:8080")
+    session = DummySession(
+        pass_reset_page="http://numorian.com", proxy="localhost:8080"
+    )
     # Patch all selenium and webdriver_manager classes used
     monkeypatch.setattr(
         "selenium.webdriver.Chrome", lambda *a, **k: mock.Mock(get=lambda uri: None)
@@ -148,5 +150,5 @@ def test_get_driver_with_proxy(monkeypatch):
     if not logger.handlers:
         logger.addHandler(logging.StreamHandler())
     logger.setLevel(logging.INFO)
-    driver = password_reset._get_driver(session, "http://example.com")
+    driver = password_reset._get_driver(session, "http://numorian.com")
     assert hasattr(driver, "get")

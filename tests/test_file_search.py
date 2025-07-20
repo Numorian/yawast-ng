@@ -30,7 +30,7 @@ def test_find_files(monkeypatch, tmp_path):
         "yawast.scanner.modules.http.file_search._find_files",
         lambda url, path: (["/admin", "/login"], []),
     )
-    files, results = file_search.find_files("http://example.com")
+    files, results = file_search.find_files("http://numorian.com")
     assert "/admin" in files and "/login" in files
 
 
@@ -47,7 +47,7 @@ def test_find_directories(monkeypatch, tmp_path):
             [],
         ),
     )
-    files, results = file_search.find_directories("http://example.com", False, False)
+    files, results = file_search.find_directories("http://numorian.com", False, False)
     assert "/admin/" in files and "/user/" in files
 
 
@@ -67,7 +67,7 @@ def test_find_backups(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    links = ["http://example.com/index.html"]
+    links = ["http://numorian.com/index.html"]
     files, results = file_search.find_backups(links)
     assert isinstance(files, list)
     assert isinstance(results, list)
@@ -82,7 +82,7 @@ def test_find_backups_no_found(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    links = ["http://example.com/index.html"]
+    links = ["http://numorian.com/index.html"]
     files, results = file_search.find_backups(links)
     assert files == []
 
@@ -103,7 +103,7 @@ def test_find_ds_store(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    links = ["http://example.com/"]
+    links = ["http://numorian.com/"]
     results = file_search.find_ds_store(links)
     assert isinstance(results, list)
 
@@ -113,7 +113,7 @@ def test_find_ds_store_no_found(monkeypatch):
         "yawast.shared.network.http_file_exists",
         lambda url, allow: (False, DummyResponse(content=b"")),
     )
-    links = ["http://example.com/"]
+    links = ["http://numorian.com/"]
     results = file_search.find_ds_store(links)
     assert results == []
 
@@ -156,7 +156,7 @@ def test__find_files_basic(monkeypatch, tmp_path):
     monkeypatch.setattr("time.sleep", lambda x: None)
     file_search._files = []
     file_search._depth = 0
-    files, results = file_search._find_files("http://example.com", str(test_file))
+    files, results = file_search._find_files("http://numorian.com", str(test_file))
     assert isinstance(files, list)
     assert isinstance(results, list)
 
@@ -195,7 +195,7 @@ def test__find_files_keyboard_interrupt(monkeypatch, tmp_path):
         ),
     )
     try:
-        file_search._find_files("http://example.com", str(test_file))
+        file_search._find_files("http://numorian.com", str(test_file))
     except KeyboardInterrupt:
         assert True
 
@@ -235,13 +235,13 @@ def test__find_files_exception(monkeypatch, tmp_path):
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
     try:
-        file_search._find_files("http://example.com", str(test_file))
+        file_search._find_files("http://numorian.com", str(test_file))
     except Exception:
         assert True
 
 
 def test__check_url_basic(monkeypatch):
-    urls = ["http://example.com/foo"]
+    urls = ["http://numorian.com/foo"]
     queue = mock.Mock(put=lambda x: None)
     monkeypatch.setattr(
         "yawast.shared.network.http_file_exists",
@@ -260,14 +260,14 @@ def test__check_url_basic(monkeypatch):
 
 
 def test__check_url_redirect(monkeypatch):
-    urls = ["http://example.com/foo"]
+    urls = ["http://numorian.com/foo"]
     queue = mock.Mock(put=lambda x: None)
     monkeypatch.setattr(
         "yawast.shared.network.http_file_exists",
         lambda url, allow: (
             False,
             DummyResponse(
-                status_code=301, headers={"Location": "http://example.com/bar"}
+                status_code=301, headers={"Location": "http://numorian.com/bar"}
             ),
         ),
     )
@@ -280,7 +280,7 @@ def test__check_url_redirect(monkeypatch):
 
 
 def test__check_url_exception(monkeypatch):
-    urls = ["http://example.com/foo"]
+    urls = ["http://numorian.com/foo"]
     queue = mock.Mock(put=lambda x: None)
     monkeypatch.setattr(
         "yawast.shared.network.http_file_exists",
@@ -308,7 +308,7 @@ def test_find_backups_cdn_cgi(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    links = ["http://example.com/cdn-cgi/path"]
+    links = ["http://numorian.com/cdn-cgi/path"]
     files, results = file_search.find_backups(links)
     assert files == []
 
@@ -330,7 +330,7 @@ def test_find_backups_dir_and_compressed(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    links = ["http://example.com/dir/"]
+    links = ["http://numorian.com/dir/"]
     files, results = file_search.find_backups(links)
     assert isinstance(files, list)
     assert isinstance(results, list)
@@ -369,10 +369,10 @@ def test__find_files_recursive(monkeypatch, tmp_path):
     file_search._depth = 0
     # Call twice to simulate recursion
     files, results = file_search._find_files(
-        "http://example.com", str(test_file), recursive=True
+        "http://numorian.com", str(test_file), recursive=True
     )
     files2, results2 = file_search._find_files(
-        "http://example.com", str(test_file), recursive=True
+        "http://numorian.com", str(test_file), recursive=True
     )
     assert isinstance(files, list)
     assert isinstance(results, list)
@@ -381,7 +381,7 @@ def test__find_files_recursive(monkeypatch, tmp_path):
 
 
 def test__check_url_redirect_no_location(monkeypatch):
-    urls = ["http://example.com/foo"]
+    urls = ["http://numorian.com/foo"]
     queue = mock.Mock(put=lambda x: None)
     monkeypatch.setattr(
         "yawast.shared.network.http_file_exists",
@@ -406,7 +406,7 @@ def test_find_files_file_not_found(monkeypatch):
         lambda pkg, name: "/tmp/doesnotexist.txt",
     )
     try:
-        file_search.find_files("http://example.com")
+        file_search.find_files("http://numorian.com")
     except Exception as e:
         assert isinstance(e, FileNotFoundError)
 
@@ -417,7 +417,7 @@ def test_find_directories_file_not_found(monkeypatch):
         lambda pkg, name: "/tmp/doesnotexist.txt",
     )
     try:
-        file_search.find_directories("http://example.com", False, False)
+        file_search.find_directories("http://numorian.com", False, False)
     except Exception as e:
         assert isinstance(e, FileNotFoundError)
 
@@ -463,14 +463,14 @@ def test__find_files_queue_dedup(monkeypatch, tmp_path):
     monkeypatch.setattr("time.sleep", lambda x: None)
     file_search._files = []
     file_search._depth = 0
-    files, results = file_search._find_files("http://example.com", str(test_file))
+    files, results = file_search._find_files("http://numorian.com", str(test_file))
     assert files == ["foo"]
     assert results == ["r1"]
 
 
 def test__check_url_exception_in_loop(monkeypatch):
     # Should handle exception for second URL
-    urls = ["http://example.com/foo", "http://example.com/bar"]
+    urls = ["http://numorian.com/foo", "http://numorian.com/bar"]
     queue = mock.Mock(put=lambda x: None)
     calls = []
 
@@ -494,7 +494,7 @@ def test__check_url_exception_in_loop(monkeypatch):
     )
     monkeypatch.setattr("yawast.shared.output.debug", lambda msg: None)
     file_search._check_url(urls, queue, False, False)
-    assert "http://example.com/foo" in calls
+    assert "http://numorian.com/foo" in calls
 
 
 def test__find_files_keyboard_interrupt_cleanup(monkeypatch, tmp_path):
@@ -534,7 +534,7 @@ def test__find_files_keyboard_interrupt_cleanup(monkeypatch, tmp_path):
     file_search._files = ["foo"]
     file_search._depth = 0  # Fix: set to 0 so after inc/dec it is 0
     try:
-        file_search._find_files("http://example.com", str(test_file))
+        file_search._find_files("http://numorian.com", str(test_file))
     except KeyboardInterrupt:
         assert file_search._depth == 0
         assert file_search._files == []
@@ -578,7 +578,7 @@ def test__find_files_exception_cleanup(monkeypatch, tmp_path):
     file_search._files = ["foo"]
     file_search._depth = 0  # Fix: set to 0 so after inc/dec it is 0
     try:
-        file_search._find_files("http://example.com", str(test_file))
+        file_search._find_files("http://numorian.com", str(test_file))
     except Exception:
         assert file_search._depth == 0
         assert file_search._files == []

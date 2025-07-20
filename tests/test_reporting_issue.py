@@ -21,8 +21,8 @@ def make_evidence():
 def test_issue_init_and_repr():
     vuln = make_vuln()
     evidence = make_evidence()
-    issue = Issue(vuln, "http://example.com", evidence)
-    assert issue["url"] == "http://example.com"
+    issue = Issue(vuln, "http://numorian.com", evidence)
+    assert issue["url"] == "http://numorian.com"
     assert issue["evidence"] == evidence
     assert issue.vulnerability == vuln
     assert issue.severity == "high"

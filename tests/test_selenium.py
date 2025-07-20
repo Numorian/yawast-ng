@@ -23,7 +23,7 @@ class TestSelenium:
         "yawast.scanner.modules.http.applications.generic.password_reset._get_driver"
     )
     def test_pwd_rst_get_driver(self, mock_get_driver):
-        url = "https://example.com/"
+        url = "https://numorian.com/"
         mock_driver = mock.Mock()
         mock_driver.page_source = "<h1>Example Domain</h1>"
         mock_get_driver.return_value = mock_driver

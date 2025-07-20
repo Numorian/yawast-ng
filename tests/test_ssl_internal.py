@@ -33,7 +33,7 @@ def test_ssl_internal():
 
 
 class DummySession:
-    def __init__(self, domain="example.com", url="https://example.com"):
+    def __init__(self, domain="numorian.com", url="https://numorian.com"):
         self.domain = domain
         self.url = url
         self.args = mock.Mock()
@@ -215,12 +215,12 @@ def test_is_cipher_suite_secure():
 def test_get_leaf_cert_info(monkeypatch):
     # Create a mock certificate with all required attributes and methods
     cert = mock.Mock()
-    cert.subject.rfc4514_string.return_value = "CN=example.com"
+    cert.subject.rfc4514_string.return_value = "CN=numorian.com"
     cert.issuer.rfc4514_string.return_value = "CN=issuer.com"
     cert_info_mock = mock.Mock()
     monkeypatch.setattr("yawast.scanner.cli.ssl_internal.cert_info", cert_info_mock)
-    cert_info_mock.get_common_names.return_value = ["example.com"]
-    cert_info_mock.get_alt_names.return_value = ["alt.example.com"]
+    cert_info_mock.get_common_names.return_value = ["numorian.com"]
+    cert_info_mock.get_alt_names.return_value = ["alt.numorian.com"]
     cert_info_mock.get_must_staple.return_value = True
     cert_info_mock.format_extensions.return_value = ["ext1", "ext2"]
     cert_info_mock.get_scts.return_value = [
@@ -237,8 +237,8 @@ def test_get_leaf_cert_info(monkeypatch):
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
     ssl_internal._get_leaf_cert_info(cert)
     assert any("Certificate Information:" in l for l in output_lines)
-    assert any("Subject: CN=example.com" in l for l in output_lines)
-    assert any("Common Names: example.com" in l for l in output_lines)
+    assert any("Subject: CN=numorian.com" in l for l in output_lines)
+    assert any("Common Names: numorian.com" in l for l in output_lines)
     assert any("Alternative names:" in l for l in output_lines)
     assert any("Not Before: 2025-01-01 00:00:00" in l for l in output_lines)
     assert any("Not After: 2026-01-01 00:00:00" in l for l in output_lines)
@@ -256,7 +256,7 @@ def test_get_leaf_cert_info(monkeypatch):
 
 def test_get_cert_chain(monkeypatch):
     cert = mock.Mock()
-    cert.subject.rfc4514_string.return_value = "CN=chain.example.com"
+    cert.subject.rfc4514_string.return_value = "CN=chain.numorian.com"
     cert.signature_algorithm_oid._name = "sha256WithRSAEncryption"
     cert.fingerprint.side_effect = [b"\x01\x02\x03", b"\x04\x05\x06"]
     monkeypatch.setattr(
@@ -269,9 +269,9 @@ def test_get_cert_chain(monkeypatch):
     output_lines = []
     monkeypatch.setattr("yawast.shared.output.norm", lambda s: output_lines.append(s))
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
-    ssl_internal._get_cert_chain([cert], "https://example.com")
+    ssl_internal._get_cert_chain([cert], "https://numorian.com")
     assert any("Certificate Chain:" in l for l in output_lines)
-    assert any("Subject: CN=chain.example.com" in l for l in output_lines)
+    assert any("Subject: CN=chain.numorian.com" in l for l in output_lines)
     assert any("Signature: sha256WithRSAEncryption" in l for l in output_lines)
     assert any("https://crt.sh/?q=040506" in l for l in output_lines)
 
@@ -307,7 +307,7 @@ def test_get_suite_info(monkeypatch):
     result = mock.Mock()
     result.accepted_cipher_suites = [secure_cbc_suite, secure_suite, insecure_suite]
     result.rejected_cipher_suites = [mock.Mock(), mock.Mock()]
-    ssl_internal._get_suite_info("TLS 1.2", result, "https://example.com")
+    ssl_internal._get_suite_info("TLS 1.2", result, "https://numorian.com")
     # Check output for all branches
     assert any("TLS 1.2:" in l for l in output_lines)
     assert any("CBC_SHA" in l for l in info_lines)
@@ -318,7 +318,7 @@ def test_get_suite_info(monkeypatch):
     result.accepted_cipher_suites = []
     result.rejected_cipher_suites = [mock.Mock(), mock.Mock(), mock.Mock()]
     output_lines.clear()
-    ssl_internal._get_suite_info("TLS 1.1", result, "https://example.com")
+    ssl_internal._get_suite_info("TLS 1.1", result, "https://numorian.com")
     assert any("all suites (3) rejected" in l for l in output_lines)
 
 
@@ -542,14 +542,14 @@ def test_get_cert_chain_empty(monkeypatch):
     output_lines = []
     monkeypatch.setattr("yawast.shared.output.norm", lambda s: output_lines.append(s))
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
-    ssl_internal._get_cert_chain([], "https://example.com")
+    ssl_internal._get_cert_chain([], "https://numorian.com")
     assert output_lines == []
 
 
 def test_get_cert_chain_symantec(monkeypatch):
     # Test _get_cert_chain with a cert that triggers Symantec root warning
     cert = mock.Mock()
-    cert.subject.rfc4514_string.return_value = "CN=chain.example.com"
+    cert.subject.rfc4514_string.return_value = "CN=chain.numorian.com"
     cert.signature_algorithm_oid._name = "sha256WithRSAEncryption"
     cert.fingerprint.side_effect = [b"\x01\x02\x03", b"\x04\x05\x06"]
     monkeypatch.setattr(
@@ -562,7 +562,7 @@ def test_get_cert_chain_symantec(monkeypatch):
     output_lines = []
     monkeypatch.setattr("yawast.shared.output.norm", lambda s: output_lines.append(s))
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
-    ssl_internal._get_cert_chain([cert], "https://example.com")
+    ssl_internal._get_cert_chain([cert], "https://numorian.com")
     assert any("Untrusted Symantec Root" not in l for l in output_lines) or True
 
 
@@ -597,7 +597,7 @@ def test_get_suite_info_all_branches(monkeypatch):
     result = mock.Mock()
     result.accepted_cipher_suites = [secure_cbc_suite, secure_suite, insecure_suite]
     result.rejected_cipher_suites = [mock.Mock(), mock.Mock()]
-    ssl_internal._get_suite_info("TLS 1.2", result, "https://example.com")
+    ssl_internal._get_suite_info("TLS 1.2", result, "https://numorian.com")
     # Check output for all branches
     assert any("TLS 1.2:" in l for l in output_lines)
     assert any("CBC_SHA" in l for l in info_lines)
@@ -608,7 +608,7 @@ def test_get_suite_info_all_branches(monkeypatch):
     result.accepted_cipher_suites = []
     result.rejected_cipher_suites = [mock.Mock(), mock.Mock(), mock.Mock()]
     output_lines.clear()
-    ssl_internal._get_suite_info("TLS 1.1", result, "https://example.com")
+    ssl_internal._get_suite_info("TLS 1.1", result, "https://numorian.com")
     assert any("all suites (3) rejected" in l for l in output_lines)
 
 

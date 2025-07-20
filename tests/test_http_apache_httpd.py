@@ -95,7 +95,7 @@ def test_check_banner_with_version(monkeypatch):
         lambda module, raw, url: ["php"],
     )
     banner = "Apache/2.4.58 PHP/8.1.0 OpenSSL/1.1.1"
-    results = apache_httpd.check_banner(banner, "raw", "http://example.com")
+    results = apache_httpd.check_banner(banner, "raw", "http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -103,13 +103,13 @@ def test_check_banner_no_version(monkeypatch):
     monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
     monkeypatch.setattr("yawast.reporting.result.Result", lambda *a, **k: mock.Mock())
     banner = "Apache"
-    results = apache_httpd.check_banner(banner, "raw", "http://example.com")
+    results = apache_httpd.check_banner(banner, "raw", "http://numorian.com")
     assert isinstance(results, list)
 
 
 def test_check_banner_not_apache():
     banner = "nginx/1.18.0"
-    results = apache_httpd.check_banner(banner, "raw", "http://example.com")
+    results = apache_httpd.check_banner(banner, "raw", "http://numorian.com")
     assert results == []
 
 
@@ -125,7 +125,7 @@ def test_check_banner_distro_string(monkeypatch):
         "yawast.scanner.modules.http.servers.php.check_version",
         lambda module, raw, url: [],
     )
-    results = apache_httpd.check_banner(banner, "raw", "http://example.com")
+    results = apache_httpd.check_banner(banner, "raw", "http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -138,7 +138,7 @@ def test_check_all(monkeypatch):
         "yawast.scanner.modules.http.servers.apache_httpd.check_server_info",
         lambda url: ["info"],
     )
-    results = apache_httpd.check_all("http://example.com")
+    results = apache_httpd.check_all("http://numorian.com")
     assert "status" in results and "info" in results
 
 
@@ -151,7 +151,7 @@ def test_check_server_status_found(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    results = apache_httpd.check_server_status("http://example.com")
+    results = apache_httpd.check_server_status("http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -162,7 +162,7 @@ def test_check_server_status_not_found(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_httpd.check_server_status("http://example.com")
+    results = apache_httpd.check_server_status("http://numorian.com")
     assert "scan" in results
 
 
@@ -175,7 +175,7 @@ def test_check_server_info_found(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    results = apache_httpd.check_server_info("http://example.com")
+    results = apache_httpd.check_server_info("http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -186,5 +186,5 @@ def test_check_server_info_not_found(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_httpd.check_server_info("http://example.com")
+    results = apache_httpd.check_server_info("http://numorian.com")
     assert "scan" in results

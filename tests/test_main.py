@@ -294,7 +294,7 @@ def test_main_keyboard_interrupt(monkeypatch):
         main_mod.command_line,
         "build_parser",
         lambda: mock.Mock(
-            parse_known_args=lambda: (DummyArgs(), ["http://example.com"])
+            parse_known_args=lambda: (DummyArgs(), ["http://numorian.com"])
         ),
     )
     monkeypatch.setattr(main_mod.output, "setup", lambda *a, **k: None)

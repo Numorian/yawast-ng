@@ -125,7 +125,7 @@ def test_scan_ready(
 ):
     # Simulate scan returning READY on first check
     mock_check_scan.return_value = ("READY", make_body())
-    session = DummySession("example.com", "https://example.com")
+    session = DummySession("numorian.com", "https://numorian.com")
     ssl_labs.scan(session)
     # Ensure output and reporter were called
     assert mock_output.norm.called
@@ -145,7 +145,7 @@ def test_scan_error(
     # Simulate scan returning ERROR
     body = make_body(status="ERROR", statusMessage="Some error")
     mock_check_scan.return_value = ("ERROR", body)
-    session = DummySession("example.com", "https://example.com")
+    session = DummySession("numorian.com", "https://numorian.com")
     with pytest.raises(ValueError):
         ssl_labs.scan(session)
 
@@ -169,7 +169,7 @@ def test_scan_cert_with_issues(
         "notAfter"
     ] = "2020-01-01T00:00:00Z"  # Expired as of 2025
     mock_check_scan.return_value = ("READY", cert_with_issues)
-    session = DummySession("example.com", "https://example.com")
+    session = DummySession("numorian.com", "https://numorian.com")
     ssl_labs.scan(session)
     # Print all output.warn call arguments for debugging
     print("output.warn calls:", mock_output.warn.call_args_list)
@@ -258,8 +258,8 @@ def test_protocol_and_vuln_info_branches(mock_reporter, mock_output):
         },
     }
     # Call helpers directly
-    ssl_labs._get_protocol_info(endpoint, "https://example.com")
-    ssl_labs._get_vulnerability_info(endpoint, "https://example.com")
+    ssl_labs._get_protocol_info(endpoint, "https://numorian.com")
+    ssl_labs._get_vulnerability_info(endpoint, "https://numorian.com")
     # Check that output and reporter were called for various branches
     assert mock_output.norm.called or mock_output.vuln.called or mock_output.warn.called
     assert mock_reporter.display.called or mock_reporter.register.called
@@ -270,7 +270,7 @@ def test_protocol_and_vuln_info_branches(mock_reporter, mock_output):
 def test_vuln_info_missing_keys(mock_output):
     ep = {"statusMessage": "Ready", "ipAddress": "1.2.3.4", "details": {}}
     # Should not raise even if keys are missing
-    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    ssl_labs._get_vulnerability_info(ep, "https://numorian.com")
     assert mock_output.error.called
 
 
@@ -278,7 +278,7 @@ def test_vuln_info_missing_keys(mock_output):
 @patch("yawast.scanner.cli.ssl_labs.output")
 def test_vuln_info_unknown_enum(mock_output):
     ep = {"statusMessage": "Ready", "ipAddress": "1.2.3.4", "details": {"poodle": 99}}
-    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    ssl_labs._get_vulnerability_info(ep, "https://numorian.com")
     assert mock_output.error.called or mock_output.norm.called
 
 
@@ -326,7 +326,7 @@ def test_cert_info_revocation(mock_output):
 def test_simulations_empty_and_error(mock_output):
     # Provide correct structure for 'client' as a dict
     ep = {"details": {"sims": {"results": []}}}
-    ssl_labs._get_simulations(ep, "https://example.com")
+    ssl_labs._get_simulations(ep, "https://numorian.com")
     assert mock_output.norm.called or mock_output.error.called
     # Simulate error in handshake with correct client structure, but code does not call output.error for errorCode=1
     ep = {
@@ -338,7 +338,7 @@ def test_simulations_empty_and_error(mock_output):
             }
         }
     }
-    ssl_labs._get_simulations(ep, "https://example.com")
+    ssl_labs._get_simulations(ep, "https://numorian.com")
     # No assertion on output, just ensure no exception
 
 
@@ -359,7 +359,7 @@ def test_scan_malformed_api(
         {"status": "READY", "statusMessage": "Test"},
     )
     session = type(
-        "DummySession", (), {"domain": "example.com", "url": "https://example.com"}
+        "DummySession", (), {"domain": "numorian.com", "url": "https://numorian.com"}
     )()
     with pytest.raises(ValueError):
         ssl_labs.scan(session)
@@ -401,7 +401,7 @@ def test_cert_info_unknown_revocation_status(mock_output):
         }
     }
     body = {"certs": [cert], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     # Check that output.error was called for unknown statuses
     assert mock_output.error.called
 
@@ -440,7 +440,7 @@ def test_cert_info_sct_bits(mock_output):
         }
     }
     body = {"certs": [cert], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     # Check that output.norm was called for SCT
     assert mock_output.norm.called
 
@@ -493,7 +493,7 @@ def test_cert_info_chain_issues(mock_output):
     }
     ep = {"details": {"certChains": [chain]}}
     body = {"certs": [cert], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     # Check that output.warn was called for chain issues
     assert mock_output.warn.called
 
@@ -531,7 +531,7 @@ def test_cert_info_unknown_validation_type(mock_output):
         }
     }
     body = {"certs": [cert], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     # Check that output.norm was called for unknown validationType
     assert mock_output.norm.called
 
@@ -585,8 +585,8 @@ from unittest import mock
 def test_scan_check_scan_retries(monkeypatch):
     # Simulate api.check_scan raising exceptions, then succeeding
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     call_count = {"count": 0}
 
@@ -617,8 +617,8 @@ def test_scan_check_scan_retries(monkeypatch):
 def test_scan_check_scan_raises(monkeypatch):
     # Simulate api.check_scan always raising exception
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     def always_fail(domain):
         raise Exception("fail")
@@ -641,8 +641,8 @@ def test_scan_check_scan_raises(monkeypatch):
 def test_scan_tty_status(monkeypatch):
     # Simulate TTY output branch
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     monkeypatch.setattr(
         "yawast.scanner.modules.ssl_labs.api.get_info_message", lambda: []
@@ -691,7 +691,7 @@ def test_get_cert_info_missing_keys(monkeypatch):
     body = {"certs": []}
     ep = {"details": {}}
     with pytest.raises(Exception):
-        ssl_labs._get_cert_info(body, ep, "https://example.com")
+        ssl_labs._get_cert_info(body, ep, "https://numorian.com")
 
 
 def test_get_protocol_info_missing_keys(monkeypatch):
@@ -700,7 +700,7 @@ def test_get_protocol_info_missing_keys(monkeypatch):
     monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
     ep = {"details": {}}
     with pytest.raises(KeyError):
-        ssl_labs._get_protocol_info(ep, "https://example.com")
+        ssl_labs._get_protocol_info(ep, "https://numorian.com")
     # Should raise KeyError due to missing 'protocols' key
 
 
@@ -722,7 +722,7 @@ def test_get_vulnerability_info_unknown_values(monkeypatch):
             "sessionResumption": 99,
         }
     }
-    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    ssl_labs._get_vulnerability_info(ep, "https://numorian.com")
     # Should not raise
 
 
@@ -799,7 +799,7 @@ def test_get_cert_info_all_issues(monkeypatch):
         }
     }
     body = {"certs": [cert], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     assert (
         mock_output.warn.called or mock_output.error.called or mock_output.vuln.called
     )
@@ -876,7 +876,7 @@ def test_get_cert_info_ec_key(monkeypatch):
         }
     }
     body = {"certs": [cert], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     assert mock_output.norm.called
 
 
@@ -931,8 +931,8 @@ def test_is_cipher_suite_secure_branches():
 def test_scan_tty_status_all_branches(monkeypatch):
     # Simulate TTY output and all status branches
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     # Dummy sys.stdout to capture writes
     class DummyStdout:
@@ -1062,8 +1062,8 @@ def test_scan_tty_status_all_branches(monkeypatch):
 def test_scan_missing_endpoints(monkeypatch):
     # Simulate scan result missing 'endpoints' key
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
     mock_output = mock.Mock()
@@ -1088,8 +1088,8 @@ def test_scan_missing_endpoints(monkeypatch):
 def test_scan_status_error(monkeypatch):
     # Simulate scan result with status ERROR
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     monkeypatch.setattr("yawast.scanner.cli.ssl_labs.sleep", lambda x: None)
     mock_output = mock.Mock()
@@ -1112,8 +1112,8 @@ def test_scan_status_error(monkeypatch):
 def test_scan_status_fallback(monkeypatch):
     # Simulate scan result with neither 'endpoints' nor 'status' in body
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     class DummyStdout:
         def __init__(self):
@@ -1228,7 +1228,7 @@ def test_cert_chain_trust_paths(monkeypatch):
     }
     ep = {"details": {"certChains": [chain]}}
     body = {"certs": [cert], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     assert mock_output.norm.called
 
 
@@ -1300,7 +1300,7 @@ def test_cert_chain_provided_by_server(monkeypatch):
     cert2["sha256Hash"] = "11" * 32
     ep = {"details": {"certChains": [chain]}}
     body = {"certs": [cert, cert2], "details": ep["details"]}
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     assert mock_output.norm.called
 
 
@@ -1309,7 +1309,7 @@ def test_protocol_info_empty(monkeypatch):
     monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
     monkeypatch.setattr("yawast.scanner.cli.ssl_labs.reporter", mock.Mock())
     ep = {"ipAddress": "1.2.3.4", "details": {"protocols": [], "sims": {"results": []}}}
-    ssl_labs._get_protocol_info(ep, "https://example.com")
+    ssl_labs._get_protocol_info(ep, "https://numorian.com")
     assert mock_output.norm.called
 
 
@@ -1362,7 +1362,7 @@ def test_vuln_info_all_unknown(monkeypatch):
             "miscIntolerance": 99,
         }
     }
-    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    ssl_labs._get_vulnerability_info(ep, "https://numorian.com")
     assert (
         mock_output.error.called or mock_output.warn.called or mock_output.info.called
     )
@@ -1371,8 +1371,8 @@ def test_vuln_info_all_unknown(monkeypatch):
 def test_scan_status_error_branch(monkeypatch):
     # Covers scan() else branch for non-Ready/Non-Error endpoint status
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     mock_output = mock.Mock()
     monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
@@ -1520,7 +1520,7 @@ def test_cert_info_chain_trust_paths_multiple(monkeypatch):
     body = {"certs": [cert], "details": ep["details"]}
     from yawast.scanner.cli import ssl_labs
 
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     assert mock_output.norm.called
 
 
@@ -1540,7 +1540,7 @@ def test_protocol_info_named_groups_and_empty(monkeypatch):
     }
     from yawast.scanner.cli import ssl_labs
 
-    ssl_labs._get_protocol_info(ep, "https://example.com")
+    ssl_labs._get_protocol_info(ep, "https://numorian.com")
     assert mock_output.norm.called
 
 
@@ -1555,7 +1555,7 @@ def test_vuln_info_misc_and_protocol_intolerance(monkeypatch):
     }
     from yawast.scanner.cli import ssl_labs
 
-    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    ssl_labs._get_vulnerability_info(ep, "https://numorian.com")
     assert mock_output.info.called or mock_output.warn.called
 
 
@@ -1567,15 +1567,15 @@ def test_vuln_info_all_else_branches(monkeypatch):
     ep = {"ipAddress": "1.2.3.4", "details": {}}
     from yawast.scanner.cli import ssl_labs
 
-    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    ssl_labs._get_vulnerability_info(ep, "https://numorian.com")
     assert mock_output.error.called
 
 
 def test_scan_invalid_response(monkeypatch):
     # Covers scan() else branch for invalid response (no endpoints, not ERROR)
     class DummySession:
-        domain = "example.com"
-        url = "https://example.com"
+        domain = "numorian.com"
+        url = "https://numorian.com"
 
     mock_output = mock.Mock()
     monkeypatch.setattr("yawast.scanner.cli.ssl_labs.output", mock_output)
@@ -1661,7 +1661,7 @@ def test_cert_chain_all_issues(monkeypatch):
     body = {"certs": [cert], "details": ep["details"]}
     from yawast.scanner.cli import ssl_labs
 
-    ssl_labs._get_cert_info(body, ep, "https://example.com")
+    ssl_labs._get_cert_info(body, ep, "https://numorian.com")
     assert mock_output.warn.call_count >= 4
 
 
@@ -1680,7 +1680,7 @@ def test_protocol_info_unknown_version(monkeypatch):
     }
     from yawast.scanner.cli import ssl_labs
 
-    ssl_labs._get_protocol_info(ep, "https://example.com")
+    ssl_labs._get_protocol_info(ep, "https://numorian.com")
     assert mock_output.norm.called
 
 
@@ -1702,5 +1702,5 @@ def test_vuln_info_rare_enum(monkeypatch):
     }
     from yawast.scanner.cli import ssl_labs
 
-    ssl_labs._get_vulnerability_info(ep, "https://example.com")
+    ssl_labs._get_vulnerability_info(ep, "https://numorian.com")
     assert mock_output.error.call_count >= 3

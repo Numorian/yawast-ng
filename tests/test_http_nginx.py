@@ -15,7 +15,7 @@ def test_check_banner_with_version(monkeypatch):
         )(),
     )
     banner = "nginx/1.24.0"
-    results = nginx.check_banner(banner, "raw", "http://example.com")
+    results = nginx.check_banner(banner, "raw", "http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -23,13 +23,13 @@ def test_check_banner_no_version(monkeypatch):
     monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
     monkeypatch.setattr("yawast.reporting.result.Result", lambda *a, **k: mock.Mock())
     banner = "nginx"
-    results = nginx.check_banner(banner, "raw", "http://example.com")
+    results = nginx.check_banner(banner, "raw", "http://numorian.com")
     assert isinstance(results, list)
 
 
 def test_check_banner_not_nginx():
     banner = "Apache/2.4.58"
-    results = nginx.check_banner(banner, "raw", "http://example.com")
+    results = nginx.check_banner(banner, "raw", "http://numorian.com")
     assert results == []
 
 
@@ -37,7 +37,7 @@ def test_check_all(monkeypatch):
     monkeypatch.setattr(
         "yawast.scanner.modules.http.servers.nginx.check_status", lambda url: ["status"]
     )
-    results = nginx.check_all("http://example.com")
+    results = nginx.check_all("http://numorian.com")
     assert "status" in results
 
 
@@ -58,7 +58,7 @@ def test_check_status_found(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    results = nginx.check_status("http://example.com")
+    results = nginx.check_status("http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -69,5 +69,5 @@ def test_check_status_not_found(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = nginx.check_status("http://example.com")
+    results = nginx.check_status("http://numorian.com")
     assert "scan" in results

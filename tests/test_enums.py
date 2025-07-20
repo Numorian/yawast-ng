@@ -37,8 +37,8 @@ class TestVulnerabilitiesAdd:
         Vulnerabilities.add(name, severity, description)
         vuln_info = Vulnerabilities.TEST_CREATE_VULN_ISSUE
 
-        ev = Evidence("https://example.com", None, None)
-        issue = Issue(Vulnerabilities.TEST_CREATE_VULN_ISSUE, "https//example.com", ev)
+        ev = Evidence("https://numorian.com", None, None)
+        issue = Issue(Vulnerabilities.TEST_CREATE_VULN_ISSUE, "https//numorian.com", ev)
 
         # Assert
         assert isinstance(vuln_info, VulnerabilityInfo)
@@ -57,8 +57,8 @@ class TestVulnerabilitiesAdd:
         Vulnerabilities.add(name, severity, description)
         vuln_info = Vulnerabilities.TEST_CREATE_VULN_ISSUE_REF
 
-        ev = Evidence("https://example.com", None, None)
-        issue = Issue(Vulnerabilities.get(name), "https//example.com", ev)
+        ev = Evidence("https://numorian.com", None, None)
+        issue = Issue(Vulnerabilities.get(name), "https//numorian.com", ev)
 
         # Assert
         assert isinstance(vuln_info, VulnerabilityInfo)
@@ -78,9 +78,9 @@ def test_severity_enum():
 
 
 def test_vulnerability_reference():
-    ref = VulnerabilityReference("CVE-1234", "https://example.com")
+    ref = VulnerabilityReference("CVE-1234", "https://numorian.com")
     assert ref.name == "CVE-1234"
-    assert ref.url == "https://example.com"
+    assert ref.url == "https://numorian.com"
 
 
 def test_vulnerability_info_create_and_hash():

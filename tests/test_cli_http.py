@@ -8,6 +8,21 @@ import pytest
 from yawast.scanner.cli import http
 
 
+def make_mock_response(method, url):
+    req = mock.Mock()
+    req.method = method
+    req.url = url
+    resp = mock.Mock()
+    resp.status_code = 200
+    resp.headers = {}
+    resp.text = ""
+    resp.iter_content = lambda chunk_size: iter([b"data"])
+    resp.content = b"data"
+    resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
+    resp.request = req
+    return resp
+
+
 class DummyArgs:
     def __init__(
         self,
@@ -276,21 +291,6 @@ def test_scan_basic(monkeypatch):
     session.args.user = None
     session.args.pass_reset_page = None
 
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
-
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
         lambda *a, **k: make_mock_response("GET", a[0] if a else "mocked"),
@@ -367,21 +367,6 @@ def test_scan_with_password_reset(monkeypatch):
         "yawast.shared.network.http_build_raw_response", lambda h: "HTTP/1.1 200 OK\n"
     )
 
-    # Provide a more realistic mock for http_get and http_post, with .request.url as a real string
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
-
     monkeypatch.setattr(
         "yawast.shared.network.http_get",
         lambda url, *a, **k: make_mock_response("GET", url),
@@ -395,21 +380,6 @@ def test_scan_with_password_reset(monkeypatch):
     session.args.dir = False
     session.args.user = "user"
     session.args.pass_reset_page = "http://numorian.com/reset"
-
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
 
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
@@ -439,21 +409,6 @@ def test_scan_error_handling(monkeypatch):
     session.args.dir = False
     session.args.user = None
     session.args.pass_reset_page = None
-
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
 
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
@@ -570,21 +525,6 @@ def test_scan_login_success(monkeypatch):
     monkeypatch.setattr(
         "yawast.scanner.plugins.plugin_manager.run_http_scans", lambda url: None
     )
-
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
 
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
@@ -708,21 +648,6 @@ def test_scan_login_failure(monkeypatch):
         "yawast.scanner.plugins.plugin_manager.run_http_scans", lambda url: None
     )
 
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
-
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
         lambda *a, **k: make_mock_response("GET", a[0] if a else "mocked"),
@@ -840,21 +765,6 @@ def test_scan_header_cookie_waf_hsts(monkeypatch):
         "yawast.scanner.plugins.plugin_manager.run_http_scans", lambda url: None
     )
 
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
-
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
         lambda *a, **k: make_mock_response("GET", a[0] if a else "mocked"),
@@ -970,21 +880,6 @@ def test_scan_spider_error(monkeypatch):
         "yawast.scanner.plugins.plugin_manager.run_http_scans", lambda url: None
     )
 
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
-
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
         lambda *a, **k: make_mock_response("GET", a[0] if a else "mocked"),
@@ -1095,21 +990,6 @@ def test_scan_supported_http_methods(monkeypatch):
     monkeypatch.setattr(
         "yawast.scanner.plugins.plugin_manager.run_http_scans", lambda url: None
     )
-
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
 
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",
@@ -1247,21 +1127,6 @@ def test_scan_server_checks_and_plugins(monkeypatch):
         "yawast.scanner.plugins.plugin_manager.run_http_scans", fake_run_http_scans
     )
     session.args.php_page = "php"
-
-    # Patch the underlying session to prevent any real HTTP requests
-    def make_mock_response(method, url):
-        req = mock.Mock()
-        req.method = method
-        req.url = url
-        resp = mock.Mock()
-        resp.status_code = 200
-        resp.headers = {}
-        resp.text = ""
-        resp.iter_content = lambda chunk_size: iter([b"data"])
-        resp.content = b"data"
-        resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
-        resp.request = req
-        return resp
 
     monkeypatch.setattr(
         "yawast.shared.network._requester.get",

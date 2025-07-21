@@ -303,6 +303,10 @@ def test_scan_basic(monkeypatch):
         "yawast.shared.network._requester.head",
         lambda *a, **k: make_mock_response("HEAD", a[0] if a else "mocked"),
     )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.http.http_basic.check_hsts_preload",
+        lambda url: [{"name": "test", "status": "ok", "preloadedDomain": True}],
+    )
     # Should run without error
     http.scan(session)
 
@@ -393,6 +397,10 @@ def test_scan_with_password_reset(monkeypatch):
         "yawast.shared.network._requester.head",
         lambda *a, **k: make_mock_response("HEAD", a[0] if a else "mocked"),
     )
+    monkeypatch.setattr(
+        "yawast.scanner.modules.http.http_basic.check_hsts_preload",
+        lambda url: [{"name": "test", "status": "ok", "preloadedDomain": True}],
+    )
     http.scan(session)
 
 
@@ -470,7 +478,7 @@ def test_scan_login_success(monkeypatch):
     )
     monkeypatch.setattr("yawast.scanner.modules.http.waf.get_waf", lambda h, r, u: [])
     monkeypatch.setattr(
-        "yawast.scanner.modules.http.http_basic.check_hsts_preload", lambda url: []
+        "yawast.scanner.modules.http.http_basic.check_hsts_preload", lambda url: [{"name": "test", "status": "ok", "preloadedDomain": True}]
     )
     monkeypatch.setattr(
         "yawast.scanner.modules.http.http_basic.check_http_methods",

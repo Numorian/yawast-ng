@@ -7,21 +7,21 @@ from yawast.commands import utils as cutils
 from yawast.shared import utils
 
 
-def make_session(scheme="http", url="http://example.com"):
+def make_session(scheme="http", url="http://numorian.com"):
     session = mock.Mock()
     session.url = url
     session.url_parsed.scheme = scheme
     session.supports_http = False
     session.supports_https = False
     session.redirects_https = False
-    session.get_http_url.return_value = "http://example.com"
+    session.get_http_url.return_value = "http://numorian.com"
     return session
 
 
 def test_check_redirect_http_tls_redirect():
-    session = make_session("http", "http://example.com")
+    session = make_session("http", "http://numorian.com")
     with mock.patch(
-        "yawast.shared.network.check_ssl_redirect", return_value="https://example.com"
+        "yawast.shared.network.check_ssl_redirect", return_value="https://numorian.com"
     ) as check_ssl_redirect, mock.patch(
         "yawast.shared.network.check_www_redirect", return_value=None
     ), mock.patch.object(
@@ -30,14 +30,16 @@ def test_check_redirect_http_tls_redirect():
         "builtins.print"
     ) as mprint:
         cutils.check_redirect(session)
-        check_ssl_redirect.assert_called_once_with("http://example.com")
-        update_url.assert_called_once_with("https://example.com")
-        mprint.assert_any_call("Server redirects to TLS: Scanning: https://example.com")
+        check_ssl_redirect.assert_called_once_with("http://numorian.com")
+        update_url.assert_called_once_with("https://numorian.com")
+        mprint.assert_any_call(
+            "Server redirects to TLS: Scanning: https://numorian.com"
+        )
         assert session.redirects_https is True
 
 
 def test_check_redirect_http_no_redirect():
-    session = make_session("http", "http://example.com")
+    session = make_session("http", "http://numorian.com")
     with mock.patch(
         "yawast.shared.network.check_ssl_redirect", return_value=None
     ), mock.patch(
@@ -50,7 +52,7 @@ def test_check_redirect_http_no_redirect():
 
 
 def test_check_redirect_http_ssl_redirect_exception_then_https_head_success():
-    session = make_session("http", "http://example.com")
+    session = make_session("http", "http://numorian.com")
     with mock.patch(
         "yawast.shared.network.check_ssl_redirect", side_effect=Exception("fail")
     ), mock.patch(
@@ -74,7 +76,7 @@ def test_check_redirect_http_ssl_redirect_exception_then_https_head_success():
 
 
 def test_check_redirect_http_ssl_redirect_exception_then_https_head_fails():
-    session = make_session("http", "http://example.com")
+    session = make_session("http", "http://numorian.com")
     with mock.patch(
         "yawast.shared.network.check_ssl_redirect", side_effect=Exception("fail")
     ), mock.patch(
@@ -96,7 +98,7 @@ def test_check_redirect_http_ssl_redirect_exception_then_https_head_fails():
 
 
 def test_check_redirect_https_head_success():
-    session = make_session("https", "https://example.com")
+    session = make_session("https", "https://numorian.com")
     with mock.patch("yawast.shared.network.http_head", return_value=True), mock.patch(
         "yawast.shared.network.check_www_redirect", return_value=None
     ), mock.patch("builtins.print") as mprint:
@@ -107,7 +109,7 @@ def test_check_redirect_https_head_success():
 
 
 def test_check_redirect_https_head_fails():
-    session = make_session("https", "https://example.com")
+    session = make_session("https", "https://numorian.com")
     with mock.patch(
         "yawast.shared.network.http_head", side_effect=Exception("fail")
     ), mock.patch("yawast.shared.output.debug_exception") as debug_exc, mock.patch(
@@ -121,22 +123,22 @@ def test_check_redirect_https_head_fails():
 
 
 def test_check_redirect_www_redirect():
-    session = make_session("http", "http://example.com")
+    session = make_session("http", "http://numorian.com")
     with mock.patch(
         "yawast.shared.network.check_ssl_redirect", return_value=None
     ), mock.patch(
         "yawast.shared.network.check_www_redirect",
-        return_value="http://www.example.com",
+        return_value="http://www.numorian.com",
     ) as check_www_redirect, mock.patch.object(
         session, "update_url"
     ) as update_url, mock.patch(
         "builtins.print"
     ) as mprint:
         cutils.check_redirect(session)
-        check_www_redirect.assert_called_once_with("http://example.com")
-        update_url.assert_called_once_with("http://www.example.com")
+        check_www_redirect.assert_called_once_with("http://numorian.com")
+        update_url.assert_called_once_with("http://www.numorian.com")
         mprint.assert_any_call(
-            "Server performs WWW redirect: Scanning: http://www.example.com"
+            "Server performs WWW redirect: Scanning: http://www.numorian.com"
         )
 
 

@@ -9,7 +9,7 @@ from yawast.scanner.modules.http.servers import apache_tomcat
 
 class DummyResponse:
     def __init__(
-        self, text="", status_code=200, url="http://example.com", request=None
+        self, text="", status_code=200, url="http://numorian.com", request=None
     ):
         self.text = text
         self.status_code = status_code
@@ -31,20 +31,20 @@ def test_get_version_found(monkeypatch):
         "yawast.scanner.modules.http.servers.apache_tomcat._check_version_outdated",
         lambda v, u, b: [],
     )
-    results = apache_tomcat.get_version("http://example.com", res)
+    results = apache_tomcat.get_version("http://numorian.com", res)
     assert isinstance(results, list)
 
 
 def test_get_version_not_found(monkeypatch):
     res = DummyResponse(text="No Tomcat here", status_code=404)
-    results = apache_tomcat.get_version("http://example.com", res)
+    results = apache_tomcat.get_version("http://numorian.com", res)
     assert results == []
 
 
 def test_get_version_exception(monkeypatch):
     res = DummyResponse(text=None, status_code=404)
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat.get_version("http://example.com", res)
+    results = apache_tomcat.get_version("http://numorian.com", res)
     assert results == []
 
 
@@ -65,7 +65,7 @@ def test_check_version(monkeypatch):
         "yawast.scanner.modules.http.servers.apache_tomcat._check_version_406",
         lambda url: ["d"],
     )
-    results = apache_tomcat.check_version("http://example.com")
+    results = apache_tomcat.check_version("http://numorian.com")
     assert results == ["a", "b", "c", "d"]
 
 
@@ -87,7 +87,7 @@ def test_check_manager(monkeypatch):
         "yawast.scanner.modules.http.servers.apache_tomcat.check_manager_password",
         lambda url: ["pw"],
     )
-    results = apache_tomcat.check_manager("http://example.com")
+    results = apache_tomcat.check_manager("http://numorian.com")
     assert "pw" in results
 
 
@@ -101,7 +101,7 @@ def test_check_manager_no_manager(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat.check_manager("http://example.com")
+    results = apache_tomcat.check_manager("http://numorian.com")
     assert "scan" in results
 
 
@@ -111,7 +111,7 @@ def test_check_manager_exception(monkeypatch):
         lambda url, *a, **k: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat.check_manager("http://example.com")
+    results = apache_tomcat.check_manager("http://numorian.com")
     assert results == []
 
 
@@ -134,7 +134,7 @@ def test_check_manager_password(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    results = apache_tomcat.check_manager_password("http://example.com")
+    results = apache_tomcat.check_manager_password("http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -147,7 +147,7 @@ def test_check_manager_password_no_hit(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat.check_manager_password("http://example.com")
+    results = apache_tomcat.check_manager_password("http://numorian.com")
     assert "scan" in results
 
 
@@ -157,7 +157,7 @@ def test_check_manager_password_exception(monkeypatch):
         lambda url, *a, **k: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat.check_manager_password("http://example.com")
+    results = apache_tomcat.check_manager_password("http://numorian.com")
     assert results == []
 
 
@@ -180,7 +180,7 @@ def test_check_cve_2017_12615_rce(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: [],
     )
-    results = apache_tomcat.check_cve_2017_12615("http://example.com")
+    results = apache_tomcat.check_cve_2017_12615("http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -195,7 +195,7 @@ def test_check_cve_2017_12615_no_rce(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat.check_cve_2017_12615("http://example.com")
+    results = apache_tomcat.check_cve_2017_12615("http://numorian.com")
     assert "scan" in results
 
 
@@ -208,7 +208,7 @@ def test_check_cve_2017_12615_status_not_2xx(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat.check_cve_2017_12615("http://example.com")
+    results = apache_tomcat.check_cve_2017_12615("http://numorian.com")
     assert "scan" in results
 
 
@@ -218,7 +218,7 @@ def test_check_cve_2017_12615_exception(monkeypatch):
         lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat.check_cve_2017_12615("http://example.com")
+    results = apache_tomcat.check_cve_2017_12615("http://numorian.com")
     assert results == []
 
 
@@ -276,7 +276,7 @@ def test_check_struts_sample_404(monkeypatch):
         "yawast.shared.network.check_404_response",
         lambda url: (False, None, None, None),
     )
-    results = apache_tomcat.check_struts_sample("http://example.com")
+    results = apache_tomcat.check_struts_sample("http://numorian.com")
     assert results == []
 
 
@@ -298,7 +298,7 @@ def test_check_struts_sample_found(monkeypatch):
     monkeypatch.setattr(
         "yawast.shared.network.http_build_raw_response", lambda res: "rawres"
     )
-    results = apache_tomcat.check_struts_sample("http://example.com")
+    results = apache_tomcat.check_struts_sample("http://numorian.com")
     assert "scan" in results
 
 
@@ -320,7 +320,7 @@ def test_check_struts_sample_status_200(monkeypatch):
     monkeypatch.setattr(
         "yawast.shared.network.http_build_raw_response", lambda res: "rawres"
     )
-    results = apache_tomcat.check_struts_sample("http://example.com")
+    results = apache_tomcat.check_struts_sample("http://numorian.com")
     assert isinstance(results, list)
 
 
@@ -330,7 +330,7 @@ def test_check_struts_sample_exception(monkeypatch):
         lambda url: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat.check_struts_sample("http://example.com")
+    results = apache_tomcat.check_struts_sample("http://numorian.com")
     assert results == []
 
 
@@ -345,7 +345,7 @@ def test_check_version_404(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat._check_version_404("http://example.com")
+    results = apache_tomcat._check_version_404("http://numorian.com")
     assert "ver" in results and "scan" in results
 
 
@@ -355,7 +355,7 @@ def test_check_version_404_exception(monkeypatch):
         lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat._check_version_404("http://example.com")
+    results = apache_tomcat._check_version_404("http://numorian.com")
     assert results == []
 
 
@@ -372,7 +372,7 @@ def test_check_version_verb(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat._check_version_verb("http://example.com")
+    results = apache_tomcat._check_version_verb("http://numorian.com")
     assert "ver" in results and "scan" in results
 
 
@@ -382,7 +382,7 @@ def test_check_version_verb_exception(monkeypatch):
         lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat._check_version_verb("http://example.com")
+    results = apache_tomcat._check_version_verb("http://numorian.com")
     assert results == []
 
 
@@ -399,7 +399,7 @@ def test_check_version_post(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat._check_version_post("http://example.com")
+    results = apache_tomcat._check_version_post("http://numorian.com")
     assert "ver" in results and "scan" in results
 
 
@@ -409,7 +409,7 @@ def test_check_version_post_exception(monkeypatch):
         lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat._check_version_post("http://example.com")
+    results = apache_tomcat._check_version_post("http://numorian.com")
     assert results == []
 
 
@@ -426,7 +426,7 @@ def test_check_version_406(monkeypatch):
         "yawast.scanner.modules.http.response_scanner.check_response",
         lambda url, res: ["scan"],
     )
-    results = apache_tomcat._check_version_406("http://example.com")
+    results = apache_tomcat._check_version_406("http://numorian.com")
     assert "ver" in results and "scan" in results
 
 
@@ -436,7 +436,7 @@ def test_check_version_406_exception(monkeypatch):
         lambda *a, **k: (_ for _ in ()).throw(Exception("fail")),
     )
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = apache_tomcat._check_version_406("http://example.com")
+    results = apache_tomcat._check_version_406("http://numorian.com")
     assert results == []
 
 
@@ -458,6 +458,6 @@ def test_check_version_outdated(monkeypatch):
     monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
     monkeypatch.setattr("yawast.reporting.result.Result", lambda *a, **k: mock.Mock())
     results = apache_tomcat._check_version_outdated(
-        "8.5.12", "http://example.com", "body"
+        "8.5.12", "http://numorian.com", "body"
     )
     assert isinstance(results, list)

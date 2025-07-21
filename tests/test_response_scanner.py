@@ -22,8 +22,8 @@ def make_response(url, method="GET"):
 
 class TestFindInjectionPoints:
     def test_injection_points_url_params_only(self):
-        url = "http://example.com/page"
-        res = make_response("http://example.com/page?foo=bar&baz=qux", "POST")
+        url = "http://numorian.com/page"
+        res = make_response("http://numorian.com/page?foo=bar&baz=qux", "POST")
         points = response_scanner._find_injection_points(url, res, soup=None)
         expected = [
             InjectionPoint(url, "foo", "POST", "bar"),
@@ -32,7 +32,7 @@ class TestFindInjectionPoints:
         assert points == expected
 
     def test_injection_points_form_fields_only(self):
-        url = "http://example.com/page"
+        url = "http://numorian.com/page"
         res = make_response(url, "GET")
         html = """
         <form method="post" action="/submit">
@@ -43,14 +43,14 @@ class TestFindInjectionPoints:
         soup = BeautifulSoup(html, "html.parser")
         points = response_scanner._find_injection_points(url, res, soup)
         expected = [
-            InjectionPoint("http://example.com/submit", "username", "POST", "alice"),
-            InjectionPoint("http://example.com/submit", "password", "POST", "secret"),
+            InjectionPoint("http://numorian.com/submit", "username", "POST", "alice"),
+            InjectionPoint("http://numorian.com/submit", "password", "POST", "secret"),
         ]
         assert points == expected
 
     def test_injection_points_url_and_form_fields(self):
-        url = "http://example.com/page?foo=bar"
-        res = make_response("http://example.com/page?foo=bar", "GET")
+        url = "http://numorian.com/page?foo=bar"
+        res = make_response("http://numorian.com/page?foo=bar", "GET")
         html = """
         <form>
             <input type="text" name="q" value="search">
@@ -65,7 +65,7 @@ class TestFindInjectionPoints:
         assert points == expected
 
     def test_injection_points_form_action_missing(self):
-        url = "http://example.com/page"
+        url = "http://numorian.com/page"
         res = make_response(url, "POST")
         html = """
         <form>
@@ -80,14 +80,14 @@ class TestFindInjectionPoints:
         assert points == expected
 
     def test_injection_points_no_params_no_forms(self):
-        url = "http://example.com/page"
+        url = "http://numorian.com/page"
         res = make_response(url, "GET")
         soup = BeautifulSoup("<html></html>", "html.parser")
         points = response_scanner._find_injection_points(url, res, soup)
         assert points == []
 
     def test_injection_points_form_input_missing_name_value(self):
-        url = "http://example.com/page"
+        url = "http://numorian.com/page"
         res = make_response(url, "GET")
         html = """
         <form action="/a" method="post">
@@ -97,12 +97,12 @@ class TestFindInjectionPoints:
         soup = BeautifulSoup(html, "html.parser")
         points = response_scanner._find_injection_points(url, res, soup)
         expected = [
-            InjectionPoint("http://example.com/a", "", "POST", ""),
+            InjectionPoint("http://numorian.com/a", "", "POST", ""),
         ]
         assert points == expected
 
     def test_injection_points_form_action_hash(self):
-        url = "http://example.com/page"
+        url = "http://numorian.com/page"
         html = """
         <form action="#" method="GET">
             <p>
@@ -114,7 +114,7 @@ class TestFindInjectionPoints:
         """
 
         class DummyReq:
-            url = "http://example.com/page"
+            url = "http://numorian.com/page"
             method = "GET"
 
         class DummyRes:

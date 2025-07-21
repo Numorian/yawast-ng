@@ -24,7 +24,7 @@ def test_get_ip_info_success():
     with mock.patch("socket.gethostbyname", return_value="1.2.3.4"), mock.patch(
         "yawast.scanner.modules.dns.network_info.network_info", return_value="info"
     ):
-        ip, ni = dns._get_ip_info("example.com")
+        ip, ni = dns._get_ip_info("numorian.com")
         assert ip == "1.2.3.4"
         assert ni == "info"
 
@@ -54,7 +54,7 @@ def test_scan_ip_domain(monkeypatch):
 
 def test_scan_normal_domain(monkeypatch):
     # Test main scan flow with a normal domain, mocking all dependencies
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -68,22 +68,22 @@ def test_scan_normal_domain(monkeypatch):
     )
     monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_text", lambda d: ["txt"])
     monkeypatch.setattr(
-        "yawast.scanner.modules.dns.basic.get_mx", lambda d: [("mx.example.com", 10)]
+        "yawast.scanner.modules.dns.basic.get_mx", lambda d: [("mx.numorian.com", 10)]
     )
     monkeypatch.setattr(
-        "yawast.scanner.modules.dns.basic.get_ns", lambda d: ["ns.example.com"]
+        "yawast.scanner.modules.dns.basic.get_ns", lambda d: ["ns.numorian.com"]
     )
     monkeypatch.setattr(
         "yawast.scanner.modules.dns.srv.find_srv_records",
-        lambda d: [("srv", "srv.example.com", 123)],
+        lambda d: [("srv", "srv.numorian.com", 123)],
     )
     monkeypatch.setattr(
         "yawast.scanner.modules.dns.subdomains.find_subdomains",
-        lambda d: [("A", "sub.example.com", "2.2.2.2")],
+        lambda d: [("A", "sub.numorian.com", "2.2.2.2")],
     )
     monkeypatch.setattr(
         "yawast.scanner.modules.dns.caa.get_caa",
-        lambda d: [("example.com", "CAA", ['issue "letsencrypt.org"'])],
+        lambda d: [("numorian.com", "CAA", ['issue "letsencrypt.org"'])],
     )
     monkeypatch.setattr(
         "yawast.scanner.modules.dns.dnssec.get_dnskey",
@@ -110,7 +110,7 @@ def test_scan_normal_domain(monkeypatch):
 
 
 def test_scan_txt_exception(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -131,7 +131,7 @@ def test_scan_txt_exception(monkeypatch):
 
 
 def test_scan_mx_exception(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -153,7 +153,7 @@ def test_scan_mx_exception(monkeypatch):
 
 
 def test_scan_ns_exception(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -176,7 +176,7 @@ def test_scan_ns_exception(monkeypatch):
 
 
 def test_scan_srv_exception(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com", srv=True)
+    session = DummySession(domain="numorian.com", url="http://numorian.com", srv=True)
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -201,7 +201,7 @@ def test_scan_srv_exception(monkeypatch):
 
 def test_scan_subdomains_exception(monkeypatch):
     session = DummySession(
-        domain="example.com", url="http://example.com", subdomains=True
+        domain="numorian.com", url="http://numorian.com", subdomains=True
     )
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
@@ -227,7 +227,7 @@ def test_scan_subdomains_exception(monkeypatch):
 
 
 def test_scan_caa_exception(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -251,7 +251,7 @@ def test_scan_caa_exception(monkeypatch):
 
 
 def test_scan_caa_missing(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -261,7 +261,8 @@ def test_scan_caa_missing(monkeypatch):
     monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_mx", lambda d: [])
     monkeypatch.setattr("yawast.scanner.modules.dns.basic.get_ns", lambda d: [])
     monkeypatch.setattr(
-        "yawast.scanner.modules.dns.caa.get_caa", lambda d: [("example.com", "CAA", [])]
+        "yawast.scanner.modules.dns.caa.get_caa",
+        lambda d: [("numorian.com", "CAA", [])],
     )
     monkeypatch.setattr(
         "yawast.reporting.reporter.display",
@@ -280,7 +281,7 @@ def test_scan_caa_missing(monkeypatch):
 
 
 def test_scan_dnssec_missing(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)
@@ -308,7 +309,7 @@ def test_scan_dnssec_missing(monkeypatch):
 
 
 def test_scan_dnssec_exception(monkeypatch):
-    session = DummySession(domain="example.com", url="http://example.com")
+    session = DummySession(domain="numorian.com", url="http://numorian.com")
     monkeypatch.setattr("yawast.reporting.reporter.register_data", lambda *a, **k: None)
     monkeypatch.setattr("yawast.shared.utils.is_ip", lambda d: False)
     monkeypatch.setattr("yawast.shared.output.empty", lambda: None)

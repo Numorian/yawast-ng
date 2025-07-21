@@ -23,8 +23,8 @@ def test_process_urls_invalid_url(monkeypatch):
 
 def test_process_urls_valid_url(monkeypatch):
     with mock.patch("yawast.shared.utils.is_url", return_value=True):
-        urls = command_line.process_urls(["http://example.com"])
-        assert urls == ["http://example.com"]
+        urls = command_line.process_urls(["http://numorian.com"])
+        assert urls == ["http://numorian.com"]
 
 
 def test_process_urls_param(monkeypatch, capsys):
@@ -39,11 +39,11 @@ def test_process_urls_param(monkeypatch, capsys):
 
 def test_command_scan_calls(monkeypatch):
     args = mock.Mock()
-    urls = ["http://example.com"]
+    urls = ["http://numorian.com"]
     with mock.patch(
-        "yawast.shared.utils.extract_url", return_value="http://example.com"
+        "yawast.shared.utils.extract_url", return_value="http://numorian.com"
     ), mock.patch(
-        "yawast.shared.utils.get_domain", return_value="example.com"
+        "yawast.shared.utils.get_domain", return_value="numorian.com"
     ), mock.patch(
         "yawast.reporting.reporter.setup"
     ) as setup, mock.patch(
@@ -52,17 +52,17 @@ def test_command_scan_calls(monkeypatch):
         "yawast.commands.scan.start"
     ) as scan_start:
         command_line.command_scan(args, urls)
-        setup.assert_called_once_with("example.com")
+        setup.assert_called_once_with("numorian.com")
         scan_start.assert_called()
 
 
 def test_command_dns_calls(monkeypatch):
     args = mock.Mock()
-    urls = ["http://example.com"]
+    urls = ["http://numorian.com"]
     with mock.patch(
-        "yawast.shared.utils.extract_url", return_value="http://example.com"
+        "yawast.shared.utils.extract_url", return_value="http://numorian.com"
     ), mock.patch(
-        "yawast.shared.utils.get_domain", return_value="example.com"
+        "yawast.shared.utils.get_domain", return_value="numorian.com"
     ), mock.patch(
         "yawast.reporting.reporter.setup"
     ) as setup, mock.patch(
@@ -71,17 +71,17 @@ def test_command_dns_calls(monkeypatch):
         "yawast.commands.dns.start"
     ) as dns_start:
         command_line.command_dns(args, urls)
-        setup.assert_called_once_with("example.com")
+        setup.assert_called_once_with("numorian.com")
         dns_start.assert_called()
 
 
 def test_command_ssl_calls(monkeypatch):
     args = mock.Mock()
-    urls = ["http://example.com"]
+    urls = ["http://numorian.com"]
     with mock.patch(
-        "yawast.shared.utils.extract_url", return_value="http://example.com"
+        "yawast.shared.utils.extract_url", return_value="http://numorian.com"
     ), mock.patch(
-        "yawast.shared.utils.get_domain", return_value="example.com"
+        "yawast.shared.utils.get_domain", return_value="numorian.com"
     ), mock.patch(
         "yawast.reporting.reporter.setup"
     ) as setup, mock.patch(
@@ -90,7 +90,7 @@ def test_command_ssl_calls(monkeypatch):
         "yawast.commands.ssl.start"
     ) as ssl_start:
         command_line.command_ssl(args, urls)
-        setup.assert_called_once_with("example.com")
+        setup.assert_called_once_with("numorian.com")
         ssl_start.assert_called()
 
 

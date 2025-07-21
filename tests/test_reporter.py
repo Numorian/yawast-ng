@@ -52,10 +52,10 @@ class TestReporterSaveOutput:
         self.orig_data = reporter._data
         self.orig_output_file = reporter._output_file
         # Mock data
-        reporter._issues = {"example.com": {}}
-        reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE] = {
+        reporter._issues = {"numorian.com": {}}
+        reporter._issues["numorian.com"][Vulnerabilities.SERVER_INVALID_404_FILE] = {
             Result.from_evidence(
-                Evidence("https://example.com", "<request>", "<response>"),
+                Evidence("https://numorian.com", "<request>", "<response>"),
                 "test",
                 "test",
             )
@@ -106,7 +106,7 @@ class TestReporterSaveOutput:
 
     def test_save_output_no_compression(self, tmp_path, monkeypatch):
         reporter._output_file = str(tmp_path / "out.json")
-        reporter.setup("example.com")
+        reporter.setup("numorian.com")
         issue = make_issue()
         reporter.register(issue)
         monkeypatch.setattr(reporter.output, "debug", lambda x: None)
@@ -157,7 +157,7 @@ class TestReporterSetup:
         reporter._data = self.orig_data
 
     def test_setup_creates_new_domain_keys(self):
-        domain = "example.com"
+        domain = "numorian.com"
         reporter.setup(domain)
         assert reporter._domain == domain
         assert domain in reporter._issues
@@ -166,7 +166,7 @@ class TestReporterSetup:
         assert reporter._data[domain] == {}
 
     def test_setup_preserves_existing_domain_data(self):
-        domain = "example.com"
+        domain = "numorian.com"
         reporter._issues[domain] = {"test_key": "test_value"}
         reporter._data[domain] = {"test_key": "test_value"}
         reporter.setup(domain)
@@ -189,13 +189,13 @@ class TestReporterIsRegistered:
         assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
     def test_is_registered_different_domain(self):
-        reporter._issues["example.com"] = {}
+        reporter._issues["numorian.com"] = {}
         reporter._domain = "test.com"
         assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
     def test_is_registered_with_vuln(self):
-        reporter._domain = "example.com"
-        reporter._issues["example.com"] = {
+        reporter._domain = "numorian.com"
+        reporter._issues["numorian.com"] = {
             Vulnerabilities.SERVER_INVALID_404_FILE: ["sample_issue"]
         }
         assert reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
@@ -205,8 +205,8 @@ class TestReporterIsRegistered:
         assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
     def test_is_registered_issue_not_present(self):
-        reporter._domain = "example.com"
-        reporter._issues["example.com"] = {}
+        reporter._domain = "numorian.com"
+        reporter._issues["numorian.com"] = {}
         assert not reporter.is_registered(Vulnerabilities.SERVER_INVALID_404_FILE)
 
 
@@ -217,7 +217,7 @@ class TestReporterRegisterData:
         self.orig_domain = reporter._domain
         reporter._data = {}
         reporter._output_file = "/tmp/test_output"
-        reporter._domain = "example.com"
+        reporter._domain = "numorian.com"
 
     def teardown_method(self):
         reporter._data = self.orig_data
@@ -225,11 +225,11 @@ class TestReporterRegisterData:
         reporter._domain = self.orig_domain
 
     def test_register_data_with_existing_domain(self):
-        reporter._data["example.com"] = {"existing_key": "existing_value"}
+        reporter._data["numorian.com"] = {"existing_key": "existing_value"}
         reporter.register_data("new_key", "new_value")
-        assert "new_key" in reporter._data["example.com"]
-        assert reporter._data["example.com"]["new_key"] == "new_value"
-        assert "existing_key" in reporter._data["example.com"]
+        assert "new_key" in reporter._data["numorian.com"]
+        assert reporter._data["numorian.com"]["new_key"] == "new_value"
+        assert "existing_key" in reporter._data["numorian.com"]
 
     def test_register_data_with_new_domain(self):
         reporter._domain = "newdomain.com"
@@ -245,19 +245,19 @@ class TestReporterRegisterData:
         assert reporter._data["global_key"] == "global_value"
 
     def test_register_data_appends_to_existing_list(self):
-        reporter._data["example.com"] = {"list_key": [1, 2, 3]}
+        reporter._data["numorian.com"] = {"list_key": [1, 2, 3]}
         reporter.register_data("list_key", [4, 5])
-        assert reporter._data["example.com"]["list_key"] == [1, 2, 3, 4, 5]
+        assert reporter._data["numorian.com"]["list_key"] == [1, 2, 3, 4, 5]
 
     def test_register_data_updates_existing_dict(self):
-        reporter._data["example.com"] = {"dict_key": {"a": 1}}
+        reporter._data["numorian.com"] = {"dict_key": {"a": 1}}
         reporter.register_data("dict_key", {"b": 2})
-        assert reporter._data["example.com"]["dict_key"] == {"a": 1, "b": 2}
+        assert reporter._data["numorian.com"]["dict_key"] == {"a": 1, "b": 2}
 
     def test_register_data_overwrites_non_matching_types(self):
-        reporter._data["example.com"] = {"key": [1, 2, 3]}
+        reporter._data["numorian.com"] = {"key": [1, 2, 3]}
         reporter.register_data("key", {"a": 1})
-        assert reporter._data["example.com"]["key"] == {"a": 1}
+        assert reporter._data["numorian.com"]["key"] == {"a": 1}
 
 
 class TestReporterRegisterMessage:
@@ -317,7 +317,7 @@ class TestReporterRegister:
         self.orig_domain = reporter._domain
         self.orig_output_file = reporter._output_file
         reporter._issues = {}
-        reporter._domain = "example.com"
+        reporter._domain = "numorian.com"
         reporter._output_file = ""
 
     def teardown_method(self):
@@ -327,56 +327,62 @@ class TestReporterRegister:
 
     def test_register_creates_new_vulnerability_list(self):
         issue = Issue(
-            url="https://example.com",
-            evidence=Evidence("https://example.com", "<request>", "<response>"),
+            url="https://numorian.com",
+            evidence=Evidence("https://numorian.com", "<request>", "<response>"),
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue)
         assert (
-            Vulnerabilities.SERVER_INVALID_404_FILE in reporter._issues["example.com"]
+            Vulnerabilities.SERVER_INVALID_404_FILE in reporter._issues["numorian.com"]
         )
         assert (
             len(
-                reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE]
+                reporter._issues["numorian.com"][
+                    Vulnerabilities.SERVER_INVALID_404_FILE
+                ]
             )
             == 1
         )
         assert (
-            reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE][0]
+            reporter._issues["numorian.com"][Vulnerabilities.SERVER_INVALID_404_FILE][0]
             == issue
         )
 
     def test_register_does_not_duplicate_issues(self):
         issue = Issue(
-            url="https://example.com",
-            evidence=Evidence("https://example.com", "<request>", "<response>"),
+            url="https://numorian.com",
+            evidence=Evidence("https://numorian.com", "<request>", "<response>"),
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue)
         reporter.register(issue)  # Register the same issue again
         assert (
             len(
-                reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE]
+                reporter._issues["numorian.com"][
+                    Vulnerabilities.SERVER_INVALID_404_FILE
+                ]
             )
             == 1
         )
 
     def test_register_handles_different_issues(self):
         issue1 = Issue(
-            url="https://example.com",
-            evidence=Evidence("https://example.com", "<request1>", "<response1>"),
+            url="https://numorian.com",
+            evidence=Evidence("https://numorian.com", "<request1>", "<response1>"),
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         issue2 = Issue(
-            url="https://example.com",
-            evidence=Evidence("https://example.com", "<request2>", "<response2>"),
+            url="https://numorian.com",
+            evidence=Evidence("https://numorian.com", "<request2>", "<response2>"),
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue1)
         reporter.register(issue2)
         assert (
             len(
-                reporter._issues["example.com"][Vulnerabilities.SERVER_INVALID_404_FILE]
+                reporter._issues["numorian.com"][
+                    Vulnerabilities.SERVER_INVALID_404_FILE
+                ]
             )
             == 2
         )
@@ -384,8 +390,8 @@ class TestReporterRegister:
     @patch("yawast.reporting.reporter.output.debug")
     def test_register_logs_duplicate_issue(self, mock_debug):
         issue = Issue(
-            url="https://example.com",
-            evidence=Evidence("https://example.com", "<request>", "<response>"),
+            url="https://numorian.com",
+            evidence=Evidence("https://numorian.com", "<request>", "<response>"),
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue)
@@ -396,12 +402,12 @@ class TestReporterRegister:
 
     def test_register_removes_evidence_when_no_output_file(self):
         issue = Issue(
-            url="https://example.com",
+            url="https://numorian.com",
             evidence={"request": "<request>", "response": "<response>"},
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue)
-        registered_issue = reporter._issues["example.com"][
+        registered_issue = reporter._issues["numorian.com"][
             Vulnerabilities.SERVER_INVALID_404_FILE
         ][0]
         assert registered_issue.evidence["request"] == ""
@@ -411,8 +417,8 @@ class TestReporterRegister:
     def test_register_caches_evidence_to_disk(self, mock_cache_to_file):
         reporter._output_file = "/tmp/test_output"
         issue = Issue(
-            url="https://example.com",
-            evidence=Evidence("https://example.com", "<request>", "<response>"),
+            url="https://numorian.com",
+            evidence=Evidence("https://numorian.com", "<request>", "<response>"),
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue)
@@ -426,8 +432,8 @@ class TestReporterRegister:
     def test_register_logs_cache_error(self, mock_cache_to_file, mock_debug):
         reporter._output_file = "/tmp/test_output"
         issue = Issue(
-            url="https://example.com",
-            evidence=Evidence("https://example.com", "<request>", "<response>"),
+            url="https://numorian.com",
+            evidence=Evidence("https://numorian.com", "<request>", "<response>"),
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
         reporter.register(issue)
@@ -440,7 +446,7 @@ class TestReporterDisplay:
         self.orig_domain = reporter._domain
         self.orig_output_file = reporter._output_file
         reporter._issues = {}
-        reporter._domain = "example.com"
+        reporter._domain = "numorian.com"
         reporter._output_file = ""
 
     def teardown_method(self):
@@ -452,7 +458,7 @@ class TestReporterDisplay:
     @patch("yawast.reporting.reporter.register")
     def test_display_critical_severity(self, mock_register, mock_vuln):
         issue = Issue(
-            url="https://example.com",
+            url="https://numorian.com",
             evidence=None,
             vuln=Vulnerabilities.TLS_HEARTBLEED,
         )
@@ -465,7 +471,7 @@ class TestReporterDisplay:
     @patch("yawast.reporting.reporter.register")
     def test_display_medium_severity(self, mock_register, mock_warn):
         issue = Issue(
-            url="https://example.com",
+            url="https://numorian.com",
             evidence=None,
             vuln=Vulnerabilities.TLS_GOLDENDOODLE_NE,
         )
@@ -478,7 +484,7 @@ class TestReporterDisplay:
     @patch("yawast.reporting.reporter.register")
     def test_display_low_severity(self, mock_register, mock_info):
         issue = Issue(
-            url="https://example.com",
+            url="https://numorian.com",
             evidence=None,
             vuln=Vulnerabilities.TLS_LIMITED_FORWARD_SECRECY,
         )
@@ -491,7 +497,7 @@ class TestReporterDisplay:
     @patch("yawast.reporting.reporter.register")
     def test_display_with_existing_evidence(self, mock_register, mock_info):
         issue = Issue(
-            url="https://example.com",
+            url="https://numorian.com",
             evidence="Existing evidence",
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
@@ -505,7 +511,7 @@ class TestReporterDisplay:
     @patch("yawast.reporting.reporter.register")
     def test_display_not_registered(self, mock_register, mock_is_registered, mock_vuln):
         issue = Issue(
-            url="https://example.com",
+            url="https://numorian.com",
             evidence=None,
             vuln=Vulnerabilities.TLS_HEARTBLEED,
         )
@@ -518,7 +524,7 @@ class TestReporterDisplay:
     @patch("yawast.reporting.reporter.register")
     def test_display_registered(self, mock_register, mock_is_registered, mock_info):
         issue = Issue(
-            url="https://example.com",
+            url="https://numorian.com",
             evidence=None,
             vuln=Vulnerabilities.SERVER_INVALID_404_FILE,
         )
@@ -621,7 +627,7 @@ def test_init_and_get_output_file(tmp_path):
 
 def test_setup_and_register():
     reporter._output_file = "foo.json"
-    reporter.setup("example.com")
+    reporter.setup("numorian.com")
     issue = make_issue()
     reporter.register(issue)
     assert reporter.is_registered(issue.vulnerability)
@@ -629,7 +635,7 @@ def test_setup_and_register():
 
 def test_register_duplicate(monkeypatch):
     reporter._output_file = "foo.json"
-    reporter.setup("example.com")
+    reporter.setup("numorian.com")
     issue = make_issue()
     reporter.register(issue)
     with mock.patch("yawast.shared.output.debug") as debug:
@@ -639,11 +645,11 @@ def test_register_duplicate(monkeypatch):
 
 def test_register_info_and_data():
     reporter._output_file = "foo.json"
-    reporter.setup("example.com")
+    reporter.setup("numorian.com")
     reporter.register_info("foo", 123)
     assert reporter._info["foo"] == 123
     reporter.register_data("bar", {"baz": 1})
-    assert "bar" in reporter._data["example.com"]
+    assert "bar" in reporter._data["numorian.com"]
 
 
 def test_register_message(monkeypatch):
@@ -655,15 +661,15 @@ def test_register_message(monkeypatch):
 
 def test_register_injection_points():
     reporter._output_file = "foo.json"
-    reporter.setup("example.com")
+    reporter.setup("numorian.com")
     point = mock.Mock(spec=reporter.InjectionPoint)
     reporter.register_injection_points([point])
-    assert point in reporter._injection_points["example.com"]
+    assert point in reporter._injection_points["numorian.com"]
 
 
 def test_display_and_display_results(monkeypatch):
     reporter._output_file = "foo.json"
-    reporter.setup("example.com")
+    reporter.setup("numorian.com")
     issue = make_issue()
     monkeypatch.setattr(reporter.output, "vuln", lambda x: None)
     monkeypatch.setattr(reporter.output, "warn", lambda x: None)
@@ -682,7 +688,7 @@ def test_display_and_display_results(monkeypatch):
 def test_save_output(tmp_path, monkeypatch):
     monkeypatch.setattr(reporter.config, "no_json_compression", False)
     reporter._output_file = str(tmp_path / "out.json")
-    reporter.setup("example.com")
+    reporter.setup("numorian.com")
     issue = make_issue()
     reporter.register(issue)
     monkeypatch.setattr(

@@ -62,7 +62,7 @@ class TestPluginManager:
         plugin_manager.plugins["scanner"].clear()
         plugin_manager.plugins["scanner"]["fail"] = FailingScanner
 
-        plugin_manager.run_http_scans("https://example.com")
+        plugin_manager.run_http_scans("https://numorian.com")
 
         # Should call output.error with the exception message
         mock_output.error.assert_any_call(
@@ -77,7 +77,7 @@ class TestPluginManager:
     @mock.patch("yawast.scanner.plugins.plugin_manager.output")
     def test_run_http_scans_no_scanner_plugins(self, mock_output):
         plugin_manager.plugins["scanner"].clear()
-        plugin_manager.run_http_scans("https://example.com")
+        plugin_manager.run_http_scans("https://numorian.com")
         # Should not call output.debug or output.error
         mock_output.debug.assert_not_called()
         mock_output.error.assert_not_called()
@@ -97,7 +97,7 @@ class TestPluginManager:
         plugin_manager.plugins["scanner"].clear()
         plugin_manager.plugins["scanner"]["net"] = fake_plugin
 
-        plugin_manager.run_network_scans("https://example.com")
+        plugin_manager.run_network_scans("https://numorian.com")
 
         # Should call check and output.debug for start and completion
         mock_output.debug.assert_any_call("Running network scanner plugins...")
@@ -114,7 +114,7 @@ class TestPluginManager:
         plugin_manager.plugins["scanner"].clear()
         plugin_manager.plugins["scanner"]["not_net"] = FakeScanner
 
-        plugin_manager.run_network_scans("https://example.com")
+        plugin_manager.run_network_scans("https://numorian.com")
 
         # Should not call check, so no error
         mock_output.error.assert_not_called()
@@ -130,7 +130,7 @@ class TestPluginManager:
         plugin_manager.plugins["scanner"].clear()
         plugin_manager.plugins["scanner"]["fail_net"] = FailingNetworkScanner
 
-        plugin_manager.run_network_scans("https://example.com")
+        plugin_manager.run_network_scans("https://numorian.com")
 
         # Should call output.error with the exception message
         mock_output.error.assert_any_call(
@@ -145,7 +145,7 @@ class TestPluginManager:
     @mock.patch("yawast.scanner.plugins.plugin_manager.output")
     def test_run_network_scans_no_scanner_plugins(self, mock_output):
         plugin_manager.plugins["scanner"].clear()
-        plugin_manager.run_network_scans("https://example.com")
+        plugin_manager.run_network_scans("https://numorian.com")
         # Should not call output.debug or output.error
         mock_output.debug.assert_not_called()
         mock_output.error.assert_not_called()
@@ -272,7 +272,7 @@ class TestPluginManager:
         plugin_manager.plugins["scanner"].clear()
         plugin_manager.plugins["scanner"]["other"] = FakeOtherScanner
 
-        plugin_manager.run_other_scans("https://example.com")
+        plugin_manager.run_other_scans("https://numorian.com")
 
         # Should call check and output.debug for start and completion
         mock_output.debug.assert_any_call("Running other scanner plugins...")
@@ -293,7 +293,7 @@ class TestPluginManager:
         plugin_manager.plugins["scanner"]["http"] = FakeHttpScanner
         plugin_manager.plugins["scanner"]["net"] = FakeNetworkScanner
 
-        plugin_manager.run_other_scans("https://example.com")
+        plugin_manager.run_other_scans("https://numorian.com")
 
         # Should not call check, so no error
         mock_output.error.assert_not_called()
@@ -308,7 +308,7 @@ class TestPluginManager:
         plugin_manager.plugins["scanner"].clear()
         plugin_manager.plugins["scanner"]["fail_other"] = FailingOtherScanner
 
-        plugin_manager.run_other_scans("https://example.com")
+        plugin_manager.run_other_scans("https://numorian.com")
 
         # Should call output.error with the exception message
         mock_output.error.assert_any_call(
@@ -323,7 +323,7 @@ class TestPluginManager:
     @mock.patch("yawast.scanner.plugins.plugin_manager.output")
     def test_run_other_scans_no_scanner_plugins(self, mock_output):
         plugin_manager.plugins["scanner"].clear()
-        plugin_manager.run_other_scans("https://example.com")
+        plugin_manager.run_other_scans("https://numorian.com")
         # Should not call output.debug or output.error
         mock_output.debug.assert_not_called()
         mock_output.error.assert_not_called()
@@ -344,7 +344,7 @@ class TestPluginManager:
         plugin_manager.plugins["hook"]["hook1"] = fake_plugin
 
         fake_response = mock.Mock()
-        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+        plugin_manager.run_hook_response_received("https://numorian.com", fake_response)
 
         # Should call response_received and not call output.error
         mock_output.error.assert_not_called()
@@ -361,7 +361,7 @@ class TestPluginManager:
         plugin_manager.plugins["hook"]["not_hook"] = NotAHook
 
         fake_response = mock.Mock()
-        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+        plugin_manager.run_hook_response_received("https://numorian.com", fake_response)
 
         # Should not call output.error (since issubclass will fail and be caught)
         mock_output.error.assert_not_called()
@@ -377,7 +377,7 @@ class TestPluginManager:
         plugin_manager.plugins["hook"]["fail_hook"] = FailingHook
 
         fake_response = mock.Mock()
-        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+        plugin_manager.run_hook_response_received("https://numorian.com", fake_response)
 
         # Should call output.error with the exception message
         mock_output.error.assert_any_call(
@@ -388,7 +388,7 @@ class TestPluginManager:
     def test_run_hook_response_received_no_hook_plugins(self, mock_output):
         plugin_manager.plugins["hook"].clear()
         fake_response = mock.Mock()
-        plugin_manager.run_hook_response_received("https://example.com", fake_response)
+        plugin_manager.run_hook_response_received("https://numorian.com", fake_response)
         # Should not call output.error or output.debug
         mock_output.error.assert_not_called()
         mock_output.debug.assert_not_called()
@@ -409,7 +409,9 @@ class TestPluginManager:
         plugin_manager.plugins["hook"]["hook1"] = fake_plugin
 
         fake_point = mock.Mock()
-        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+        plugin_manager.run_hook_injection_point_found(
+            "https://numorian.com", fake_point
+        )
 
         # Should call injection_point_found and not call output.error
         mock_output.error.assert_not_called()
@@ -426,7 +428,9 @@ class TestPluginManager:
         plugin_manager.plugins["hook"]["not_hook"] = NotAHook
 
         fake_point = mock.Mock()
-        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+        plugin_manager.run_hook_injection_point_found(
+            "https://numorian.com", fake_point
+        )
 
         # Should not call output.error (since issubclass will fail and be caught)
         mock_output.error.assert_not_called()
@@ -442,7 +446,9 @@ class TestPluginManager:
         plugin_manager.plugins["hook"]["fail_hook"] = FailingHook
 
         fake_point = mock.Mock()
-        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+        plugin_manager.run_hook_injection_point_found(
+            "https://numorian.com", fake_point
+        )
 
         # Should call output.error with the exception message
         mock_output.error.assert_any_call(
@@ -453,7 +459,9 @@ class TestPluginManager:
     def test_run_hook_injection_point_found_no_hook_plugins(self, mock_output):
         plugin_manager.plugins["hook"].clear()
         fake_point = mock.Mock()
-        plugin_manager.run_hook_injection_point_found("https://example.com", fake_point)
+        plugin_manager.run_hook_injection_point_found(
+            "https://numorian.com", fake_point
+        )
         # Should not call output.error or output.debug
         mock_output.error.assert_not_called()
         mock_output.debug.assert_not_called()

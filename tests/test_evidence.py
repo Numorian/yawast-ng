@@ -12,7 +12,7 @@ from yawast.reporting.evidence import Evidence
 
 class TestEvidenceInit:
     def test_init_with_url_only(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         assert evidence["url"] == url
@@ -22,7 +22,7 @@ class TestEvidenceInit:
         assert evidence.get("response_id") is None
 
     def test_init_with_request(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         evidence = Evidence(url, request, None)
 
@@ -33,7 +33,7 @@ class TestEvidenceInit:
         assert evidence.get("response_id") is None
 
     def test_init_with_response(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, response)
 
@@ -44,7 +44,7 @@ class TestEvidenceInit:
         assert evidence.get("request_id") is None
 
     def test_init_with_request_and_response(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, request, response)
@@ -56,7 +56,7 @@ class TestEvidenceInit:
         assert evidence.get("response_id") is not None
 
     def test_init_with_custom_data(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         custom_data = {"key1": "value1", "key2": "value2"}
         evidence = Evidence(url, None, None, custom=custom_data)
 
@@ -71,7 +71,7 @@ class TestEvidenceInit:
 
 class TestEvidenceGetItem:
     def test_getitem_request_id_generated(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         evidence = Evidence(url, request, None)
 
@@ -84,7 +84,7 @@ class TestEvidenceGetItem:
         )
 
     def test_getitem_response_id_generated(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, response)
 
@@ -97,7 +97,7 @@ class TestEvidenceGetItem:
         )
 
     def test_getitem_request_id_late_set(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         evidence = Evidence(url, None, None)
         evidence["request"] = request
@@ -111,7 +111,7 @@ class TestEvidenceGetItem:
         )
 
     def test_getitem_response_id_late_set(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, None)
         evidence["response"] = response
@@ -125,7 +125,7 @@ class TestEvidenceGetItem:
         )
 
     def test_getitem_request_from_file(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request_content = "GET / HTTP/1.1"
         evidence = Evidence(url, None, None)
         with tempfile.NamedTemporaryFile(delete=False, mode="w") as temp_file:
@@ -139,7 +139,7 @@ class TestEvidenceGetItem:
         os.remove(temp_file.name)
 
     def test_getitem_response_from_file(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         response_content = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, None)
         with tempfile.NamedTemporaryFile(delete=False, mode="w") as temp_file:
@@ -153,7 +153,7 @@ class TestEvidenceGetItem:
         os.remove(temp_file.name)
 
     def test_getitem_key_not_found(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         with pytest.raises(KeyError):
@@ -162,7 +162,7 @@ class TestEvidenceGetItem:
 
 class TestEvidenceHash:
     def test_hash_with_identical_objects(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         evidence1 = Evidence(url, request, response)
@@ -172,7 +172,7 @@ class TestEvidenceHash:
         assert hash(evidence1) == hash(evidence2)
 
     def test_hash_with_different_objects(self):
-        url1 = "http://example.com"
+        url1 = "http://numorian.com"
         url2 = "http://example.org"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
@@ -183,7 +183,7 @@ class TestEvidenceHash:
         assert hash(evidence1) != hash(evidence2)
 
     def test_hash_with_custom_data(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         custom_data1 = {"key1": "value1"}
@@ -195,7 +195,7 @@ class TestEvidenceHash:
         assert hash(evidence1) != hash(evidence2)
 
     def test_hash_with_empty_object(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         # Hash should be consistent for an empty object
@@ -204,7 +204,7 @@ class TestEvidenceHash:
 
 class TestEvidenceEquality:
     def test_eq_with_identical_objects(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         evidence1 = Evidence(url, request, response)
@@ -214,7 +214,7 @@ class TestEvidenceEquality:
         assert evidence1 == evidence2
 
     def test_eq_with_different_urls(self):
-        url1 = "http://example.com"
+        url1 = "http://numorian.com"
         url2 = "http://example.org"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
@@ -225,7 +225,7 @@ class TestEvidenceEquality:
         assert evidence1 != evidence2
 
     def test_eq_with_different_requests(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request1 = "GET / HTTP/1.1"
         request2 = "POST / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
@@ -236,7 +236,7 @@ class TestEvidenceEquality:
         assert evidence1 != evidence2
 
     def test_eq_with_different_responses(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response1 = "HTTP/1.1 200 OK"
         response2 = "HTTP/1.1 404 Not Found"
@@ -247,7 +247,7 @@ class TestEvidenceEquality:
         assert evidence1 != evidence2
 
     def test_eq_with_different_custom_data(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         custom_data1 = {"key1": "value1"}
@@ -259,7 +259,7 @@ class TestEvidenceEquality:
         assert evidence1 != evidence2
 
     def test_eq_with_non_evidence_object(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, request, response)
@@ -268,7 +268,7 @@ class TestEvidenceEquality:
         assert evidence != {"url": url, "request": request, "response": response}
 
     def test_eq_with_empty_objects(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence1 = Evidence(url, None, None)
         evidence2 = Evidence(url, None, None)
 
@@ -276,7 +276,7 @@ class TestEvidenceEquality:
         assert evidence1 == evidence2
 
     def test_eq_with_different_lengths(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence1 = Evidence(url, None, None)
         evidence2 = Evidence(url, None, None, custom={"key": "value"})
 
@@ -286,7 +286,7 @@ class TestEvidenceEquality:
 
 class TestEvidenceRequestProperty:
     def test_request_property_with_direct_value(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request_content = "GET / HTTP/1.1"
         evidence = Evidence(url, request_content, None)
 
@@ -294,7 +294,7 @@ class TestEvidenceRequestProperty:
         assert evidence.request == request_content
 
     def test_request_property_with_file(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request_content = "GET / HTTP/1.1"
         evidence = Evidence(url, None, None)
         with tempfile.NamedTemporaryFile(delete=False, mode="w") as temp_file:
@@ -308,7 +308,7 @@ class TestEvidenceRequestProperty:
         os.remove(temp_file.name)
 
     def test_request_property_with_missing_file(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
         evidence.request_file_name = "non_existent_file.txt"
 
@@ -316,7 +316,7 @@ class TestEvidenceRequestProperty:
         assert evidence.request is None
 
     def test_request_property_with_no_value(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         # The request property should return None if no value is set
@@ -325,7 +325,7 @@ class TestEvidenceRequestProperty:
 
 class TestEvidenceResponseProperty:
     def test_response_property_with_direct_value(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         response_content = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, response_content)
 
@@ -333,7 +333,7 @@ class TestEvidenceResponseProperty:
         assert evidence.response == response_content
 
     def test_response_property_with_file(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         response_content = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, None)
         with tempfile.NamedTemporaryFile(delete=False, mode="w") as temp_file:
@@ -347,7 +347,7 @@ class TestEvidenceResponseProperty:
         os.remove(temp_file.name)
 
     def test_response_property_with_missing_file(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
         evidence.response_file_name = "non_existent_file.txt"
 
@@ -355,7 +355,7 @@ class TestEvidenceResponseProperty:
         assert evidence.response is None
 
     def test_response_property_with_no_value(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         # The response property should return None if no value is set
@@ -364,14 +364,14 @@ class TestEvidenceResponseProperty:
 
 class TestEvidenceCustomProperty:
     def test_custom_property_with_no_custom_data(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         # The custom property should return an empty dictionary if no custom data is set
         assert evidence.custom == {}
 
     def test_custom_property_with_custom_data(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         custom_data = {"key1": "value1", "key2": "value2"}
         evidence = Evidence(url, None, None, custom=custom_data)
 
@@ -379,7 +379,7 @@ class TestEvidenceCustomProperty:
         assert evidence.custom == custom_data
 
     def test_custom_property_with_mixed_data(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         custom_data = {"key1": "value1", "key2": "value2"}
@@ -389,7 +389,7 @@ class TestEvidenceCustomProperty:
         assert evidence.custom == custom_data
 
     def test_custom_property_with_overlapping_keys(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         custom_data = {"url": "http://other.com", "key1": "value1"}
         evidence = Evidence(url, None, None, custom=custom_data)
 
@@ -403,7 +403,7 @@ class TestEvidenceFromResponse:
     def test_from_response_with_valid_response(
         self, mock_http_build_raw_response, mock_http_build_raw_request
     ):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request_content = "GET / HTTP/1.1"
         response_content = "HTTP/1.1 200 OK"
         custom_data = {"key1": "value1"}
@@ -435,7 +435,7 @@ class TestEvidenceFromResponse:
     def test_from_response_with_no_custom_data(
         self, mock_http_build_raw_response, mock_http_build_raw_request
     ):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request_content = "GET / HTTP/1.1"
         response_content = "HTTP/1.1 200 OK"
 
@@ -465,7 +465,7 @@ class TestEvidenceFromResponse:
     def test_from_response_with_empty_response(
         self, mock_http_build_raw_response, mock_http_build_raw_request
     ):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request_content = "GET / HTTP/1.1"
 
         # Mock the Response object
@@ -492,7 +492,7 @@ class TestEvidenceFromResponse:
 
 class TestEvidenceCacheToFile:
     def test_cache_to_file_with_small_request_and_response(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, request, response)
@@ -507,7 +507,7 @@ class TestEvidenceCacheToFile:
         assert evidence["response"] == response
 
     def test_cache_to_file_with_large_request(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1\n" + "A" * (1024 * 30)  # 30KB request
         response = "HTTP/1.1 200 OK"
         evidence = Evidence(url, request, response)
@@ -528,7 +528,7 @@ class TestEvidenceCacheToFile:
             os.remove(evidence.request_file_name)
 
     def test_cache_to_file_with_large_response(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1"
         response = "HTTP/1.1 200 OK\n" + "B" * (1024 * 30)  # 30KB response
         evidence = Evidence(url, request, response)
@@ -549,7 +549,7 @@ class TestEvidenceCacheToFile:
             os.remove(evidence.response_file_name)
 
     def test_cache_to_file_with_large_request_and_response(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request = "GET / HTTP/1.1\n" + "A" * (1024 * 30)  # 30KB request
         response = "HTTP/1.1 200 OK\n" + "B" * (1024 * 30)  # 30KB response
         evidence = Evidence(url, request, response)
@@ -572,7 +572,7 @@ class TestEvidenceCacheToFile:
 
 class TestEvidencePurgeFiles:
     def test_purge_files_with_existing_files(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         request_content = "GET / HTTP/1.1"
         response_content = "HTTP/1.1 200 OK"
         evidence = Evidence(url, None, None)
@@ -603,7 +603,7 @@ class TestEvidencePurgeFiles:
         assert evidence.response_file_name is None
 
     def test_purge_files_with_missing_files(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         # Set non-existent file names
@@ -618,7 +618,7 @@ class TestEvidencePurgeFiles:
         assert evidence.response_file_name is None
 
     def test_purge_files_with_no_files_set(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
 
         # Ensure no file names are set initially
@@ -635,7 +635,7 @@ class TestEvidencePurgeFiles:
 
 class TestEvidence:
     def test_evidence(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
         evidence = Evidence(url, None, None)
         assert evidence is not None
 

@@ -21,7 +21,7 @@ class DummyResponse:
 class TestErrorChecker:
     def test_check_response_none(self):
         with requests_mock.Mocker() as m:
-            url = "http://example.com"
+            url = "http://numorian.com"
             m.get(url, text="body")
 
             resp = requests.get(url)
@@ -31,7 +31,7 @@ class TestErrorChecker:
         assert len(res) == 0
 
     def test_check_response_php(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
 
         with requests_mock.Mocker(real_http=True) as m:
             m.get(
@@ -48,7 +48,7 @@ class TestErrorChecker:
         assert len(res) == 1
 
     def test_check_response_java(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
 
         with requests_mock.Mocker(real_http=True) as m:
             m.get(
@@ -65,7 +65,7 @@ class TestErrorChecker:
         assert len(res) == 1
 
     def test_check_response_fp(self):
-        url = "http://example.com"
+        url = "http://numorian.com"
 
         with requests_mock.Mocker(real_http=True) as m:
             m.get(url, text="at (202)")
@@ -90,7 +90,7 @@ def test_check_response_detects_error(monkeypatch):
         "yawast.reporting.evidence.Evidence.from_response", lambda res: mock.Mock()
     )
     monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
-    results = error_checker.check_response("http://example.com", res)
+    results = error_checker.check_response("http://numorian.com", res)
     assert isinstance(results, list)
     assert len(results) == 1
 
@@ -108,14 +108,14 @@ def test_check_response_duplicate(monkeypatch):
     )
     monkeypatch.setattr("yawast.reporting.enums.Vulnerabilities", mock.Mock())
     # First call adds the report
-    error_checker.check_response("http://example.com", res)
+    error_checker.check_response("http://numorian.com", res)
     # Second call should be deduped
-    results = error_checker.check_response("http://example.com", res)
+    results = error_checker.check_response("http://numorian.com", res)
     assert results == []
 
 
 def test_check_response_none(monkeypatch):
-    results = error_checker.check_response("http://example.com", None)
+    results = error_checker.check_response("http://numorian.com", None)
     assert results == []
 
 
@@ -130,7 +130,7 @@ def test_check_response_exception(monkeypatch):
     error_checker._reports = []
     res = DummyResponse(text="foo")
     monkeypatch.setattr("yawast.shared.output.debug_exception", lambda: None)
-    results = error_checker.check_response("http://example.com", res)
+    results = error_checker.check_response("http://numorian.com", res)
     assert results == []
 
 

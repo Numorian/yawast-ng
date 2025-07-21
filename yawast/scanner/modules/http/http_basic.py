@@ -312,6 +312,7 @@ def check_hsts_preload(url: str) -> List[dict]:
             # get the HSTS preload status for the domain
             # (we don't need to walk up the domain, as the service will do that for us)
             res, _ = network.http_json(f"{hsts_service}{domain}")
+            
             results.append(res)
     except Exception:
         output.debug_exception()

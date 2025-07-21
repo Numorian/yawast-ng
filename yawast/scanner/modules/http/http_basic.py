@@ -312,22 +312,8 @@ def check_hsts_preload(url: str) -> List[dict]:
             # get the HSTS preload status for the domain
             # (we don't need to walk up the domain, as the service will do that for us)
             res, _ = network.http_json(f"{hsts_service}{domain}")
-            # If res is a mock (from tests), return a dict with expected keys
-            if hasattr(res, "__getitem__") and isinstance(res, dict):
-                results.append(res)
-            else:
-                # If it's a mock.Mock or similar, return a dummy dict with expected keys
-                try:
-                    # Try to access keys to see if it's a real dict
-                    _ = res["name"]
-                    _ = res["status"]
-                    _ = res["preloadedDomain"]
-                    results.append(res)
-                except Exception:
-                    # Return a default dict for test
-                    results.append(
-                        {"name": "mock", "status": "ok", "preloadedDomain": "yes"}
-                    )
+            
+            results.append(res)
     except Exception:
         output.debug_exception()
         # if we fail, just return an empty list

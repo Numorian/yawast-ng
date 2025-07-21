@@ -27,6 +27,7 @@ from yawast.scanner.modules.http import (
     xss,
 )
 from yawast.scanner.modules.http.servers import apache_tomcat, iis, rails
+from yawast.scanner.plugins import plugin_manager
 from yawast.shared import network, output, utils
 
 
@@ -59,6 +60,9 @@ def check_response(
     results += _check_cache_headers(url, res)
 
     points = _find_injection_points(url, res, soup)
+    for point in points:
+        # call the plugins that are hooked into injection points
+        plugin_manager.run_hook_injection_point_found(url, point, res)
     reporter.register_injection_points(points)
 
     # check for possible injection attacks

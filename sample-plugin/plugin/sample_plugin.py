@@ -54,7 +54,9 @@ class SampleHookPlugin(HookScannerBase):
         if len(response.content) > 1024 * 100:
             output.info(f"SampleHookPlugin received large response: {url}")
 
-    def injection_point_found(self, url: str, point: InjectionPoint) -> None:
+    def injection_point_found(
+        self, url: str, point: InjectionPoint, response: Response
+    ) -> None:
         # This is where your injection point logic goes.
         # For demonstration, we'll just print a message if an injection point is found.
         output.info(f"SampleHookPlugin found injection point: {url} ({point})")

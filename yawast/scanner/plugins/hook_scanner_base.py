@@ -25,8 +25,13 @@ class HookScannerBase(PluginBase):
         """
         pass
 
-    def injection_point_found(self, url: str, point: InjectionPoint) -> None:
+    def injection_point_found(
+        self, url: str, point: InjectionPoint, response: Response
+    ) -> None:
         """
         Called when an injection point is found.
+        :param url: The URL being scanned
+        :param point: The injection point found
+        :param response: The HTTP response associated with the injection point
         """
         pass

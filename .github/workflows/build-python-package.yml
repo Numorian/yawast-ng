@@ -82,7 +82,16 @@ jobs:
       shell: bash {0}
 
     - name: Update requirements for Docker build
-      run: ./build_requirements.sh
+      run: |
+        if [ ! -f ./build_requirements.sh ]; then
+          echo "Error: ./build_requirements.sh does not exist."
+          exit 1
+        fi
+        if [ ! -x ./build_requirements.sh ]; then
+          echo "Error: ./build_requirements.sh is not executable."
+          exit 1
+        fi
+        ./build_requirements.sh
       shell: bash {0}
 
     - name: Build the Docker image

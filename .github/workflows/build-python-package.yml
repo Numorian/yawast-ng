@@ -74,6 +74,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Update requirements for Docker build
+      run: ./build_requirements.sh
+      shell: bash {0}
+
     - name: Build the Docker image
       if: github.ref != 'refs/heads/main'
       run: docker build . --file Dockerfile --tag yawast-ci:$(date +%s)

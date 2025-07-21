@@ -400,7 +400,7 @@ class TestPluginManager:
             def __init__(self):
                 self.called = False
 
-            def injection_point_found(self, url, point):
+            def injection_point_found(self, url, point, response):
                 self.called = True
                 mock_output.debug("hook injection called")
 
@@ -409,8 +409,9 @@ class TestPluginManager:
         plugin_manager.plugins["hook"]["hook1"] = fake_plugin
 
         fake_point = mock.Mock()
+        fake_response = mock.Mock()
         plugin_manager.run_hook_injection_point_found(
-            "https://numorian.com", fake_point
+            "https://numorian.com", fake_point, fake_response
         )
 
         # Should call injection_point_found and not call output.error
@@ -421,15 +422,16 @@ class TestPluginManager:
     def test_run_hook_injection_point_found_skips_non_hook_plugins(self, mock_output):
         # Setup a plugin that does NOT inherit from HookScannerBase
         class NotAHook:
-            def injection_point_found(self, url, point):
+            def injection_point_found(self, url, point, response):
                 raise Exception("Should not be called")
 
         plugin_manager.plugins["hook"].clear()
         plugin_manager.plugins["hook"]["not_hook"] = NotAHook
 
         fake_point = mock.Mock()
+        fake_response = mock.Mock()
         plugin_manager.run_hook_injection_point_found(
-            "https://numorian.com", fake_point
+            "https://numorian.com", fake_point, fake_response
         )
 
         # Should not call output.error (since issubclass will fail and be caught)
@@ -439,15 +441,16 @@ class TestPluginManager:
     def test_run_hook_injection_point_found_handles_plugin_exception(self, mock_output):
         # Setup a plugin that raises in injection_point_found
         class FailingHook(plugin_manager.HookScannerBase):
-            def injection_point_found(self, url, point):
+            def injection_point_found(self, url, point, response):
                 raise ValueError("fail hook injection!")
 
         plugin_manager.plugins["hook"].clear()
         plugin_manager.plugins["hook"]["fail_hook"] = FailingHook
 
         fake_point = mock.Mock()
+        fake_response = mock.Mock()
         plugin_manager.run_hook_injection_point_found(
-            "https://numorian.com", fake_point
+            "https://numorian.com", fake_point, fake_response
         )
 
         # Should call output.error with the exception message
@@ -459,8 +462,9 @@ class TestPluginManager:
     def test_run_hook_injection_point_found_no_hook_plugins(self, mock_output):
         plugin_manager.plugins["hook"].clear()
         fake_point = mock.Mock()
+        fake_response = mock.Mock()
         plugin_manager.run_hook_injection_point_found(
-            "https://numorian.com", fake_point
+            "https://numorian.com", fake_point, fake_response
         )
         # Should not call output.error or output.debug
         mock_output.error.assert_not_called()
@@ -564,11 +568,13 @@ def test_run_hook_response_received(monkeypatch):
 
 def test_run_hook_injection_point_found(monkeypatch):
     class Dummy(plugin_manager.HookScannerBase):
-        def injection_point_found(self, url, point):
+        def injection_point_found(self, url, point, response):
             self.called = True
 
     plugin_manager.plugins["hook"] = {"hook": Dummy}
-    plugin_manager.run_hook_injection_point_found("http://foo", mock.Mock())
+    plugin_manager.run_hook_injection_point_found(
+        "http://foo", mock.Mock(), mock.Mock()
+    )
 
 
 def test_plugin_error_handling(monkeypatch):

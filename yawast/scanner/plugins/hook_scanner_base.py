@@ -23,10 +23,15 @@ class HookScannerBase(PluginBase):
         """
         Called when a response is received.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass
 
-    def injection_point_found(self, url: str, point: InjectionPoint) -> None:
+    def injection_point_found(
+        self, url: str, point: InjectionPoint, response: Response
+    ) -> None:
         """
         Called when an injection point is found.
+        :param url: The URL being scanned
+        :param point: The injection point found
+        :param response: The HTTP response associated with the injection point
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass

@@ -20,7 +20,7 @@ class ScannerPluginBase(PluginBase):
         """
         Check the given URL for vulnerabilities.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass
 
 
 class HttpScannerPluginBase(ScannerPluginBase):
@@ -38,7 +38,7 @@ class HttpScannerPluginBase(ScannerPluginBase):
         """
         Check the given URL for vulnerabilities.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass
 
 
 class NetworkScannerPluginBase(ScannerPluginBase):
@@ -56,4 +56,4 @@ class NetworkScannerPluginBase(ScannerPluginBase):
         """
         Check the given URL for vulnerabilities.
         """
-        raise NotImplementedError("Subclasses must implement this method.")
+        pass

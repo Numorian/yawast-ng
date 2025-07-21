@@ -8,7 +8,7 @@ import pytest
 from yawast.scanner.cli import http
 
 
-def make_mock_response(method, url):
+def make_mock_response(method, url, *, custom=False):
     req = mock.Mock()
     req.method = method
     req.url = url
@@ -20,6 +20,8 @@ def make_mock_response(method, url):
     resp.content = b"data"
     resp.elapsed = mock.Mock(total_seconds=lambda: 0.01)
     resp.request = req
+    if custom:
+        resp.json = lambda: {}
     return resp
 
 
@@ -328,6 +330,12 @@ def test_scan_with_password_reset(monkeypatch):
         "yawast.scanner.modules.http.file_search.find_directories",
         lambda url, a, b: ([], []),
     )
+
+    # Mock http_custom to prevent real network requests
+    monkeypatch.setattr(
+        "yawast.shared.network.http_custom",
+        lambda verb, url, *a, **k: make_mock_response(verb, url, custom=True),
+    )
     monkeypatch.setattr(
         "yawast.scanner.modules.http.file_search.find_backups", lambda links: ([], [])
     )
@@ -478,7 +486,8 @@ def test_scan_login_success(monkeypatch):
     )
     monkeypatch.setattr("yawast.scanner.modules.http.waf.get_waf", lambda h, r, u: [])
     monkeypatch.setattr(
-        "yawast.scanner.modules.http.http_basic.check_hsts_preload", lambda url: [{"name": "test", "status": "ok", "preloadedDomain": True}]
+        "yawast.scanner.modules.http.http_basic.check_hsts_preload",
+        lambda url: [{"name": "test", "status": "ok", "preloadedDomain": True}],
     )
     monkeypatch.setattr(
         "yawast.scanner.modules.http.http_basic.check_http_methods",

@@ -42,4 +42,4 @@ jobs:
           body: 'Automated update of the download badge in README.md.'
           branch: 'update/download-badge'
           delete-branch: true
-          base: ${{ github.ref_name }}
+          base: 'main'

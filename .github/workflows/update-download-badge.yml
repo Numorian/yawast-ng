@@ -1,0 +1,45 @@
+name: Update Download Badge
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-badge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run badge update script
+        run: python build_readme_downloads.py
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git diff --cached --quiet || git commit -m 'chore: update download badge in README.md'
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore: update download badge in README.md'
+          title: 'chore: update download badge in README.md'
+          body: 'Automated update of the download badge in README.md.'
+          branch: 'update/download-badge'
+          delete-branch: true
+          base: ${{ github.ref_name }}

@@ -49,7 +49,7 @@ def scan(session: Session):
         try:
             output.norm("\tAttempting to login...")
             tokens = generic_login.login_and_get_auth(
-                session.url, session.args.user, session.args.password
+                session.url, session.args.user, session.args.password, session
             )
 
             if tokens["error"] is not None and len(tokens["error"]) > 0:

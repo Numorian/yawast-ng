@@ -8,6 +8,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from webdriver_manager.chrome import ChromeDriverManager
 
+from yawast.scanner.selenium import get_selenium_driver
+from yawast.scanner.session import Session
 from yawast.shared import output
 
 COMMON_USER_FIELDS = [
@@ -32,7 +34,7 @@ class LoginFormNotFound(Exception):
 
 
 def login_and_get_auth(
-    url: str, username: str, password: str
+    url: str, username: str, password: str, session: Session
 ) -> Dict[str, Optional[dict]]:
     """
     Attempts to login to a website using Selenium and returns session cookies and Authorization header if present.
@@ -42,19 +44,11 @@ def login_and_get_auth(
     :param login_url: Optional explicit login page URL to visit before filling the form.
     :return: Dict with 'cookies', 'header', and 'error' keys.
     """
-    options = webdriver.ChromeOptions()
-    options.add_argument("headless")
-    options.add_argument("incognito")
-    options.add_argument("disable-dev-shm-usage")
-    options.add_argument("no-sandbox")
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    options.accept_insecure_certs = True
 
-    driver = webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()), options=options
-    )
-
+    driver = None
     try:
+        driver = get_selenium_driver(session, url)
+
         driver.get(url)
         time.sleep(2)  # Let JS-heavy pages load
 
@@ -121,7 +115,11 @@ def login_and_get_auth(
 
         return {"cookies": cookies, "header": header, "error": error_message}
     finally:
-        driver.quit()
+        if driver is not None:
+            try:
+                driver.quit()
+            except Exception:
+                pass
 
 
 def _find_element(

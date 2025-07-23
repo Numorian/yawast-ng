@@ -7,14 +7,12 @@ import time
 from typing import Dict, List, Optional, Tuple, Union
 
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from webdriver_manager.chrome import ChromeDriverManager
 
 from yawast.reporting.enums import Vulnerabilities
 from yawast.reporting.evidence import Evidence
 from yawast.reporting.result import Result
+from yawast.scanner.selenium import get_selenium_driver
 from yawast.scanner.session import Session
 from yawast.shared import output
 
@@ -119,34 +117,12 @@ def check_resp_user_enum(
     return results
 
 
-def _get_driver(session: Session, uri: str) -> WebDriver:
-    options = webdriver.ChromeOptions()
-    options.add_argument("headless")
-    options.add_argument("incognito")
-    options.add_argument("disable-dev-shm-usage")
-    options.add_argument("no-sandbox")
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    options.accept_insecure_certs = True
-
-    # if we have a proxy set, use that
-    if session.args.proxy:
-        proxy = webdriver.Proxy()
-        proxy.http_proxy = f"http://#{session.args.proxy}"
-        proxy.ssl_proxy = f"http://#{session.args.proxy}"
-        options.proxy = proxy
-
-    driver = webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()), options=options
-    )
-    driver.get(uri)
-
-    return driver
-
-
 def _fill_form_get_body(
     session: Session, uri: str, user: str, element_name: Optional[str] = None
 ) -> Tuple[str, str, int]:
-    driver = _get_driver(session, uri)
+    driver = get_selenium_driver(session, uri)
+
+    driver.get(uri)
 
     # find the page form element - this is going to be a best effort thing, and may not always be right
     element = _find_user_field(driver, element_name)

@@ -2,6 +2,7 @@ from unittest import mock
 
 import pytest
 
+from tests.session_test_utils import make_test_session
 from yawast.scanner.modules.http import generic_login
 
 
@@ -42,7 +43,9 @@ class TestGenericLogin:
             [],  # sessionStorage keys
         ]
 
-        result = generic_login.login_and_get_auth("http://numorian.com", "user", "pass")
+        result = generic_login.login_and_get_auth(
+            "http://numorian.com", "user", "pass", make_test_session()
+        )
 
         assert result["cookies"] == {"sessionid": "abc123"}
         assert result["header"] == {"authorization": "Bearer token"}
@@ -72,7 +75,9 @@ class TestGenericLogin:
         mock_find_login_link.return_value = None
 
         with pytest.raises(generic_login.LoginFormNotFound):
-            generic_login.login_and_get_auth("http://numorian.com", "user", "pass")
+            generic_login.login_and_get_auth(
+                "http://numorian.com", "user", "pass", make_test_session()
+            )
         mock_driver.quit.assert_called_once()
 
     @mock.patch("yawast.scanner.modules.http.generic_login.webdriver.Chrome")
@@ -105,7 +110,9 @@ class TestGenericLogin:
             [],  # sessionStorage keys
         ]
 
-        result = generic_login.login_and_get_auth("http://numorian.com", "user", "pass")
+        result = generic_login.login_and_get_auth(
+            "http://numorian.com", "user", "pass", make_test_session()
+        )
 
         assert result["cookies"] == {}
         assert result["header"] is None
@@ -144,7 +151,9 @@ class TestGenericLogin:
             [],  # sessionStorage keys
         ]
 
-        result = generic_login.login_and_get_auth("http://numorian.com", "user", "pass")
+        result = generic_login.login_and_get_auth(
+            "http://numorian.com", "user", "pass", make_test_session()
+        )
 
         assert result["cookies"] == {}
         assert result["header"] is None
@@ -232,7 +241,9 @@ def test_login_and_get_auth_success(monkeypatch):
     )
     monkeypatch.setattr("time.sleep", lambda x: None)
     monkeypatch.setattr("yawast.shared.output.debug", lambda msg: None)
-    result = generic_login.login_and_get_auth("http://numorian.com", "user", "pass")
+    result = generic_login.login_and_get_auth(
+        "http://numorian.com", "user", "pass", make_test_session()
+    )
     assert "cookies" in result and "header" in result and "error" in result
 
 
@@ -274,7 +285,9 @@ def test_login_and_get_auth_login_link(monkeypatch):
     monkeypatch.setattr(
         "yawast.scanner.modules.http.generic_login._detect_login_error", lambda d: None
     )
-    result = generic_login.login_and_get_auth("http://numorian.com", "user", "pass")
+    result = generic_login.login_and_get_auth(
+        "http://numorian.com", "user", "pass", make_test_session()
+    )
     assert "cookies" in result
     driver.quit.assert_called_once()
 
@@ -291,7 +304,9 @@ def test_login_and_get_auth_no_fields(monkeypatch):
     monkeypatch.setattr("time.sleep", lambda x: None)
     monkeypatch.setattr("yawast.shared.output.debug", lambda msg: None)
     with pytest.raises(generic_login.LoginFormNotFound):
-        generic_login.login_and_get_auth("http://numorian.com", "user", "pass")
+        generic_login.login_and_get_auth(
+            "http://numorian.com", "user", "pass", make_test_session()
+        )
 
 
 def test_find_element_found(monkeypatch):

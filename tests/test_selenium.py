@@ -12,7 +12,6 @@ from tests import utils
 from yawast import command_line
 from yawast.scanner.modules.http.applications.generic.password_reset import (
     _find_user_field,
-    _get_driver,
 )
 from yawast.scanner.session import Session
 from yawast.shared import output
@@ -20,20 +19,20 @@ from yawast.shared import output
 
 class TestSelenium:
     @mock.patch(
-        "yawast.scanner.modules.http.applications.generic.password_reset._get_driver"
+        "yawast.scanner.modules.http.applications.generic.password_reset.get_selenium_driver"
     )
-    def test_pwd_rst_get_driver(self, mock_get_driver):
+    def test_pwd_rst_get_driver(self, mock_get_selenium_driver):
         url = "https://example.com/"
         mock_driver = mock.Mock()
         mock_driver.page_source = "<h1>Example Domain</h1>"
-        mock_get_driver.return_value = mock_driver
+        mock_get_selenium_driver.return_value = mock_driver
         output.setup(False, False, False)
         with utils.capture_sys_output() as (stdout, stderr):
             p = command_line.build_parser()
             ns = p.parse_args(args=["scan"])
             s = Session(ns, url)
-            # Use the mock directly to avoid calling the real _get_driver
-            driver = mock_get_driver(s, url)
+            # Use the mock directly to avoid calling the real get_selenium_driver
+            driver = mock_get_selenium_driver(s, url)
         assert "<h1>Example Domain</h1>" in driver.page_source
         assert "Exception" not in stderr.getvalue()
         assert "Error" not in stderr.getvalue()
@@ -42,13 +41,13 @@ class TestSelenium:
         "yawast.scanner.modules.http.applications.generic.password_reset._find_user_field"
     )
     @mock.patch(
-        "yawast.scanner.modules.http.applications.generic.password_reset._get_driver"
+        "yawast.scanner.modules.http.applications.generic.password_reset.get_selenium_driver"
     )
-    def test_pwd_rst_find_field(self, mock_get_driver, mock_find_user_field):
+    def test_pwd_rst_find_field(self, mock_get_selenium_driver, mock_find_user_field):
         url = "https://www.starbucks.com/account/forgot-password"
         mock_driver = mock.Mock()
         mock_driver.page_source = "Just need to confirm your email"
-        mock_get_driver.return_value = mock_driver
+        mock_get_selenium_driver.return_value = mock_driver
         mock_element = mock.Mock()
         mock_element.get_attribute.return_value = "emailAddress"
         mock_find_user_field.return_value = mock_element
@@ -58,7 +57,7 @@ class TestSelenium:
             ns = p.parse_args(args=["scan"])
             s = Session(ns, url)
             # Use the mocks directly to avoid calling the real functions
-            driver = mock_get_driver(s, url)
+            driver = mock_get_selenium_driver(s, url)
             element = mock_find_user_field(driver)
         assert "Just need to confirm your email" in driver.page_source
         assert element.get_attribute("id") == "emailAddress"

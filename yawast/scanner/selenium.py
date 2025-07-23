@@ -1,3 +1,5 @@
+import shutil
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -22,8 +24,14 @@ def get_selenium_driver(session: Session, uri: str) -> WebDriver:
         proxy.ssl_proxy = f"http://{session.args.proxy}"
         options.proxy = proxy
 
-    driver = webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager().install()), options=options
-    )
+    # Try to use system chromedriver if available
+    chromedriver_path = shutil.which("chromedriver")
+    if chromedriver_path:
+        service = ChromeService(executable_path=chromedriver_path)
+    else:
+        # Fallback to ChromeDriverManager
+        service = ChromeService(ChromeDriverManager().install())
+
+    driver = webdriver.Chrome(service=service, options=options)
 
     return driver

@@ -25,6 +25,5 @@ def get_selenium_driver(session: Session, uri: str) -> WebDriver:
     driver = webdriver.Chrome(
         service=ChromeService(ChromeDriverManager().install()), options=options
     )
-    driver.get(uri)
 
     return driver

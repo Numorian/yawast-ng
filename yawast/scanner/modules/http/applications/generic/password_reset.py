@@ -122,6 +122,8 @@ def _fill_form_get_body(
 ) -> Tuple[str, str, int]:
     driver = get_selenium_driver(session, uri)
 
+    driver.get(uri)
+
     # find the page form element - this is going to be a best effort thing, and may not always be right
     element = _find_user_field(driver, element_name)
 

@@ -18,8 +18,8 @@ def get_selenium_driver(session: Session, uri: str) -> WebDriver:
     # if we have a proxy set, use that
     if session.args.proxy:
         proxy = webdriver.Proxy()
-        proxy.http_proxy = f"http://#{session.args.proxy}"
-        proxy.ssl_proxy = f"http://#{session.args.proxy}"
+        proxy.http_proxy = f"http://{session.args.proxy}"
+        proxy.ssl_proxy = f"http://{session.args.proxy}"
         options.proxy = proxy
 
     driver = webdriver.Chrome(

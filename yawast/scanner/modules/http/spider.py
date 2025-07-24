@@ -223,6 +223,41 @@ def _get_links_collect_links(
     return found_links
 
 
+def _is_password_reset(url: str, description: str) -> bool:
+    """
+    Check if the URL is likely a password reset page based on common patterns.
+    """
+    description = str(description).lower() if description else ""
+
+    patterns = [
+        r"reset.*password",
+        r"forgot.*password",
+        r"recover.*password",
+        r"change.*password",
+        r"new.*password",
+        r"password.*reset",
+        r"password.*recovery",
+        r"password.*change",
+        r"password.*update",
+        r"reset.*your.*password",
+        r"forgot.*your.*password",
+        r"recover.*your.*password",
+        r"change.*your.*password",
+        r"new.*your.*password",
+        r"password.*forgot",
+    ]
+
+    # Check if the URL matches any of the patterns
+    for pattern in patterns:
+        url_match = re.search(pattern, url)
+        desc_match = re.search(pattern, description)
+
+        if url_match or desc_match:
+            return True
+
+    return False
+
+
 def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):
     global _links, _insecure, _tasks, _lock
 
@@ -269,6 +304,15 @@ def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):
                             else:
                                 file_ext = None
 
+                            # check to see if this is a password reset page BEFORE adding to _links
+                            link_str = getattr(link, "string", "") or ""
+                            is_reset = _is_password_reset(href, link_str)
+                            if session.args.password_reset is None and is_reset:
+                                session.args.password_reset = href
+                                output.debug(
+                                    f"Spider: Found password reset page: {href} - setting as password_reset"
+                                )
+
                             with _lock:
                                 _links.append(href)
 
@@ -296,11 +340,12 @@ def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):
                                 "pkg",
                                 "dmg",
                             ]:
-                                if not is_unsafe_link(href, link.string):
+                                link_str = getattr(link, "string", "") or ""
+                                if not is_unsafe_link(href, link_str):
                                     to_process.append(href)
                                 else:
                                     output.debug(
-                                        f"Skipping unsafe URL: {link.string} - {href}"
+                                        f"Skipping unsafe URL: {link_str} - {href}"
                                     )
                             else:
                                 output.debug(

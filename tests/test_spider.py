@@ -1,3 +1,4 @@
+import re
 from unittest import mock
 
 import pytest
@@ -668,3 +669,98 @@ def test_spider_with_sitemap_skips_recursion(reset_spider_globals):
                 links, results = spider.spider(session)
                 assert set(links) == {"http://test.local/a", "http://test.local/b"}
                 assert results == []
+
+
+def test_is_password_reset_patterns():
+    # Should match common password reset patterns
+    patterns = [
+        ("/reset-password", "Reset your password", True),
+        ("/forgot-password", "Forgot password", True),
+        ("/recover-password", "Recover password", True),
+        ("/change-password", "Change password", True),
+        ("/new-password", "New password", True),
+        ("/password-reset", "Password reset", True),
+        ("/password-recovery", "Password recovery", True),
+        ("/password-change", "Password change", True),
+        ("/password-update", "Password update", True),
+        ("/reset-your-password", "Reset your password", True),
+        ("/forgot-your-password", "Forgot your password", True),
+        ("/recover-your-password", "Recover your password", True),
+        ("/change-your-password", "Change your password", True),
+        ("/new-your-password", "New your password", True),
+        ("/password-forgot", "Password forgot", True),
+        ("/not-a-reset", "Not a password page", False),
+        ("/login", "Login page", False),
+        ("/signup", "Sign up", False),
+    ]
+    for url, desc, expected in patterns:
+        assert spider._is_password_reset(url, desc) is expected
+
+
+def test_is_password_reset_case_insensitive():
+    # Should match regardless of case
+    assert spider._is_password_reset("/RESET-PASSWORD", "RESET PASSWORD") is True
+    assert spider._is_password_reset("/forgot-password", "FORGOT PASSWORD") is True
+
+
+def test_is_password_reset_partial_match():
+    # Should match even if only part of the pattern is present
+    assert spider._is_password_reset("/reset", "reset password") is True
+    assert spider._is_password_reset("/password", "forgot password") is True
+
+
+# --- New test for session.args.password_reset being set in _get_links ---
+def test_get_links_sets_password_reset(monkeypatch):
+    import argparse
+
+    from yawast.scanner.session import Session
+
+    args = argparse.Namespace(php_page=None, password_reset=None)
+    session = Session(url="http://numorian.com", args=args)
+
+    # Patch pool to call _get_links synchronously
+    class SyncPool:
+        def apply_async(self, func, args):
+            func(*args)
+            return mock.Mock(ready=lambda: True, get=lambda: None)
+
+    pool = SyncPool()
+    monkeypatch.setattr(spider, "_links", [])
+    monkeypatch.setattr(spider, "_insecure", [])
+    monkeypatch.setattr(spider, "_tasks", [])
+    monkeypatch.setattr(spider, "_lock", mock.Mock())
+    monkeypatch.setattr(
+        spider, "output", mock.Mock(debug=lambda x: None, debug_exception=lambda: None)
+    )
+    monkeypatch.setattr(spider.utils, "fix_relative_link", lambda href, url: href)
+    monkeypatch.setattr(
+        spider.response_scanner, "check_response", lambda url, res, soup: []
+    )
+    monkeypatch.setattr(spider.network, "response_body_is_text", lambda r: True)
+
+    # Simulate a link that matches password reset
+
+    class FakeLink:
+        def get(self, k):
+            if k == "href":
+                return "http://numorian.com/reset-password"
+            return None
+
+        @property
+        def string(self):
+            return "Reset your password"
+
+    class FakeSoup:
+        def find_all(self, tag):
+            return [FakeLink()]
+
+    monkeypatch.setattr(spider, "BeautifulSoup", lambda text, parser: FakeSoup())
+    res = mock.Mock(
+        status_code=200,
+        text="<html><a href='http://numorian.com/reset-password'>reset</a></html>",
+        headers={},
+    )
+    monkeypatch.setattr(spider.network, "http_get", lambda url, allow: res)
+    queue = mock.Mock(put=lambda x: None)
+    spider._get_links(session, session.url, [session.url], queue, pool)
+    assert session.args.password_reset == "http://numorian.com/reset-password"

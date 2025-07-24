@@ -160,6 +160,41 @@ def _start_scan(session: Session, base_url: str, urls: List[str], queue, pool):
                     to_process.append(link)
 
 
+def _is_password_reset(url: str, description: str) -> bool:
+    """
+    Check if the URL is likely a password reset page based on common patterns.
+    """
+    description = str(description).lower() if description else ""
+
+    patterns = [
+        r"reset.*password",
+        r"forgot.*password",
+        r"recover.*password",
+        r"change.*password",
+        r"new.*password",
+        r"password.*reset",
+        r"password.*recovery",
+        r"password.*change",
+        r"password.*update",
+        r"reset.*your.*password",
+        r"forgot.*your.*password",
+        r"recover.*your.*password",
+        r"change.*your.*password",
+        r"new.*your.*password",
+        r"password.*forgot",
+    ]
+
+    # Check if the URL matches any of the patterns
+    for pattern in patterns:
+        url_match = re.search(pattern, url)
+        desc_match = re.search(pattern, description)
+
+        if url_match or desc_match:
+            return True
+
+    return False
+
+
 # Helper version of _get_links that returns the links found (for recursion in _start_scan)
 def _get_links_collect_links(
     session: Session, base_url: str, urls: List[str], queue, pool
@@ -221,41 +256,6 @@ def _get_links_collect_links(
     output.debug(f"GetLinks Task Completed - {len(results)} issues found.")
     queue.put(results)
     return found_links
-
-
-def _is_password_reset(url: str, description: str) -> bool:
-    """
-    Check if the URL is likely a password reset page based on common patterns.
-    """
-    description = str(description).lower() if description else ""
-
-    patterns = [
-        r"reset.*password",
-        r"forgot.*password",
-        r"recover.*password",
-        r"change.*password",
-        r"new.*password",
-        r"password.*reset",
-        r"password.*recovery",
-        r"password.*change",
-        r"password.*update",
-        r"reset.*your.*password",
-        r"forgot.*your.*password",
-        r"recover.*your.*password",
-        r"change.*your.*password",
-        r"new.*your.*password",
-        r"password.*forgot",
-    ]
-
-    # Check if the URL matches any of the patterns
-    for pattern in patterns:
-        url_match = re.search(pattern, url)
-        desc_match = re.search(pattern, description)
-
-        if url_match or desc_match:
-            return True
-
-    return False
 
 
 def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):

@@ -26,6 +26,7 @@ from yawast.scanner.modules.http import (
     sql_injection,
     xss,
 )
+from yawast.scanner.modules.http.helpers import is_unsafe_link
 from yawast.scanner.modules.http.servers import apache_tomcat, iis, rails
 from yawast.scanner.plugins import plugin_manager
 from yawast.shared import network, output, utils
@@ -127,16 +128,36 @@ def _find_injection_points(
             # make action absolute
             action = utils.fix_relative_link(action, url)
 
-            # get the input fields
-            inputs = form.find_all("input")
-            for input_field in inputs:
-                name = input_field.get("name", "")
-                value = input_field.get("value", "")
+            button_text = _get_button_text(form)
 
-                ip = InjectionPoint(action, name, method, value)
-                injection_points.append(ip)
+            # check if the action is unsafe - if so, skip it
+            if not is_unsafe_link(action, button_text):
+                # get the input fields
+                inputs = form.find_all("input")
+                for input_field in inputs:
+                    name = input_field.get("name", "")
+                    value = input_field.get("value", "")
+
+                    ip = InjectionPoint(action, name, method, value)
+                    injection_points.append(ip)
 
     return injection_points
+
+
+def _get_button_text(form: BeautifulSoup) -> str:
+    """
+    This function attempts to find the text of the submit button in a form.
+    It checks for buttons and submits, and returns the text of the first one found.
+    """
+    button = form.find("button")
+    if button:
+        return button.get_text(strip=True)
+
+    submit = form.find("input", {"type": "submit"})
+    if submit:
+        return submit.get("value", "").strip()
+
+    return ""
 
 
 def _check_charset(url: str, res: Response) -> List[Result]:

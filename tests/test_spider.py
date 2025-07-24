@@ -709,13 +709,13 @@ def test_is_password_reset_partial_match():
     assert spider._is_password_reset("/password", "forgot password") is True
 
 
-# --- New test for session.args.password_reset being set in _get_links ---
+# --- New test for session.args.pass_reset_page being set in _get_links ---
 def test_get_links_sets_password_reset(monkeypatch):
     import argparse
 
     from yawast.scanner.session import Session
 
-    args = argparse.Namespace(php_page=None, password_reset=None)
+    args = argparse.Namespace(php_page=None, pass_reset_page=None)
     session = Session(url="http://numorian.com", args=args)
 
     # Patch pool to call _get_links synchronously
@@ -763,4 +763,4 @@ def test_get_links_sets_password_reset(monkeypatch):
     monkeypatch.setattr(spider.network, "http_get", lambda url, allow: res)
     queue = mock.Mock(put=lambda x: None)
     spider._get_links(session, session.url, [session.url], queue, pool)
-    assert session.args.password_reset == "http://numorian.com/reset-password"
+    assert session.args.pass_reset_page == "http://numorian.com/reset-password"

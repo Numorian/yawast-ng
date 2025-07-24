@@ -611,6 +611,32 @@ def test_spider_no_sitemap_recurses(reset_spider_globals):
 
         return DummyRes(url)
 
+    # Patch BeautifulSoup to return links with a 'string' property
+    class FakeLink:
+        def __init__(self, href, string):
+            self._href = href
+            self.string = string
+
+        def get(self, k):
+            if k == "href":
+                return self._href
+            return None
+
+    class FakeSoup:
+        def __init__(self, url):
+            # Return links based on html_map
+            if url == "http://test.local/":
+                self.links = [FakeLink("http://test.local/a", "A")]
+            elif url == "http://test.local/a":
+                self.links = [FakeLink("http://test.local/b", "B")]
+            else:
+                self.links = []
+
+        def find_all(self, tag):
+            if tag == "a":
+                return self.links
+            return []
+
     with patch(
         "yawast.scanner.modules.http.spider.network.http_get", side_effect=fake_http_get
     ):
@@ -622,10 +648,21 @@ def test_spider_no_sitemap_recurses(reset_spider_globals):
                 "yawast.scanner.modules.http.spider.response_scanner.check_response",
                 return_value=[],
             ):
-                session = DummySession()
-                links, results = spider.spider(session)
-                assert set(links) == {"http://test.local/a", "http://test.local/b"}
-                assert results == []
+                with patch(
+                    "yawast.scanner.modules.http.spider.BeautifulSoup",
+                    side_effect=lambda text, parser: FakeSoup(
+                        [k for k, v in html_map.items() if v == text][0]
+                    ),
+                ):
+                    import argparse
+
+                    from yawast.scanner.session import Session
+
+                    args = argparse.Namespace(php_page=None, pass_reset_page=None)
+                    session = Session(url="http://test.local/", args=args)
+                    links, results = spider.spider(session)
+                    assert set(links) == {"http://test.local/a", "http://test.local/b"}
+                    assert results == []
 
 
 def test_spider_with_sitemap_skips_recursion(reset_spider_globals):

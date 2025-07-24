@@ -74,7 +74,11 @@ def find_phpinfo(links: List[str]) -> List[Result]:
             )
 
         # check for version in the banner
-        results += check_version(res.headers.get("X-Powered-By", ""), res.text, url)
+        results += check_version(
+            res.headers.get("X-Powered-By", ""),
+            network.http_build_raw_response(res),
+            url,
+        )
 
     targets = ["phpinfo.php", "info.php", "version.php", "x.php"]
 

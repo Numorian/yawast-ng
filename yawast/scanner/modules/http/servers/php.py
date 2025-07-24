@@ -8,6 +8,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from typing import List, Tuple, cast
 from urllib.parse import quote, urljoin, urlparse
 
+from bs4 import BeautifulSoup
 from packaging import version
 from requests import Response
 
@@ -35,8 +36,16 @@ def check_version(banner: str, raw: str, url: str) -> List[Result]:
         )
     )
 
+    results += _check_php_version(banner.split("/")[1], url, raw)
+
+    return results
+
+
+def _check_php_version(ver_number: str, url: str, raw: str) -> List[Result]:
+    results = []
+
     # parse the version, and get the latest version - see if the server is up to date
-    ver = cast(version.Version, version.parse(banner.split("/")[1]))
+    ver = cast(version.Version, version.parse(ver_number))
     curr_version = version_checker.get_latest_version("php", ver)
 
     if curr_version is not None and curr_version > ver:
@@ -64,21 +73,33 @@ def find_phpinfo(links: List[str]) -> List[Result]:
 
         found, res = result
 
-        if found and '<h1 class="p">PHP Version' in res.text:
-            results.append(
-                Result.from_evidence(
-                    Evidence.from_response(res),
-                    f"PHP Info Found: {url}",
-                    Vulnerabilities.SERVER_PHP_PHPINFO,
+        # check for the PHP version in the body
+        if res.text and '<h1 class="p">PHP Version' in res.text:
+            soup = BeautifulSoup(res.text, features="html.parser")
+            php_version = soup.find("h1", class_="p")
+            if php_version and "PHP Version" in php_version.text:
+                results.append(
+                    Result.from_evidence(
+                        Evidence.from_response(res),
+                        f"PHP Info Found: {url}",
+                        Vulnerabilities.SERVER_PHP_PHPINFO,
+                    )
                 )
-            )
 
-        # check for version in the banner
-        results += check_version(
-            res.headers.get("X-Powered-By", ""),
-            network.http_build_raw_response(res),
-            url,
-        )
+                # we've got a PHP version, check to see if it's up to date
+                ver = php_version.text.split("PHP Version")[1].strip()
+                results += _check_php_version(
+                    ver, url, network.http_build_raw_response(res)
+                )
+
+            # check for version in the banner
+            # this is here as a fallback, in case this header isn't set elsewhere
+            if "X-Powered-By" in res.headers:
+                results += check_version(
+                    res.headers.get("X-Powered-By", ""),
+                    network.http_build_raw_response(res),
+                    url,
+                )
 
     targets = ["phpinfo.php", "info.php", "version.php", "x.php"]
 

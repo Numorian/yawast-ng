@@ -224,8 +224,19 @@ def _get_links_collect_links(
                                 file_ext = href.split("/")[-1].split(".")[-1]
                             else:
                                 file_ext = None
+
+                            # check to see if this is a password reset page BEFORE adding to _links
+                            link_str = getattr(link, "string", "") or ""
+                            is_reset = _is_password_reset(href, link_str)
+                            if session.args.pass_reset_page is None and is_reset:
+                                session.args.pass_reset_page = href
+                                output.debug(
+                                    f"Spider: Found password reset page: {href} - setting as password_reset"
+                                )
+
                             with _lock:
                                 _links.append(href)
+
                             if file_ext is None or str(file_ext).lower() not in [
                                 "gzip",
                                 "jpg",
@@ -307,8 +318,8 @@ def _get_links(session: Session, base_url: str, urls: List[str], queue, pool):
                             # check to see if this is a password reset page BEFORE adding to _links
                             link_str = getattr(link, "string", "") or ""
                             is_reset = _is_password_reset(href, link_str)
-                            if session.args.password_reset is None and is_reset:
-                                session.args.password_reset = href
+                            if session.args.pass_reset_page is None and is_reset:
+                                session.args.pass_reset_page = href
                                 output.debug(
                                     f"Spider: Found password reset page: {href} - setting as password_reset"
                                 )

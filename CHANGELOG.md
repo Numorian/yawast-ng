@@ -13,6 +13,7 @@
 * Reduce memory usage when not using the `--output` option.
 * Improve performance of ASN data lookups.
 * Automatically detect PHP pages instead of relying on the `--php_page` option.
+* Automatically detect password reset pages instead of relying on the `--pass_reset_page` option.
 * Replaced `Feature-Policy` with `Permissions-Policy` in the HTTP header checks.
 * Added X-XSS-Protection Is Deprecated check.
 * Changed the logic for random file names to use a deterministic hash of the URL, to create consistent results.

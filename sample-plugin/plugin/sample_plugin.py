@@ -60,3 +60,8 @@ class SampleHookPlugin(HookScannerBase):
         # This is where your injection point logic goes.
         # For demonstration, we'll just print a message if an injection point is found.
         output.info(f"SampleHookPlugin found injection point: {url} ({point})")
+
+    def scan_complete(self, session):
+        # This is where your logic for when the scan is complete goes.
+        # For demonstration, we'll just print a message.
+        output.info(f"SampleHookPlugin scan complete for session: {session.url}")

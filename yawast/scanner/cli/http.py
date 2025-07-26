@@ -235,6 +235,9 @@ def scan(session: Session):
     # run the scanning plugins
     plugin_manager.run_http_scans(session.url)
 
+    # run the scan complete hook
+    plugin_manager.run_hook_scan_complete(session)
+
 
 def reset():
     retirejs.reset()

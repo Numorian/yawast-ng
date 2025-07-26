@@ -7,6 +7,8 @@ from typing import Dict, Type
 
 from requests import Response
 
+from yawast.scanner.session import Session
+
 if sys.version_info < (3, 10):
     from importlib_metadata import entry_points
 else:
@@ -162,6 +164,21 @@ def run_hook_injection_point_found(url: str, point: InjectionPoint, response: Re
                 if issubclass(plugin_class, HookScannerBase):
                     plugin_instance = plugin_class()
                     plugin_instance.injection_point_found(url, point, response)
+            except Exception as e:
+                output.error(f"Failed to run plugin {plugin_name}: {e}")
+                continue
+
+def run_hook_scan_complete(session: Session):
+    """
+    Run all loaded hook plugins when the scan is complete.
+    """
+    if "hook" in plugins and len(plugins["hook"]) > 0:
+        for plugin_name, plugin_class in plugins["hook"].items():
+            try:
+                # get the plugins that derive from HookScannerBase
+                if issubclass(plugin_class, HookScannerBase):
+                    plugin_instance = plugin_class()
+                    plugin_instance.scan_complete(session)
             except Exception as e:
                 output.error(f"Failed to run plugin {plugin_name}: {e}")
                 continue

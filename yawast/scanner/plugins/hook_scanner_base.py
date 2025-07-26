@@ -6,6 +6,7 @@ from requests import Response
 
 from yawast.reporting.injection import InjectionPoint
 from yawast.scanner.plugins.plugin_base import PluginBase
+from yawast.scanner.session import Session
 
 
 class HookScannerBase(PluginBase):
@@ -33,5 +34,11 @@ class HookScannerBase(PluginBase):
         :param url: The URL being scanned
         :param point: The injection point found
         :param response: The HTTP response associated with the injection point
+        """
+        pass
+
+    def scan_complete(self, session: Session) -> None:
+        """
+        Called when the scan is complete.
         """
         pass

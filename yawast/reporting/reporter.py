@@ -292,6 +292,18 @@ def register(issue: Issue) -> None:
             output.debug(f"Duplicate Issue: {issue.id} (duplicate of {finding.id})")
 
             return
+        elif finding.url == issue.url and issue.vulnerability.limit_per_url > 0:
+            # we have a limit per URL, so we need to check the count for this exact URL
+            cnt = 0
+            for f in findings:
+                if f.url == issue.url:
+                    cnt += 1
+
+            if cnt >= issue.vulnerability.limit_per_url:
+                output.debug(
+                    f"Limit reached for {issue.vulnerability.name} on {issue.url} (limit: {issue.vulnerability.limit_per_url})"
+                )
+                return
 
     # if we aren't saving evidence, we can remove some things to save memory
     if _output_file is None or len(_output_file) == 0:
